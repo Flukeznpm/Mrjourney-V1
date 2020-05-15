@@ -1,0 +1,17 @@
+
+.box-room { 
+    background: rgb(255, 255, 255);
+    color: navy; 
+  }
+
+  .box-room-details { 
+    background:#f7f7f7;
+    color: rgb(37, 37, 37); 
+  }
+  .show-box{
+    width: 100%;
+    height: 100%;
+  }
+  .button-search{
+    cursor: pointer;
+  }

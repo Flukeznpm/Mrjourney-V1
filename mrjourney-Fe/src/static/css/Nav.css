@@ -1,0 +1,19 @@
+.nav-color{
+background-color: #F37945;
+}
+.round{
+    border-radius: 18px;
+}
+
+.nav-color-owner{
+color: #F37945;
+border-color: #F37945;
+ }
+.nav-color-owner:hover{
+color: #F37945;
+       
+ }
+.round2{
+    border-radius: 12px;
+    width: 15%;
+     }

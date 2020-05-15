@@ -1,0 +1,78 @@
+.step-progress{
+    margin:  auto;
+    padding-bottom: auto;
+}
+
+.step-progress img{
+    width: 35px;
+}
+.step-progress ul{
+    text-align: center;
+    padding: 0;
+}
+.step-progress ul li{
+    display: inline-block;
+    width: 360px;
+    position: relative;
+}
+
+.step-progress ul li .fas{
+    margin-top: 20px;
+    margin-bottom: 10px;
+   background: orange;
+   width: 30px;
+   height: 30px;
+   color: white;
+   border-radius: 50%;
+   padding: 7px;
+}
+
+.step-progress ul li .fas::after{
+    content: "";
+    background: orange;
+    height: 6px;
+    width: 365px;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 68px;
+    z-index: -1;
+}
+
+.step-progress ul li:first-child .fas::after{
+    width: 180px;
+    left: 180px;
+}
+.step-progress ul li:last-child .fas::after{
+    width: 180px;
+    
+}
+
+/* step1 */
+ .step-1 ul li:nth-child(2) .fas{
+    background: #cccccc;;
+}
+
+.step-1 ul li:nth-child(2) .fas::after{
+    background: #cccccc;;
+}
+
+.step-1 ul li:nth-child(3) .fas{
+    background: #cccccc;;
+}
+
+.step-1 ul li:nth-child(3) .fas::after{
+    background: #cccccc;;
+}
+/* step2 */
+
+.step-2 ul li:nth-child(3) .fas{
+    background: #cccccc;;
+}
+
+.step-2 ul li:nth-child(3) .fas::after{
+    background: #cccccc;;
+}
+
+/* step3 */
+

@@ -1,0 +1,83 @@
+[33mcommit 743fe3878d1e718cbd2fea2a5f41ac73fcada5f3[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: romncn <romncn@gmail.com>
+Date:   Sun Apr 5 16:54:45 2020 +0700
+
+    [ADD]NavWebPage.js
+
+[33mcommit 24737ad0bd61f953c070bd620e7b53acbaf3c8c9[m
+Author: romncn <romncn@gmail.com>
+Date:   Sun Apr 5 16:49:41 2020 +0700
+
+    [ADD]Home.js
+
+[33mcommit 3cb1b92052e1d62eac60a69a55f454764a6df77c[m
+Author: romncn <romncn@gmail.com>
+Date:   Fri Apr 3 20:21:54 2020 +0700
+
+    [UPDATE]use fontawesome & Create InputAddDate in CreateTrip.js
+
+[33mcommit 48c23ea734519ea03b1171e66c87f769bbe50174[m
+Author: romncn <romncn@gmail.com>
+Date:   Thu Apr 2 23:58:53 2020 +0700
+
+    [UPDATE]CreateTrip.js -content-page
+
+[33mcommit b0f596070b9e4a90ccdd55444944a3ad20d25845[m
+Author: romncn <romncn@gmail.com>
+Date:   Thu Apr 2 23:44:08 2020 +0700
+
+    [UPDATE]FooterTripPage.js & CreateTrip.js add buttom page
+
+[33mcommit 21fcdd6b656c56f84154283973dfecdb2327bae3[m
+Author: romncn <romncn@gmail.com>
+Date:   Thu Apr 2 23:25:46 2020 +0700
+
+    [ADD]NavTripPage.js & [UPDATE]Top-Page in App.js
+
+[33mcommit 0474e26ddfdcb4425869a54661411ca00fede0bf[m
+Author: romncn <romncn@gmail.com>
+Date:   Thu Apr 2 23:09:29 2020 +0700
+
+    [ADD]CreateTrip.js App.css and react-route
+
+[33mcommit a455ce5c6bc771d49a2a84642ef8f8a5c7c0f150[m
+Author: romncn <romncn@gmail.com>
+Date:   Thu Apr 2 22:11:09 2020 +0700
+
+    [ADD]Bootstrap 4
+
+[33mcommit 10d9aaf35e49ac8151b21d97ab057ad9c6e853ba[m
+Author: Chutikan <chutikan.khunpan@mail.kmutt.ac.th>
+Date:   Wed Apr 1 16:13:25 2020 +0700
+
+    [TEST] gun push
+
+[33mcommit c20e73e6c27e65869f7bd36286c2bb6bee8beb23[m
+Author: romncn <romncn@gmail.com>
+Date:   Sun Mar 29 20:49:20 2020 +0700
+
+    [ADD]css&img
+
+[33mcommit b07d6ab0f6c859e8b285e8110b7a05722584328b[m
+Author: romncn <romncn@gmail.com>
+Date:   Sun Mar 29 20:44:42 2020 +0700
+
+    [ADD]Footer.js & Navbar.js
+
+[33mcommit 54395645b082a4c968f5d5a275b02a876f146585[m
+Author: romncn <romncn@gmail.com>
+Date:   Sun Mar 29 20:42:36 2020 +0700
+
+    [ADD]Folder Structure Page
+
+[33mcommit ec4b96d333cfd170e5f1251009aedc15e645c910[m
+Author: romncn <romncn@gmail.com>
+Date:   Wed Mar 25 16:30:22 2020 +0700
+
+    first commit
+
+[33mcommit 7ddae0cca899382d0ddee47013d2b541588e38c7[m
+Author: romncn <romncn@gmail.com>
+Date:   Wed Mar 25 16:15:08 2020 +0700
+
+    Initialize project using Create React App

@@ -1,0 +1,21 @@
+{
+  "name": "mrjourney-backend1",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "firebase": "^7.14.0",
+    "firebase-admin": "^8.10.0",
+    "jsonwebtoken": "^8.5.1",
+    "line-login": "^1.0.14",
+    "morgan": "^1.9.1"
+  }
+}
