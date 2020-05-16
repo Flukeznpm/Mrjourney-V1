@@ -11,8 +11,9 @@ firebase.initializeApp({
 let db = firebase.firestore()
 
 // GET /room  (แสดงroomทั้งหมด)
-router.get('/', function (req, res, next) {
-    showRoom();
+router.get('/', async function (req, res, next) {
+    let RoomList = await showRoom();
+    res.status(200).json(RoomList);
 })
 // POST /room/createRoom  (สร้าง room)
 router.post('/createRoom', async function (req, res, next) {
@@ -40,19 +41,18 @@ router.put('/deleteRoom', function (req, res, next) {
 
 
 
-function showRoom() {
-    // วน loop แสดงข้อมูลบน Feed ??
+async function showRoom() {
     let RoomList = [];
     let showAllRoomRef = db.collection("Room");
-    showAllRoomRef.get().then(snapshot => {
+    await showAllRoomRef.get().then(snapshot => {
         snapshot.forEach(doc => {
-            console.log(doc.data());
             RoomList.push(doc.data());
         });
     })
         .catch(err => {
             console.log('Error getting Room', err);
         });
+    console.log(RoomList)
     return RoomList;
 }
 

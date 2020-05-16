@@ -17,6 +17,7 @@ var loginRouter = require('./routes/login');
 // var profileRouter = require('./routes/AccountProfile');
 // var tripRouter = require('./routes/trip');
 var roomRouter = require('./routes/room');
+
 app.use("/getToken", loginRouter);
 // app.use("/profile", profileRouter);
 // app.use("/trip", tripRouter);
