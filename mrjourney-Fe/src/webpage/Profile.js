@@ -5,9 +5,9 @@ import '../static/css/App.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 
 import { Button, ButtonToolbar, Tabs, Tab } from 'react-bootstrap'
-// import { Redirect, withRouter } from 'react-router-dom';
-// import jwt from 'jsonwebtoken';
-// import cookie from 'react-cookies'
+import { Redirect, withRouter } from 'react-router-dom';
+import jwt from 'jsonwebtoken';
+import cookie from 'react-cookies'
 
 const ProfileMoreDetail = () => {
     const [key, setKey] = useState('home');
@@ -35,28 +35,28 @@ const ProfileMoreDetail = () => {
 
 class Profile extends React.Component {
   
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         Linename: '',
-    //         Linepicture: ''
-    //     }
-    // }
+    constructor(props) {
+        super(props);
+        this.state = {
+            Linename: '',
+            Linepicture: ''
+        }
+    }
 
-    // componentDidMount() {
-    //     let loadJWT = cookie.load('jwt');
-    //     console.log(loadJWT)
-    //     if (loadJWT == undefined) {
-    //         this.props.history.push('/Home');
-    //     } else {
-    //         var user = jwt.verify(loadJWT, 'secreatKey');
-    //         this.setState({
-    //             displayName: user.displayName,
-    //             pictureURL: user.pictureURL,
-    //             email: user.email,
-    //         })
-    //     }
-    // }
+    componentDidMount() {
+        let loadJWT = cookie.load('jwt');
+        console.log(loadJWT)
+        if (loadJWT == undefined) {
+            this.props.history.push('/Home');
+        } else {
+            var user = jwt.verify(loadJWT, 'secreatKey');
+            this.setState({
+                displayName: user.displayName,
+                pictureURL: user.pictureURL,
+                email: user.email,
+            })
+        }
+    }
     render() {
         return (
             <div className="flex-wrapper">
