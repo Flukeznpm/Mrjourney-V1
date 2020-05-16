@@ -66,8 +66,9 @@ class Profile extends React.Component {
                 <div className="content-page">
                     <div className="pt-5">
                         <div className="Profile-Details text-center">
-                            <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img"/>
-                            <div className="line-name pt-2" style={{ fontSize: "32px" }}>คุณ : </div>
+                            <img src={this.state.pictureURL} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img"/>
+                            <div className="line-name pt-2" style={{ fontSize: "28px" }}>คุณ : {this.state.displayName}</div>
+                            <div className="line-name pt-2" style={{ fontSize: "20px" }}>เมล : {this.state.email}</div>
                             <div className="detail-web pt-2">
                                 <span>ชื่อจริง : </span>
                                 <p /><span>เพศ : </span>
