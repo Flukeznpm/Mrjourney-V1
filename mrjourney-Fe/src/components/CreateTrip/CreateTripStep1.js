@@ -87,7 +87,8 @@ class CreateTripStep1 extends React.Component {
                                                     name="demoProvince"
                                                     value={this.props.TripForm.demoProvince}
                                                     onChange={(e) => this.props.handleForm(e)}
-                                                    id="dropdownMenuButton">
+                                                    id="dropdownMenuButton"
+                                                    >
                                                     {this.state.thaiprovince.map((ThaiProvinceShow) => {
                                                         return (
                                                             <option value={ThaiProvinceShow}>{ThaiProvinceShow}</option>

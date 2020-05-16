@@ -44,7 +44,6 @@ class CreateTrip extends React.Component {
                 //     },
                 // ]
 
-
     onhandleFormText = async (e) => {
         let value = e.target.value
         let name = e.target.name
@@ -114,27 +113,20 @@ class CreateTrip extends React.Component {
 
 
 
-
-
-
-
-
-
-
-
-    
-
-    handleRemoveEvent = (Event, key) => {
+    handleRemoveEvent = async (listevent, key) => {
         let AllDate = this.state.Trip.totalDate //new
-        const newAllDate = AllDate[key].event.filter(Event => {
-            return Event !== Event
+        const newAllEvent = await AllDate[key].event.filter(Event => {
+            return Event !== listevent
         })
+        AllDate[key].event = newAllEvent
+        console.log('showdate',newAllEvent);
 
-        this.setState({
-            Event:{
-                ...newAllDate
+        this.setState(prevState => ({
+            Trip:{
+                ...prevState.Trip,
+                totalDate: AllDate
             } 
-        })
+        }))
 
 
         // AllDate[key].event.push(Event) //add
@@ -145,35 +137,6 @@ class CreateTrip extends React.Component {
         //     }
         // }))
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

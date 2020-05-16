@@ -62,21 +62,15 @@ class CreateTripStep2 extends React.Component {
 
     addModalClose = () => {
         this.setState({
-            addModalShow: false
+            addModalShow: false,
+            Event: {
+                eventName: '',
+                startEvent: '',
+                endEvent: '',
+                eventType: ''
+            },
         })
     }
-
-
-    // RemoveConfirm = (key) => {
-    //     let Event = this.state.Event
-    //     console.log('key', key);
-    //     this.props.handleRemoveEvent(Event, key)
-    // }
-
-
-
-
-    
 
     addModalConfirm = (key) => {
         let Event = this.state.Event
@@ -86,8 +80,15 @@ class CreateTripStep2 extends React.Component {
 
         this.setState({
             addModalShow: false,
+            Event: {
+                eventName: '',
+                startEvent: '',
+                endEvent: '',
+                eventType: ''
+            },
         })
     }
+
 
     render() {
 
@@ -155,7 +156,7 @@ class CreateTripStep2 extends React.Component {
                                     <div class="alert event-box-active border-bottom" >
                                         <span style={{ color: "rgb(241, 82, 19)", fontSize: "24px" }}>{PerDay.eventDate}</span>
                                         <span className="float-right"><i class="fas fa-caret-up"></i></span>
-                                        {PerDay.event.map((eventDetail, key) => {
+                                        {PerDay.event.map((eventDetail) => {
 
                                             return (
                                                 <div className="container">
@@ -192,11 +193,10 @@ class CreateTripStep2 extends React.Component {
                                                             <div className="m-2">
                                                                 <button type="button" 
                                                                 class="event-deleted-btn p-0 ml-1 btn float-right"
-                                                                onClick={() => this.props.handleRemoveEvent(0,0)}>
+                                                                onClick={() => this.props.handleRemoveEvent(eventDetail,key)}>
                                                                     <span class="shadow fas fa-trash-alt"></span></button>
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             )
