@@ -75,6 +75,7 @@ class CreateTrip extends React.Component {
                 TripForm={this.state.Trip}
                 handleForm={this.onhandleFormText}
                 handleSetEvent={this.handleSetEvent}
+                handleRemoveEvent={this.handleRemoveEvent}
                 handlePreviousStep={this.handlePreviousComponent} ></CreateTripStep2>
         } if (this.state.StepComponent === 3) {
             return <CreateTripStep3 handleStep={this.handleNextComponent}></CreateTripStep3>
@@ -110,6 +111,71 @@ class CreateTrip extends React.Component {
             }
         }))
     }
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    handleRemoveEvent = (Event, key) => {
+        let AllDate = this.state.Trip.totalDate //new
+        const newAllDate = AllDate[key].event.filter(Event => {
+            return Event !== Event
+        })
+
+        this.setState({
+            Event:{
+                ...newAllDate
+            } 
+        })
+
+
+        // AllDate[key].event.push(Event) //add
+        // this.setState(prevState => ({
+        //     Trip: {
+        //         ...prevState.Trip,
+        //         totalDate: AllDate //old = new
+        //     }
+        // }))
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     setAllDate = (AllTripDate) => {
         for (let index = 0; index < this.state.Trip.numberAddDate; index++) {

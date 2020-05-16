@@ -5,33 +5,6 @@ import LogoStep1 from '../../static/img/LogoStep1.png'
 import LogoStep2 from '../../static/img/LogoStep2.png'
 import LogoStep3 from '../../static/img/LogoStep3.png'
 
-const InputAddDate = () => {
-    const [dateNum, setDateNum] = useState(0);
-    return (
-
-        <div className="col pt-4">
-            <label htmlFor="example-date-input">จำนวนวัน<span className="p-1" style={{ color: "red" }}>*</span></label>
-            <div className="input-group">
-
-                <span className="input-group-btn">
-                    <button type="button" className="btn btn-default btn-number" data-type="minus" data-field="quant[1]"
-                        onClick={() => { setDateNum(dateNum - 1) }}>
-                        <span className="fas fa-minus"></span>
-                    </button>
-                </span>
-
-                <input type="text" name="quant[1]" className="form-control input-number" value={dateNum} min="1" max="10" />
-
-                <span className="input-group-btn">
-                    <button type="button" className="btn btn-default btn-number" data-type="plus" data-field="quant[1]"
-                        onClick={() => { setDateNum(dateNum + 1) }}>
-                        <span className="fas fa-plus" aria-hidden="true"></span>
-                    </button>
-                </span>
-            </div>
-        </div>
-    )
-}
 
 class CreateTripStep1 extends React.Component {
 

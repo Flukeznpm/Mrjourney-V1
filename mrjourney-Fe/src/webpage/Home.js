@@ -4,31 +4,30 @@ import CarouselHeader from '../components/Home/CarouselHeader';
 import ShowRoomBox from '../components/Home/ShowRoomBox';
 import '../static/css/Show-Room.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
-// import axios from 'axios';
-// import jwt from 'jsonwebtoken';
-// import cookie from 'react-cookies'
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import cookie from 'react-cookies'
 
 
-// class Home extends React.Component {
-//     componentDidMount() {
-//         let search = window.location.search;
-//         let params = new URLSearchParams(search);
-//         let code = params.get('code');
-//         let data = {
-//             code: code
-//         }
-//         if (code != null) {
-//             axios.post('http://localhost:5000/getToken', data).then((res) => {
-//                 console.log(res);
-//                 cookie.save('jwt', res.data);
-//                 var decoded = jwt.verify(res.data, 'secreatKey');
-//                 console.log(decoded);
-//             })
-//         }
-//     }
 
 
 class Home extends React.Component {
+    componentDidMount() {
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        let code = params.get('code');
+        let data = {
+            code: code
+        }
+        if (code != null) {
+            axios.post('http://localhost:5000/getToken', data).then((res) => {
+                console.log(res);
+                cookie.save('jwt', res.data);
+                var decoded = jwt.verify(res.data, 'secreatKey');
+                console.log(decoded);
+            })
+        }
+    }
     render() {
         return (
             <div className="flex-wrapper">
