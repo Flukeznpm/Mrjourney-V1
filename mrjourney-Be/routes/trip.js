@@ -50,7 +50,6 @@ router.put('/deleteTrip', function (req, res, next) {
 
 
 async function showAllTrip(lineGroupID, lineID) {
-
     // ** สิ่งที่ติดขัด : กรณีที่ user คนอื่นๆ (ไม่ใช่เจ้าของห้อง) จะ check ยังไง ? **
     let dataList = [];
     let tripID;
@@ -88,7 +87,10 @@ async function showAllTrip(lineGroupID, lineID) {
     return dataList
 }
 
-// ** ต้อง if else ว่าถ้าดูแบบ All trip ให้วน loop แสดงข้อมูล trip per day ทั้งหมด **
+
+
+
+// ** : ต้อง if else ว่าถ้าดูแบบ All trip ให้วน loop แสดงข้อมูล trip per day ทั้งหมด **
 // function showTripPerDay(trip) {
 //     let dataPerDay = [];
 //     let checkGroup = await db.collection('').doc().where('', '==', '');
@@ -109,8 +111,10 @@ async function showAllTrip(lineGroupID, lineID) {
 //     return dataPerDay
 // }
 
+
+
+
 async function createTripList(datas) {
-    console.log(datas);
 
     // 0. Trip id จะมีการ Generste & จัดเรียง ยังไง ? [DO]
     // 1. check : group id นั้น มีการ create trip แล้วหรือยัง ? ถ้ามี สร้างไม่ได้ / ถ้าไม่มีสร้างได้
@@ -162,6 +166,9 @@ async function createTripList(datas) {
     createTripPerday(datas);
 }
 
+
+
+
 // function createTripPerday(datas) {
 //     // ** ต้องไป check กับ frontend ว่าส่งตัวแปลอะไรมาเก็บค่าันที่ **
 //     let dataTripPerDay = {
@@ -183,6 +190,9 @@ async function createTripList(datas) {
 //     db.collection('').update()
 // }
 
+
+
+
 async function deleteTrip() {
     await db.collection('TripList').doc(datas.tripID).delete()
     await db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').doc(datas.tripID).delete()
@@ -191,43 +201,6 @@ async function deleteTrip() {
         }).catch(function (error) {
             console.error("Error deleted document trip: ", error);
         });
-
-
-    // function deleteCollection(db, collectionRef, batchSize) {
-    //     var query = collectionRef.orderBy('__name__').limit(batchSize);
-
-    //     return new Promise(function (resolve, reject) {
-    //         deleteQueryBatch(db, query, batchSize, resolve, reject);
-    //     });
-    // }
-
-    // function deleteQueryBatch(db, query, batchSize, resolve, reject) {
-    //     query.get()
-    //         .then((snapshot) => {
-    //             if (snapshot.size == 0) {
-    //                 return 0;
-    //             }
-
-    //             var batch = db.batch();
-    //             snapshot.docs.forEach(function (doc) {
-    //                 batch.delete(doc.ref);
-    //             });
-
-    //             return batch.commit().then(function () {
-    //                 return snapshot.size;
-    //             });
-    //         }).then(function (numDeleted) {
-    //             if (numDeleted <= batchSize) {
-    //                 resolve();
-    //                 return;
-    //             }
-
-    //             process.nextTick(function () {
-    //                 deleteQueryBatch(db, query, batchSize, resolve, reject);
-    //             });
-    //         })
-    //         .catch(reject);
-    // }
 }
 
 module.exports = router;
