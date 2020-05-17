@@ -38,15 +38,19 @@ class CreateRoomStep2 extends React.Component {
                     <div>
                         <img class="d-block w-100" src={BgSlide1} alt="First slide" />
                     </div>
-                    <div className="container">
-                        <div className="Room-Details">
-                            ชื่อทริป : {this.props.RoomForm.roomName}
-                            ชื่อทริป : {this.props.RoomForm.roomCover}
-                            ชื่อทริป : {this.props.RoomForm.EndDate}
-                            ชื่อทริป : {this.props.RoomForm.tripDetails}
-                            ชื่อทริป : {this.props.RoomForm.qrCode}
-                            ชื่อทริป : {this.props.RoomForm.genderCondition}
+                    <div className="Show-RoomDetails py-3">
+                        <div className="container">
+                            <div className="Room-Details">
+                                ชื่อทริป : {this.props.RoomForm.roomName}
+                                <p />จังหวัด : {this.props.RoomForm.roomCover}
+                                <p />วันเริ่ม-วันจบ : {this.props.RoomForm.EndDate}
+                                <p />เงื่อนไข : {this.props.RoomForm.tripDetails}
+                                <p />รายละเอียด : {this.props.RoomForm.qrCode}
+                                <p />คิวอาร์โค้ด : {this.props.RoomForm.genderCondition}
+                            </div>
                         </div>
+                        <button>ย้อนกลับ</button>
+                        <button>เสร็จสิ้น</button>
                     </div>
                 </div>
             </div>
