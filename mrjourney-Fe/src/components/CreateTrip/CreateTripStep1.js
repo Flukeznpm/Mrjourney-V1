@@ -76,6 +76,7 @@ class CreateTripStep1 extends React.Component {
                         </div>
 
                         <div className="py-3">
+                            
                             <form>
                                 <div className="form-group">
                                     <div className="InputFrom">
@@ -140,8 +141,6 @@ class CreateTripStep1 extends React.Component {
                                             </span>
                                         </div>
                                     </div>
-
-
 
                                 </div>
 
