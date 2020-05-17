@@ -5,17 +5,43 @@ import "../../static/css/App.css";
 import BgSlide1 from '../../static/img/pr-01.png';
 import Logo from '../../static/img/logojourney.png';
 import Swal from 'sweetalert2';
-
-
+import axios from 'axios';
 
 class ShowRoomBox extends React.Component {
 
     constructor() {
         super()
         this.state = {
+            room: [
+                {
+                    // roomID: '',
+                    // roomName: '',
+                    // // picRoom: datas.picRoom,
+                    // province: '',
+                    // startDate: '',
+                    // endDate: '',
+                    // tripDetails: '',
+                    // // QRcode: datas.QRcode,
+                    // maxMember: '',
+                    // genderCondition: '',
+                    // ageCondition: '',
+                    // status: ''
+                }
+            ],
             myacc: 'guest',
             myaccLog: 'Acc',
         }
+    }
+
+    componentDidMount = async () => {
+        await axios.get('http://localhost:5000/room')
+            .then(async res => {
+                // console.log('Data from /api/room : ' + res.data)
+                this.setState({
+                    room: res.data
+                });
+            });
+        // console.log('Data from state.room : ' + this.state.room);
     }
 
     AlertJoinRoom = () => {
@@ -28,7 +54,7 @@ class ShowRoomBox extends React.Component {
                 confirmButtonColor: '#D33',
                 confirmButtonText: 'กลับสู่หน้าหลัก'
             })
-        }else{
+        } else {
             Swal.fire({
                 icon: 'success',
                 title: 'เข้าร่วมสำเร็จ!',
@@ -68,7 +94,6 @@ class ShowRoomBox extends React.Component {
         }
     }
 
-
     AlertRoomDetails = () => {
         Swal.fire({
             imageUrl: "//static/img/logojourney.png",
@@ -84,6 +109,7 @@ class ShowRoomBox extends React.Component {
             </div>`,
         })
     }
+
     //  AlertTester() {
     //     const getAlert = () => (
     //         <Swal
@@ -101,206 +127,56 @@ class ShowRoomBox extends React.Component {
     // hideAlert(){
     //     console.log('Hiding Alert');
     // }
+
     render() {
         return (
-            <section className="py-5">
-                <div className="Show-Join-Room">
-                    <div className="container">
-                        <div className="row">
 
-                            
-                            <div className="col-4">
-                                <div className="col">
-                                    <img src={Logo} height="45" alt="MrJourney" />
-                                    <div class="alert box-room show-box">
-                                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                                        <div class="box-room-details show-box mt-2">
-                                            <div className="mt-3 mr-3 ml-3 mb-0">
-                                                <h3 className="py-1">Let'Go Chonburi !</h3>
-                                                <span className="py-1" style={{ fontSize: "14px" }}>จ. เชียงใหม่ </span>
-                                                <br /><span className="py-1" style={{ fontSize: "14px" }}>วันที่ 14/02/2563-15/02/2563 </span>
-                                                <p /><i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                <br /><span className="mt-0 ml-2" style={{ fontSize: "8px" }}>อายุ 20 ปีขึ้นไป</span>
-                                                <p className="text-right" style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</p>
-                                            </div>
-                                            <div className="navbar">
-                                                <div>
-                                                    <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinRoom}>เข้าร่วม</button>
+        
+                <section className="py-5">
+                    <div className="Show-Join-Room">
+                        <div className="container">
+                            <div className="row">
+
+                                {this.state.room.map((room, key) => {
+                                    return (
+                                        // <span id={key}>
+                                            <div className="col-4">
+                                                <div className="col">
+                                                    <img src={Logo} height="45" alt="MrJourney" />
+                                                    <div class="alert box-room show-box">
+                                                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
+                                                        <div class="box-room-details show-box mt-2">
+                                                            <div className="mt-3 mr-3 ml-3 mb-0">
+                                                                <h3 className="py-1">{room.roomName}</h3>
+                                                                <span className="py-1" style={{ fontSize: "14px" }}>Room ID : {room.roomID}</span>
+                                                                <br /> <span className="py-1" style={{ fontSize: "14px" }}>จังหวัด : {room.province}</span>
+                                                                <br /><span className="py-1" style={{ fontSize: "14px" }}>วันที่ : {room.startDate} - {room.endDate} </span>
+                                                                <p /><i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                                                <br /><span className="mt-0 ml-2" style={{ fontSize: "8px" }}>อายุ {room.ageCondition}</span>
+                                                                <p className="text-right" style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</p>
+                                                            </div>
+                                                            <div className="navbar">
+                                                                <div>
+                                                                    <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinRoom}>เข้าร่วม</button>
+                                                                </div>
+                                                                <div className="button-search">
+                                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
-                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        // </span>
+                                    )
+                                })}
+
                             </div>
-
-                            <div className="col-4">
-                                <div className="col">
-                                    <img src={Logo} height="45" alt="MrJourney" />
-                                    <div class="alert box-room show-box">
-                                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                                        <div class="box-room-details show-box mt-2">
-                                            <div className="mt-3 mr-3 ml-3 mb-0">
-                                                <h3 className="py-1">Let'Go Chonburi !</h3>
-                                                <span className="py-1" style={{ fontSize: "14px" }}>จ. เชียงใหม่ </span>
-                                                <br /><span className="py-1" style={{ fontSize: "14px" }}>วันที่ 14/02/2563-15/02/2563 </span>
-                                                <p /><i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                <br /><span className="mt-0 ml-2" style={{ fontSize: "8px" }}>อายุ 20 ปีขึ้นไป</span>
-                                                <p className="text-right" style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</p>
-                                            </div>
-                                            <div className="navbar">
-                                                <div>
-                                                    <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinRoomHaveAcc}>เข้าร่วม</button>
-                                                </div>
-                                                <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-4">
-                                <div className="col">
-                                    <img src={Logo} height="45" alt="MrJourney" />
-                                    <div class="alert box-room show-box">
-                                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                                        <div class="box-room-details show-box mt-2">
-                                            <div className="mt-3 mr-3 ml-3 mb-0">
-                                                <h3 className="py-1">Let'Go Chonburi !</h3>
-                                                <span className="py-1" style={{ fontSize: "14px" }}>จ. เชียงใหม่ </span>
-                                                <br /><span className="py-1" style={{ fontSize: "14px" }}>วันที่ 14/02/2563-15/02/2563 </span>
-                                                <p /><i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                <br /><span className="mt-0 ml-2" style={{ fontSize: "8px" }}>อายุ 20 ปีขึ้นไป</span>
-                                                <p className="text-right" style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</p>
-                                            </div>
-                                            <div className="navbar">
-                                                <div>
-                                                    <button type="button" class="btn nav-color round text-white"  onClick={this.AlertJoinRoomDontAcc}>เข้าร่วม</button>
-                                                </div>
-                                                <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-4">
-                                <div className="col">
-                                    {/* <img src={Logo} height="45" alt="MrJourney" /> */}
-                                    <div class="alert box-room show-box">
-                                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                                        <div class="box-room-details show-box mt-2">
-                                            <div className="mt-3 mr-3 ml-3 mb-0">
-                                                <h3 className="py-1">Let'Go Chonburi !</h3>
-                                                <span className="py-1" style={{ fontSize: "14px" }}>จ. เชียงใหม่ </span>
-                                                <br /><span className="py-1" style={{ fontSize: "14px" }}>วันที่ 14/02/2563-15/02/2563 </span>
-                                                <p />
-                                                <div className="text-right">
-                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                    <br /><span className="mt-0 ml-2" style={{ fontSize: "8px" }}>อายุ 20 ปีขึ้นไป</span>
-                                                </div>
-
-                                                {/* <p className="text-right" style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</p> */}
-                                                <span className="pl-1 pr-1"><img src={Logo} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
-                                                <span style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</span>
-                                            </div>
-                                            <div className="navbar pt-2">
-                                                <div>
-                                                    <button type="button" class="btn nav-color round text-white" >เข้าร่วม</button>
-                                                </div>
-                                                <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-4">
-                                <div className="col">
-                                    {/* <img src={Logo} height="45" alt="MrJourney" /> */}
-                                    <div class="alert box-room show-box">
-                                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                                        <div class="box-room-details show-box mt-2">
-                                            <div className="mt-3 mr-3 ml-3 mb-0">
-                                                <h3 className="py-1">Let'Go Chonburi !</h3>
-                                                <span className="py-1" style={{ fontSize: "14px" }}>จ. เชียงใหม่ </span>
-                                                <br /><span className="py-1" style={{ fontSize: "14px" }}>วันที่ 14/02/2563-15/02/2563 </span>
-                                                <p />
-                                                <div className="text-right">
-                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                    <br /><span className="mt-0 ml-2" style={{ fontSize: "8px" }}>อายุ 20 ปีขึ้นไป</span>
-                                                </div>
-
-                                                {/* <p className="text-right" style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</p> */}
-                                                <span className="pl-1 pr-1"><img src={Logo} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
-                                                <span style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</span>
-                                            </div>
-                                            <div className="navbar pt-2">
-                                                <div>
-                                                    <button type="button" class="btn nav-color round text-white">เข้าร่วม</button>
-                                                </div>
-                                                <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-4">
-                                <div className="col">
-                                    {/* <img src={Logo} height="45" alt="MrJourney" /> */}
-                                    <div class="alert box-room show-box">
-                                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                                        <div class="box-room-details show-box mt-2">
-                                            <div className="mt-3 mr-3 ml-3 mb-0">
-                                                <h3 className="py-1">Let'Go Chonburi !</h3>
-                                                <span className="py-1" style={{ fontSize: "14px" }}>จ. เชียงใหม่ </span>
-                                                <br /><span className="py-1" style={{ fontSize: "14px" }}>วันที่ 14/02/2563-15/02/2563 </span>
-                                                <p />
-                                                <div className="text-right">
-                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                    <br /><span className="mt-0 ml-2" style={{ fontSize: "8px" }}>อายุ 20 ปีขึ้นไป</span>
-                                                </div>
-
-                                                {/* <p className="text-right" style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</p> */}
-                                                <span className="pl-1 pr-1"><img src={Logo} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
-                                                <span style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</span>
-                                            </div>
-                                            <div className="navbar pt-2">
-                                                <div>
-                                                    <button type="button" class="btn nav-color round text-white">เข้าร่วม</button>
-                                                </div>
-                                                <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+         
         )
     }
 }

@@ -98,7 +98,7 @@ class CreateRoomStep1 extends React.Component {
                                     <label for="exampleInputEmail1" >จังหวัด<span className="p-1" style={{ color: "red" }}>*</span></label>
                                     <div className="btn-group pl-5">
                                         <select className=" btn province-btn dropdown-toggle"
-                                            name="Province"
+                                            name="province"
                                             value={this.props.RoomForm.province}
                                             onChange={(e) => this.props.handleForm(e)}
                                             id="dropdownMenuButton">
@@ -113,7 +113,7 @@ class CreateRoomStep1 extends React.Component {
                                 <div class="pt-4">
                                     <label for="exampleInputEmail1">วันเริ่มทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                     <input type="date" class="form-control"
-                                        name="StartDate"
+                                        name="startDate"
                                         value={this.props.RoomForm.startDate}
                                         onChange={(e) => this.props.handleForm(e)}
                                     />
@@ -121,7 +121,7 @@ class CreateRoomStep1 extends React.Component {
                                 <div class="pt-4">
                                     <label for="exampleInputEmail1">วันสิ้นสุดทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                     <input type="date" class="form-control"
-                                        name="EndDate"
+                                        name="endDate"
                                         value={this.props.RoomForm.endDate}
                                         onChange={(e) => this.props.handleForm(e)}
                                     />

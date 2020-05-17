@@ -9,21 +9,18 @@ import BgSlide1 from '../static/img/pr-01.png';
 import Logo from '../static/img/logojourney.png';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 
-
-
 class Home extends React.Component {
+
     render() {
         return (
             <div className="flex-wrapper">
                 <div className="top-page">
                     <NavWebPage />
-
                     <div className="content-page">
                         <div className="Carousel-Header">
                             <CarouselHeader></CarouselHeader>
                         </div>
                         <div className="show-owner-room">
-                            
                             <div className="col-4">
                                 <div className="col">
                                     {/* <img src={Logo} height="45" alt="MrJourney" /> */}
@@ -48,13 +45,13 @@ class Home extends React.Component {
                                                 <span className="pl-1">
                                                     <button type="button" class="btn nav-color text-white round2" >แก้ไข</button>
                                                 </span>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="col-4">
                                 <div className="col">
                                     {/* <img src={Logo} height="45" alt="MrJourney" /> */}

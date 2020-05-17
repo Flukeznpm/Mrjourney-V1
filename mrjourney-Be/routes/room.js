@@ -73,6 +73,7 @@ async function generateRoomID() {
         let roomID = 'R_' + id;
         let query = await CheckRoomIDRef.doc(roomID).get()
             .then(doc => {
+                // ถ้าไม่มีข้อมูลอยู่
                 if (!doc.exists) {
                     checkDocumentisEmpty = false;
                     result = 'R_' + id;

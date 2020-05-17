@@ -28,9 +28,7 @@ class JoinedRoom extends React.Component {
                     </div>
                 </div>
                 <div className="buttom-page">
-
                 </div>
-
             </div>
         )
     }
