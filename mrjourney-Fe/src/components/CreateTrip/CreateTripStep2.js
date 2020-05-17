@@ -7,6 +7,10 @@ import LogoStep1 from '../../static/img/LogoStep1.png'
 import LogoStep2 from '../../static/img/LogoStep2.png'
 import LogoStep3 from '../../static/img/LogoStep3.png'
 import momentjs from 'moment'
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import cookie from 'react-cookies';
+import { withRouter } from 'react-router-dom';
 
 class CreateTripStep2 extends React.Component {
     constructor(props) {
@@ -23,6 +27,19 @@ class CreateTripStep2 extends React.Component {
         }
     }
 
+    componentDidMount() {
+        let loadJWT = cookie.load('jwt');
+        console.log(loadJWT)
+        if (loadJWT == undefined) {
+            this.props.history.push('/Home');
+        } else {
+            var user = jwt.verify(loadJWT, 'secreatKey');
+            this.setState({
+                Linename: user.displayName,
+                Linepicture: user.pictureURL
+            })
+        }
+    }
 
     onhandleEventForm = async (e) => {
         let value = e.target.value
@@ -90,9 +107,26 @@ class CreateTripStep2 extends React.Component {
     }
 
 
+
+    handleSubmit(e) {
+        e.preventDefault();
+        let dataTrip = {
+            tripname: this.state.tripname,
+            province: this.state.province,
+            date: this.state.date,
+            day: this.state.day
+        }
+        axios.post('http://localhost:5000/trip/createTrip', dataTrip)
+            .then(res => {
+                console.log(res)
+            });
+    }
+
+
+
+
+
     render() {
-
-
         return (
             <div>
                 <div className="top-page mb-3">
@@ -118,16 +152,16 @@ class CreateTripStep2 extends React.Component {
                             </ul>
                         </div>
                         <div className="header-trip">
-                            <h3>ชื่อทริป : {this.props.TripForm.demoTripName}</h3>
-                            <h4>จังหวัด : {this.props.TripForm.demoProvince}</h4>
+                            <h3>ชื่อทริป : {this.props.TripForm.tripName}</h3>
+                            <h4>จังหวัด : {this.props.TripForm.province}</h4>
                         </div>
                         <div className="trip-perday-box py-3">
 
                             <div className="text-center py-2">
                                 <span className="show-date-to-end">
-                                    <span className="p-1"> {momentjs(this.props.TripForm.demoDate).format('DD/MM/YYYY')}
+                                    <span className="p-1"> {momentjs(this.props.TripForm.date).format('DD/MM/YYYY')}
                                     </span>
-                                    <span className="p-1">{momentjs(this.props.TripForm.demoDate).add(this.props.TripForm.numberAddDate - 1, 'day').format('DD/MM/YYYY')}
+                                    <span className="p-1">{momentjs(this.props.TripForm.date).add(this.props.TripForm.numberAddDate - 1, 'day').format('DD/MM/YYYY')}
                                     </span>
                                 </span>
                             </div>
@@ -150,7 +184,6 @@ class CreateTripStep2 extends React.Component {
                             })} */}
 
                             {this.props.TripForm.totalDate.map((PerDay, key) => {
-                                
 
                                 return (
                                     <div class="alert event-box-active border-bottom" >
@@ -191,9 +224,9 @@ class CreateTripStep2 extends React.Component {
 
                                                         <div className="col-3">
                                                             <div className="m-2">
-                                                                <button type="button" 
-                                                                class="event-deleted-btn p-0 ml-1 btn float-right"
-                                                                onClick={() => this.props.handleRemoveEvent(eventDetail,key)}>
+                                                                <button type="button"
+                                                                    class="event-deleted-btn p-0 ml-1 btn float-right"
+                                                                    onClick={() => this.props.handleRemoveEvent(eventDetail, key)}>
                                                                     <span class="shadow fas fa-trash-alt"></span></button>
                                                             </div>
                                                         </div>
@@ -205,7 +238,6 @@ class CreateTripStep2 extends React.Component {
                                             <i class="far fa-plus-square fa-2x pt-3" style={{ color: "rgb(241, 82, 19)" }}
                                                 onClick={() => this.setState({ keyModal: key, addModalShow: true })}></i>
                                             <CreateTripModal
-
                                                 show={this.state.addModalShow}
                                                 onConfirm={() => this.addModalConfirm(this.state.keyModal)}
                                                 onHide={() => this.addModalClose(this.state.keyModal)} //use for closeButton
@@ -231,23 +263,22 @@ class CreateTripStep2 extends React.Component {
                             <div className="buttom-page py-3">
                                 <div className="container py-3">
                                     <div className="col-2 float-left ml-4">
-                                        <button type="button" class="btn btn-warning btn-lg btn-block text-white" 
-                                        onClick={this.props.handlePreviousStep}>ย้อนกลับ</button>
+                                        <button type="button" class="btn btn-warning btn-lg btn-block text-white"
+                                            onClick={this.props.handlePreviousStep}>ย้อนกลับ</button>
                                     </div>
                                     <div className=" col-2 float-right mr-4">
-                                        <button type="button" class="btn btn-warning btn-lg btn-block text-white" 
-                                        onClick={this.props.handleStep}>เสร็จสิ้น</button>
+                                        <button type="button" class="btn btn-warning btn-lg btn-block text-white"
+                                            onClick={this.props.handleStep}>เสร็จสิ้น</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         )
     }
 }
 
-export default CreateTripStep2;
+export default withRouter(CreateTripStep2);
 

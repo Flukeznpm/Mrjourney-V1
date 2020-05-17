@@ -6,8 +6,6 @@ import CreateRoomStep2 from '../components/CreateRoom/CreateRoomStep2';
 import CreateRoomStep3 from '../components/CreateRoom/CreateRoomStep3';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 
-
-
 class CreateJoinRoom extends React.Component {
 
     constructor(props) {
@@ -85,18 +83,17 @@ class CreateJoinRoom extends React.Component {
         }
     }
 
-
     handleNextComponent = async () => {
         if (this.state.StepComponent !== 3) {
             await this.setState({ StepComponent: this.state.StepComponent + 1 })
         }
     }
+
     handlePreviousComponent = async () => {
         if (this.state.StepComponent !== 1) {
             await this.setState({ StepComponent: this.state.StepComponent - 1 })
         }
     }
-
 
     render() {
         return (
@@ -106,9 +103,7 @@ class CreateJoinRoom extends React.Component {
                 </div>
                 <div className="Content-Component">
                     {this.handleRoomComponent()}
-
                 </div>
-
                 <div className="footer-page">
                     <FooterWebPage></FooterWebPage>
                 </div>

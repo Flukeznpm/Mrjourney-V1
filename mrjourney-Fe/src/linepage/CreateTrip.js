@@ -7,19 +7,15 @@ import FooterWebPage from '../components/Footer/FooterWebPage';
 import CreateTripStep3 from '../components/CreateTrip/CreateTripStep3';
 import momentjs from 'moment'
 
-
-
-
 class CreateTrip extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             StepComponent: 1,
-
             Trip: {
-                demoTripName: '',
-                demoProvince: '',
-                demoDate: '',
+                tripName: '',
+                province: '',
+                date: '',
                 numberAddDate: 1,
                 totalDate: [{}]
             }
@@ -56,7 +52,6 @@ class CreateTrip extends React.Component {
             }
         }))
     }
-
 
     handleTripComponent = () => {
         if (this.state.StepComponent === 1) {
@@ -111,8 +106,6 @@ class CreateTrip extends React.Component {
         }))
     }
 
-
-
     handleRemoveEvent = async (listevent, key) => {
         let AllDate = this.state.Trip.totalDate //new
         const newAllEvent = await AllDate[key].event.filter(Event => {
@@ -138,12 +131,10 @@ class CreateTrip extends React.Component {
         // }))
     }
 
-
-
     setAllDate = (AllTripDate) => {
         for (let index = 0; index < this.state.Trip.numberAddDate; index++) {
             let ShowBox = {
-                eventDate: momentjs(this.state.Trip.demoDate).add(index, 'day').format('DD/MM/YYYY'),
+                eventDate: momentjs(this.state.Trip.date).add(index, 'day').format('DD/MM/YYYY'),
                 event: []
             }
             AllTripDate.push(ShowBox)
@@ -166,7 +157,6 @@ class CreateTrip extends React.Component {
             await this.setState({ StepComponent: this.state.StepComponent + 1 })
         }
     }
-    
 
     handleNextComponentStep2 = async () => {
         if (this.state.StepComponent !== 3) {
@@ -178,7 +168,6 @@ class CreateTrip extends React.Component {
             await this.setState({ StepComponent: this.state.StepComponent - 1 })
         }
     }
-
 
     render() {
         return (

@@ -3,48 +3,13 @@ import Logo from '../../static/img/navlogo.png';
 import IconProfile from '../../static/img/logojourney.png';
 import "../../static/css/App.css";
 import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import '../../static/css/Nav.css'
-
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 
 // const NavWebPage = () => {
 class NavWebPage extends React.Component {
-
-    AlertRoom = () => {
-
-        Swal.fire({
-            title: 'อยากสร้างห้องงั้นหรอ?',
-            text: 'Login ก่อนสิ!',
-            showCancelButton: false,
-            confirmButtonColor: '#F37945',
-            confirmButtonText: 'Login'
-        })
-    }
-    AlertTrip = () => {
-
-        Swal.fire({
-            title: 'อยากสร้างทริปงั้นหรอ?',
-            text: 'Login ก่อนสิ!',
-            showCancelButton: false,
-            confirmButtonColor: '#F37945',
-            confirmButtonText: 'Login'
-        })
-    }
-    Alert = () => {
-        Swal.fire({
-            icon: "success",
-            title: 'สร้างห้องสำเร็จ',
-            text: 'ขอให้คุณสนุกกับการท่องเที่ยวนะ',
-            showCancelButton: true,
-            confirmButtonColor: '#31CC71',
-            confirmButtonText: 'เข้าสู่ห้อง',
-            cancelButtonText: 'กลับสู่หน้าหลัก',
-        })
-    }
-
-
 
     constructor() {
         super();
@@ -53,11 +18,7 @@ class NavWebPage extends React.Component {
             ComponentAuth: <div></div>
         }
     }
-    OpenSearch = async () => {
-        await this.setState({
-            showSearch: !this.state.showSearch
-        })
-    }
+
     componentDidMount() {
         let loadJWT = cookie.load('jwt');
         console.log(loadJWT)
@@ -76,12 +37,54 @@ class NavWebPage extends React.Component {
             })
         }
     }
-    
+
+    AlertRoom = () => {
+
+        Swal.fire({
+            title: 'อยากสร้างห้องงั้นหรอ?',
+            text: 'Login ก่อนสิ!',
+            showCancelButton: false,
+            confirmButtonColor: '#F37945',
+            confirmButtonText: 'Login'
+        })
+    }
+
+    AlertTrip = () => {
+
+        Swal.fire({
+            title: 'อยากสร้างทริปงั้นหรอ?',
+            text: 'Login ก่อนสิ!',
+            showCancelButton: false,
+            confirmButtonColor: '#F37945',
+            confirmButtonText: 'Login'
+        })
+    }
+
+    Alert = () => {
+        Swal.fire({
+            icon: "success",
+            title: 'สร้างห้องสำเร็จ',
+            text: 'ขอให้คุณสนุกกับการท่องเที่ยวนะ',
+            showCancelButton: true,
+            confirmButtonColor: '#31CC71',
+            confirmButtonText: 'เข้าสู่ห้อง',
+            cancelButtonText: 'กลับสู่หน้าหลัก',
+        })
+    }
+
+    OpenSearch = async () => {
+        await this.setState({
+            showSearch: !this.state.showSearch
+        })
+    }
+
+    onLogout = () => {
+        cookie.remove('jwt');
+        this.props.history.push('/Home');
+    }
 
     render() {
-
         return (
-
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark nav-color" style={{ color: "white" }}>
                     <a href="/Home" className="navbar-brand">
@@ -90,7 +93,6 @@ class NavWebPage extends React.Component {
                     <button type="button" className="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-
 
                     {
                         this.state.displayName === "" ? // state ? true : false
@@ -119,7 +121,7 @@ class NavWebPage extends React.Component {
                                     </li>
 
                                     <li className="nav-item mt-1">
-                                        <button type="button" 
+                                        <button type="button"
                                             className="btn btn-light ml-2 mr-2 text-dark round"
                                             onClick={this.AlertRoom}>
                                             Create Room
@@ -189,8 +191,8 @@ class NavWebPage extends React.Component {
                                                 className="dropdown-item">Joied Room</a>
                                             <a href="/"
                                                 className="dropdown-item">Owner Room</a>
-                                            <a href="/"
-                                                className="dropdown-item">Sign Out</a>
+                                            <button
+                                                className="dropdown-item" onClick={this.onLogout}>Sign Out</button>
                                         </div>
 
                                     </li>
@@ -198,13 +200,9 @@ class NavWebPage extends React.Component {
                             </div>
                     }
 
-
-
-
-
                 </nav>
             </div >
         )
     }
 }
-export default NavWebPage;
+export default withRouter(NavWebPage);
