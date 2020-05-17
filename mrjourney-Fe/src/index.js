@@ -23,7 +23,6 @@ import CheckTrip from './linepage/CheckTrip';
 
 ReactDOM.render(
     <Router>
-        
         <Switch>
             <Route path="/CheckTrip" >
                 <CheckTrip />
@@ -50,7 +49,6 @@ ReactDOM.render(
                 <App />
             </Route>
         </Switch>
-        
     </Router>
     ,document.getElementById('root')
 );

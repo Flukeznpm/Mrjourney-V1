@@ -20,13 +20,7 @@ class App extends React.Component {
         <Link to="/CreateJoinRoom" >
           <button>CreateJoinRoom</button>
         </Link>
-
-
-
-
       </div>
-
-
     );
   }
 }

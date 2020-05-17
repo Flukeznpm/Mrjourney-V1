@@ -8,10 +8,8 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 
-
-
-
 class Home extends React.Component {
+
     componentDidMount() {
         let search = window.location.search;
         let params = new URLSearchParams(search);
@@ -28,12 +26,12 @@ class Home extends React.Component {
             })
         }
     }
+
     render() {
         return (
             <div className="flex-wrapper">
                 <div className="top-page">
                     <NavWebPage />
-
                     <div className="content-page">
                         <div className="Carousel-Header">
                             <CarouselHeader></CarouselHeader>

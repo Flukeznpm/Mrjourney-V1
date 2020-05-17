@@ -4,6 +4,9 @@ import '../../static/css/Stepper.css';
 import LogoStep1 from '../../static/img/LogoStep1.png'
 import LogoStep2 from '../../static/img/LogoStep2.png'
 import LogoStep3 from '../../static/img/LogoStep3.png'
+import jwt from 'jsonwebtoken';
+import cookie from 'react-cookies';
+import { withRouter } from 'react-router-dom';
 
 
 class CreateTripStep1 extends React.Component {
@@ -28,20 +31,29 @@ class CreateTripStep1 extends React.Component {
                 'ศรีสะเกษ',
                 'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรปราการ', 'สมุทรสงคราม', 'สมุทรสาคร', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์',
                 'หนองคาย', 'หนองบัวลำภู', 'อ่างทอง', 'อุดรธานี', 'อุทัยธานี', 'อุตรดิตถ์', 'อุบลราชธานี', 'อำนาจเจริญ']
+        }
+    }
 
+    componentDidMount() {
+        let loadJWT = cookie.load('jwt');
+        console.log(loadJWT)
+        if (loadJWT == undefined) {
+            this.props.history.push('/Home');
+        } else {
+            var user = jwt.verify(loadJWT, 'secreatKey');
+            this.setState({
+                Linename: user.displayName,
+                Linepicture: user.pictureURL
+            })
         }
     }
 
     render() {
-
         return (
             <div >
-
                 <div className="top-page">
                     {/* <NavTripPage firsttitle={"ยินดีต้อนรับ"} secondtitle={"เริ่มสร้างแผนการท่องเที่ยว"} ></NavTripPage> */}
-
                     <div className=" container content-page py-2">
-
                         <div className="step-progress step-1 mt-3 pt-2" >
                             <ul>
                                 <li>
@@ -64,31 +76,28 @@ class CreateTripStep1 extends React.Component {
                         </div>
 
                         <div className="py-3">
-
                             <form>
                                 <div className="form-group">
-
                                     <div className="InputFrom">
                                         <div className="">
                                             <label htmlFor="exampleInputEmail1">ชื่อทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <input type='text' className="form-control"
-                                                name="demoTripName"
-                                                value={this.props.TripForm.demoTripName}
+                                                name="tripName"
+                                                value={this.props.TripForm.tripName}
                                                 onChange={(e) => this.props.handleForm(e)}
                                                 placeholder="ใส่ชื่อทริปท่องเที่ยว" />
                                         </div>
                                     </div>
-
                                     <div className="InputFrom">
                                         <div className="pt-4">
                                             <label htmlFor="exampleInputEmail1" >จังหวัด<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <div className="btn-group pl-5">
                                                 <select className=" btn province-btn dropdown-toggle"
-                                                    name="demoProvince"
-                                                    value={this.props.TripForm.demoProvince}
+                                                    name="province"
+                                                    value={this.props.TripForm.province}
                                                     onChange={(e) => this.props.handleForm(e)}
                                                     id="dropdownMenuButton"
-                                                    >
+                                                >
                                                     {this.state.thaiprovince.map((ThaiProvinceShow) => {
                                                         return (
                                                             <option value={ThaiProvinceShow}>{ThaiProvinceShow}</option>
@@ -102,8 +111,8 @@ class CreateTripStep1 extends React.Component {
                                         <div className="pt-4">
                                             <label htmlFor="exampleInputEmail1">เลือกวันเริ่มเดินทาง<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <input type='date' className="form-control"
-                                                name="demoDate"
-                                                value={this.props.TripForm.demoDate}
+                                                name="date"
+                                                value={this.props.TripForm.date}
                                                 onChange={(e) => this.props.handleForm(e)} />
                                         </div>
                                     </div>
@@ -115,7 +124,7 @@ class CreateTripStep1 extends React.Component {
                                         <div className="input-group">
 
                                             <span className="input-group-btn">
-                                                <button type="button" className="btn btn-default btn-number" 
+                                                <button type="button" className="btn btn-default btn-number"
                                                     onClick={this.props.handleFormRemoveDate}>
                                                     <span className="fas fa-minus"></span>
                                                 </button>
@@ -124,7 +133,7 @@ class CreateTripStep1 extends React.Component {
                                             <input type="text" name="numberAddDate" className="form-control input-number" value={this.props.TripForm.numberAddDate} min="1" max="10" />
 
                                             <span className="input-group-btn">
-                                                <button type="button" className="btn btn-default btn-number" 
+                                                <button type="button" className="btn btn-default btn-number"
                                                     onClick={this.props.handleFormAddDate}>
                                                     <span className="fas fa-plus" aria-hidden="true"></span>
                                                 </button>
@@ -154,6 +163,6 @@ class CreateTripStep1 extends React.Component {
         )
     }
 }
-export default CreateTripStep1;
+export default withRouter(CreateTripStep1);
 
 

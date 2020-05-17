@@ -4,9 +4,8 @@ import '../../static/css/App.css'
 import "../../static/css/Event-Trip.css";
 
 class CreateTripModal extends React.Component {
+
     render(props) {
-       
-        
         return (
             <div>
                 <Modal {...this.props} aria-labelledby="contained-modal-title-vcenter">

@@ -1,13 +1,17 @@
 import React from 'react';
-
 import '../../static/css/Stepper.css';
 import LogoStep1 from '../../static/img/LogoStep1.png'
 import LogoStep2 from '../../static/img/LogoStep2.png'
 import LogoStep3 from '../../static/img/LogoStep3.png'
 // import FooterTripPage from '../components/Footer/FooterTripPage';
 import FooterTripPage from '../../components/Footer/FooterTripPage'
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import cookie from 'react-cookies';
+import { withRouter } from 'react-router-dom';
 
 class CreateRoomStep2 extends React.Component {
+
     constructor() {
         super()
         this.state = {
@@ -24,6 +28,20 @@ class CreateRoomStep2 extends React.Component {
 
         }
     }
+
+    componentDidMount() {
+        let loadJWT = cookie.load('jwt');
+        console.log(loadJWT)
+        if (loadJWT == undefined) {
+            this.props.history.push('/Home');
+        } else {
+            var user = jwt.verify(loadJWT, 'secreatKey');
+            this.setState({
+                lineID: user.lineID,
+            })
+        }
+    }
+
     render() {
         return (
             <div>
@@ -140,4 +158,4 @@ class CreateRoomStep2 extends React.Component {
     }
 }
 
-export default CreateRoomStep2;
+export default withRouter(CreateRoomStep2);

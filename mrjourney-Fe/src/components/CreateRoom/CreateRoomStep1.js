@@ -1,13 +1,16 @@
 import React from 'react';
-
 import '../../static/css/Stepper.css';
 import LogoStep1 from '../../static/img/LogoStep1.png'
 import LogoStep2 from '../../static/img/LogoStep2.png'
 import LogoStep3 from '../../static/img/LogoStep3.png'
 // import FooterTripPage from '../components/Footer/FooterTripPage';
 import FooterTripPage from '../../components/Footer/FooterTripPage'
+import jwt from 'jsonwebtoken';
+import cookie from 'react-cookies';
+import { withRouter } from 'react-router-dom';
 
 class CreateRoomStep1 extends React.Component {
+
     constructor() {
         super()
         this.state = {
@@ -31,6 +34,20 @@ class CreateRoomStep1 extends React.Component {
 
         }
     }
+
+    componentDidMount() {
+        let loadJWT = cookie.load('jwt');
+        console.log(loadJWT)
+        if (loadJWT == undefined) {
+            this.props.history.push('/Home');
+        } else {
+            var user = jwt.verify(loadJWT, 'secreatKey');
+            this.setState({
+                lineID: user.lineID,
+            })
+        }
+    }
+
     render() {
         return (
             <div>
@@ -82,7 +99,7 @@ class CreateRoomStep1 extends React.Component {
                                     <div className="btn-group pl-5">
                                         <select className=" btn province-btn dropdown-toggle"
                                             name="Province"
-                                            value={this.props.RoomForm.Province}
+                                            value={this.props.RoomForm.province}
                                             onChange={(e) => this.props.handleForm(e)}
                                             id="dropdownMenuButton">
                                             {this.state.thaiprovince.map((ThaiProvinceShow) => {
@@ -97,7 +114,7 @@ class CreateRoomStep1 extends React.Component {
                                     <label for="exampleInputEmail1">วันเริ่มทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                     <input type="date" class="form-control"
                                         name="StartDate"
-                                        value={this.props.RoomForm.StartDate}
+                                        value={this.props.RoomForm.startDate}
                                         onChange={(e) => this.props.handleForm(e)}
                                     />
                                 </div>
@@ -105,7 +122,7 @@ class CreateRoomStep1 extends React.Component {
                                     <label for="exampleInputEmail1">วันสิ้นสุดทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                     <input type="date" class="form-control"
                                         name="EndDate"
-                                        value={this.props.RoomForm.EndDate}
+                                        value={this.props.RoomForm.endDate}
                                         onChange={(e) => this.props.handleForm(e)}
                                     />
                                 </div>
@@ -147,4 +164,4 @@ class CreateRoomStep1 extends React.Component {
     }
 }
 
-export default CreateRoomStep1;
+export default withRouter(CreateRoomStep1);
