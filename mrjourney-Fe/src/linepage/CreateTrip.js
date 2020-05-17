@@ -13,6 +13,7 @@ class CreateTrip extends React.Component {
         this.state = {
             StepComponent: 1,
             Trip: {
+                activeEvent: 0, 
                 tripName: '',
                 province: '',
                 date: '',
@@ -22,23 +23,23 @@ class CreateTrip extends React.Component {
         }
     }
 
-        // totalDate: [
-                //     {
-                //         eventDate: '2020-02-02',
-                //         event: [
-                //             {
-                //                 eventName: 'ดอยสุเทพ',
-                //                 eventTime: 0,
-                //                 eventType: 'กินข้าว'
-                //             },
-                //             {
-                //                 eventName: 'ดอยคำ',
-                //                 eventTime: 0,
-                //                 eventType: 'กินข้าว'
-                //             }
-                //         ]
-                //     },
-                // ]
+    // totalDate: [
+    //     {
+    //         eventDate: '2020-02-02',
+    //         event: [
+    //             {
+    //                 eventName: 'ดอยสุเทพ',
+    //                 eventTime: 0,
+    //                 eventType: 'กินข้าว'
+    //             },
+    //             {
+    //                 eventName: 'ดอยคำ',
+    //                 eventTime: 0,
+    //                 eventType: 'กินข้าว'
+    //             }
+    //         ]
+    //     },
+    // ]
 
     onhandleFormText = async (e) => {
         let value = e.target.value
@@ -69,12 +70,38 @@ class CreateTrip extends React.Component {
                 TripForm={this.state.Trip}
                 handleForm={this.onhandleFormText}
                 handleSetEvent={this.handleSetEvent}
+                handleSetActiveEvent={this.handleSetActiveEvent}
+                handleSetNotActiveEvent={this.handleSetNotActiveEvent}
                 handleRemoveEvent={this.handleRemoveEvent}
                 handlePreviousStep={this.handlePreviousComponent} ></CreateTripStep2>
         } if (this.state.StepComponent === 3) {
             return <CreateTripStep3 handleStep={this.handleNextComponent}></CreateTripStep3>
         }
     }
+
+
+    //>>>>active
+    handleSetActiveEvent = (key) => {
+        this.setState(prevState => ({
+            Trip: {
+                ...prevState.Trip,
+                activeEvent: key
+            },
+        }))
+    }
+
+
+    //>>>>NotActive
+    handleSetNotActiveEvent = (key) => {
+        this.setState(prevState => ({
+            Trip: {
+                ...prevState.Trip,
+                activeEvent: key-1
+            },
+        }))
+    }
+
+
 
     handleNumberAddDate = () => {
         this.setState(prevState => ({
@@ -112,16 +139,14 @@ class CreateTrip extends React.Component {
             return Event !== listevent
         })
         AllDate[key].event = newAllEvent
-        console.log('showdate',newAllEvent);
+        console.log('showdate', newAllEvent);
 
         this.setState(prevState => ({
-            Trip:{
+            Trip: {
                 ...prevState.Trip,
                 totalDate: AllDate
-            } 
+            }
         }))
-
-
         // AllDate[key].event.push(Event) //add
         // this.setState(prevState => ({
         //     Trip: {
