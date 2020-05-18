@@ -112,6 +112,7 @@ async function createRoom(datas) {
             let saveUserRef = db.collection('AccountProfile').doc(datas.lineID);
             saveUserRef.set({
                 lineID: datas.lineID,
+                displayName : datas.displayName 
                 // bio: datas.bio,
                 // birthday: datas.birthday,
                 // gender: datas.gender,
@@ -125,6 +126,8 @@ async function createRoom(datas) {
             let saveRoomID = db.collection('Room').doc(genRoomID)
             saveRoomID.set({
                 roomID: genRoomID,
+                ownerRoom : datas.displayName ,
+                ownerPicRoom : datas.pictureURL ,
                 roomName: datas.roomName,
                 // picRoom: datas.picRoom,
                 province: datas.province,
