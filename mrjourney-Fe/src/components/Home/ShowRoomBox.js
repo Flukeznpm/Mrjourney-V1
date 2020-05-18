@@ -7,11 +7,13 @@ import Logo from '../../static/img/logojourney.png';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import momentjs from 'moment'
+import MoreRoomDetailModal from '../Modal/MoreRoomDetailModal';
 class ShowRoomBox extends React.Component {
 
     constructor() {
         super()
         this.state = {
+            addModalShow: false,
             room: [
                 {
                     // roomID: '',
@@ -44,7 +46,7 @@ class ShowRoomBox extends React.Component {
         // console.log('Data from state.room : ' + this.state.room);
     }
 
-    AlertJoinWrongCondition= () => {
+    AlertJoinWrongCondition = () => {
 
         Swal.fire({
             icon: 'error',
@@ -101,23 +103,11 @@ class ShowRoomBox extends React.Component {
         })
     }
 
-    //  AlertTester() {
-    //     const getAlert = () => (
-    //         <Swal
-    //             success
-    //             title="Woot!"
-    //             onConfirm={() => this.hideAlert()}
-    //         >
-    //             HelloWorld
-    //         </Swal>
-    //     );
-    //      this.setState({
-    //          alert: getAlert()
-    //     })
-    // }
-    // hideAlert(){
-    //     console.log('Hiding Alert');
-    // }
+    addModalClose = () => {
+        this.setState({
+            addModalShow: false,
+        })
+    }
 
     render() {
         return (
@@ -205,7 +195,7 @@ class ShowRoomBox extends React.Component {
                                                             <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinRoom}>เข้าร่วม</button>
                                                         </div>
                                                         <div className="button-search">
-                                                            <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
+                                                            <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} ></i>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -278,7 +268,7 @@ class ShowRoomBox extends React.Component {
                                                     <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinWrongCondition}>เข้าร่วม</button>
                                                 </div>
                                                 <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
+                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }}></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -314,7 +304,7 @@ class ShowRoomBox extends React.Component {
                                                     วันที่ : &nbsp;
                                                             <button
                                                         type="button" class="show-details-btn btn p-1 " style={{ fontSize: "10px" }}>
-                                                        {momentjs('2020-06-02').format('DD/MM/YYYY')}
+                                                        {momentjs('2020-06-08').format('DD/MM/YYYY')}
                                                         <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                                     </button>
                                                             &nbsp; - &nbsp;
@@ -347,7 +337,14 @@ class ShowRoomBox extends React.Component {
                                                     <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinRoomDontAcc}>เข้าร่วม</button>
                                                 </div>
                                                 <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} onClick={this.AlertRoomDetails}></i>
+                                                    <button type="button" className="btn"
+                                                        onClick={() => this.setState({ addModalShow: true })}>
+                                                        <i class="fas fa-search fa-2x" style={{ color: "#F37945" }}></i>
+                                                    </button>
+                                                    <MoreRoomDetailModal
+                                                        show={this.state.addModalShow}
+                                                        onHide={this.addModalClose} //use for closeButton
+                                                    ></MoreRoomDetailModal>
                                                 </div>
                                             </div>
                                         </div>
