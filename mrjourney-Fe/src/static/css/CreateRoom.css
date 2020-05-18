@@ -15,14 +15,14 @@
   
 
 /* Show-ageCongition */
-  .ageCondition-btn {
+  .show-details-btn {
     color: honeydew;
     background-color: rgb(230, 111, 15);
 
   text-align: center; 
   border-radius: 5px;
   }
-  .ageCongition-btn:hover {
+  .show-details-btn:hover {
     color: honeydew;
     background-color: rgb(230, 111, 15);
   

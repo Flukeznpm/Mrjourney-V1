@@ -15,3 +15,28 @@
   .button-search{
     cursor: pointer;
   }
+  .show-details-btn {
+    color: honeydew;
+    background-color: rgb(230, 111, 15);
+
+  text-align: center; 
+  border-radius: 5px;
+  }
+  .show-details-btn:hover {
+    color: honeydew;
+    background-color: rgb(230, 111, 15);
+  
+  }
+  .maxMember-btn {
+    color: honeydew;
+    background-color: rgb(230, 111, 15);
+    width: 35px; 
+  height: 35px; 
+  text-align: center; 
+  border-radius: 20px;
+  }
+  .maxMember-btn:hover {
+    color: honeydew;
+    background-color: rgb(230, 111, 15);
+  
+  }

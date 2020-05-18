@@ -45,7 +45,7 @@ class NavWebPage extends React.Component {
             text: 'Login ก่อนสิ!',
             showCancelButton: false,
             confirmButtonColor: '#F37945',
-            confirmButtonText: 'Login'
+            confirmButtonText:  '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>'
         })
     }
 
@@ -56,7 +56,7 @@ class NavWebPage extends React.Component {
             text: 'Login ก่อนสิ!',
             showCancelButton: false,
             confirmButtonColor: '#F37945',
-            confirmButtonText: 'Login'
+            confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>'
         })
     }
 
@@ -199,7 +199,7 @@ class NavWebPage extends React.Component {
                                 </ul>
                             </div>
                     }
-
+                        
                 </nav>
             </div >
         )

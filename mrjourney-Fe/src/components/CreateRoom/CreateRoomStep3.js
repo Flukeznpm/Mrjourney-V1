@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import '../../static/css/Stepper.css'; 
+import '../../static/css/App.css'; 
 import '../../static/css/CreateRoom.css'; 
 import LogoStep1 from '../../static/img/LogoStep1.png'
 import LogoStep2 from '../../static/img/LogoStep2.png'
@@ -11,6 +12,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import momentjs from 'moment'
+import Swal from 'sweetalert2';
 
 class CreateRoomStep3 extends React.Component {
 
@@ -66,6 +68,15 @@ class CreateRoomStep3 extends React.Component {
             .then(res => {
                 console.log(res)
             });
+            Swal.fire({
+                icon: 'success',
+                title: 'สร้างห้องสำเร็จ!',
+                text: 'ขอให้คุณสนุกกับการท่องเที่ยว',
+                showCancelButton: true,
+                confirmButtonText: '<a href="/Joined-Room" id="alert-confirm-button">เข้าสู่ห้อง</a>',
+                confirmButtonColor: '#31CC71',
+                cancelButtonText: '<a href="/Home" id="alert-confirm-button">กลับสู่หน้าหลัก</a>',
+            })
     }
 
     render() {
@@ -118,13 +129,13 @@ class CreateRoomStep3 extends React.Component {
                                                 <div className="py-2">
                                                     <span className="Show-Date pl-3 pr-3 ">
                                                     <button
-                                                        type="button" class="ageCondition-btn btn p-1 ">
+                                                        type="button" class="show-details-btn btn p-1 ">
                                                         {momentjs(this.props.RoomForm.startDate).format('DD/MM/YYYY')}
                                                         <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                                     </button>  
                                                     <span className="pl-2 p-2">-</span>
                                                     <button
-                                                        type="button" class="ageCondition-btn btn p-1">
+                                                        type="button" class="show-details-btn btn p-1">
                                                         {momentjs(this.props.RoomForm.endDate).format('DD/MM/YYYY')}
                                                         <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                                     </button>
@@ -190,8 +201,10 @@ class CreateRoomStep3 extends React.Component {
                                         </div>
                                         <div className="ConfirmButton text-center">
                                         
-                                        <button type="button" className="btn btn-warning text-white mr-3" onClick={this.props.handlePreviousStep}>ย้อนกลับ</button>
-                                        <button type="button" className="btn btn-warning text-white ml-3" onClick={this.handleSubmit}>เสร็จสิ้น</button>
+                                        <button type="button" className="btn btn-warning text-white mr-3" 
+                                        onClick={this.props.handlePreviousStep}>ย้อนกลับ</button>
+                                        <button type="button" className="btn btn-warning text-white ml-3" 
+                                        onClick={this.handleSubmit}>เสร็จสิ้น</button>
                                        
                                          </div>
                                     </div>

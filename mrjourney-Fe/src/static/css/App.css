@@ -33,3 +33,9 @@ body {
     margin: 20px 60px 30px 60px;
 }
 /* .ant-steps-item-process .ant-steps-item-icon { background: #F37945; border-color:#F37945;} */
+
+
+#alert-confirm-button{
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
