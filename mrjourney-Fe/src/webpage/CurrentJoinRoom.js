@@ -9,7 +9,7 @@ import BgSlide1 from '../static/img/pr-01.png';
 import Logo from '../static/img/logojourney.png';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 
-class MyOwnerRoom extends React.Component {
+class CurrentJoinRoom extends React.Component {
 
     render() {
         return (
@@ -93,4 +93,4 @@ class MyOwnerRoom extends React.Component {
     }
 }
 
-export default MyOwnerRoom;
+export default CurrentJoinRoom;
