@@ -20,7 +20,8 @@ class CreateRoomStep3 extends React.Component {
         super();
         this.state = {
             lineID: '',
-            linename: '',
+            displayName: '',
+            pictureURL:'',
             roomID: '',
             roomName: '',
             province: '',
@@ -43,7 +44,8 @@ class CreateRoomStep3 extends React.Component {
             var user = jwt.verify(loadJWT, 'secreatKey');
             this.setState({
                 lineID: user.lineID,
-                linename: user.displayName
+                displayName: user.displayName,
+                pictureURL : user.pictureURL
             })
         }
     }
@@ -52,7 +54,8 @@ class CreateRoomStep3 extends React.Component {
         e.preventDefault();
         let dataRoom = {
             lineID: this.state.lineID,
-            linename: this.state.linename,
+            displayName: this.state.displayName,
+            pictureURL:this.state.pictureURL,
             roomID: this.state.roomID,
             roomName: this.props.RoomForm.roomName,
             province: this.props.RoomForm.province,

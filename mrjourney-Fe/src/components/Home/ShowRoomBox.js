@@ -149,7 +149,7 @@ class ShowRoomBox extends React.Component {
                                                             {room.roomName} &nbsp;
                                                              <button
                                                                 type="button" class="maxMember-btn btn p-0 ml-1 "
-                                                                style={{ fontSize: "12px" }} > 
+                                                                style={{ fontSize: "12px" }} >
                                                                 0/
                                                                 {room.maxMember}
                                                             </button>
@@ -206,8 +206,8 @@ class ShowRoomBox extends React.Component {
                                                                 </button>
                                                             </span>
                                                         </div>
-                                                        <span className="pl-1 pr-1"><img src={Logo} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
-                                                        <span style={{ fontSize: "13px" }}>ผู้สร้าง chutikann</span>
+                                                        <span className="pl-1 pr-1"><img src={room.ownerPicRoom} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
+                                                        <span style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoom}</span>
                                                     </div>
                                                     <div className="navbar pt-2">
                                                         <div>
