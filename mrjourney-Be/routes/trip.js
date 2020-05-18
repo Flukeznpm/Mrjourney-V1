@@ -1,12 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var firebase = require('firebase-admin');
-var serviceAccountKey = require('../serviceAccountKey.json')
-
-firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccountKey),
-    databaseURL: "https://test-firebase-c50da.firebaseio.com"
-});
 
 let db = firebase.firestore()
 
@@ -49,7 +43,8 @@ router.put('/deleteTrip', function (req, res, next) {
 //-------------------------------------------------------------------------------------------------------------//
 
 
-async function showAllTrip(lineGroupID, lineID) {
+// async function showAllTrip(lineGroupID, lineID) {
+async function showAllTrip() {
     // ** สิ่งที่ติดขัด : กรณีที่ user คนอื่นๆ (ไม่ใช่เจ้าของห้อง) จะ check ยังไง ? **
     let dataList = [];
     let tripID;
@@ -89,7 +84,6 @@ async function showAllTrip(lineGroupID, lineID) {
 
 
 
-
 // ** : ต้อง if else ว่าถ้าดูแบบ All trip ให้วน loop แสดงข้อมูล trip per day ทั้งหมด **
 // function showTripPerDay(trip) {
 //     let dataPerDay = [];
@@ -110,7 +104,6 @@ async function showAllTrip(lineGroupID, lineID) {
 //     }
 //     return dataPerDay
 // }
-
 
 
 

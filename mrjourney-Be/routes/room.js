@@ -1,12 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var firebase = require('firebase-admin');
-var serviceAccountKey = require('../serviceAccountKey.json')
-
-firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccountKey),
-    databaseURL: "https://test-firebase-c50da.firebaseio.com"
-});
 
 let db = firebase.firestore()
 
