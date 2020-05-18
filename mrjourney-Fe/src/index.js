@@ -15,7 +15,8 @@ import MyOwnerRoom from './webpage/MyOwnerRoom';
 import CurrentJoinRoom from './webpage/CurrentJoinRoom';
 import Profile from './webpage/Profile';
 import CheckTrip from './linepage/CheckTrip';
-
+import LoginPage from './webpage/LoginPage';
+import FirstTimeLogin from './webpage/FirstTimeLogin';
 
 // ReactDOM.render
 // (<App />, 
@@ -48,6 +49,12 @@ ReactDOM.render(
             </Route>
             <Route path="/CurrentJoinRoom">
                 <CurrentJoinRoom/>
+            </Route>
+            <Route path="/LoginPage">
+                <LoginPage/>
+            </Route>
+            <Route path="/FirstTimeLogin">
+                <FirstTimeLogin/>
             </Route>
             <Route path="/">
                 <App />
