@@ -3,7 +3,7 @@ var router = express.Router();
 var firebase = require('firebase-admin');
 
 let db = firebase.firestore()
-
+ 
 // GET /room  (แสดงroomทั้งหมด)
 router.get('/', async function (req, res, next) {
     let RoomList = await showRoom();
@@ -24,7 +24,7 @@ router.put('/editRoom', function (req, res, next) {
     })
 });
 // DELETE /room/deleteRoom  (ลบroom)
-router.put('/deleteRoom', function (req, res, next) {
+router.delete('/deleteRoom', function (req, res, next) {
     deleteRoom(req.body)
     res.status(200).json({
         message: "Delete Room Success",

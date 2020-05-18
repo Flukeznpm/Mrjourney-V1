@@ -32,7 +32,7 @@ router.put('/editTrip', function (req, res, next) {
     })
 });
 // DELETE /trip/deleteTrip  (ลบทริป)
-router.put('/deleteTrip', function (req, res, next) {
+router.delete('/deleteTrip', function (req, res, next) {
     deleteTrip(req.body)
     res.status(200).json({
         message: "Delete Trip Success",
