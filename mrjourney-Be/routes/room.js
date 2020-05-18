@@ -94,6 +94,8 @@ async function createRoom(datas) {
             let saveRoomID = db.collection('Room').doc(genRoomID)
             saveRoomID.set({
                 roomID: genRoomID,
+                ownerRoom : datas.displayName ,
+                ownerPicRoom : datas.pictureURL ,
                 roomName: datas.roomName,
                 // picRoom: datas.picRoom,
                 province: datas.province,
