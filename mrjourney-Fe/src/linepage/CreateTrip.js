@@ -13,13 +13,14 @@ class CreateTrip extends React.Component {
         this.state = {
             StepComponent: 1,
             Trip: {
-                activeEvent: 0, 
+                activeEvent: 0,
                 tripName: '',
                 province: '',
                 date: '',
                 numberAddDate: 1,
                 totalDate: [{}]
             }
+
         }
     }
 
@@ -75,7 +76,9 @@ class CreateTrip extends React.Component {
                 handleRemoveEvent={this.handleRemoveEvent}
                 handlePreviousStep={this.handlePreviousComponent} ></CreateTripStep2>
         } if (this.state.StepComponent === 3) {
-            return <CreateTripStep3 handleStep={this.handleNextComponent}></CreateTripStep3>
+            return <CreateTripStep3
+                handleStep={this.handleNextComponent}
+                TripForm={this.state.Trip}></CreateTripStep3>
         }
     }
 
@@ -96,7 +99,7 @@ class CreateTrip extends React.Component {
         this.setState(prevState => ({
             Trip: {
                 ...prevState.Trip,
-                activeEvent: key-1
+                activeEvent: key - 1
             },
         }))
     }

@@ -80,7 +80,7 @@ class CreateTripStep1 extends React.Component {
                                 <div className="col-2"></div>
                                 <div className="col-8">
                                     <div className="py-3">
-
+            
                                         <form>
                                             <div className="form-group">
                                                 <div className="InputFrom">
@@ -119,6 +119,7 @@ class CreateTripStep1 extends React.Component {
                                                             name="date"
                                                             value={this.props.TripForm.date}
                                                             onChange={(e) => this.props.handleForm(e)} />
+                                                            
                                                     </div>
                                                 </div>
                                                 {/* <InputAddDate></InputAddDate> */}

@@ -1,3 +1,15 @@
 .bg-showmember {
     background-color: #f7f7f7;
 }
+.showmember img{
+width: 45px;
+height: 45px;
+}
+.showmember {
+margin-top: 30px;
+margin-bottom: 30px;
+
+}
+.showmembers-list {
+        font-size: 18px;
+}

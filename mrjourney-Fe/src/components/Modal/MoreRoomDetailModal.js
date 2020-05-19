@@ -21,7 +21,12 @@ class MoreRoomDetailModal extends React.Component {
                         <div className="container">
                             <img class="d-block w-100" src={BgSlide1} alt="First slide" />
                             <div className="pt-3" style={{ fontSize: "20px", fontWeight: 'bold' }}>
-                                Trip MockUp 02
+                                Trip MockUp 02 &nbsp;
+                                <button
+                                    type="button" class="maxMember-btn btn p-0 ml-1 "
+                                    style={{ fontSize: "12px" }} >
+                                    0/5
+                                </button>
                             </div>
                             <div className="details py-1">
                                 <span className="row">
@@ -66,11 +71,15 @@ class MoreRoomDetailModal extends React.Component {
                             </div>
                             <div className="trip-detail-modal py-1">
                                 รายละเอียดแผนการท่องเที่ยว
-                                <div class="alert" style={{width:"100%",height:"200px",borderColor:"orange"}}>
+                                {/* <div class="alert" style={{width:"100%",height:"200px",borderColor:"orange"}}>
                                     แผนการเดินทางวันที่ 8
                                     <p/>แผนการเดินทางวันที่ 9
                                     <p/>แผนการเดินทางวันที่ 10
-                                </div>
+                                </div> */}
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+
+                                >
+                                </textarea>
                             </div>
                         </div>
                     </Modal.Body>

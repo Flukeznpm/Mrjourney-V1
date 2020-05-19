@@ -165,17 +165,20 @@ class CreateTripStep2 extends React.Component {
                                 <div className="col-2"></div>
                                 <div className="col-8">
 
-                                    <div className="header-trip">
+                                    {/* <div className="header-trip">
                                         <h3>ชื่อทริป : {this.props.TripForm.tripName}</h3>
                                         <h4>จังหวัด : {this.props.TripForm.province}</h4>
-                                    </div>
+                                    </div> */}
                                     <div className="trip-perday-box py-3">
 
-                                        <div className="text-center py-2">
-                                            <span className="show-date-to-end">
-                                                <span className="p-1"> {momentjs(this.props.TripForm.date).format('DD/MM/YYYY')}
-                                                </span>
-                                                <span className="p-1">{momentjs(this.props.TripForm.date).add(this.props.TripForm.numberAddDate - 1, 'day').format('DD/MM/YYYY')}
+                                        <div className="text-center " style={{paddingBottom:"25px"}}>
+                                            <span className="show-date-to-end ">
+                                                <span className="mt-2 mb-2 ml-3 mr-3" style={{fontWeight:"normal"}}>
+                                                    <span className="p-1"> {momentjs(this.props.TripForm.date).format('DD/MM/YYYY')}
+                                                    </span>
+                                                    &nbsp;-&nbsp;
+                                                    <span className="p-1">{momentjs(this.props.TripForm.date).add(this.props.TripForm.numberAddDate - 1, 'day').format('DD/MM/YYYY')}
+                                                    </span>
                                                 </span>
                                             </span>
                                         </div>

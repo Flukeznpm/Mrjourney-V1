@@ -4,6 +4,11 @@ import '../static/css/App.css';
 import CarouselHeader from '../components/Home/CarouselHeader';
 import ShowMembers from '../components/JoinedRoom/ShowMembers';
 import RoomDetails from '../components/JoinedRoom/RoomDetails';
+import BgSlide1 from '../static/img/pr-01.png';
+
+import FooterWebPage from '../components/Footer/FooterWebPage';
+
+
 
 class JoinedRoom extends React.Component {
     render() {
@@ -14,20 +19,23 @@ class JoinedRoom extends React.Component {
                         <NavWebPage></NavWebPage>
                     </div>
                     <div className="content-page">
-                        <div className="Carousel-Header">
-                            <CarouselHeader></CarouselHeader>
+                        <div>
+                            <img class="d-block w-100" src={BgSlide1} alt="First slide" />
                         </div>
                         <div className="Details-JoinedRoom">
-                            <div className="col-12">
-                                <div className="row">
-                                    <RoomDetails></RoomDetails>
-                                    <ShowMembers></ShowMembers>
+                            <div className="container">
+                                <div className="col-12">
+                                    <div className="row">
+                                        <RoomDetails></RoomDetails>
+                                        <ShowMembers></ShowMembers>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="buttom-page">
+                    <FooterWebPage></FooterWebPage>
                 </div>
             </div>
         )

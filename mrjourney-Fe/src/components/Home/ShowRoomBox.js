@@ -30,8 +30,7 @@ class ShowRoomBox extends React.Component {
                     // status: ''
                 }
             ],
-            myacc: 'guest',
-            myaccLog: 'Acc',
+
         }
     }
 
@@ -74,17 +73,15 @@ class ShowRoomBox extends React.Component {
     }
 
     AlertJoinRoomDontAcc = () => {
-        if (this.state.myacc === 'guest') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'คุณยังไม่ได้ Login!',
-                text: 'กรุณาทำการ Login ก่อนทำรายการ',
-                showCancelButton: true,
-                confirmButtonText: 'Login',
-                confirmButtonColor: '#F37945',
-                cancelButtonText: 'กลับสู่หน้าหลัก',
-            })
-        }
+        Swal.fire({
+            icon: 'warning',
+            title: 'คุณยังไม่ได้ Login!',
+            text: 'กรุณาทำการ Login ก่อนทำรายการ',
+            showCancelButton: true,
+            confirmButtonText: 'Login',
+            confirmButtonColor: '#F37945',
+            cancelButtonText: 'กลับสู่หน้าหลัก',
+        })
     }
 
     AlertRoomDetails = () => {
@@ -195,7 +192,14 @@ class ShowRoomBox extends React.Component {
                                                             <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinRoom}>เข้าร่วม</button>
                                                         </div>
                                                         <div className="button-search">
-                                                            <i class="fas fa-search fa-2x" style={{ color: "#F37945" }} ></i>
+                                                            <button type="button" className="btn"
+                                                                onClick={() => this.setState({ addModalShow: true })}>
+                                                                <i class="fas fa-search fa-2x" style={{ color: "#F37945" }}></i>
+                                                            </button>
+                                                            <MoreRoomDetailModal
+                                                                show={this.state.addModalShow}
+                                                                onHide={this.addModalClose} //use for closeButton
+                                                            ></MoreRoomDetailModal>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -268,7 +272,14 @@ class ShowRoomBox extends React.Component {
                                                     <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinWrongCondition}>เข้าร่วม</button>
                                                 </div>
                                                 <div className="button-search">
-                                                    <i class="fas fa-search fa-2x" style={{ color: "#F37945" }}></i>
+                                                    <button type="button" className="btn"
+                                                        onClick={() => this.setState({ addModalShow: true })}>
+                                                        <i class="fas fa-search fa-2x" style={{ color: "#F37945" }}></i>
+                                                    </button>
+                                                    <MoreRoomDetailModal
+                                                        show={this.state.addModalShow}
+                                                        onHide={this.addModalClose} //use for closeButton
+                                                    ></MoreRoomDetailModal>
                                                 </div>
                                             </div>
                                         </div>

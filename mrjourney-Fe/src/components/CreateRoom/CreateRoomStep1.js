@@ -82,6 +82,12 @@ class CreateRoomStep1 extends React.Component {
                                 <form>
                                     <div className="form-group">
                                         <div className="container">
+
+
+
+
+
+
                                             <div class="pt-4">
                                                 <label for="exampleInputEmail1">ชื่อทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                                 <input type="text" class="form-control"
@@ -90,13 +96,23 @@ class CreateRoomStep1 extends React.Component {
                                                     onChange={(e) => this.props.handleForm(e)}
                                                     placeholder="ใส่ชื่อทริปของคุณ" />
                                             </div>
-                                            <div class="pt-4">
+                                            <div class="pt-4 ">
                                                 <label for="exampleInputEmail1">หน้าปกทริป<span className="p-1" style={{ color: "red", fontSize: "12px" }}>(ขนาดไม่เกิน 800px)</span></label>
-                                                <input type="file" class="form-control-file"
+                                                {/* <input type="file" class="form-control-file"
                                                     name="roomCover"
                                                     value={this.props.RoomForm.roomCover}
                                                     onChange={(e) => this.props.handleForm(e)}
-                                                    placeholder="ใส่ชื่อทริปของคุณ" />
+                                                    placeholder="ใส่ชื่อทริปของคุณ" /> */}
+
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="validatedCustomFile"
+                                                        name="roomCover"
+                                                        value={this.props.RoomForm.roomCover}
+                                                        onChange={(e) => this.props.handleForm(e)}
+                                                    />
+                                                    <label class="custom-file-label" for="validatedCustomFile" >{this.props.RoomForm.roomCover}</label>
+                                                </div>
+
                                             </div>
                                             <div class="pt-4">
                                                 <label for="exampleInputEmail1" >จังหวัด<span className="p-1" style={{ color: "red" }}>*</span></label>
@@ -142,11 +158,20 @@ class CreateRoomStep1 extends React.Component {
                                             </div>
                                             <div class="pt-4">
                                                 <label for="exampleInputEmail1">คิวอาร์โค้ด<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                <input type="file" class="form-control-file"
+                                                {/* <input type="file" class="form-control-file"
                                                     name="qrCode"
                                                     value={this.props.RoomForm.qrCode}
                                                     onChange={(e) => this.props.handleForm(e)}
-                                                />
+                                                /> */}
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="validatedCustomFile"
+                                                        name="qrCode"
+                                                        value={this.props.RoomForm.qrCode}
+                                                        onChange={(e) => this.props.handleForm(e)}
+                                                    />
+                                                    <label class="custom-file-label" for="validatedCustomFile" >{this.props.RoomForm.qrCode}</label>
+                                                </div>
+
                                             </div>
 
 

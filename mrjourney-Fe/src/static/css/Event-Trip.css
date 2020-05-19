@@ -61,3 +61,11 @@
 .event-btn {
   border-radius: 50%;
 } */
+
+/* showdate */
+.show-date-to-end{
+  color: rgb(26, 26, 26);
+  border: solid rgb(230, 111, 15);
+  border-radius: 13px;
+  
+}
