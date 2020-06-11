@@ -25,7 +25,7 @@ router.get('/', function (req, res, next) {
     showTripPerDay();
     res.status(200).json(data);
 })
-POST /trip/createTrip   (เก็บข้อมูลทริป)
+// POST /trip/createTrip   (เก็บข้อมูลทริป)
 router.post('/createTrip', async function (req, res, next) {
     let datas = req.body
     await createTripList(datas);
