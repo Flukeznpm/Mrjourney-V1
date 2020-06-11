@@ -33,7 +33,7 @@ router.post("/", function (req, resp) {
                 email: decoded.email,
                 pictureURL: decoded.picture
             }
-            console.log(dataLine)
+            console.log('Data after Decode : ' + dataLine)
             var token = jwt.sign(dataLine, 'secreatKey');
             resp.json(token)
         })
@@ -44,36 +44,5 @@ router.post("/", function (req, resp) {
     request.write(data)
     request.end()
 })
-
-module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-router.get('/', function (req, res, next) {
-    res.send('login api');
-});
 
 module.exports = router;

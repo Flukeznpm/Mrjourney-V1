@@ -3,12 +3,12 @@ var router = express.Router();
 var firebase = require('firebase-admin');
 
 let db = firebase.firestore()
- 
-// GET /room  (แสดงroomทั้งหมด)
+
+// GET /room  (แสดง room ทั้งหมดใน feed page)
 router.get('/', async function (req, res, next) {
-    let RoomList = await showRoom();
+    let RoomList = await getAllRoom();
     res.status(200).json(RoomList);
-})
+});
 // POST /room/createRoom  (สร้าง room)
 router.post('/createRoom', async function (req, res, next) {
     await createRoom(req.body);
@@ -16,14 +16,14 @@ router.post('/createRoom', async function (req, res, next) {
         message: "Create Room Success",
     })
 });
-// PUT /room/editRoom (แก้ไขข้อมูลroom)
-router.put('/editRoom', function (req, res, next) {
-    editRoom(req.body)
+// PUT /room/editRoom (แก้ไขข้อมูล room)
+router.put('/editRoom', async function (req, res, next) {
+    await updateRoom(req.body)
     res.status(201).json({
         message: "Edit Room Success",
     })
 });
-// DELETE /room/deleteRoom  (ลบroom)
+// DELETE /room/deleteRoom  (ลบ room)
 router.delete('/deleteRoom', function (req, res, next) {
     deleteRoom(req.body)
     res.status(200).json({
@@ -31,11 +31,7 @@ router.delete('/deleteRoom', function (req, res, next) {
     })
 });
 
-//-------------------------------------------------------------------------------------------------------------//
-
-
-
-async function showRoom() {
+async function getAllRoom() {
     let RoomList = [];
     let showAllRoomRef = db.collection("Room");
     await showAllRoomRef.get().then(snapshot => {
@@ -49,8 +45,6 @@ async function showRoom() {
     console.log(RoomList)
     return RoomList;
 }
-
-
 
 async function generateRoomID() {
     function ran() {
@@ -67,7 +61,6 @@ async function generateRoomID() {
         let roomID = 'R_' + id;
         let query = await CheckRoomIDRef.doc(roomID).get()
             .then(doc => {
-                // ถ้าไม่มีข้อมูลอยู่
                 if (!doc.exists) {
                     checkDocumentisEmpty = false;
                     result = 'R_' + id;
@@ -77,8 +70,6 @@ async function generateRoomID() {
     } while (checkDocumentisEmpty == true)
     return result;
 }
-
-
 
 async function createRoom(datas) {
     let genRoomID = await generateRoomID();
@@ -94,8 +85,9 @@ async function createRoom(datas) {
             let saveRoomID = db.collection('Room').doc(genRoomID)
             saveRoomID.set({
                 roomID: genRoomID,
-                ownerRoom : datas.displayName ,
-                ownerPicRoom : datas.pictureURL ,
+                lineID: datas.lineID,
+                ownerRoom: datas.displayName,
+                ownerPicRoom: datas.pictureURL,
                 roomName: datas.roomName,
                 // picRoom: datas.picRoom,
                 province: datas.province,
@@ -112,7 +104,7 @@ async function createRoom(datas) {
             let saveUserRef = db.collection('AccountProfile').doc(datas.lineID);
             saveUserRef.set({
                 lineID: datas.lineID,
-                displayName : datas.displayName 
+                displayName: datas.displayName
                 // bio: datas.bio,
                 // birthday: datas.birthday,
                 // gender: datas.gender,
@@ -126,8 +118,9 @@ async function createRoom(datas) {
             let saveRoomID = db.collection('Room').doc(genRoomID)
             saveRoomID.set({
                 roomID: genRoomID,
-                ownerRoom : datas.displayName ,
-                ownerPicRoom : datas.pictureURL ,
+                lineID: datas.lineID,
+                ownerRoom: datas.displayName, 
+                ownerPicRoom: datas.pictureURL,
                 roomName: datas.roomName,
                 // picRoom: datas.picRoom,
                 province: datas.province,
@@ -144,11 +137,9 @@ async function createRoom(datas) {
     });
 }
 
-
-
-function editRoom(datas) {
-    let editRoom = db.collection('Room').doc(data.roomID);
-    editRoom.update({
+async function updateRoom(datas) {
+    let editRoomRef = await db.collection('Room').doc(datas.roomID);
+    editRoomRef.update({
         roomName: datas.roomName,
         // picRoom: datas.picRoom,
         province: datas.province,
@@ -167,21 +158,26 @@ function editRoom(datas) {
     });
 }
 
-
-
 async function deleteRoom(datas) {
-    await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(datas.roomID).delete()
-        .then(function () {
-            console.log("RoomID in AccountProfile successfully deleted!");
-        }).catch(function (error) {
-            console.error("Error deleted document in AccountProfile: ", error);
-        });
+    await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(datas.roomID).delete();
+
+    // จะลบข้อมูลของ Member ทั้งหมดใน room ?
+    // await db.collection('Room').doc(datas.roomID).collection('Member').doc().delete();
+
     await db.collection('Room').doc(datas.roomID).delete()
         .then(function () {
             console.log("Room successfully deleted!");
         }).catch(function (error) {
             console.error("Error deleted document in Room: ", error);
         });
+}
+
+async function setRoomHistory(datas) {
+
+}
+
+async function queryRoom(datas) {
+
 }
 
 module.exports = router;
