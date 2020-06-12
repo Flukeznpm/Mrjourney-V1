@@ -1,20 +1,79 @@
-.nav-color{
-background-color: #F37945;
+.nav-color {
+    background-color: #F37945;
 }
-.round{
+
+.nav-color-2 {}
+
+.round {
     border-radius: 18px;
 }
 
-.nav-color-owner{
-color: #F37945;
-border-color: #F37945;
- }
-.nav-color-owner:hover{
-color: #F37945;
-       
- }
-.round2{
+.nav-color-owner {
+    color: #F37945;
+    border-color: #F37945;
+}
+
+.nav-color-owner:hover {
+    color: #F37945;
+}
+
+.round2 {
     border-radius: 12px;
     width: 15%;
-     }
-    
+}
+
+.signout-btn {
+    cursor: pointer;
+}
+
+.a-dropdown {
+    color: #2b2b2b;
+}
+
+.a-dropdown:hover {
+    color: #F37945;
+    text-decoration: none;
+}
+
+.dropdown-show-profile {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.dropdown-profile-label {
+    font-size: 20px;
+    cursor: text;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.create-btn {
+    background-color: #F37945;
+}
+
+.create-btn:hover {
+    background-color: #df612b;
+}
+
+.profile-session {
+    cursor: pointer;
+}
+
+.search-btn {
+    border: 2px solid #F37945;
+    font-weight: 500;
+    color: #F37945 !important;
+}
+
+.search-btn:hover {
+    border: 2px solid #F37945;
+    background-color: #F37945;
+    font-weight: 500;
+    color: #f7f7f7 !important;
+}
+.navbar-webpage{
+    border-bottom: 1px solid lightgrey;
+}

@@ -1,42 +1,56 @@
+.box-room {
+  background: rgb(255, 255, 255);
+  color: navy;
+}
 
-.box-room { 
-    background: rgb(255, 255, 255);
-    color: navy; 
-  }
+.box-room-details {
+  background: #f7f7f7;
+  color: rgb(37, 37, 37);
+}
 
-  .box-room-details { 
-    background:#f7f7f7;
-    color: rgb(37, 37, 37); 
-  }
-  .show-box{
-    width: 100%;
-    height: 100%;
-  }
-  .button-search{
-    cursor: pointer;
-  }
-  .show-details-btn {
-    color: honeydew;
-    background-color: rgb(230, 111, 15);
+.show-box {
+  width: 100%;
+  height: 100%;
+}
 
-  text-align: center; 
+.button-search {
+  cursor: pointer;
+}
+
+.show-details-btn {
+  color: honeydew;
+  background-color: rgb(230, 111, 15);
+  text-align: center;
   border-radius: 5px;
-  }
-  .show-details-btn:hover {
-    color: honeydew;
-    background-color: rgb(230, 111, 15);
-  
-  }
-  .maxMember-btn {
-    color: honeydew;
-    background-color: rgb(230, 111, 15);
-    width: 35px; 
-  height: 35px; 
-  text-align: center; 
+}
+
+.show-details-btn:hover {
+  color: honeydew;
+  background-color: rgb(230, 111, 15);
+}
+
+.maxMember-btn {
+  color: honeydew;
+  background-color: rgb(230, 111, 15);
+  width: 35px;
+  height: 35px;
+  text-align: center;
   border-radius: 20px;
-  }
-  .maxMember-btn:hover {
-    color: honeydew;
-    background-color: rgb(230, 111, 15);
-  
-  }
+}
+
+.maxMember-btn:hover {
+  color: honeydew;
+  background-color: rgb(230, 111, 15);
+}
+
+.btn-join-color {
+  background-color: #F37945;
+}
+
+.btn-join-color:hover {
+  background-color: rgb(218, 78, 18);
+}
+
+.round {
+  border-radius: 18px;
+}
