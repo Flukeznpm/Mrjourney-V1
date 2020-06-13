@@ -20,7 +20,7 @@ router.get('/tripperday', async function (req, res, next) {
     let result = await getTripPerDayByDate(lineGroupID, lineID, Date)
     res.status(200).json(result);
 }) 
-// POST /trip/createTrip   (เก็บข้อมูลทริป)
+// POST /trip/createTrip   (เก็บ + อัพเดท ข้อมูลทริป)
 router.post('/createTrip', async function (req, res, next) {
     let datas = req.body
     await createTripList(datas);
@@ -28,7 +28,7 @@ router.post('/createTrip', async function (req, res, next) {
         message: "create trip success"
     });
 });
-// POST /trip/deleteTrip   (ลบทริป)
+// DELETE /trip/deleteTrip   (ลบทริป)
 router.delete('/deleteTrip', function (req, res, next) {
     deleteTrip(req.body)
     res.status(200).json({
