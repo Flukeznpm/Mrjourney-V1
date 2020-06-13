@@ -19,7 +19,7 @@ router.get('/tripperday', async function (req, res, next) {
     let Date = req.query.Date;
     let result = await getTripPerDayByDate(lineGroupID, lineID, Date)
     res.status(200).json(result);
-})
+}) 
 // POST /trip/createTrip   (เก็บข้อมูลทริป)
 router.post('/createTrip', async function (req, res, next) {
     let datas = req.body
