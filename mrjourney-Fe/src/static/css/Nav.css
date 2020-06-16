@@ -35,6 +35,12 @@
     text-decoration: none;
 }
 
+.a-dropdown:active {
+    color: #F37945;
+    background-color: white;
+    text-decoration: none;
+}
+
 .dropdown-show-profile {
     padding-top: 5px;
     padding-bottom: 5px;
@@ -74,6 +80,7 @@
     font-weight: 500;
     color: #f7f7f7 !important;
 }
-.navbar-webpage{
+
+.navbar-webpage {
     border-bottom: 1px solid rgb(236, 236, 236);
 }

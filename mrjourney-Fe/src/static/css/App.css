@@ -1,41 +1,56 @@
 /* @import '~antd/dist/antd.css'; */
 
-.flex-wrapper{
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css");
+.flex-wrapper {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
     justify-content: space-between;
 }
+
 /* 
 .btn-outline-dark:hover{
     color: rgb(255, 255, 255);
     background-color: #f06718;
     border-color: #f8f8f8; 
 } */
-.province-btn{
-    border-color: #d6d6d6; 
+
+.province-btn {
+    border-color: #d6d6d6;
 }
+
 body {
     font-family: 'Kanit', sans-serif;
 }
 
-.image_outer_container{
+.image_outer_container {
     margin-top: auto;
     margin-bottom: auto;
     border-radius: 50%;
     position: relative;
-  }
-.login-profile{
-   
+}
+
+.login-profile {
     border-radius: 50%;
 }
-.step-createtrip{
+
+.step-createtrip {
     margin: 20px 60px 30px 60px;
 }
+
 /* .ant-steps-item-process .ant-steps-item-icon { background: #F37945; border-color:#F37945;} */
 
-
-#alert-confirm-button{
+#alert-confirm-button {
     text-decoration: none;
     color: rgb(255, 255, 255);
+}
+
+/* //CSS Transition */
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }

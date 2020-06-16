@@ -29,13 +29,6 @@ class CreateTripStep2 extends React.Component {
         }
     }
 
-
-
-
-
-
-
-
     componentDidMount() {
         let loadJWT = cookie.load('jwt');
         console.log(loadJWT)
@@ -100,7 +93,6 @@ class CreateTripStep2 extends React.Component {
 
     addModalConfirm = (key) => {
         let Event = this.state.Event
-        // let Trip = this.props.
         console.log('key', key);
         this.props.handleSetEvent(Event, key)
 
@@ -114,8 +106,6 @@ class CreateTripStep2 extends React.Component {
             },
         })
     }
-
-
 
     handleSubmit(e) {
         e.preventDefault();
@@ -131,14 +121,10 @@ class CreateTripStep2 extends React.Component {
             });
     }
 
-
-
-
     render() {
         return (
             <div>
                 <div className="top-page mb-3">
-                    {/* <div className="container content-page py-2"> */}
                     <div className=" step-progress step-2 mt-3 pt-2">
                         <ul>
                             <li>
@@ -148,7 +134,6 @@ class CreateTripStep2 extends React.Component {
                             </li>
                             <li>
                                 <img src={LogoStep2} style={{ opacity: '80%' }} /><br />
-                                {/* <i class="fas fa-sync-alt"></i> */}
                                 <i class="fas fa-sync-alt"></i>
                                 <p>ระบุรายละเอียด</p>
                             </li>
@@ -164,16 +149,11 @@ class CreateTripStep2 extends React.Component {
                             <div className="row">
                                 <div className="col-2"></div>
                                 <div className="col-8">
-
-                                    {/* <div className="header-trip">
-                                        <h3>ชื่อทริป : {this.props.TripForm.tripName}</h3>
-                                        <h4>จังหวัด : {this.props.TripForm.province}</h4>
-                                    </div> */}
                                     <div className="trip-perday-box py-3">
 
-                                        <div className="text-center " style={{paddingBottom:"25px"}}>
+                                        <div className="text-center " style={{ paddingBottom: "25px" }}>
                                             <span className="show-date-to-end ">
-                                                <span className="mt-2 mb-2 ml-3 mr-3" style={{fontWeight:"normal"}}>
+                                                <span className="mt-2 mb-2 ml-3 mr-3" style={{ fontWeight: "normal" }}>
                                                     <span className="p-1"> {momentjs(this.props.TripForm.date).format('DD/MM/YYYY')}
                                                     </span>
                                                     &nbsp;-&nbsp;
@@ -182,9 +162,7 @@ class CreateTripStep2 extends React.Component {
                                                 </span>
                                             </span>
                                         </div>
-
                                         {this.props.TripForm.totalDate.map((PerDay, key) => {
-
                                             return (
                                                 <div>
 
@@ -192,14 +170,14 @@ class CreateTripStep2 extends React.Component {
                                                         <div class="alert event-box-disabled">
                                                             <span className="text-white">{PerDay.eventDate}</span>
                                                             <span className="float-right">
-                                                                <i class="fas fa-caret-down" onClick={() => this.props.handleSetActiveEvent(key)} />
+                                                                <i class="fas fa-caret-down" onClick={() => this.props.handleSetActiveEvent(key)} style={{ cursor: "pointer" }} />
                                                             </span>
                                                         </div>
                                                         :
-                                                        <div class="alert event-box-active border-bottom" >
+                                                        <div class="alert event-box-active border-bottom">
                                                             <span style={{ color: "rgb(241, 82, 19)", fontSize: "24px" }}>{PerDay.eventDate}</span>
                                                             <span className="float-right">
-                                                                <i class="fas fa-caret-up" onClick={() => this.props.handleSetNotActiveEvent(key)} />
+                                                                <i class="fas fa-caret-up" onClick={() => this.props.handleSetNotActiveEvent(key)} style={{ cursor: "pointer" }} />
                                                             </span>
                                                             {PerDay.event.map((eventDetail) => {
                                                                 return (
@@ -236,7 +214,7 @@ class CreateTripStep2 extends React.Component {
                                                                             <div className="col-3">
                                                                                 <div className="m-2">
                                                                                     <button type="button"
-                                                                                        class="event-deleted-btn p-0 ml-1 btn float-right"
+                                                                                        class="delete-event-btn p-0 ml-1 btn float-right"
                                                                                         onClick={() => this.props.handleRemoveEvent(eventDetail, key)}>
                                                                                         <span class="shadow fas fa-trash-alt"></span></button>
                                                                                 </div>

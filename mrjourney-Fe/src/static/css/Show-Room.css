@@ -17,6 +17,11 @@
   cursor: pointer;
 }
 
+.button-search:hover {
+  background-color: rgb(243, 243, 243);
+  border-radius: 10px;
+}
+
 .show-details-btn {
   color: honeydew;
   background-color: rgb(230, 111, 15);
