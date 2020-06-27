@@ -95,9 +95,9 @@ class CreateTripStep3 extends React.Component {
                                                     <div className="row">
                                                         <div className="col-3"></div>
                                                         <div className="col-6 my-2">
-                                                            <Link to="/CheckTrip">
+                                                            <Link to="/CheckTrip" style={{textDecoration:"none"}}>
                                                                 <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                                    onClick={this.checkTripList.bind(this)}>ดูแผนการเดินทางทั้งหมด</button>
+                                                                    onClick={this.checkTripList.bind(this)} >ดูแผนการเดินทางทั้งหมด</button>
                                                             </Link>
                                                         </div>
                                                         <div className="col-3"></div>
@@ -107,7 +107,7 @@ class CreateTripStep3 extends React.Component {
                                                     <div className="row">
                                                         <div className="col-3"></div>
                                                         <div className="col-6 my-2">
-                                                            <Link to="/Home">
+                                                            <Link to="/Home" style={{textDecoration:"none"}}>
                                                                 <button type="button" class="btn btn-warning btn-lg btn-block text-white">กลับสู่หน้าหลัก</button>
                                                             </Link>
                                                         </div>
@@ -140,10 +140,6 @@ class CreateTripStep3 extends React.Component {
                 </div> */}
 
 
-
-
-
-
                 {/* SHOW ALL TRIP   */}
                 {this.state.trip.map((trip, key) => {
                     return (
@@ -156,9 +152,6 @@ class CreateTripStep3 extends React.Component {
                         </div>
                     )
                 })}
-
-
-
 
 
             </div>

@@ -80,7 +80,7 @@ class CreateTripStep1 extends React.Component {
                                 <div className="col-2"></div>
                                 <div className="col-8">
                                     <div className="py-3">
-            
+
                                         <form>
                                             <div className="form-group">
                                                 <div className="InputFrom">
@@ -119,12 +119,8 @@ class CreateTripStep1 extends React.Component {
                                                             name="date"
                                                             value={this.props.TripForm.date}
                                                             onChange={(e) => this.props.handleForm(e)} />
-                                                            
                                                     </div>
                                                 </div>
-                                                {/* <InputAddDate></InputAddDate> */}
-
-
                                                 <div className="col pt-4">
                                                     <label htmlFor="example-date-input">จำนวนวัน<span className="p-1" style={{ color: "red" }}>*</span></label>
                                                     <div className="input-group">
@@ -135,9 +131,7 @@ class CreateTripStep1 extends React.Component {
                                                                 <span className="fas fa-minus"></span>
                                                             </button>
                                                         </span>
-
                                                         <input type="text" name="numberAddDate" className="form-control input-number" value={this.props.TripForm.numberAddDate} min="1" max="10" />
-
                                                         <span className="input-group-btn">
                                                             <button type="button" className="btn btn-default btn-number"
                                                                 onClick={this.props.handleFormAddDate}>
@@ -146,18 +140,15 @@ class CreateTripStep1 extends React.Component {
                                                         </span>
                                                     </div>
                                                 </div>
-
                                             </div>
-
                                             <div className="col-12">
                                                 <div className="row">
                                                     <div className="col-2"></div>
                                                     <div className="col-8">
                                                         <div className="buttom-page py-3">
                                                             <div className="py-3" style={{ marginBottom: "25px", marginTop: "20px" }}>
-                                                                {/* <div className=" col-2 float-right "> */}
                                                                 <div className="next-btn">
-                                                                    <button type="button" className="btn btn-warning btn-lg btn-block text-white"
+                                                                    <button type="submit" className="btn btn-warning btn-lg btn-block text-white"
                                                                         onClick={this.props.handleStep}>{this.props.nextButton}</button>
                                                                 </div>
                                                             </div>
@@ -168,7 +159,6 @@ class CreateTripStep1 extends React.Component {
                                             </div>
                                         </form>
                                     </div>
-
                                 </div>
                                 <div className="col-2"></div>
                             </div>
