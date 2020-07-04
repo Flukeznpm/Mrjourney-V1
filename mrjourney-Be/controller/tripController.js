@@ -4,15 +4,18 @@ var firebase = require('firebase-admin');
 let db = firebase.firestore()
 
 //---------------- Controller ----------------//
-
 // GET /trip  (ดูข้อมูลทริปทั้งหมด)
+// GET /trip/tripperday  (ดูข้อมูลทริปแบบรายวัน)
+// POST /trip/createTrip   (เก็บ + อัพเดท ข้อมูลทริป)
+// DELETE /trip/deleteTrip   (ลบทริป)
+
 router.get('/', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
     let lineID = req.query.lineID;
     let result = await getAllTripByGroupID(lineGroupID, lineID);
     res.status(200).json(result);
 })
-// GET /trip/tripperday  (ดูข้อมูลทริปแบบรายวัน)
+
 router.get('/tripperday', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
     let lineID = req.query.lineID;
@@ -21,7 +24,7 @@ router.get('/tripperday', async function (req, res, next) {
     let result = await getTripPerDayByDate(lineGroupID, lineID, Date)
     res.status(200).json(result);
 }) 
-// POST /trip/createTrip   (เก็บ + อัพเดท ข้อมูลทริป)
+
 router.post('/createTrip', async function (req, res, next) {
     let datas = req.body
     await createTripList(datas);
@@ -29,7 +32,7 @@ router.post('/createTrip', async function (req, res, next) {
         message: "create trip success"
     });
 });
-// DELETE /trip/deleteTrip   (ลบทริป)
+
 router.delete('/deleteTrip', function (req, res, next) {
     deleteTrip(req.body)
     res.status(200).json({
@@ -38,7 +41,6 @@ router.delete('/deleteTrip', function (req, res, next) {
 });
 
 //---------------- Function ----------------//
-
 async function getAllTripByGroupID(lineGroupID, lineID) {
     let dataAllTrip = [];
     let tripID;
@@ -190,7 +192,7 @@ async function createTripList(datas) {
                                                     if (data.exists) {
                                                         // checkTripPerDay.collection('Day').doc().set({
                                                         //     eventName: datas.eventName,
-                                                        //     StartEventTime: datas.StartEventTime,
+                                                        //     startEventTime: datas.startEventTime,
                                                         //     endEventTime: datas.endEventTime,
                                                         //     eventType: datas.eventType
                                                         // }) 
@@ -245,7 +247,7 @@ async function createTripList(datas) {
                     })
                     // saveTripPerDay.collection('Day').doc().set({
                     //     eventName: datas.eventName,
-                    //     StartEventTime: datas.StartEventTime,
+                    //     startEventTime: datas.startEventTime,
                     //     endEventTime: datas.endEventTime,
                     //     eventType: datas.eventType
                     // })
@@ -292,7 +294,7 @@ async function createTripList(datas) {
             })
             // saveTripPerDay.collection('Day').doc().set({
             //     eventName: datas.eventName,
-            //     StartEventTime: datas.StartEventTime,
+            //     startEventTime: datas.startEventTime,
             //     endEventTime: datas.endEventTime,
             //     eventType: datas.eventType
             // })
@@ -349,7 +351,7 @@ async function createTripPerday(tripID, ก้อนข้อมูลของP
     let saveTripPerDayRef = await db.collection('TripPerDay').doc(tripID);
     saveTripPerDayRef.collection('Day').doc().set({
         eventName: datas.eventName,
-        StartEventTime: datas.StartEventTime,
+        startEventTime: datas.startEventTime,
         endEventTime: datas.endEventTime,
         eventType: datas.eventType
     })

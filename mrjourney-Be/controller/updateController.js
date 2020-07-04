@@ -3,6 +3,7 @@ var router = express.Router();
 var firebase = require('firebase-admin');
 let db = firebase.firestore()
 
+//---------------- Controller ----------------//
 // POST /update (อัพเดทข้อมูลชื่อและรูปภาพของ user)
 router.post('/', async function (req, res, next) {
     let datas = req.body
@@ -13,6 +14,7 @@ router.post('/', async function (req, res, next) {
     })
 });
 
+//---------------- Function ----------------//
 async function updateProfile(data) {
     // console.log('updateProfile Be 2 :' + data.lineID)
     // let updateRef = await db.collection('Room').where('lineID', '==', data.lineID)

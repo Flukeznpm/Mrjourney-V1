@@ -13,11 +13,11 @@ firebase.initializeApp({
     databaseURL: "https://test-firebase-c50da.firebaseio.com"
 });
 
-var loginRouter = require('./controller/login');
-var accountProfileRouter = require('./controller/accountProfile');
-var tripRouter = require('./controller/trip');
-var roomRouter = require('./controller/room');
-var updateRouter = require('./controller/update');
+var loginRouter = require('./controller/loginController');
+var accountProfileRouter = require('./controller/accountProfileController');
+var tripRouter = require('./controller/tripController');
+var roomRouter = require('./controller/roomController');
+var updateRouter = require('./controller/updateController');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

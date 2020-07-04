@@ -1,30 +1,31 @@
 var express = require('express');
 var router = express.Router();
 var firebase = require('firebase-admin');
-let db = firebase.firestore()
+let db = firebase.firestore();
 
 //---------------- Controller ----------------//
-
 // GET /room  (แสดง room ทั้งหมดใน feed page)
+// POST /room/createRoom  (สร้าง room)
+// PUT /room/editRoom (แก้ไขข้อมูล room)
+// DELETE /room/deleteRoom  (ลบ room)
+
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
     res.status(200).json(RoomList);
 });
-// POST /room/createRoom  (สร้าง room)
+
 router.post('/createRoom', async function (req, res, next) {
     await createRoom(req.body);
     res.status(201).json({
         message: "Create Room Success",
     })
 });
-// PUT /room/editRoom (แก้ไขข้อมูล room)
 router.put('/editRoom', async function (req, res, next) {
     await updateRoom(req.body)
     res.status(201).json({
         message: "Edit Room Success",
     })
 });
-// DELETE /room/deleteRoom  (ลบ room)
 router.delete('/deleteRoom', function (req, res, next) {
     deleteRoom(req.body)
     res.status(200).json({
@@ -101,7 +102,7 @@ async function createRoom(datas) {
                 maxMember: datas.maxMember,
                 genderCondition: datas.genderCondition,
                 ageCondition: datas.ageCondition,
-                status: datas.status
+                status: datas.status 
             })
         } else {
             let saveUserRef = db.collection('AccountProfile').doc(datas.lineID);

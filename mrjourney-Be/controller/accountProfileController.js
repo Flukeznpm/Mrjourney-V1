@@ -4,14 +4,18 @@ var firebase = require('firebase-admin');
 let db = firebase.firestore()
 
 //---------------- Controller ----------------//
-
 // GET : /accountProfile  (แสดง profile ทั้งหมด ของ user)
+// POST : /accountProfile/createAccountDetail  (set profile)
+// POST : /accountProfile/editAccountDetail (Edit profile)
+// GET : /accountProfile/trip (ดูทริปที่เคยสร้าง)
+// GET : /accountProfile/roomJoin (ดูทริปที่เคยJoin)
+
 router.get('/', async function (req, res, next) {
     let datas = req.body;
     let showAcc = await getAccountByID(datas);
     res.status(200).json(showAcc);
 });
-// POST : /accountProfile/createAccountDetail  (set profile)
+
 router.post('/createAccountDetail', async function (req, res, next) {
     let datas = req.body;
     await createAccountDetail(datas);
@@ -19,7 +23,7 @@ router.post('/createAccountDetail', async function (req, res, next) {
         message: "Register Profile Success",
     })
 });
-// POST : /accountProfile/editAccountDetail (Edit profile)
+
 router.post('/editAccountDetail', async function (req, res, next) {
     let datas = req.body;
     await updateAccountDetail(datas);
@@ -27,12 +31,8 @@ router.post('/editAccountDetail', async function (req, res, next) {
         message: "Edit Profile Success",
     })
 });
-// GET : /accountProfile/trip (ดูทริปที่เคยสร้าง)
-// GET : /accountProfile/roomJoin (ดูทริปที่เคยJoin)
-
 
 //---------------- Function ----------------//
-
 async function getAccountByID(datas) {
     let dataAcc = [];
     let showDataAcc = db.collection("AccountProfile").doc(datas.lineID);
