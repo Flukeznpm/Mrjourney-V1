@@ -15,4 +15,4 @@ function Rating(entertainRating, worthRating, preparaionRating) {
     this.preparaionRating = preparaionRating 
 }
 
-module.exports = accountProfile;
+module.exports = accountProfile,Rating;
