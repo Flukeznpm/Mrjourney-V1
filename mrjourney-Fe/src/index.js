@@ -25,7 +25,7 @@ import { HookProvider } from './store/HookProvider'
 // );
 
 ReactDOM.render(
-    <CounterProvider>
+    <HookProvider>
         <Router>
             <Switch>
                 <Route path="/CheckTrip" >
@@ -63,7 +63,7 @@ ReactDOM.render(
                 </Route>
             </Switch>
         </Router>
-    </CounterProvider>
+    </HookProvider>
     , document.getElementById('root')
 );
 
