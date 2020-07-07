@@ -18,7 +18,11 @@ import Profile from './webpage/Profile';
 import CheckTrip from './linepage/CheckTrip';
 import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
+<<<<<<< HEAD
 import { HookProvider } from './store/HookProvider'
+=======
+import { CounterProvider } from './store/CounterProvider'
+>>>>>>> e68397699073545bffb1d6070314bd59996c0ede
 
 // ReactDOM.render
 // (<App />, 
@@ -26,7 +30,11 @@ import { HookProvider } from './store/HookProvider'
 // );
 
 ReactDOM.render(
+<<<<<<< HEAD
     <HookProvider>
+=======
+    <CounterProvider>
+>>>>>>> e68397699073545bffb1d6070314bd59996c0ede
         <Router>
             <Switch>
                 <Route path="/CheckTrip" >
@@ -38,9 +46,12 @@ ReactDOM.render(
                 <Route path="/CreateJoinRoom" >
                     <CreateJoinRoom />
                 </Route>
+<<<<<<< HEAD
                 <Route path="/CreateJoinRoomV2" >
                     <CreateJoinRoomV2 />
                 </Route>
+=======
+>>>>>>> e68397699073545bffb1d6070314bd59996c0ede
                 <Route path="/JoinedRoom">
                     <JoinedRoom />
                 </Route>
@@ -67,7 +78,11 @@ ReactDOM.render(
                 </Route>
             </Switch>
         </Router>
+<<<<<<< HEAD
     </HookProvider>
+=======
+    </CounterProvider>
+>>>>>>> e68397699073545bffb1d6070314bd59996c0ede
     , document.getElementById('root')
 );
 
