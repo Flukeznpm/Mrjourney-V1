@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './static/css/App.css';
-import { Link } from 'react-router-dom';
 import Home from './webpage/Home'
 import PreviewPage from './components/Preview/PreviewPage';
+import { HookContext } from './store/HookProvider'
 
-class App extends React.Component {
-
-  render() {
+function App() {
+    const { counter, step, addCounter, subCounter, nextStep, prevStep } = useContext(HookContext)
     return (
       <div>
         <Home></Home>
@@ -14,6 +13,5 @@ class App extends React.Component {
       </div>
     );
   }
-}
 
 export default App;
