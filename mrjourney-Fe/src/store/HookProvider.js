@@ -30,6 +30,11 @@ const hookReducer = (state, action) => {
         ...state,
         step: state.step - action.payload
       }
+    case "RESET_STEP":
+      return {
+        ...state,
+        step: 1
+      }
   }
 }
 
@@ -57,6 +62,8 @@ export const HookProvider = ({ children }) => {
     stepDispatch({ type: "NEXT_STEP", payload }) // ส่ง type ADD_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
   const prevStep = payload =>
     stepDispatch({ type: "PREV_STEP", payload }) // ส่ง type SUB_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
+  const resetStep = payload =>
+    stepDispatch({ type: "RESET_STEP", payload }) // ส่ง type SUB_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
 
   return (
     <HookContext.Provider
@@ -66,7 +73,8 @@ export const HookProvider = ({ children }) => {
         addCounter,
         subCounter,
         nextStep,
-        prevStep
+        prevStep,
+        resetStep,
       }}>
       {children}
     </HookContext.Provider>
