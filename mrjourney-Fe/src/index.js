@@ -4,7 +4,6 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
 } from 'react-router-dom';
 import App from './App';
 import CreateTrip from './linepage/CreateTrip';
@@ -18,11 +17,6 @@ import CheckTrip from './linepage/CheckTrip';
 import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
 import { HookProvider } from './store/HookProvider'
-
-// ReactDOM.render
-// (<App />, 
-// document.getElementById('root')
-// );
 
 ReactDOM.render(
     <HookProvider>
@@ -66,8 +60,4 @@ ReactDOM.render(
     </HookProvider>
     , document.getElementById('root')
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 
