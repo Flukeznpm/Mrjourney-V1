@@ -21,7 +21,7 @@ function CreateTripStep2(props) {
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
         console.log(loadJWT)
-        if (loadJWT == undefined) {
+        if (loadJWT === undefined) {
             props.history.push('/Home');
         } else {
             var user = jwt.verify(loadJWT, 'secreatKey');
@@ -112,20 +112,20 @@ function CreateTripStep2(props) {
                                                                                 <br />{eventDetail.startEvent}
                                                                             </span>
                                                                             <div className="m-2">
-                                                                                {eventDetail.eventType == 'eating' ?
+                                                                                {eventDetail.eventType === 'eating' ?
                                                                                     <button
                                                                                         type="button" class="event-type-btn btn p-0 ml-1 float-right">
                                                                                         <span class="shadow fas fa-utensils"></span>
                                                                                     </button>
                                                                                     : ""}
-                                                                                {eventDetail.eventType == 'travel' ?
+                                                                                {eventDetail.eventType === 'travel' ?
                                                                                     <button
                                                                                         type="button" class="event-type-btn btn p-0 ml-1 float-right">
                                                                                         <span class="shadow fas fa-car-side"></span>
                                                                                     </button>
                                                                                     : ""}
 
-                                                                                {eventDetail.eventType == 'sleep' ?
+                                                                                {eventDetail.eventType === 'sleep' ?
                                                                                     <button
                                                                                         type="button" class="event-type-btn btn p-0 ml-1 float-right">
                                                                                         <span class="shadow fas fa-bed"></span>

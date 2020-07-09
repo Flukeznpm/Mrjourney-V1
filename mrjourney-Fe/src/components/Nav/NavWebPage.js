@@ -22,7 +22,7 @@ class NavWebPage extends React.Component {
     componentDidMount() {
         let loadJWT = cookie.load('jwt');
         console.log(loadJWT)
-        if (loadJWT == undefined) {
+        if (loadJWT === undefined) {
             this.setState({
                 displayName: "",
                 pictureURL: "",

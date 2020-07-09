@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import '../../static/css/Stepper.css';
 import '../../static/css/App.css';
 import '../../static/css/CreateRoom.css';
@@ -38,7 +38,7 @@ class CreateRoomStep3 extends React.Component {
     componentDidMount() {
         let loadJWT = cookie.load('jwt');
         console.log(loadJWT)
-        if (loadJWT == undefined) {
+        if (loadJWT === undefined) {
             this.props.history.push('/Home');
         } else {
             var user = jwt.verify(loadJWT, 'secreatKey');

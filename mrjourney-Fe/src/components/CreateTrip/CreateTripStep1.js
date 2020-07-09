@@ -19,7 +19,7 @@ function CreateTripStep1(props) {
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
         console.log(loadJWT)
-        if (loadJWT == undefined) {
+        if (loadJWT === undefined) {
             props.history.push('/Home');
         } else {
             var user = jwt.verify(loadJWT, 'secreatKey');

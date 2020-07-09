@@ -1,5 +1,4 @@
 import React from 'react';
-import ProfileImg from '../../static/img/bg-slide-test-1.jpg';
 import TestQrCode from '../../static/img/Mrjourney-QrCode.png';
 import momentjs from 'moment'
 

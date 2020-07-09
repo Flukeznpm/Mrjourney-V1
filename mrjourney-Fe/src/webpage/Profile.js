@@ -3,8 +3,8 @@ import NavWebPage from '../components/Nav/NavWebPage';
 import ProfileImg from '../static/img/bg-slide-test-1.jpg';
 import '../static/css/App.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
-import { Button, ButtonToolbar, Tabs, Tab } from 'react-bootstrap'
-import { Redirect, withRouter } from 'react-router-dom';
+import { Tabs, Tab } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 
@@ -38,7 +38,7 @@ class Profile extends React.Component {
     componentDidMount() {
         let loadJWT = cookie.load('jwt');
         console.log(loadJWT)
-        if (loadJWT == undefined) {
+        if (loadJWT === undefined) {
             this.props.history.push('/Home');
         } else {
             var user = jwt.verify(loadJWT, 'secreatKey');

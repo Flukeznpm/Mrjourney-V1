@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { Modal, Col, Row, ModalDialog, ModalHeader, ModalTitle, ModalFooter, ModalBody, Button, Container } from 'react-bootstrap';
+import { Modal, Button} from 'react-bootstrap';
 import '../../static/css/App.css'
 import "../../static/css/Event-Trip.css";
 import { HookContext } from '../../store/HookProvider'
 
 function CreateTripModal(props) {
-    const { nextStep, prevStep, handleEventForm, Trip, Event, addModalShow, keyModal, setActiveEvent, selectEventType, setNotActiveEvent, setEvent, eventModalConfirm, eventModalShow } = useContext(HookContext)
+    const { handleEventForm, Event, selectEventType } = useContext(HookContext)
     return (
         <div>
             <Modal {...props} aria-labelledby="contained-modal-title-vcenter">

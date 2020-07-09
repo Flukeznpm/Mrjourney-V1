@@ -1,7 +1,6 @@
 import React from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
 import '../static/css/App.css';
-import CarouselHeader from '../components/Home/CarouselHeader';
 import ShowMembers from '../components/JoinedRoom/ShowMembers';
 import RoomDetails from '../components/JoinedRoom/RoomDetails';
 import BgSlide1 from '../static/img/pr-01.png';

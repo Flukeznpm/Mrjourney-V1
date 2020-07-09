@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Col, Row, ModalDialog, ModalHeader, ModalTitle, ModalFooter, ModalBody, Button, Container } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import '../../static/css/App.css'
 import "../../static/css/Event-Trip.css";
 import BgSlide1 from '../../static/img/pr-01.png';
