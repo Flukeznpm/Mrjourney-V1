@@ -128,9 +128,21 @@ function NavWebPage(props) {
                         :
                         <div className="collapse navbar-collapse" id="navbarCollapse">
                             <ul className="navbar-nav ml-auto">
+                                <li className="nav-item pt-1 mr-1">
+                                    <a href="/Home">
+                                        <button type="button" className="btn nav-text-btn ml-2 mr-2" style={{ height: "40px" }}>
+                                            Home
+                                    </button>
+                                    </a>
+                                </li>
+                                <li className="nav-item pt-1 mr-1">
+                                    <button type="button" className="btn nav-text-btn ml-2 mr-2" style={{ height: "40px" }}>
+                                        About Us
+                                    </button>
+                                </li>
                                 <li className="nav-item mr-1 mt-1 pt-1">
                                     <Link to="/CreateTrip">
-                                        <button type="button" className="btn create-btn ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Trip
+                                        <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Trip
                                                  <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
                                         </button>
                                     </Link>
@@ -138,16 +150,16 @@ function NavWebPage(props) {
 
                                 <li className="nav-item mt-1 pt-1">
                                     <Link to="/CreateJoinRoom">
-                                        <button type="button" className="btn create-btn ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Room
+                                        <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Room
                                                  <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
                                         </button>
                                     </Link>
                                 </li>
-                                <li className="nav-item dropdown ">
+                                <li className="nav-item dropdown ml-3 px-2 ">
                                     <button className="btn nav-link dropdown-toggle profile-session" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                         <i> <img src={pictureURL} class="login-profile" height="40px" width="40px" alt="owner-img" /> </i>
-                                        <i class="fas fa-chevron-down fa-sm mt-1" style={{ color: "#585858" }}></i>
+                                        <img src={DropDownArrow} className="DropDownArrow pt-1 ml-2" height="13" alt="MrJourney" />
                                     </button>
                                     <div className="dropdown-menu dropdown-menu-right dropdown-info"
                                     >
