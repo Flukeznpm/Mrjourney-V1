@@ -18,6 +18,9 @@ import CheckTrip from './linepage/CheckTrip';
 import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
 import { HookProvider } from './store/HookProvider'
+import momentjs from 'moment'
+import 'moment/locale/th'
+momentjs.locale('th')
 
 ReactDOM.render(
     <HookProvider>

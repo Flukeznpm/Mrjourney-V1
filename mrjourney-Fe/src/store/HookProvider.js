@@ -185,7 +185,7 @@ const hookReducer = (state, action) => {
       let AllTripDate = []
       for (let index = 0; index < state.Trip.numberAddDate; index++) {
         let ShowBox = {
-          eventDate: momentjs(state.Trip.date).add(index, 'day').format('DD/MM/YYYY'),
+          eventDate: momentjs(state.Trip.date).add(index, 'day').format('ll'),
           event: []
         }
         AllTripDate.push(ShowBox)
