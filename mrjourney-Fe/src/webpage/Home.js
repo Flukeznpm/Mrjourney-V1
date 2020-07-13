@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
 import CarouselHeader from '../components/Home/CarouselHeader';
 import ShowRoomBox from '../components/Home/ShowRoomBox';
@@ -9,9 +9,9 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 
-class Home extends React.Component {
+function Home() {
 
-    componentDidMount() {
+    useEffect(() => {
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let code = params.get('code');
@@ -26,9 +26,8 @@ class Home extends React.Component {
                 console.log(decoded);
             })
         }
-    }
+    }, [])
 
-    render() {
         return (
             <div className="flex-wrapper">
                 <div className="top-page">
@@ -57,6 +56,5 @@ class Home extends React.Component {
 
         )
     }
-}
 
 export default Home;

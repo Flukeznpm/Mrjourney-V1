@@ -162,13 +162,13 @@ const hookReducer = (state, action) => {
           eventType: action.payload
         }
       }
+    //Event Modal
     case "EVENT_MODAL_SHOW":
       return {
         ...state,
         keyModal: action.payload,
         addModalShow: true
       }
-    //Event Modal
     case "EVENT_MODAL_CLOSE":
       return {
         ...state,
@@ -179,6 +179,17 @@ const hookReducer = (state, action) => {
           endEvent: '',
           eventType: ''
         },
+      }
+    //ShowRoom
+    case "SHOW_ROOM_MODAL_SHOW":
+      return {
+        ...state,
+        addModalShow: true
+      }
+    case "SHOW_ROOM_MODAL_CLOSE":
+      return {
+        ...state,
+        addModalShow: false
       }
 
     case "NEXT_STEP_1":
@@ -243,6 +254,11 @@ export const HookProvider = ({ children }) => {
     hookDispatch({ type: "NEXT_STEP_1", payload })
   const deleteEvent = (eventDetail, key) =>
     hookDispatch({ type: "DELETE_EVENT", eventDetail, key })
+  const showRoomModalShow = () =>
+    hookDispatch({ type: "SHOW_ROOM_MODAL_SHOW" })
+  const showRoomModalClose = () =>
+    hookDispatch({ type: "SHOW_ROOM_MODAL_CLOSE" })
+
 
 
   return (
@@ -271,7 +287,9 @@ export const HookProvider = ({ children }) => {
         selectEventType,
         eventModalShow,
         confirmTripStep,
-        deleteEvent
+        deleteEvent,
+        showRoomModalShow,
+        showRoomModalClose
       }}>
       {children}
     </HookContext.Provider>

@@ -158,7 +158,6 @@ function CreateTripStep2(props) {
                                                                 show={addModalShow}
                                                                 onConfirm={() => setEvent(keyModal)}
                                                                 onHide={() => eventModalClose(keyModal)}
-                                                                show={addModalShow}
                                                             ></CreateTripModal>
                                                         </p>
                                                     </div>
