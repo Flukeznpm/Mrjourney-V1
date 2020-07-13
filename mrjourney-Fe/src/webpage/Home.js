@@ -3,6 +3,7 @@ import NavWebPage from '../components/Nav/NavWebPage';
 import CarouselHeader from '../components/Home/CarouselHeader';
 import ShowRoomBox from '../components/Home/ShowRoomBox';
 import '../static/css/Show-Room.css';
+import '../static/css/SearchButton.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
@@ -35,6 +36,14 @@ class Home extends React.Component {
                     <div className="content-page">
                         <div className="Carousel-Header">
                             <CarouselHeader></CarouselHeader>
+                        </div>
+                        <div class="container h-100 my-3 py-2">
+                            <div class="d-flex justify-content-center h-100">
+                                <div class="searchbar">
+                                    <input class="search_input" type="text" name="" placeholder="Search..." />
+                                    <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
+                                </div>
+                            </div>
                         </div>
                         <ShowRoomBox></ShowRoomBox>
                     </div>
