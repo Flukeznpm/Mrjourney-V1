@@ -1,23 +1,41 @@
 .nav-color {
-    background-color: #F37945;
+    background-color: #E9DDD1;
+}
+
+.join-btn-color {
+    background-color: #F37944;
 }
 
 .round {
-    border-radius: 18px;
+    border-radius: 16px;
+}
+
+.navbar {
+    padding: 6px 12px 6px 12px;
 }
 
 .nav-color-owner {
-    color: #F37945;
-    border-color: #F37945;
+    color: #F37944;
+    border-color: #F37944;
 }
 
 .nav-color-owner:hover {
-    color: #F37945;
+    color: #F37944;
 }
 
 .round2 {
     border-radius: 12px;
     width: 15%;
+}
+
+.nav-text-btn {
+    color: #231F20;
+    font-size: 20px;
+    margin-top: 4px;
+}
+
+.nav-text-btn:hover {
+    color: #C25738;
 }
 
 .signout-btn {
@@ -29,12 +47,12 @@
 }
 
 .a-dropdown:hover {
-    color: #F37945;
+    color: #F37944;
     text-decoration: none;
 }
 
 .a-dropdown:active {
-    color: #F37945;
+    color: #F37944;
     background-color: white;
     text-decoration: none;
 }
@@ -55,7 +73,7 @@
 }
 
 .create-btn {
-    background-color: #F37945;
+    background-color: #F37944;
 }
 
 .create-btn:hover {
@@ -67,18 +85,23 @@
 }
 
 .search-btn {
-    border: 2px solid #F37945;
+    border: 2px solid #F37944;
     font-weight: 500;
-    color: #F37945 !important;
+    color: #F37944 !important;
 }
 
 .search-btn:hover {
-    border: 2px solid #F37945;
-    background-color: #F37945;
+    border: 2px solid #F37944;
+    background-color: #F37944;
     font-weight: 500;
     color: #f7f7f7 !important;
 }
 
 .navbar-webpage {
     border-bottom: 1px solid rgb(236, 236, 236);
+}
+
+.WebLogo {
+    width: 140px;
+    height: 60px;
 }

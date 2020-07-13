@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Logo from '../../static/img/navlogo.png';
-import IconProfile from '../../static/img/logojourney.png';
+import Logo from '../../static/img/MrJ-Logo.png';
+import DropDownArrow from '../../static/img/dropdown.svg';
+import IconProfile from '../../static/img/Guest-Logo.svg';
 import "../../static/css/App.css";
 import Swal from 'sweetalert2';
 import { Link, withRouter } from 'react-router-dom';
@@ -27,7 +28,7 @@ function NavWebPage(props) {
             setLinePicture(user.pictureURL)
             setLineEmail(user.email)
         }
-    })
+    }, [])
 
     const AlertRoom = () => {
 
@@ -69,9 +70,9 @@ function NavWebPage(props) {
     }
     return (
         <div className="navbar-webpage">
-            <nav className="navbar navbar-expand-lg navbar-dark" style={{ color: "white" }}>
-                <a href="/Home" className="navbar-brand">
-                    <img src={Logo} height="45" alt="MrJourney" />
+            <nav className="navbar nav-color navbar-expand-lg navbar-dark" style={{ color: "white" }}>
+                <a href="/Home">
+                    <img src={Logo} className="WebLogo" height="45" alt="MrJourney" />
                 </a>
                 <button type="button" className="navbar-toggler " data-toggle="collapse" data-target="#navbarCollapse" style={{ color: "#2b2b2b", borderColor: "lightgrey" }}>
                     <i class="fas fa-hamburger" ></i>
@@ -81,21 +82,20 @@ function NavWebPage(props) {
                     displayName === "" ? // state ? true : false
                         <div className="collapse navbar-collapse" id="navbarCollapse">
                             <ul className="navbar-nav ml-auto">
-                                <li className="nav-item mr-1 mt-1 pt-1">
-                                    <button className="btn search-btn my-2 my-sm-0" onClick={() => setSearch(!showSearch)} style={{ height: "40px" }}>Search</button>
+                                <li className="nav-item pt-1 mr-1">
+                                    <a href="/Home">
+                                        <button type="button" className="btn nav-text-btn ml-2 mr-2" style={{ height: "40px" }}>
+                                            Home
+                                    </button>
+                                    </a>
                                 </li>
-                                <li className="nav-item mr-1 mt-1 pt-1" >
-                                    {
-                                        showSearch ? // state ? true : false
-                                            <form className="form-inline">
-                                                <input className="form-control mr-sm-2"
-                                                    type="search" placeholder="Search" aria-label="Search" style={{ height: "40px" }} />
-                                            </form>
-                                            : null
-                                    }
+                                <li className="nav-item pt-1 mr-1">
+                                    <button type="button" className="btn nav-text-btn ml-2 mr-2" style={{ height: "40px" }}>
+                                        About Us
+                                    </button>
                                 </li>
                                 <li className="nav-item mr-1 mt-1 pt-1">
-                                    <button type="button" className="btn create-btn ml-2 mr-2 text-white" style={{ height: "40px" }}
+                                    <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}
                                         onClick={AlertTrip}>
                                         Create Trip
                                             <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
@@ -103,18 +103,18 @@ function NavWebPage(props) {
                                 </li>
 
                                 <li className="nav-item mt-1 pt-1">
-                                    <button type="button" className="btn create-btn ml-2 mr-2 text-white" style={{ height: "40px" }}
+                                    <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}
                                         onClick={AlertRoom}>
                                         Create Room
                                             <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
                                     </button>
                                 </li>
-                                <li className="nav-item dropdown ">
+                                <li className="nav-item dropdown ml-3 px-2 ">
                                     <button className="btn nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
 
-                                        <i> <img src={IconProfile} class="login-profile" height="40px" width="40px" alt="owner-img" /> </i>
-                                        <i class="fas fa-chevron-down fa-sm mt-1" style={{ color: "#585858" }}></i>
+                                        <i> <img src={IconProfile} class="login-profile" height="40px" width="30px" alt="owner-img" /> </i>
+                                        <img src={DropDownArrow} className="DropDownArrow pt-1 ml-2" height="13" alt="MrJourney" />
 
                                     </button>
 
@@ -128,19 +128,6 @@ function NavWebPage(props) {
                         :
                         <div className="collapse navbar-collapse" id="navbarCollapse">
                             <ul className="navbar-nav ml-auto">
-                                <li className="nav-item mr-1 mt-1 pt-1">
-                                    <button className="btn search-btn my-2 my-sm-0" onClick={() => setSearch(!showSearch)} style={{ height: "40px" }}>Search</button>
-                                </li>
-                                <li className="nav-item mr-1 mt-1 pt-1" >
-                                    {
-                                        showSearch ? // state ? true : false
-                                            <form className="form-inline">
-                                                <input className="form-control mr-sm-2"
-                                                    type="search" placeholder="Search" aria-label="Search" style={{ height: "40px" }} />
-                                            </form>
-                                            : null
-                                    }
-                                </li>
                                 <li className="nav-item mr-1 mt-1 pt-1">
                                     <Link to="/CreateTrip">
                                         <button type="button" className="btn create-btn ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Trip

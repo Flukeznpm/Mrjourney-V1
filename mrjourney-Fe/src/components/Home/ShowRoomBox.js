@@ -269,7 +269,7 @@ class ShowRoomBox extends React.Component {
                                             </div>
                                             <div className="navbar pt-2">
                                                 <div>
-                                                    <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinRoomSuc}>เข้าร่วม</button>
+                                                    <button type="button" class="btn join-btn-color round text-white" onClick={this.AlertJoinRoomSuc}>เข้าร่วม</button>
                                                 </div>
                                                 <div className="button-search">
                                                     <button type="button" className="btn"
