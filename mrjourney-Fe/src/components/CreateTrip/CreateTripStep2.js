@@ -11,6 +11,8 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
+import 'moment/locale/th'
+momentjs.locale('th')
 
 function CreateTripStep2(props) {
     const { nextStep, prevStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
@@ -76,10 +78,10 @@ function CreateTripStep2(props) {
                                     <div className="text-center " style={{ paddingBottom: "25px" }}>
                                         <span className="show-date-to-end ">
                                             <span className="mt-2 mb-2 ml-3 mr-3" style={{ fontWeight: "normal" }}>
-                                                <span className="p-1"> {momentjs(Trip.date).format('DD/MM/YYYY')}
+                                                <span className="p-1"> {momentjs(Trip.date).format('ll')}
                                                 </span>
                                                     &nbsp;-&nbsp;
-                                                    <span className="p-1">{momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day').format('DD/MM/YYYY')}
+                                                    <span className="p-1">{momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day').format('ll')}
                                                 </span>
                                             </span>
                                         </span>
