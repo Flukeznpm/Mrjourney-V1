@@ -8,7 +8,6 @@ import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
-import ShowRoomBoxV2 from '../components/Home/ShowRoomBoxV2';
 
 class Home extends React.Component {
 
