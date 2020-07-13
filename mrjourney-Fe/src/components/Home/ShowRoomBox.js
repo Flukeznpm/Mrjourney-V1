@@ -108,7 +108,7 @@ class ShowRoomBox extends React.Component {
 
     render() {
         return (
-            <section className="py-5">
+            <section className="py-3">
                 <div className="Show-Join-Room">
                     <div className="container">
                         <div className="row">
