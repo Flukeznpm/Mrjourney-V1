@@ -48,7 +48,7 @@ class Home extends React.Component {
                             </div>
                         </div>
                         {/* <ShowRoomBox></ShowRoomBox> */}
-                        <ShowRoomBoxV2></ShowRoomBoxV2>
+                        <ShowRoomBox></ShowRoomBox>
                     </div>
                 </div>
                 <div className="footer-page">
