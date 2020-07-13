@@ -1,18 +1,12 @@
 /* Show-maxMember */
   .maxMember-btn {
-    color: honeydew;
-    background-color: rgb(230, 111, 15);
-    width: 35px; 
-  height: 35px; 
+  color: honeydew;
+  background-color: rgb(230, 111, 15);
+  width: 25px; 
+  height: 25px; 
   text-align: center; 
   border-radius: 20px;
   }
-  .maxMember-btn:hover {
-    color: honeydew;
-    background-color: rgb(230, 111, 15);
-  
-  }
-  
 
 /* Show-ageCongition */
   .show-details-btn {
