@@ -1,5 +1,5 @@
 import React from 'react';
-import BgSlide1 from '../../static/img/pr-01.png';
+import BgSlide1 from '../../static/img/pr-02.png';
 
 
 const CarouselHeader = () => {
@@ -13,13 +13,13 @@ const CarouselHeader = () => {
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="d-block" src={BgSlide1} alt="First slide" style={{ height: "100vh", width: "100%" }} />
+                        <img class="d-block" src={BgSlide1} alt="First slide" style={{ height: "75vh", width: "100%" }} />
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src={BgSlide1} alt="Second slide" style={{ height: "100vh", width: "100%" }} />
+                        <img class="d-block w-100" src={BgSlide1} alt="Second slide" style={{ height: "75vh", width: "100%" }} />
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src={BgSlide1} alt="Third slide" style={{ height: "100vh", width: "100%" }} />
+                        <img class="d-block w-100" src={BgSlide1} alt="Third slide" style={{ height: "75vh", width: "100%" }} />
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
