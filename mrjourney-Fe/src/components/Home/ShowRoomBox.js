@@ -84,7 +84,7 @@ function ShowRoomBox() {
             <div className="row">
                 {room.map((room, key) => {
                     return (
-                        <div className="col-4 d-flex justify-content-center">
+                        <div className="col-md-4 col-sm-12 d-flex justify-content-center py-2">
                             <div class="card" style={{ width: "18rem" }}>
                                 <img class="card-img-top" src={BgSlide1} alt="Card image cap" />
                                 <div class="card-body">
@@ -104,7 +104,7 @@ function ShowRoomBox() {
                                             {momentjs(room.startDate).format('ll')}
                                             <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                         </button>
-                                                    &nbsp; - &nbsp;
+                                                    &nbsp;-&nbsp;
                                                 <button
                                             type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
                                             {momentjs(room.endDate).format('ll')}
