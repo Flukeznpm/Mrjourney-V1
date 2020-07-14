@@ -9,7 +9,6 @@ import App from './App';
 import CreateTrip from './linepage/CreateTrip';
 import Home from './webpage/Home';
 import CreateJoinRoom from './webpage/CreateJoinRoom';
-import CreateJoinRoomHook from './webpage/CreateJoinRoomHook';
 import JoinedRoom from './webpage/JoinedRoom';
 import MyOwnerRoom from './webpage/MyOwnerRoom';
 import CurrentJoinRoom from './webpage/CurrentJoinRoom';
@@ -34,9 +33,6 @@ ReactDOM.render(
                 </Route>
                 <Route path="/CreateJoinRoom" >
                     <CreateJoinRoom />
-                </Route>
-                <Route path="/CreateJoinRoomHook" >
-                    <CreateJoinRoomHook />
                 </Route>
                 <Route path="/JoinedRoom">
                     <JoinedRoom />

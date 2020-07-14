@@ -45,7 +45,6 @@ function Home() {
                                 </div>
                             </div>
                         </div>
-                        {/* <ShowRoomBox></ShowRoomBox> */}
                         <ShowRoomBox></ShowRoomBox>
                     </div>
                 </div>

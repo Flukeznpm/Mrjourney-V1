@@ -42,7 +42,19 @@ const initialState = {
     eventType: '',
 
   },
-  keyModal: 0
+  keyModal: 0,
+  Room: {
+    roomName: '',
+    roomCover: '',
+    province: '',
+    startDate: '',
+    endDate: '',
+    tripDetails: '',
+    qrCode: '',
+    maxMember: 0,
+    genderCondition: '',
+    ageCondition: '',
+  }
 }
 
 const hookReducer = (state, action) => {
@@ -87,6 +99,14 @@ const hookReducer = (state, action) => {
           [action.name]: action.value
         }
       }
+    case "HANDLE_ROOM":
+      return {
+        ...state,
+        Room: {
+          ...state.Room,
+          [action.name]: action.value
+        }
+      }
     // Plus&Minus Date Trip
     case "PLUS_DATE":
       return {
@@ -102,6 +122,22 @@ const hookReducer = (state, action) => {
         Trip: {
           ...state.Trip,
           numberAddDate: state.Trip.numberAddDate - action.payload
+        }
+      }
+    case "PLUS_MEMBER":
+      return {
+        ...state,
+        Room: {
+          ...state.Room,
+          maxMember: state.Room.maxMember + action.payload
+        }
+      }
+    case "MINUS_MEMBER":
+      return {
+        ...state,
+        Room: {
+          ...state.Room,
+          maxMember: state.Room.maxMember - action.payload
         }
       }
     // Active Event
@@ -218,7 +254,7 @@ export const HookProvider = ({ children }) => {
     initialState
   )
 
-  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal } = hookState
+  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal, Room } = hookState
 
   const addCounter = payload =>
     hookDispatch({ type: "ADD_COUNTER", payload }) // ส่ง type ADD_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
@@ -234,10 +270,16 @@ export const HookProvider = ({ children }) => {
     hookDispatch({ type: "HANDLE_TRIP", value, name })
   const handleEventForm = (value, name) =>
     hookDispatch({ type: "HANDLE_EVENT", value, name })
+  const handleRoomForm = (value, name) =>
+    hookDispatch({ type: "HANDLE_ROOM", value, name })
   const plusDate = payload =>
     hookDispatch({ type: "PLUS_DATE", payload })
   const minusDate = payload =>
     hookDispatch({ type: "MINUS_DATE", payload })
+  const plusMember = payload =>
+    hookDispatch({ type: "PLUS_MEMBER", payload })
+  const minusMember = payload =>
+    hookDispatch({ type: "MINUS_MEMBER", payload })
   const setActiveEvent = payload =>
     hookDispatch({ type: "ACTIVE_EVENT", payload })
   const setNotActiveEvent = payload =>
@@ -271,6 +313,7 @@ export const HookProvider = ({ children }) => {
         Event,
         addModalShow,
         keyModal,
+        Room,
         addCounter,
         subCounter,
         nextStep,
@@ -278,8 +321,11 @@ export const HookProvider = ({ children }) => {
         resetStep,
         handleTripForm,
         handleEventForm,
+        handleRoomForm,
         plusDate,
         minusDate,
+        plusMember,
+        minusMember,
         setActiveEvent,
         setNotActiveEvent,
         setEvent,
