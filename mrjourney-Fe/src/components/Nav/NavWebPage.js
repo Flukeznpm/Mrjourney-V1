@@ -120,7 +120,7 @@ function NavWebPage(props) {
 
                                     <div className="dropdown-menu dropdown-menu-right dropdown-info">
                                         <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ"
-                                            className="dropdown-item  a-dropdown">Sign in</a>
+                                            className="dropdown-item a-dropdown">Sign in</a>
                                     </div>
                                 </li>
                             </ul>
@@ -164,19 +164,19 @@ function NavWebPage(props) {
                                     <div className="dropdown-menu dropdown-menu-right dropdown-info"
                                     >
                                         <div className="ml-1 mr-1 dropdown-show-profile px-2">
-                                            <img src={pictureURL} class="login-profile" height="45px" width="45px" alt="owner-img" />
-                                            <span className="btn ml-3 dropdown-profile-label">{displayName}</span>
+                                            <img src={pictureURL} class="login-profile" height="50px" width="50px" alt="owner-img" />
+                                            <div className="btn ml-1 dropdown-profile-label">
+                                                <div style={{ fontSize: "20px", fontWeight: "bold" }}>Hi! {displayName}</div>
+                                                <a href="/Profile" className="dropdown-see-profile">ดูโปรไฟล์ของฉัน</a>
+                                            </div>
                                         </div>
-                                        <a href="/Profile" className="my-2 dropdown-item a-dropdown">
-                                            <i class="fas fa-user-circle pr-1 fa-lg" /> My Profile
-                                            </a>
                                         <a href="/Profile" className="my-2 dropdown-item a-dropdown">
                                             <i class="fas fa-door-open pr-1 fa-lg" /> Join Room
                                             </a>
                                         <a href="/Profile" className="my-2 dropdown-item a-dropdown">
                                             <i class="fas fa-house-user pr-1 fa-lg" /> Owner Room
                                             </a>
-                                        <div className="my-2 dropdown-item signout-btn a-dropdown">
+                                        <div className="my-2 dropdown-item signout-btn a-dropdown" style={{ color: "#C25738" }}>
                                             <a onClick={onLogout}>
                                                 <i class="fas fa-sign-out-alt pr-1 fa-lg" /> Sign Out
                                                 </a>

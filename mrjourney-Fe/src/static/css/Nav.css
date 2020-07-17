@@ -42,7 +42,7 @@
     cursor: pointer;
 }
 
-.dropdown:hover{
+.dropdown:hover {
     background-color: #eee9e3;
     border-radius: 12px;
 }
@@ -65,11 +65,9 @@
 .dropdown-show-profile {
     padding-top: 5px;
     padding-bottom: 5px;
-    border-bottom: 1px solid lightgrey;
 }
 
 .dropdown-profile-label {
-    font-size: 20px;
     cursor: text;
 }
 
@@ -109,4 +107,29 @@
 .WebLogo {
     width: 140px;
     height: 60px;
+}
+
+.dropdown-menu {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.a-dropdown:hover {
+    border-radius: 8px;
+    background-color: #eee9e3;
+    color: #231F20;
+}
+
+.dropdown-see-profile {
+    font-size: 10.5px;
+    text-decoration: none;
+    color: #231F20;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-see-profile:hover {
+    text-decoration: none;
+    color: #C25738;
 }
