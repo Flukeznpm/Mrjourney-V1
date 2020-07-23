@@ -13,7 +13,7 @@ import RequiredForm from "../Required/RequiredForm"
 
 
 function CreateTripStep1(props) {
-    const { thaiprovince, handleTripForm, plusDate, minusDate, Trip, confirmTripStep } = useContext(HookContext)
+    const { thaiprovince, handleTripForm, plusDate, minusDate, Trip, confirmTripStep, toDate } = useContext(HookContext)
 
     const [Linename, setLineName] = useState('')
     const [Linepicture, setLinePicture] = useState('')
@@ -110,6 +110,7 @@ function CreateTripStep1(props) {
                                                     <input type='date' className="form-control"
                                                         name="date"
                                                         value={Trip.date}
+                                                        min={toDate}
                                                         onChange={(e) => handleTripForm(e.target.value, e.target.name)}
                                                         ref={register({ required: true })}
                                                     />

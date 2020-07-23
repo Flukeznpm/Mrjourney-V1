@@ -114,6 +114,7 @@ function CreateRoomStep1(props) {
                                             <input type="date" class="form-control"
                                                 name="startDate"
                                                 value={Room.startDate}
+                                                max={Room.endDate}
                                                 ref={register({ required: true })}
                                                 onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                                             />
@@ -124,6 +125,7 @@ function CreateRoomStep1(props) {
                                             <input type="date" class="form-control"
                                                 name="endDate"
                                                 value={Room.endDate}
+                                                min={Room.startDate}
                                                 ref={register({ required: true })}
                                                 onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                                             />

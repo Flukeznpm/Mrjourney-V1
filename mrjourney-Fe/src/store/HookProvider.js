@@ -26,6 +26,7 @@ const initialState = {
       'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรปราการ', 'สมุทรสงคราม', 'สมุทรสาคร', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์',
       'หนองคาย', 'หนองบัวลำภู', 'อ่างทอง', 'อุดรธานี', 'อุทัยธานี', 'อุตรดิตถ์', 'อุบลราชธานี', 'อำนาจเจริญ'
     ],
+  toDate: momentjs(new Date()).format('YYYY-MM-DD'),
   Trip: {
     activeEvent: 0,
     tripName: '',
@@ -258,7 +259,7 @@ export const HookProvider = ({ children }) => {
     initialState
   )
 
-  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal, Room } = hookState
+  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal, Room, toDate } = hookState
 
   const addCounter = payload =>
     hookDispatch({ type: "ADD_COUNTER", payload }) // ส่ง type ADD_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
@@ -318,6 +319,7 @@ export const HookProvider = ({ children }) => {
         addModalShow,
         keyModal,
         Room,
+        toDate,
         addCounter,
         subCounter,
         nextStep,
