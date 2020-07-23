@@ -7,10 +7,13 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
+import { useForm } from "react-hook-form";
+import RequiredForm from "../Required/RequiredForm"
 
 function CreateRoomStep1(props) {
     const { thaiprovince, nextStep, handleRoomForm, Room } = useContext(HookContext)
     const [lineID, setLineId] = useState("");
+    const { register, handleSubmit, watch, errors } = useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -22,6 +25,14 @@ function CreateRoomStep1(props) {
             setLineId(user.lineID)
         }
     }, [])
+
+    const onSubmit = () => {
+        if (Room.roomName && Room.province && Room.startDate && Room.endDate) {
+            nextStep(1)
+        } else {
+            return false
+        }
+    };
 
     return (
         <div>
@@ -45,14 +56,13 @@ function CreateRoomStep1(props) {
                         </li>
                     </ul>
                 </div>
-
             </div>
             <div className="create-room-form py-3">
                 <div className="col-12">
                     <div className="row">
                         <div className="col-2"></div>
                         <div className="col-8">
-                            <form>
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="form-group">
                                     <div className="container">
                                         <div class="pt-4">
@@ -61,7 +71,10 @@ function CreateRoomStep1(props) {
                                                 name="roomName"
                                                 value={Room.roomName}
                                                 onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
-                                                placeholder="ใส่ชื่อทริปของคุณ" />
+                                                ref={register({ required: true })}
+                                                placeholder="ใส่ชื่อทริปของคุณ"
+                                            />
+                                            {errors.roomName && <RequiredForm />}
                                         </div>
                                         <div class="pt-4 ">
                                             <label for="exampleInputEmail1">หน้าปกทริป<span className="p-1" style={{ color: "red", fontSize: "12px" }}>(ขนาดไม่เกิน 800px)</span></label>
@@ -69,9 +82,11 @@ function CreateRoomStep1(props) {
                                                 <input type="file" class="custom-file-input" id="validatedCustomFile"
                                                     name="roomCover"
                                                     value={Room.roomCover}
+                                                    ref={register({ required: true })}
                                                     onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                                                 />
                                                 <label class="custom-file-label" for="validatedCustomFile" >{Room.roomCover}</label>
+                                                {errors.roomCover && <RequiredForm />}
                                             </div>
                                         </div>
                                         <div class="pt-4">
@@ -80,10 +95,11 @@ function CreateRoomStep1(props) {
                                                 <select className=" btn province-btn dropdown-toggle"
                                                     name="province"
                                                     value={Room.province}
+                                                    ref={register({ required: true })}
                                                     onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                                                     id="dropdownMenuButton"
                                                 >
-                                                    <option value="selected" selected>กรุณาเลือกจังหวัด</option>
+                                                    <option value="" selected>กรุณาเลือกจังหวัด</option>
                                                     {thaiprovince.map((ThaiProvinceShow) => {
                                                         return (
                                                             <option value={ThaiProvinceShow}>{ThaiProvinceShow}</option>
@@ -91,30 +107,37 @@ function CreateRoomStep1(props) {
                                                     })}
                                                 </select>
                                             </div>
+                                            {errors.province && <RequiredForm />}
                                         </div>
                                         <div class="pt-4">
                                             <label for="exampleInputEmail1">วันเริ่มทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <input type="date" class="form-control"
                                                 name="startDate"
                                                 value={Room.startDate}
+                                                ref={register({ required: true })}
                                                 onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                                             />
+                                            {errors.startDate && <RequiredForm />}
                                         </div>
                                         <div class="pt-4">
                                             <label for="exampleInputEmail1">วันสิ้นสุดทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <input type="date" class="form-control"
                                                 name="endDate"
                                                 value={Room.endDate}
+                                                ref={register({ required: true })}
                                                 onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                                             />
+                                            {errors.endDate && <RequiredForm />}
                                         </div>
                                         <div class="pt-4">
                                             <label for="exampleInputEmail1">รายละเอียดการเดินทาง<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <textarea class="form-control" rows="3"
                                                 name="tripDetails"
                                                 value={Room.tripDetails}
+                                                ref={register({ required: true })}
                                                 onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                                             />
+                                            {errors.tripDetails && <RequiredForm />}
                                         </div>
                                         <div class="pt-4">
                                             <label for="exampleInputEmail1">คิวอาร์โค้ด<span className="p-1" style={{ color: "red" }}>*</span></label>
@@ -122,16 +145,18 @@ function CreateRoomStep1(props) {
                                                 <input type="file" class="custom-file-input" id="validatedCustomFile"
                                                     name="qrCode"
                                                     value={Room.qrCode}
+                                                    ref={register({ required: true })}
                                                     onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                                                 />
                                                 <label class="custom-file-label" for="validatedCustomFile" >{Room.qrCode}</label>
+                                                {errors.qrCode && <RequiredForm />}
                                             </div>
                                         </div>
                                         <div className="buttom-page py-3">
                                             <div className="py-3" style={{ marginBottom: "25px", marginTop: "20px" }}>
                                                 <div className="next-btn">
                                                     <button type="submit" className="btn btn-warning btn-lg btn-block text-white"
-                                                        onClick={() => nextStep(1)}>ต่อไป</button>
+                                                        onClick={() => onSubmit()}>ต่อไป</button>
                                                 </div>
                                             </div>
                                         </div>

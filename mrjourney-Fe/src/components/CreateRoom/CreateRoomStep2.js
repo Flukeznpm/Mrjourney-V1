@@ -7,13 +7,16 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
+import { useForm } from "react-hook-form";
 import { HookContext } from '../../store/HookProvider'
+import RequiredForm from "../Required/RequiredForm"
 
 function CreateRoomStep2(props) {
     const { nextStep, prevStep, handleRoomForm, Room, plusMember, minusMember } = useContext(HookContext)
     const [gender, selectGender] = useState(["ชาย", "หญิง", "ไม่จำกัดเพศ"])
     const [age, selectAge] = useState(["18 ปีขึ้นไป", "20 ปีขึ้นไป", "ไม่จำกัดช่วงอายุ"])
     const [lineID, setLineID] = useState("")
+    const { register, handleSubmit, watch, errors } = useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -25,6 +28,14 @@ function CreateRoomStep2(props) {
             setLineID(user.lineID)
         }
     }, [])
+
+    const onSubmit = () => {
+        if (Room.maxMember && Room.maxMember !== 0 && Room.ageCondition && Room.genderCondition) {
+            nextStep(1)
+        } else {
+            return false
+        }
+    };
 
     return (
         <div>
@@ -55,10 +66,9 @@ function CreateRoomStep2(props) {
                     <div className="row">
                         <div className="col-2"></div>
                         <div className="col-8">
-                            <form>
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="form-group">
                                     <div className="container">
-
                                         <div className="pt-4">
                                             <label htmlFor="example-date-input">จำนวนคนที่เปิดรับ<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <div className="input-group">
@@ -69,11 +79,12 @@ function CreateRoomStep2(props) {
                                                         <span className="fas fa-minus"></span>
                                                     </button>
                                                 </span>
-
-                                                <input type="text" name="maxMember"
+                                                <input type="text"
+                                                    name="maxMember"
                                                     className="form-control input-number"
-                                                    value={Room.maxMember} />
-
+                                                    value={Room.maxMember}
+                                                    ref={register({ required: true })}
+                                                />
                                                 <span className="input-group-btn">
                                                     <button type="button" className="btn btn-default btn-number"
                                                         onClick={() => plusMember(1)}>
@@ -81,9 +92,9 @@ function CreateRoomStep2(props) {
                                                     </button>
                                                 </span>
                                             </div>
+                                            {errors.maxMember && <RequiredForm />}
+
                                         </div>
-
-
                                         <div class="pt-4">
                                             <label for="exampleInputEmail1" >เพศที่ต้องการให้ร่วมการท่องเที่ยว<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <div className="btn-group pl-5">
@@ -91,8 +102,10 @@ function CreateRoomStep2(props) {
                                                     name="genderCondition"
                                                     value={Room.genderCondition}
                                                     onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
-                                                    id="dropdownMenuButton">
-                                                    <option value="selected" selected>กรุณาเลือกเพศ</option>
+                                                    id="dropdownMenuButton"
+                                                    ref={register({ required: true })}
+                                                >
+                                                    <option value="" selected>กรุณาเลือกเพศ</option>
                                                     {gender.map((ShowGender) => {
                                                         return (
                                                             <option value={ShowGender}>{ShowGender}</option>
@@ -100,9 +113,8 @@ function CreateRoomStep2(props) {
                                                     })}
                                                 </select>
                                             </div>
+                                            {errors.genderCondition && <RequiredForm />}
                                         </div>
-
-
                                         <div class="pt-4">
                                             <label for="exampleInputEmail1" >ช่วงอายุที่ต้องการให้ร่วมการท่องเที่ยว<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <div className="btn-group pl-5">
@@ -110,8 +122,10 @@ function CreateRoomStep2(props) {
                                                     name="ageCondition"
                                                     value={Room.ageCondition}
                                                     onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
-                                                    id="dropdownMenuButton">
-                                                    <option value="selected" selected>กรุณาเลือกช่วงอายุ</option>
+                                                    id="dropdownMenuButton"
+                                                    ref={register({ required: true })}
+                                                >
+                                                    <option value="" selected>กรุณาเลือกช่วงอายุ</option>
                                                     {age.map((ShowAge) => {
                                                         return (
                                                             <option value={ShowAge}>{ShowAge}</option>
@@ -119,9 +133,8 @@ function CreateRoomStep2(props) {
                                                     })}
                                                 </select>
                                             </div>
+                                            {errors.ageCondition && <RequiredForm />}
                                         </div>
-
-
 
                                         <div className="buttom-page py-3">
                                             <div className="py-3" style={{ marginBottom: "25px", marginTop: "20px" }}>
@@ -131,8 +144,8 @@ function CreateRoomStep2(props) {
                                                             onClick={() => prevStep(1)}>ย้อนกลับ</button>
                                                     </div>
                                                     <div className="next-btn col-6">
-                                                        <button type="button" className="btn btn-warning btn-lg btn-block text-white"
-                                                            onClick={() => nextStep(1)}>ต่อไป</button>
+                                                        <button type="submit" className="btn btn-warning btn-lg btn-block text-white"
+                                                            onClick={() => onSubmit()}>ต่อไป</button>
                                                     </div>
                                                 </div>
                                             </div>

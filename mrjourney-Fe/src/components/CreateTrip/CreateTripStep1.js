@@ -8,6 +8,8 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
+import { useForm } from "react-hook-form";
+import RequiredForm from "../Required/RequiredForm"
 
 
 function CreateTripStep1(props) {
@@ -15,6 +17,7 @@ function CreateTripStep1(props) {
 
     const [Linename, setLineName] = useState('')
     const [Linepicture, setLinePicture] = useState('')
+    const { register, handleSubmit, watch, errors } = useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -26,7 +29,15 @@ function CreateTripStep1(props) {
             setLineName(user.displayName)
             setLinePicture(user.pictureURL)
         }
-    },[])
+    }, [])
+
+    const onSubmit = () => {
+        if (Trip.tripName && Trip.province && Trip.date) {
+            confirmTripStep(1)
+        } else {
+            return false
+        }
+    };
 
     return (
         <div>
@@ -56,17 +67,20 @@ function CreateTripStep1(props) {
                             <div className="col-2"></div>
                             <div className="col-8">
                                 <div className="py-3">
-                                    <form>
+                                    <form onSubmit={handleSubmit(onSubmit)}>
                                         <div className="form-group">
                                             <div className="InputFrom">
-                                                <div className="">
+                                                <div className="pt-4">
                                                     <label htmlFor="exampleInputEmail1">ชื่อทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
                                                     <input type='text' className="form-control"
                                                         name="tripName"
                                                         value={Trip.tripName}
                                                         onChange={(e) => handleTripForm(e.target.value, e.target.name)}
-                                                        placeholder="ใส่ชื่อทริปท่องเที่ยว" />
+                                                        placeholder="ใส่ชื่อทริปท่องเที่ยว"
+                                                        ref={register({ required: true })}
+                                                    />
                                                 </div>
+                                                {errors.tripName && <RequiredForm />}
                                             </div>
                                             <div className="InputFrom">
                                                 <div className="pt-4">
@@ -77,7 +91,9 @@ function CreateTripStep1(props) {
                                                             value={Trip.province}
                                                             onChange={(e) => handleTripForm(e.target.value, e.target.name)}
                                                             id="dropdownMenuButton"
+                                                            ref={register({ required: true })}
                                                         >
+                                                            <option value="" selected>กรุณาเลือกจังหวัด</option>
                                                             {thaiprovince.map((ThaiProvinceShow) => {
                                                                 return (
                                                                     <option value={ThaiProvinceShow}>{ThaiProvinceShow}</option>
@@ -86,6 +102,7 @@ function CreateTripStep1(props) {
                                                         </select>
                                                     </div>
                                                 </div>
+                                                {errors.province && <RequiredForm />}
                                             </div>
                                             <div className="InputFrom">
                                                 <div className="pt-4">
@@ -93,8 +110,11 @@ function CreateTripStep1(props) {
                                                     <input type='date' className="form-control"
                                                         name="date"
                                                         value={Trip.date}
-                                                        onChange={(e) => handleTripForm(e.target.value, e.target.name)} />
+                                                        onChange={(e) => handleTripForm(e.target.value, e.target.name)}
+                                                        ref={register({ required: true })}
+                                                    />
                                                 </div>
+                                                {errors.date && <RequiredForm />}
                                             </div>
                                             <div className="col pt-4">
                                                 <label htmlFor="example-date-input">จำนวนวัน<span className="p-1" style={{ color: "red" }}>*</span></label>
@@ -106,7 +126,12 @@ function CreateTripStep1(props) {
                                                             <span className="fas fa-minus"></span>
                                                         </button>
                                                     </span>
-                                                    <input type="text" name="numberAddDate" className="form-control input-number" value={Trip.numberAddDate} min="1" max="10" />
+                                                    <input type="text"
+                                                        name="numberAddDate"
+                                                        className="form-control input-number"
+                                                        value={Trip.numberAddDate}
+                                                        ref={register({ required: true })}
+                                                    />
                                                     <span className="input-group-btn">
                                                         <button type="button" className="btn btn-default btn-number"
                                                             onClick={() => plusDate(1)}>
@@ -114,6 +139,7 @@ function CreateTripStep1(props) {
                                                         </button>
                                                     </span>
                                                 </div>
+                                                {errors.numberAddDate && <RequiredForm />}
                                             </div>
                                         </div>
                                         <div className="col-12">
@@ -124,7 +150,7 @@ function CreateTripStep1(props) {
                                                         <div className="py-3" style={{ marginBottom: "25px", marginTop: "20px" }}>
                                                             <div className="next-btn">
                                                                 <button type="submit" className="btn btn-warning btn-lg btn-block text-white"
-                                                                    onClick={() => confirmTripStep(1)}>ต่อไป</button>
+                                                                    onClick={() => onSubmit()}>ต่อไป</button>
                                                             </div>
                                                         </div>
                                                     </div>

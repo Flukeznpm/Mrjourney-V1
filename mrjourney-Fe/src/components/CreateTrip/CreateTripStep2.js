@@ -11,8 +11,8 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
-import 'moment/locale/th'
-momentjs.locale('th')
+import { useForm } from "react-hook-form";
+import RequiredForm from "../Required/RequiredForm"
 
 function CreateTripStep2(props) {
     const { nextStep, prevStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)

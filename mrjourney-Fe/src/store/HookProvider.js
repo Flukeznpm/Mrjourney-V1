@@ -162,19 +162,23 @@ const hookReducer = (state, action) => {
     case "SET_EVENT":
       let AllDate = state.Trip.totalDate
       AllDate[action.key].event.push(state.Event)
-      return {
-        ...state,
-        Trip: {
-          ...state.Trip,
-          totalDate: AllDate
-        },
-        addModalShow: false,
-        Event: {
-          eventName: '',
-          startEvent: '',
-          endEvent: '',
-          eventType: ''
+      if (state.Event.eventName && state.Event.startEvent && state.Event.endEvent) {
+        return {
+          ...state,
+          Trip: {
+            ...state.Trip,
+            totalDate: AllDate
+          },
+          addModalShow: false,
+          Event: {
+            eventName: '',
+            startEvent: '',
+            endEvent: '',
+            eventType: ''
+          }
         }
+      } else {
+        return false
       }
     case "DELETE_EVENT":
       let AllDateDelete = state.Trip.totalDate //new
