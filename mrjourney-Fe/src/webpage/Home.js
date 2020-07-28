@@ -20,9 +20,19 @@ class Home extends React.Component {
         if (code != null) {
             axios.post('http://localhost:5000/getToken', data).then((res) => {
                 console.log(res);
-                cookie.save('jwt', res.data);
-                var decoded = jwt.verify(res.data, 'secreatKey');
-                console.log(decoded);
+                if (res.status == 400) {
+                    // Go to the Register Page (กรณีเรียกหน้าregisterแบบไม่เปลี่ยนหน้า)
+                    // Axios to API /caccountProfile/reateAccountDetail
+                    cookie.save('jwt', res.data);
+                    var decoded = jwt.verify(res.data, 'secreatKey');
+                    console.log(decoded);
+                } else {
+                    cookie.save('jwt', res.data);
+                    var decoded = jwt.verify(res.data, 'secreatKey');
+                    console.log(decoded);
+                }
+            }).catch((error) => {
+                console.log(error);
             })
         }
     }

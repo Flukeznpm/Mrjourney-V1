@@ -24,6 +24,7 @@ class CreateRoomStep3 extends React.Component {
             pictureURL: '',
             roomID: '',
             roomName: '',
+            roomCover: '',
             province: '',
             startDate: '',
             endDate: '',
@@ -31,6 +32,7 @@ class CreateRoomStep3 extends React.Component {
             maxMember: '',
             genderCondition: '',
             ageCondition: '',
+            qrCode: '',
             status: true
         }
     }
@@ -56,8 +58,8 @@ class CreateRoomStep3 extends React.Component {
             lineID: this.state.lineID,
             displayName: this.state.displayName,
             pictureURL: this.state.pictureURL,
-            roomID: this.state.roomID,
             roomName: this.props.RoomForm.roomName,
+            //roomCover:this.props.RoomForm.roomCover,   
             province: this.props.RoomForm.province,
             startDate: this.props.RoomForm.startDate,
             endDate: this.props.RoomForm.endDate,
@@ -65,6 +67,7 @@ class CreateRoomStep3 extends React.Component {
             maxMember: this.props.RoomForm.maxMember,
             genderCondition: this.props.RoomForm.genderCondition,
             ageCondition: this.props.RoomForm.ageCondition,
+            //qrCode : this.props.RoomForm.qrCode,
             status: this.state.status
         }
         await axios.post('http://localhost:5000/room/createRoom', dataRoom)

@@ -37,20 +37,20 @@ class CreateTripStep3 extends React.Component {
         }
     }
 
-    checkTripList = async () => {
-        let dataCheckTrip = {
-            lineGroupID: this.state.lineGroupID,
-            lineID: this.state.lineID,
-        }
-        await axios.get(`http://localhost:5000/trip?lineGroupID=${this.state.lineGroupID}&lineID=${this.state.lineID}`)
-            .then(async checkTrip => {
-                console.log('Data from API : ' + checkTrip.data)
-                this.setState({
-                    trip: checkTrip.data
-                });
-            });
-        console.log('Data from State : ' + this.state.trip);
-    }
+    // checkTripList = async () => {
+    //     let dataCheckTrip = {
+    //         lineGroupID: this.state.lineGroupID,
+    //         lineID: this.state.lineID,
+    //     }
+    //     await axios.get(`http://localhost:5000/trip?lineGroupID=${this.state.lineGroupID}&lineID=${this.state.lineID}`)
+    //         .then(async checkTrip => {
+    //             console.log('Data from API : ' + checkTrip.data)
+    //             this.setState({
+    //                 trip: checkTrip.data
+    //             });
+    //         });
+    //     console.log('Data from State : ' + this.state.trip);
+    // }
 
     render() {
         return (
