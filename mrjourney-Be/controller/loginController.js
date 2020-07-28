@@ -3,8 +3,10 @@ var router = express.Router();
 var querystring = require('querystring');
 var https = require('https');
 const jwt = require('jsonwebtoken');
+var firebase = require('firebase-admin');
+let db = firebase.firestore();
 
-router.post("/", function (req, resp) {
+router.post("/", async function (req, resp) {
     var data = querystring.stringify({
         grant_type: "authorization_code",
         code: req.body.code,
@@ -21,11 +23,10 @@ router.post("/", function (req, resp) {
         }
     }
     const request = https.request(options, res => {
-        console.log(`statusCode: ${res.statusCode}`)
-        res.on('data', d => {
+        //console.log(`statusCode: ${res.statusCode}`)
+        res.on('data', async d => {
             process.stdout.write(d)
             data = JSON.parse(d)
-            // JWT Decode
             var decoded = jwt.decode(data.id_token);
             var dataLine = {
                 lineID: decoded.sub,
@@ -33,9 +34,27 @@ router.post("/", function (req, resp) {
                 email: decoded.email,
                 pictureURL: decoded.picture
             }
-            console.log('Data after Decode : ' + dataLine)
-            var token = jwt.sign(dataLine, 'secreatKey');
-            resp.json(token)
+            //console.log('Data after Decode : ' + dataLine)
+
+            // Check first login or not
+            if (dataLine != null) {
+                let CheckUserRegister = await db.collection('AccountProfile').where('lineID', '==', dataLine.lineID);
+                CheckUserRegister.get().then(async data => {
+                    const checkData = data.exists;
+                    if (checkData) {
+                        var token = jwt.sign(dataLine, 'secreatKey');
+                        resp.json(token);
+                    } else {
+                        resp.status(400).json({
+                            message: 'You must to register account'
+                        });
+                    }
+                })
+            } else {
+                resp.status(400).json({
+                    message: 'Error to Authorization'
+                })
+            }
         })
     })
     request.on('error', error => {
@@ -43,6 +62,6 @@ router.post("/", function (req, resp) {
     })
     request.write(data)
     request.end()
-})
+});
 
 module.exports = router;
