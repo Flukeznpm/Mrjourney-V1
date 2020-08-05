@@ -15,6 +15,7 @@ import Profile from './webpage/Profile';
 import CheckTrip from './linepage/CheckTrip';
 import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
+
 function App() {
   return (
     <Router>
@@ -56,4 +57,6 @@ function App() {
     </Router>
   );
 }
+
 export default App;
+
