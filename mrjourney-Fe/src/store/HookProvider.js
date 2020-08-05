@@ -301,10 +301,10 @@ export const HookProvider = ({ children }) => {
     hookDispatch({ type: "NEXT_STEP_1", payload })
   const deleteEvent = (eventDetail, key) =>
     hookDispatch({ type: "DELETE_EVENT", eventDetail, key })
-  const showRoomModalShow = () =>
-    hookDispatch({ type: "SHOW_ROOM_MODAL_SHOW" })
-  const showRoomModalClose = () =>
-    hookDispatch({ type: "SHOW_ROOM_MODAL_CLOSE" })
+  const showRoomModalShow = payload =>
+    hookDispatch({ type: "SHOW_ROOM_MODAL_SHOW", payload })
+  const showRoomModalClose = payload =>
+    hookDispatch({ type: "SHOW_ROOM_MODAL_CLOSE", payload })
 
 
 
