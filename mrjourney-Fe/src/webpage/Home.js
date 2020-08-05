@@ -8,6 +8,7 @@ import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+import Swal from 'sweetalert2';
 
 function Home() {
 
@@ -20,40 +21,52 @@ function Home() {
         }
         if (code != null) {
             axios.post('http://localhost:5000/getToken', data).then((res) => {
-                console.log(res);
-                cookie.save('jwt', res.data);
-                var decoded = jwt.verify(res.data, 'secreatKey');
-                console.log(decoded);
+                if (res.status === 202) {
+                    cookie.save('jwt', res.data);
+                    var decoded = jwt.verify(res.data, 'secreatKey');
+                    console.log(decoded);
+                    Swal.fire({
+                        title: 'คุณยังไม่เคยลงทะเบียน!',
+                        text: 'กรุณาลงทะเบียนเพื่อเข้าใช้เว็บไซต์',
+                        confirmButtonText: '<a href="/FirstTimeLogin" id="alert-confirm-button">ลงทะเบียน</a>',
+                        confirmButtonColor: '#F37945',
+                    })
+                } else {
+                    cookie.save('jwt', res.data);
+                    var decoded = jwt.verify(res.data, 'secreatKey');
+                    console.log(decoded);
+                }
+            }).catch((e) => {
+                console.log(e)
             })
         }
     }, [])
 
-        return (
-            <div className="flex-wrapper">
-                <div className="top-page">
-                    <NavWebPage />
-                    <div className="content-page">
-                        <div className="Carousel-Header">
-                            <CarouselHeader></CarouselHeader>
-                        </div>
-                        <div class="container h-100 my-3 py-2">
-                            <div class="d-flex justify-content-center h-100">
-                                <div class="searchbar">
-                                    <span class="search_icon"><i class="fas fa-search"></i></span>
-                                    <input class="search_input pl-3" type="text" name="" placeholder="ค้นหา..." />
-                                    <span class="search_button" onClick="">Search</span>
-                                </div>
+    return (
+        <div className="flex-wrapper">
+            <div className="top-page">
+                <NavWebPage />
+                <div className="content-page">
+                    <div className="Carousel-Header">
+                        <CarouselHeader></CarouselHeader>
+                    </div>
+                    <div class="container h-100 my-3 py-2">
+                        <div class="d-flex justify-content-center h-100">
+                            <div class="searchbar">
+                                <span class="search_icon"><i class="fas fa-search"></i></span>
+                                <input class="search_input pl-3" type="text" name="" placeholder="ค้นหา..." />
+                                <span class="search_button" onClick="">Search</span>
                             </div>
                         </div>
-                        <ShowRoomBox></ShowRoomBox>
                     </div>
-                </div>
-                <div className="footer-page">
-                    <FooterWebPage></FooterWebPage>
+                    <ShowRoomBox></ShowRoomBox>
                 </div>
             </div>
-
-        )
-    }
+            <div className="footer-page">
+                <FooterWebPage></FooterWebPage>
+            </div>
+        </div>
+    )
+}
 
 export default Home;

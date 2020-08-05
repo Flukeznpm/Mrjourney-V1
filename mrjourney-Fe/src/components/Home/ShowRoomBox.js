@@ -15,8 +15,8 @@ function ShowRoomBox() {
     const { addModalShow, showRoomModalClose, showRoomModalShow } = useContext(HookContext)
     const [room, setShowRoom] = useState([{}])
 
-    useEffect(async () => {
-        await axios.get('http://localhost:5000/room')
+    useEffect(() => {
+        axios.get('http://localhost:5000/room')
             .then(async res => {
                 // console.log('Data from /api/room : ' + res.data)
                 setShowRoom(res.data)
