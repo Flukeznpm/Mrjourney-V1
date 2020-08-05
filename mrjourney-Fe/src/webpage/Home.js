@@ -8,6 +8,7 @@ import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+import Swal from 'sweetalert2';
 
 function Home() {
 
@@ -20,10 +21,23 @@ function Home() {
         }
         if (code != null) {
             axios.post('http://localhost:5000/getToken', data).then((res) => {
-                console.log(res);
-                cookie.save('jwt', res.data);
-                var decoded = jwt.verify(res.data, 'secreatKey');
-                console.log(decoded);
+                if (res.status === 202) {
+                    cookie.save('jwt', res.data);
+                    var decoded = jwt.verify(res.data, 'secreatKey');
+                    console.log(decoded);
+                    Swal.fire({
+                        title: 'คุณยังไม่เคยลงทะเบียน!',
+                        text: 'กรุณาลงทะเบียนเพื่อเข้าใช้เว็บไซต์',
+                        confirmButtonText: '<a href="/FirstTimeLogin" id="alert-confirm-button">ลงทะเบียน</a>',
+                        confirmButtonColor: '#F37945',
+                    })
+                } else {
+                    cookie.save('jwt', res.data);
+                    var decoded = jwt.verify(res.data, 'secreatKey');
+                    console.log(decoded);
+                }
+            }).catch((e) => {
+                console.log(e)
             })
         }
     }, [])
@@ -52,7 +66,6 @@ function Home() {
                 <FooterWebPage></FooterWebPage>
             </div>
         </div>
-
     )
 }
 
