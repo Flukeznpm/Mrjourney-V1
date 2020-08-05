@@ -55,6 +55,13 @@ const initialState = {
     maxMember: 0,
     genderCondition: '',
     ageCondition: '',
+  },
+  AccProfile: {
+    fName: '',
+    lName: '',
+    birthDate: '',
+    gender: '',
+    tel: ''
   }
 }
 
@@ -105,6 +112,14 @@ const hookReducer = (state, action) => {
         ...state,
         Room: {
           ...state.Room,
+          [action.name]: action.value
+        }
+      }
+    case "HANDLE_ACCPROFILE":
+      return {
+        ...state,
+        AccProfile: {
+          ...state.AccProfile,
           [action.name]: action.value
         }
       }
@@ -259,7 +274,7 @@ export const HookProvider = ({ children }) => {
     initialState
   )
 
-  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal, Room, toDate } = hookState
+  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal, Room, toDate, AccProfile } = hookState
 
   const addCounter = payload =>
     hookDispatch({ type: "ADD_COUNTER", payload }) // ส่ง type ADD_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
@@ -277,6 +292,8 @@ export const HookProvider = ({ children }) => {
     hookDispatch({ type: "HANDLE_EVENT", value, name })
   const handleRoomForm = (value, name) =>
     hookDispatch({ type: "HANDLE_ROOM", value, name })
+  const handleAccProfileForm = (value, name) =>
+    hookDispatch({ type: "HANDLE_ACCPROFILE", value, name })
   const plusDate = payload =>
     hookDispatch({ type: "PLUS_DATE", payload })
   const minusDate = payload =>
@@ -306,8 +323,6 @@ export const HookProvider = ({ children }) => {
   const showRoomModalClose = payload =>
     hookDispatch({ type: "SHOW_ROOM_MODAL_CLOSE", payload })
 
-
-
   return (
     <HookContext.Provider
       value={{
@@ -320,6 +335,7 @@ export const HookProvider = ({ children }) => {
         keyModal,
         Room,
         toDate,
+        AccProfile,
         addCounter,
         subCounter,
         nextStep,
@@ -328,6 +344,7 @@ export const HookProvider = ({ children }) => {
         handleTripForm,
         handleEventForm,
         handleRoomForm,
+        handleAccProfileForm,
         plusDate,
         minusDate,
         plusMember,
