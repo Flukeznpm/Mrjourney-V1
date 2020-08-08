@@ -38,12 +38,14 @@ function MoreRoomDetailModal(props) {
                                                             <button
                                             type="button" class="show-details-btn btn p-1 " style={{ fontSize: "10px" }}>
                                             {momentjs(props.room.startDate).format('ll')}
+
                                             <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                         </button>
                                                             &nbsp; - &nbsp;
                                                             <button
                                             type="button" class="show-details-btn btn p-1" style={{ fontSize: "10px" }}>
                                             {momentjs(props.room.endDate).format('ll')}
+
                                             <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                         </button>
                                     </span>
@@ -82,6 +84,7 @@ function MoreRoomDetailModal(props) {
                         <div className="Creator mt-2">
                             <span className="pl-1 pr-1"><img src={props.room.ownerPicRoom} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
                             <span style={{ fontSize: "13px" }}>ผู้สร้าง : {props.room.ownerRoomName}</span>
+
                         </div>
                         <div className="trip-detail-modal py-1">
                             รายละเอียดแผนการท่องเที่ยว
@@ -89,6 +92,7 @@ function MoreRoomDetailModal(props) {
 
                             >
                                 {props.room.tripDetails}
+
                             </textarea>
                         </div>
                     </div>
