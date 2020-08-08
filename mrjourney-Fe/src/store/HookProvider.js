@@ -240,12 +240,14 @@ const hookReducer = (state, action) => {
     case "SHOW_ROOM_MODAL_SHOW":
       return {
         ...state,
-        addModalShow: true
+        addModalShow: true,
+        keyModal: action.payload
       }
     case "SHOW_ROOM_MODAL_CLOSE":
       return {
         ...state,
-        addModalShow: false
+        addModalShow: false,
+        keyModal: action.payload
       }
 
     case "NEXT_STEP_1":

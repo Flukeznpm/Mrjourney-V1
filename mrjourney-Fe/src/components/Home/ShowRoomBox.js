@@ -14,6 +14,7 @@ import MoreRoomDetailModal from '../Modal/MoreRoomDetailModal';
 function ShowRoomBox() {
     const { addModalShow, showRoomModalClose, showRoomModalShow } = useContext(HookContext)
     const [room, setShowRoom] = useState([{}])
+    const [roomModal, setRoomModal] = useState({})
 
     useEffect(() => {
         axios.get('http://localhost:5000/room')
@@ -21,7 +22,6 @@ function ShowRoomBox() {
                 // console.log('Data from /api/room : ' + res.data)
                 setShowRoom(res.data)
             });
-        // console.log('Data from state.room : ' + this.state.room);
     }, [])
 
     const AlertJoinWrongCondition = () => {
@@ -142,12 +142,15 @@ function ShowRoomBox() {
                                     <button type="button" class="col-9 btn btn-join-color round text-white" onClick={AlertJoinWrongCondition}>เข้าร่วม</button>
 
                                     <button type="button" className="btn col-3"
-                                        onClick={showRoomModalShow}>
+                                        onClick={() => {
+                                            setRoomModal(room)
+                                            showRoomModalShow()}}>
                                         <img src={SearchRoom} class="btn-see-room image_outer_container" height="30px" width="30px" alt="owner-img" />
                                     </button>
                                     <MoreRoomDetailModal
                                         show={addModalShow}
-                                        onHide={showRoomModalClose} //use for closeButton
+                                        onHide={() => showRoomModalClose()} //use for closeButton
+                                        room={roomModal}
                                     ></MoreRoomDetailModal>
                                 </div>
                             </div>
