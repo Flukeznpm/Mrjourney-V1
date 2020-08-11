@@ -12,7 +12,6 @@ let db = firebase.firestore();
 
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
-    console.log('Room: ')
     res.status(200).json(RoomList);
 });
 
