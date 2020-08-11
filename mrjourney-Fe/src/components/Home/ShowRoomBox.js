@@ -144,7 +144,8 @@ function ShowRoomBox() {
                                     <button type="button" className="btn col-3"
                                         onClick={() => {
                                             setRoomModal(room)
-                                            showRoomModalShow()}}>
+                                            showRoomModalShow()
+                                        }}>
                                         <img src={SearchRoom} class="btn-see-room image_outer_container" height="30px" width="30px" alt="owner-img" />
                                     </button>
                                     <MoreRoomDetailModal

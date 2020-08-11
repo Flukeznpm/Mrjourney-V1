@@ -12,15 +12,15 @@ let db = firebase.firestore();
 // GET : /accountProfile/roomJoin (ดูทริปที่เคยJoin)
 
 router.get('/', async function (req, res, next) {
-    let datas = req.body;
+    let datas = req.query;
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
         res.status(400).json({
             message: "The Data was empty or undefined"
         })
     } else {
-        await getAccountByID(res, datas).then(res => {
-            return res
-        })
+        let accList = await getAccountByID(datas);
+        console.log('[debug] accList', accList)
+        res.status(200).json(accList);
     }
 });
 
@@ -62,10 +62,9 @@ router.put('/editAccountDetail', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        let CheckPermission = await db.collection('AccountProfile').where('lineID', '==', datas.lineID);
+        let CheckPermission = await db.collection('AccountProfile').doc(datas.lineID);
         CheckPermission.get().then(async data => {
-            let checkDataExists = data.exists;
-            if (checkDataExists) {
+            if (data.exists) {
                 await updateAccountDetail(datas);
                 console.log('Alert: Edit Profile Success"')
                 res.status(201).json({
@@ -91,7 +90,7 @@ router.delete('/deleteAccount', async function (req, res, next) {
         let checkPermission = await db.collection('AccountProfile').doc(data.lineID);
         checkPermission.get().then(async data => {
             if (data.exists) {
-                await deleteRoom(req.body);
+                await deleteAccount(req.body);
                 console.log('Alert: Delete Account Success')
                 res.status(200).json({
                     message: "Delete Account Success",
@@ -111,16 +110,14 @@ router.delete('/deleteAccount', async function (req, res, next) {
 async function getAccountByID(datas) {
     let dataAcc = [];
     let showDataAcc = db.collection("AccountProfile").doc(datas.lineID);
-    await showDataAcc.get().then(snapshot => {
-        snapshot.forEach(doc => {
-            dataAcc.push(doc.data());
-        });
+    await showDataAcc.get().then(doc => {
+        console.log('doc', doc.data())
+        dataAcc.push(doc.data());
     })
         .catch(err => {
-            console.log('Error getting Room: ', err);
+            console.log('Error getting AccountPorfile', err);
         });
-    console.log('Data Account : ' + dataAcc);
-    return res.status(200).json(dataAcc);
+    return dataAcc;
 };
 
 async function createAccountDetail(datas) {
@@ -151,8 +148,8 @@ async function updateAccountDetail(data) {
     });
 }
 
-async function deleteRoom(data) {
-
+async function deleteAccount(data) {
+    //ลบยัน Account ID ใน 'AccountPrifile' DB
 }
 
 async function getTripHistoryById(datas) {

@@ -5,25 +5,10 @@ import '../static/css/App.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import { Tabs, Tab } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom';
+import momentjs from 'moment'
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
-
-const ProfileMoreDetail = () => {
-    const [key, setKey] = useState('home');
-    return (
-        <div>
-            <Tabs
-                id="controlled-tab-example"
-                activeKey={key}
-                onSelect={(k) => setKey(k)}>
-                <Tab eventKey="Bio" title="Bio">Welcome to MyProfile</Tab>
-                <Tab eventKey="HisRoom" title="History Room">ShowRoom</Tab>
-                <Tab eventKey="HisTrip" title="History Trip">ShowTrip</Tab>
-            </Tabs>
-        </div>
-    )
-}
 
 function Profile(props) {
     const [lineID, setLineID] = useState("")
@@ -43,12 +28,29 @@ function Profile(props) {
             setLineID(user.lineID)
         }
         axios.get(`http://localhost:5000/accountProfile?lineID=${user.lineID}`)
-            .then(async res => {
-                console.log('axios data:' + res)
+            .then(res => {
+                console.log('axios data:' + res.data)
                 setShowAcc(res.data)
                 console.log('acc', acc)
             })
     }, [])
+
+
+    const ProfileMoreDetail = () => {
+        const [key, setKey] = useState('Bio');
+        return (
+            <div>
+                <Tabs
+                    id="controlled-tab-example"
+                    activeKey={key}
+                    onSelect={(k) => setKey(k)}>
+                    <Tab eventKey="Bio" title="Bio">Welcome to MyProfile</Tab>
+                    <Tab eventKey="HisRoom" title="History Room">ShowRoom</Tab>
+                    <Tab eventKey="HisTrip" title="History Trip">ShowTrip</Tab>
+                </Tabs>
+            </div>
+        )
+    }
 
     return (
         <div className="flex-wrapper">
@@ -61,8 +63,17 @@ function Profile(props) {
                             <img src={pictureURL} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
                             <div className="line-name pt-2" style={{ fontSize: "28px" }}>คุณ : {displayName}</div>
                             <div className="detail-web pt-2">
-                                <span>ชื่อจริง : {acc.fName} </span>
-                                <p /><span>เพศ : </span>
+                                {acc.map((acc) => {
+                                    return (
+                                        <>
+                                            < span > ชื่อ : {acc.fName} </span>
+                                            < span > นามสกุล : {acc.lName} </span>
+                                            <p /><span>เพศ : {acc.gender}</span>
+                                            <p /><span>วันเกิด : {momentjs(acc.birthday).format('ll')}</span>
+                                            <p /><span>เบอร์โทรศัพท์ : {acc.tel}</span>
+                                        </>
+                                    )
+                                })}
                             </div>
                         </div>
                         <div className="container">
@@ -95,7 +106,7 @@ function Profile(props) {
             <div className="footer-page">
                 <FooterWebPage></FooterWebPage>
             </div>
-        </div>
+        </div >
     )
 }
 export default withRouter(Profile);
