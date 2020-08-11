@@ -19,7 +19,6 @@ router.get('/', async function (req, res, next) {
         })
     } else {
         let accList = await getAccountByID(datas);
-        console.log('[debug] accList', accList)
         res.status(200).json(accList);
     }
 });
@@ -111,7 +110,6 @@ async function getAccountByID(datas) {
     let dataAcc = [];
     let showDataAcc = db.collection("AccountProfile").doc(datas.lineID);
     await showDataAcc.get().then(doc => {
-        console.log('doc', doc.data())
         dataAcc.push(doc.data());
     })
         .catch(err => {

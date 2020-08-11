@@ -29,9 +29,7 @@ function Profile(props) {
         }
         axios.get(`http://localhost:5000/accountProfile?lineID=${user.lineID}`)
             .then(res => {
-                console.log('axios data:' + res.data)
                 setShowAcc(res.data)
-                console.log('acc', acc)
             })
     }, [])
 
@@ -67,7 +65,7 @@ function Profile(props) {
                                     return (
                                         <>
                                             < span > ชื่อ : {acc.fName} </span>
-                                            < span > นามสกุล : {acc.lName} </span>
+                                            <p />< span > นามสกุล : {acc.lName} </span>
                                             <p /><span>เพศ : {acc.gender}</span>
                                             <p /><span>วันเกิด : {momentjs(acc.birthday).format('ll')}</span>
                                             <p /><span>เบอร์โทรศัพท์ : {acc.tel}</span>
