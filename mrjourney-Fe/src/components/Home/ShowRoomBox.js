@@ -137,7 +137,7 @@ function ShowRoomBox() {
                                     </div>
                                     <div className="owner-trip-profile py-2">
                                         <span className="pl-1 pr-2"><img src={room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
-                                        <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoom}</span>
+                                        <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoomName}</span>
                                     </div>
                                     <button type="button" class="col-9 btn btn-join-color round text-white" onClick={AlertJoinWrongCondition}>เข้าร่วม</button>
 
