@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
 import CarouselHeader from '../components/Home/CarouselHeader';
 import ShowRoomBox from '../components/Home/ShowRoomBox';
@@ -11,7 +11,7 @@ import cookie from 'react-cookies'
 import Swal from 'sweetalert2';
 
 function Home() {
-
+    const [login, setLogin] = useState(false)
     useEffect(() => {
         let search = window.location.search;
         let params = new URLSearchParams(search);
@@ -20,6 +20,7 @@ function Home() {
             code: code
         }
         if (code != null) {
+            console.log("Jokkk");
             axios.post('http://localhost:5000/getToken', data).then((res) => {
                 if (res.status === 202) {
                     cookie.save('jwt', res.data);
@@ -34,7 +35,8 @@ function Home() {
                 } else {
                     cookie.save('jwt', res.data);
                     var decoded = jwt.verify(res.data, 'secreatKey');
-                    console.log(decoded);
+                    console.log('decode', decoded);
+                    setLogin(true)
                 }
             }).catch((e) => {
                 console.log(e)
@@ -42,10 +44,14 @@ function Home() {
         }
     }, [])
 
+    const setLogout = () =>{
+        setLogin(false)
+    }
+
     return (
         <div className="flex-wrapper">
             <div className="top-page">
-                <NavWebPage />
+                <NavWebPage login={login} setLogout={setLogout} />
                 <div className="content-page">
                     <div className="Carousel-Header">
                         <CarouselHeader></CarouselHeader>
