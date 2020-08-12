@@ -15,20 +15,23 @@ function NavWebPage(props) {
     const [displayName, setLineName] = useState("")
     const [pictureURL, setLinePicture] = useState("")
     const [email, setLineEmail] = useState("")
+    const [logout, setLogout] = useState(false)
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
+        console.log('load', loadJWT);
         if (loadJWT === undefined) {
             setLineName("")
             setLinePicture("")
             setLineEmail("")
         } else {
+            console.log("get jwt")
             var user = jwt.verify(loadJWT, 'secreatKey');
             setLineName(user.displayName)
             setLinePicture(user.pictureURL)
             setLineEmail(user.email)
         }
-    }, [])
+    }, [props.login])
 
     const AlertRoom = () => {
 
@@ -66,8 +69,10 @@ function NavWebPage(props) {
 
     const onLogout = () => {
         cookie.remove('jwt');
+        props.setLogout();
         props.history.push('/Home');
     }
+
     return (
         <div className="navbar-webpage">
             <nav className="navbar nav-color navbar-expand-lg navbar-dark" style={{ color: "white" }}>

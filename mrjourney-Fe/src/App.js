@@ -15,6 +15,7 @@ import Profile from './webpage/Profile';
 import CheckTrip from './linepage/CheckTrip';
 import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
+import Demo from './webpage/Demo'
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
       <Switch>
         <Route path="/Home">
           <Home />
+        </Route>
+        <Route path="/Demo">
+          <Demo />
         </Route>
         <Route path="/CheckTrip" >
           <CheckTrip />
