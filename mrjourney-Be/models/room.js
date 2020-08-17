@@ -1,21 +1,22 @@
-function Room(genRoomID, lineID, ownerRoom, ownerPicRoom, roomName,
-    province, startDate, endDate, tripDetails, maxMember,
-    genderCondition, ageCondition, status) {
+function Room(genRoomID, lineID, ownerRoomID, ownerRoomName, ownerPicRoom, roomName,
+    province, startDate, endDate, tripDetails, maxMember, roomCover,
+    genderCondition, ageCondition, qrCode, roomStatus) {
         this.roomID = genRoomID,
         this.lineID = lineID,
-        this.ownerRoom = ownerRoom,
+        this.ownerRoomID = ownerRoomID,
+        this.ownerRoomName = ownerRoomName,
         this.ownerPicRoom = ownerPicRoom,
         this.roomName = roomName,
-        this.picRoom = picRoom,
+        this.roomCover = roomCover,
         this.province = province,
         this.startDate = startDate,
         this.endDate = endDate,
         this.tripDetails = tripDetails,
-        this.QRcode = QRcode,
+        this.qrCode = qrCode,
         this.maxMember = maxMember,
         this.genderCondition = genderCondition,
         this.ageCondition = ageCondition,
-        this.status = status
+        this.roomStatus = roomStatus
 }
 
 module.exports = Room;

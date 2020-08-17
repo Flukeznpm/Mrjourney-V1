@@ -1,9 +1,10 @@
-function Trip(genTripID, tripName, province, date, status) {
+function Trip(genTripID, tripName, province, startDate, endDate, tripStatus) {
         this.tripID = genTripID,
         this.tripName = tripName,
         this.province = province,
-        this.date = date,
-        this.status = status
+        this.startDate = startDate,
+        this.endDate = endDate,
+        this.tripStatus = tripStatus,
         this.tripPerday = tripPerdays
 }
 
@@ -17,4 +18,4 @@ function TripPerDay(day, eventName, startEventTime, endEventTime, eventType) {
     // ]
 }
 
-module.exports = Trip,TripPerDay;
+module.exports = Trip, TripPerDay;
