@@ -40,7 +40,7 @@ router.post('/createRoom', async function (req, res, next) {
         datas.genderCondition == undefined || datas.genderCondition == null || datas.genderCondition == '' ||
         datas.ageCondition == undefined || datas.ageCondition == null || datas.ageCondition == '' ||
         //datas.qrCode == undefined || datas.qrCode == null || datas.qrCode == '' ||
-        datas.status == undefined || datas.status == null || datas.status == '') {
+        datas.roomStatus == undefined || datas.roomStatus == null || datas.roomStatus == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400).json({
             message: "The Data was empty or undefined"
@@ -67,7 +67,7 @@ router.put('/editRoom', async function (req, res, next) {
         datas.genderCondition == undefined || datas.genderCondition == null || datas.genderCondition == '' ||
         datas.ageCondition == undefined || datas.ageCondition == null || datas.ageCondition == '' ||
         //datas.qrCode == undefined || datas.qrCode == null || datas.qrCode == '' ||
-        datas.status == undefined || datas.status == null || datas.status == '') {
+        datas.roomStatus == undefined || datas.roomStatus == null || datas.roomStatus == '') {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
             message: "The Data was empty or undefined"
@@ -205,7 +205,7 @@ async function createRoom(datas) {
                 maxMember: datas.maxMember,
                 genderCondition: datas.genderCondition,
                 ageCondition: datas.ageCondition,
-                status: datas.status
+                roomStatus: datas.roomStatus
             })
             // } else {
             //     let saveUserRef = db.collection('AccountProfile').doc(datas.lineID);
@@ -241,7 +241,7 @@ async function createRoom(datas) {
             //         maxMember: datas.maxMember,
             //         genderCondition: datas.genderCondition,
             //         ageCondition: datas.ageCondition,
-            //         status: datas.status
+            //         roomStatus: datas.roomStatus
             //     })
         }
     });
@@ -260,7 +260,7 @@ async function updateRoom(datas) {
         maxMember: datas.maxuser,
         genderCondition: datas.genderCondition,
         ageCondition: datas.ageCondition,
-        status: datas.status
+        roomStatus: datas.roomStatus
     }).then(function () {
         console.log("Room successfully update!");
     }).catch(function (error) {

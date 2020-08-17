@@ -22,7 +22,7 @@ function CreateRoomStep3(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [roomID, setRoomID] = useState("")
-    const [status, setStatus] = useState(true)
+    const [roomStatus, setStatus] = useState(true)
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -52,7 +52,7 @@ function CreateRoomStep3(props) {
             maxMember: Room.maxMember,
             genderCondition: Room.genderCondition,
             ageCondition: Room.ageCondition,
-            status: status
+            roomStatus: roomStatus
         }
         await axios.post('http://localhost:5000/room/createRoom', dataRoom)
             .then(res => {
