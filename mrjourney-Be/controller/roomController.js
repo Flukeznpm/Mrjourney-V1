@@ -17,7 +17,6 @@ router.get('/', async function (req, res, next) {
 
 router.get('/roomDetail', async function (req, res, next) {
     let datas = req.query;
-    console.log('log be: ' + datas.roomID)
     if (datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
         res.status(400).json({
             message: "The Data was empty or undefined"
