@@ -10,6 +10,8 @@ let db = firebase.firestore();
 // DELETE : /accountProfile/deleteAccount  (Delete Account)
 // GET : /accountProfile/trip (ดูทริปที่เคยสร้าง)
 // GET : /accountProfile/roomJoin (ดูทริปที่เคยJoin)
+// GET : /accountProfile/ownerRoom (แสดง room ที่ user เป็นเจ้าของทั้งหมด)
+// GET : /accountProfile/joinRoom (แสดงรายชื่อ Room ที่ User ไปเข้าร่วมทั้วหมด)
 
 router.get('/', async function (req, res, next) {
     let datas = req.query;
@@ -104,6 +106,17 @@ router.delete('/deleteAccount', async function (req, res, next) {
     }
 });
 
+router.get('/ownerRoom', async function (req, res, next) {
+    let datas = req.query;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        let ownerRoomList = await getOwnerRoomByID(datas);
+        res.status(200).json(ownerRoomList);
+    }
+});
 
 //---------------- Function ----------------//
 async function getAccountByID(datas) {
@@ -129,7 +142,7 @@ async function createAccountDetail(datas) {
         birthday: datas.birthday,
         tel: datas.tel
     });
-}
+};
 
 async function updateAccountDetail(data) {
     await db.collection('AccountProfile').doc(datas.lineID).update({
@@ -144,18 +157,36 @@ async function updateAccountDetail(data) {
         tel: datas.tel,
         rating: datas.rating
     });
-}
+};
 
 async function deleteAccount(data) {
     //ลบยัน Account ID ใน 'AccountPrifile' DB
-}
+};
+
+async function getOwnerRoomByID(data) {
+    let ownerRoomList = [];
+    let showDataOwnerRoomSnapshot = db.collection("Room").where('ownerRoomID', '==', data.lineID).get();
+
+    if (showDataOwnerRoomSnapshot.empty) {
+        console.log('No matching documents.');
+        return;
+    }
+
+    showDataOwnerRoomSnapshot.forEach(doc => {
+        ownerRoomList.push(doc.data());
+    });
+
+    console.log('Data snapshot: ' + ownerRoomList)
+
+    return ownerRoomList;
+};
 
 async function getTripHistoryById(datas) {
 
-}
+};
 
 async function getRoomHistoryById(datas) {
 
-}
+};
 
 module.exports = router;

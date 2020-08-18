@@ -129,9 +129,8 @@ async function getAllRoom() {
         .catch(err => {
             console.log('Error getting Room', err);
         });
-    console.log(RoomList)
     return RoomList;
-}
+};
 
 async function getRoomDetail(datas) {
     let message;
@@ -150,7 +149,7 @@ async function getRoomDetail(datas) {
         }
     })
     return RoomDetail;
-}
+};
 
 async function generateRoomID() {
     function ran() {
@@ -175,12 +174,10 @@ async function generateRoomID() {
             })
     } while (checkDocumentisEmpty == true)
     return result;
-}
+};
 
 async function createRoom(datas) {
     let genRoomID = await generateRoomID();
-    console.log('roomID : ' + genRoomID);
-
     let CheckUserRef = await db.collection('AccountProfile').doc(datas.lineID);
     CheckUserRef.get().then(data => {
         if (data.exists) {
@@ -244,7 +241,7 @@ async function createRoom(datas) {
             //     })
         }
     });
-}
+};
 
 async function updateRoom(datas) {
     let editRoomRef = await db.collection('Room').doc(datas.roomID);
@@ -265,7 +262,7 @@ async function updateRoom(datas) {
     }).catch(function (error) {
         console.error("Error update document in Room: ", error);
     });
-}
+};
 
 async function deleteRoom(datas) {
     await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(datas.roomID).delete();
@@ -280,14 +277,14 @@ async function deleteRoom(datas) {
         }).catch(function (error) {
             console.error("Error deleted document in Room: ", error);
         });
-}
+};
 
 async function setRoomHistory(datas) {
 
-}
+};
 
 async function queryRoom(datas) {
 
-}
+};
 
 module.exports = router;

@@ -336,7 +336,7 @@ async function createTripList(datas) {
             })
         }
     })
-}
+};
 
 async function updateTrip(datas) {
     let message;
