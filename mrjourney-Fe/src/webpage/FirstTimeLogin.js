@@ -97,8 +97,8 @@ function FirstTimeLogin(props) {
                                 id="dropdownMenuButton"
                             >
                                 <option value="">กรุณาเลือกเพศของคุณ</option>
-                                <option value="male">ชาย</option>
-                                <option value="female">หญิง</option>
+                                <option value="ชาย">ชาย</option>
+                                <option value="หญิง">หญิง</option>
                             </select>
                         </div>
                         <div className="form-group">

@@ -5,16 +5,22 @@ import '../static/css/App.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import { Tabs, Tab } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom';
+import { HookContext } from '../store/HookProvider';
 import momentjs from 'moment'
+import { useForm } from "react-hook-form";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 
 function Profile(props) {
+    const { AccProfile, handleAccProfileForm } = useContext(HookContext)
     const [lineID, setLineID] = useState("")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [acc, setShowAcc] = useState([{}])
+    const [gender, selectGender] = useState(["ชาย", "หญิง"])
+    const [isEditProfile, setEditProfile] = useState(false)
+    const { register, handleSubmit, watch, errors } = useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -32,6 +38,50 @@ function Profile(props) {
                 setShowAcc(res.data)
             })
     }, [])
+
+    const onSubmit = async () => {
+        acc.map((acc) => {
+            if (!AccProfile.fName) {
+                AccProfile.fName = acc.fName
+            }
+            if (!AccProfile.lName) {
+                AccProfile.lName = acc.lName
+            }
+            if (!AccProfile.gender) {
+                AccProfile.gender = acc.gender
+            }
+            if (!AccProfile.birthday) {
+                AccProfile.birthday = acc.birthday
+            }
+            if (!AccProfile.tel) {
+                AccProfile.tel = acc.tel
+            }
+        })
+
+        let dataProfile = {
+            lineID: lineID,
+            displayName: displayName,
+            pictureURL: pictureURL,
+            fName: AccProfile.fName,
+            lName: AccProfile.lName,
+            gender: AccProfile.gender,
+            birthday: AccProfile.birthday,
+            tel: AccProfile.tel
+        }
+        await axios.post('http://localhost:5000/accountProfile/createAccountDetail', dataProfile)
+            .then(async (res) => {
+                console.log(res)
+            })
+        setEditProfile(false)
+    }
+    const onCancel = async () => {
+        AccProfile.fName = "";
+        AccProfile.lName = "";
+        AccProfile.gender = "";
+        AccProfile.birthday = "";
+        AccProfile.tel = "";
+        setEditProfile(false)
+    }
 
 
     const ProfileMoreDetail = () => {
@@ -55,45 +105,117 @@ function Profile(props) {
             <div className="top-page">
                 <NavWebPage />
 
-                <div className="content-page">
-                    <div className="pt-5">
-                        <div className="Profile-Details text-center">
-                            <img src={pictureURL} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
-                            <div className="line-name pt-2" style={{ fontSize: "28px" }}>คุณ : {displayName}</div>
-                            <div className="detail-web pt-2">
-                                {acc.map((acc) => {
-                                    return (
-                                        <>
-                                            < span > ชื่อ : {acc.fName} </span>
-                                            <p />< span > นามสกุล : {acc.lName} </span>
-                                            <p /><span>เพศ : {acc.gender}</span>
-                                            <p /><span>วันเกิด : {momentjs(acc.birthday).format('ll')}</span>
-                                            <p /><span>เบอร์โทรศัพท์ : {acc.tel}</span>
-                                        </>
-                                    )
-                                })}
-                            </div>
+                <div className="content-page pt-5">
+                    <div className="Profile-Details text-center">
+                        <img src={pictureURL} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
+                        <div className="line-name pt-2" style={{ fontSize: "28px" }}>คุณ : {displayName}</div>
+                        <div className="detail-web pt-2">
+                            {acc.map((acc) => {
+                                return (
+                                    <>
+                                        {isEditProfile ?
+                                            <form className="w-75" onSubmit={handleSubmit(onSubmit)}>
+                                                <div className="form-group row d-flex justify-content-center">
+                                                    <label for="First Name" class="col-sm-2 col-form-label">ชื่อ </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" className="form-control"
+                                                            name="fName"
+                                                            value={AccProfile.fName}
+                                                            onChange={(e) => handleAccProfileForm(e.target.value, e.target.name)}
+                                                            placeholder={acc.fName}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row d-flex justify-content-center">
+                                                    <label for="Last Name" class="col-sm-2 col-form-label">นามสกุล </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" className="form-control"
+                                                            name="lName"
+                                                            value={AccProfile.lName}
+                                                            onChange={(e) => handleAccProfileForm(e.target.value, e.target.name)}
+                                                            placeholder={acc.lName}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row d-flex justify-content-center">
+                                                    <label for="Gender" class="col-sm-2 col-form-label">เพศ </label>
+                                                    <div class="col-sm-10">
+                                                        <select className=" btn province-btn dropdown-toggle"
+                                                            name="gender"
+                                                            value={AccProfile.gender}
+                                                            onChange={(e) => handleAccProfileForm(e.target.value, e.target.name)}
+                                                            id="dropdownMenuButton"
+                                                        >
+                                                            <option value="" selected>กรุณาเลือกเพศ</option>
+                                                            {gender.map((ShowGender) => {
+                                                                return (
+                                                                    <option value={ShowGender}>{ShowGender}</option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row d-flex justify-content-center">
+                                                    <label for="Birth" class="col-sm-2 col-form-label">วันเกิด </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="date" className="form-control"
+                                                            name="birthday"
+                                                            value={AccProfile.birthday}
+                                                            onChange={(e) => handleAccProfileForm(e.target.value, e.target.name)}
+                                                            placeholder="Enter your birthday"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row d-flex justify-content-center">
+                                                    <label for="Tel" class="col-sm-2 col-form-label">เบอร์โทรศัพท์ </label>
+                                                    <div class="col-sm-10">
+                                                        <input type="tel" size="10" className="form-control"
+                                                            name="tel"
+                                                            value={AccProfile.tel}
+                                                            onChange={(e) => handleAccProfileForm(e.target.value, e.target.name)}
+                                                            placeholder={acc.tel}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <button className="btn btn-danger" onClick={() => onCancel()}>cancel</button>
+                                                <button type="submit" className="btn btn-success" onClick={() => onSubmit()}>Submit</button>
+                                            </form>
+                                            :
+                                            <>
+                                                < span > ชื่อ : {acc.fName} </span>
+                                                <p />< span > นามสกุล : {acc.lName} </span>
+                                                <p /><span>เพศ : {acc.gender}</span>
+                                                <p /><span>วันเกิด : {momentjs(acc.birthday).format('ll')}</span>
+                                                <p /><span>เบอร์โทรศัพท์ : {acc.tel}</span>
+                                                <p>
+                                                    <button type="submit" className="btn btn-primary" onClick={() => setEditProfile(true)}>Edit</button>
+                                                </p>
+                                            </>
+                                        }
+                                    </>
+                                )
+                            })}
                         </div>
-                        <div className="container">
-                            <div className="Profile-show-box mt-2" >
-                                <ProfileMoreDetail></ProfileMoreDetail>
-                            </div>
-                            <div className="Profile-score py-2 mt-5">
-                                <div className="container">
-                                    <div className="text-left pl-3">คะแนน</div><p />
-                                    <div className="row text-center">
-                                        <div className="col-4">
-                                            <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
-                                            <div className="pt-2">ความสนุก</div>
-                                        </div>
-                                        <div className="col-4">
-                                            <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
-                                            <div className="pt-2">ความคุ้มค่า</div>
-                                        </div>
-                                        <div className="col-4">
-                                            <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
-                                            <div className="pt-2">การจัดการแผน</div>
-                                        </div>
+                    </div>
+                    <div className="container">
+                        <div className="Profile-show-box mt-2" >
+                            <ProfileMoreDetail></ProfileMoreDetail>
+                        </div>
+                        <div className="Profile-score py-2 mt-5">
+                            <div className="container">
+                                <div className="text-left pl-3">คะแนน</div><p />
+                                <div className="row text-center">
+                                    <div className="col-4">
+                                        <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
+                                        <div className="pt-2">ความสนุก</div>
+                                    </div>
+                                    <div className="col-4">
+                                        <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
+                                        <div className="pt-2">ความคุ้มค่า</div>
+                                    </div>
+                                    <div className="col-4">
+                                        <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
+                                        <div className="pt-2">การจัดการแผน</div>
                                     </div>
                                 </div>
                             </div>
