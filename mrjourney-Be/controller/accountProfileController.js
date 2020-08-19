@@ -159,13 +159,13 @@ async function updateAccountDetail(datas) {
     });
 };
 
-async function deleteAccount(data) {
+async function deleteAccount(datas) {
     //ลบยัน Account ID ใน 'AccountPrifile' DB
 };
 
-async function getOwnerRoomByID(data) {
+async function getOwnerRoomByID(datas) {
     let ownerRoomList = [];
-    let showDataOwnerRoomSnapshot = db.collection("Room").where('ownerRoomID', '==', data.lineID).get();
+    let showDataOwnerRoomSnapshot = db.collection("Room").where('ownerRoomID', '==', datas.lineID).get();
 
     if (showDataOwnerRoomSnapshot.empty) {
         console.log('No matching documents.');
