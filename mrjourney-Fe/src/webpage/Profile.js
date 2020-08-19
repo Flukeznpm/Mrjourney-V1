@@ -58,7 +58,7 @@ function Profile(props) {
             }
         })
 
-        let dataProfile = {
+        let dataUpdateProfile = {
             lineID: lineID,
             displayName: displayName,
             pictureURL: pictureURL,
@@ -68,12 +68,13 @@ function Profile(props) {
             birthday: AccProfile.birthday,
             tel: AccProfile.tel
         }
-        await axios.post('http://localhost:5000/accountProfile/createAccountDetail', dataProfile)
+        await axios.put('http://localhost:5000/accountProfile/editAccountDetail', dataUpdateProfile)
             .then(async (res) => {
                 console.log(res)
             })
         setEditProfile(false)
     }
+
     const onCancel = async () => {
         AccProfile.fName = "";
         AccProfile.lName = "";
@@ -82,7 +83,6 @@ function Profile(props) {
         AccProfile.tel = "";
         setEditProfile(false)
     }
-
 
     const ProfileMoreDetail = () => {
         const [key, setKey] = useState('Bio');

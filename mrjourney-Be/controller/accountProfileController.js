@@ -144,18 +144,18 @@ async function createAccountDetail(datas) {
     });
 };
 
-async function updateAccountDetail(data) {
+async function updateAccountDetail(datas) {
     await db.collection('AccountProfile').doc(datas.lineID).update({
         lineID: datas.lineID,
         displayName: datas.displayName,
-        pictureURL: data.pictureURL,
-        fName: data.fName,
-        lName: data.lName,
-        bio: datas.bio,
+        pictureURL: datas.pictureURL,
+        fName: datas.fName,
+        lName: datas.lName,
+        //bio: datas.bio,
         gender: datas.gender,
         birthday: datas.birthday,
         tel: datas.tel,
-        rating: datas.rating
+        //rating: datas.rating
     });
 };
 
