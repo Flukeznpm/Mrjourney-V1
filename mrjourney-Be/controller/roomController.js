@@ -74,8 +74,7 @@ router.put('/editRoom', async function (req, res, next) {
     } else {
         let checkPermission = await db.collection('Room').where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID)
         checkPermission.get().then(async data => {
-            const checkData = data.exists;
-            if (checkData) {
+            if (data.exists) {
                 await updateRoom(datas);
                 console.log('Alert: Edit Room Success')
                 res.status(201).json({
