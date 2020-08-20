@@ -163,45 +163,43 @@ router.delete('/deleteTrip', async function (req, res, next) {
 
 //---------------- Function ----------------//
 async function getAllTripByGroupID(lineGroupID) {
-    let dataAllTrip = [];
+    let dataTripAllDay = [];
     let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID);
-    let getTripID = await checkTripIDRef.collection('Trip').get().then(doc => {
-        tripID = doc.data
-    });
+    let getTripID = await checkTripIDRef.collection('Trip').get()
+        .then(doc => {
+            tripID = doc.data();
+        });
 
     console.log('tripID : ' + getTripID);
+    console.log('tripID : ' + getTripID.data());
 
     let showAllTrip = await db.collection('TripPerDay').doc(getTripID);
-    showAllTrip.get().then(snapshot => {
-        snapshot.forEach(doc => {
-
-            console.log(doc.tripID, '=>', doc.data());
-
-            dataAllTrip.push(doc.data());
-        });
+    showAllTrip.get().then(doc => {
+        dataTripAllDay.push(doc.data());
     })
         .catch(err => {
             console.log('Error getting documents', err);
         });
-    return dataList;
+    return dataTripAllDay;
 };
 
 async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
+
     console.log(DateOfTrip);
+
     let dataTripPerDay = [];
     let day = DateOfTrip;
     let checkTripIDRef = await db.collection('LineGroup').doc(lineGroupID);
     let getTripID = await checkTripIDRef.collection('Trip').get().then(doc => {
-        tripID = doc.data
+        tripID = doc.data();
     });
 
     console.log('tripID : ' + getTripID);
+    console.log('tripID : ' + getTripID.data());
 
     let showTripPerDay = await db.collection('TripPerDay').doc(getTripID).where(new firestore.FieldPath('', ''), '==', day);
-    await showTripPerDay.get().then(snapshot => {
-        snapshot.forEach(doc => {
-            dataTripPerDay.push(doc.data());
-        });
+    await showTripPerDay.get().then(doc => {
+        dataTripPerDay.push(doc.data());
     })
         .catch(err => {
             console.log('Error getting documents', err);
