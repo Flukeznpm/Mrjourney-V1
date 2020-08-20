@@ -174,7 +174,7 @@ async function getAllTripByGroupID(lineGroupID) {
     console.log('tripID : ' + getTripID.data());
 
     let showAllTrip = await db.collection('TripPerDay').doc(getTripID);
-    showAllTrip.get().then(doc => {
+    await showAllTrip.get().then(doc => {
         dataTripAllDay.push(doc.data());
     })
         .catch(err => {
@@ -190,9 +190,10 @@ async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     let dataTripPerDay = [];
     let day = DateOfTrip;
     let checkTripIDRef = await db.collection('LineGroup').doc(lineGroupID);
-    let getTripID = await checkTripIDRef.collection('Trip').get().then(doc => {
-        tripID = doc.data();
-    });
+    let getTripID = await checkTripIDRef.collection('Trip').get()
+        .then(doc => {
+            tripID = doc.data();
+        });
 
     console.log('tripID : ' + getTripID);
     console.log('tripID : ' + getTripID.data());
