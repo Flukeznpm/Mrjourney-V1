@@ -10,7 +10,8 @@ var serviceAccountKey = require('./serviceAccountKey.json')
 
 firebase.initializeApp({
     credential: firebase.credential.cert(serviceAccountKey),
-    databaseURL: "https://test-firebase-c50da.firebaseio.com"
+    databaseURL: "https://test-firebase-c50da.firebaseio.com",
+    storageBucket: "gs://test-firebase-c50da.appspot.com/"
 });
 
 var loginRouter = require('./controller/loginController');
@@ -37,4 +38,3 @@ app.listen(process.env.PORT || 5000, () => {
 });
 
 
- 
