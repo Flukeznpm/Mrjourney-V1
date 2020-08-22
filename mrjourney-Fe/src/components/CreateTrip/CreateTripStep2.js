@@ -16,9 +16,12 @@ import RequiredForm from "../Required/RequiredForm"
 
 function CreateTripStep2(props) {
     const { nextStep, prevStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
-  
-    const [Linename, setLineName] = useState('')
-    const [Linepicture, setLinePicture] = useState('')
+
+    const [lineID, setLineID] = useState("")
+    const [lineGroupID, setLineGroupID] = useState("")
+    const [displayName, setDisplayName] = useState("")
+    const [pictureURL, setPictureURL] = useState("")
+    const [tripStatus, setTripStatus] = useState(true)
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -27,21 +30,27 @@ function CreateTripStep2(props) {
             props.history.push('/Home');
         } else {
             var user = jwt.verify(loadJWT, 'secreatKey');
-            setLineName(user.displayName)
-            setLinePicture(user.pictureURL)
+            setLineID(user.lineID)
+            setDisplayName(user.displayName)
+            setPictureURL(user.pictureURL)
         }
-    },[])
+    }, [])
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         let dataTrip = {
-            tripname: this.state.tripname,
-            province: this.state.province,
-            date: this.state.date,
-            day: this.state.day
+            lineID: lineID,
+            lineGroupID: lineID,
+            tripname: Trip.tripName,
+            province: Trip.province,
+            startDate: momentjs(Trip.date),
+            endDate: momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day'),
+            tripStatus: tripStatus,
+            event: Trip.totalDate
         }
-        axios.post('http://localhost:5000/trip/createTrip', dataTrip)
+        console.log('dat', dataTrip)
+        await axios.post('http://localhost:5000/trip/createTrip', dataTrip)
             .then(res => {
                 console.log(res)
             });
@@ -175,7 +184,8 @@ function CreateTripStep2(props) {
                                             </div>
                                             <div className=" col-2 float-right mr-4">
                                                 <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                    onClick={() => nextStep(1)}>เสร็จสิ้น</button>
+                                                    // onClick={() => nextStep(1)}>เสร็จสิ้น</button>
+                                                    onClick={handleSubmit}>เสร็จสิ้น</button>
                                             </div>
                                         </div>
                                     </div>
