@@ -42,7 +42,7 @@ function CreateTripStep2(props) {
         let dataTrip = {
             lineID: lineID,
             lineGroupID: lineID,
-            tripname: Trip.tripName,
+            tripName: Trip.tripName,
             province: Trip.province,
             startDate: momentjs(Trip.date),
             endDate: momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day'),

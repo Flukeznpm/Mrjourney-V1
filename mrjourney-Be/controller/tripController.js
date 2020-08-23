@@ -87,7 +87,7 @@ router.post('/createTrip', async function (req, res, next) {
     let datas = req.body;
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '' ||
-        datas.tripname == undefined || datas.tripname == null || datas.tripname == '' ||
+        datas.tripName == undefined || datas.tripName == null || datas.tripName == '' ||
         datas.province == undefined || datas.province == null || datas.province == '' ||
         datas.startDate == undefined || datas.startDate == null || datas.startDate == '' ||
         datas.endDate == undefined || datas.endDate == null || datas.endDate == '' ||
@@ -110,7 +110,7 @@ router.put('/editTrip', async function (req, res, next) {
         datas.OwnerTrip == undefined || datas.OwnerTrip == null || datas.OwnerTrip == '' ||
         datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '' ||
-        datas.tripname == undefined || datas.tripname == null || datas.tripname == '' ||
+        datas.tripName == undefined || datas.tripName == null || datas.tripName == '' ||
         datas.province == undefined || datas.province == null || datas.province == '' ||
         datas.startDate == undefined || datas.startDate == null || datas.startDate == '' ||
         datas.endDate == undefined || datas.endDate == null || datas.endDate == '' ||
@@ -266,7 +266,7 @@ async function createTripList(datas) {
             let saveTripList = await db.collection('TripList').doc(genTripID).set({
                 tripID: genTripID,
                 OwnerTrip: datas.lineID,
-                tripname: datas.tripname,
+                tripName: datas.tripName,
                 province: datas.province,
                 startDate: datas.startDate,
                 endDate: datas.endDate,
@@ -313,7 +313,7 @@ async function createTripList(datas) {
             let saveTripList = await db.collection('TripList').doc(genTripID).set({
                 tripID: genTripID,
                 OwnerTrip: datas.lineID,
-                tripname: datas.tripname,
+                tripName: datas.tripName,
                 province: datas.province,
                 startDate: datas.startDate,
                 endDate: datas.endDate,
@@ -364,7 +364,7 @@ async function updateTrip(datas) {
                                                 checkOwnerTrip.get().then(async data => {
                                                     if (data.exists) {
                                                         saveTripListRef.update({
-                                                            tripname: datas.tripname,
+                                                            tripName: datas.tripName,
                                                             province: datas.province,
                                                             startDate: datas.startDate,
                                                             endDate: datas.endDate,
