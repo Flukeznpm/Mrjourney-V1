@@ -66,7 +66,7 @@ function CreateTripModal(props) {
                             />
                         </div>
                         {ValidEventName === true ? <RequiredForm /> : ""}
-                        {console.log('event', errors.eventName)}
+                        {/* {console.log('event', errors.eventName)} */}
                         <label for="exampleInputEmail1" className="pt-2">เวลาเริ่ม</label>
                         <input type='time' class="form-control"
                             name="startEvent"
@@ -74,7 +74,7 @@ function CreateTripModal(props) {
                             onChange={(e) => handleEventForm(e.target.value, e.target.name)}
                         />
                         {ValidStartEvent === true ? <RequiredForm /> : ""}
-                        {console.log('start', errors.startEvent)}
+                        {/* {console.log('start', errors.startEvent)} */}
                         <label for="exampleInputEmail1" className="pt-2">เวลาจบ</label>
                         <input type='time' class="form-control"
                             name="endEvent"

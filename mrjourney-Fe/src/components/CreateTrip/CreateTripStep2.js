@@ -18,7 +18,7 @@ function CreateTripStep2(props) {
     const { nextStep, prevStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
 
     const [lineID, setLineID] = useState("")
-    const [lineGroupID, setLineGroupID] = useState("")
+    const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [tripStatus, setTripStatus] = useState(true)
@@ -39,9 +39,16 @@ function CreateTripStep2(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log('Fe startDate: ' + momentjs(Trip.date))
+        console.log('Fe ednDate: ' + momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day'))
+        console.log('Fe event: ' + Trip.totalDate)
+
         let dataTrip = {
             lineID: lineID,
-            lineGroupID: lineID,
+            displayName: displayName,
+            pictureURL: pictureURL,
+            lineGroupID: lineGroupID,
             tripName: Trip.tripName,
             province: Trip.province,
             startDate: momentjs(Trip.date),
@@ -49,7 +56,6 @@ function CreateTripStep2(props) {
             tripStatus: tripStatus,
             event: Trip.totalDate
         }
-        console.log('dat', dataTrip)
         await axios.post('http://localhost:5000/trip/createTrip', dataTrip)
             .then(res => {
                 console.log(res)
@@ -96,7 +102,6 @@ function CreateTripStep2(props) {
                                         </span>
                                     </div>
                                     {Trip.totalDate.map((PerDay, key) => {
-                                        console.log('per', PerDay)
                                         return (
                                             <div>
 

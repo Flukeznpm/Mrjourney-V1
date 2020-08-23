@@ -85,7 +85,21 @@ router.get('/tripperday', async function (req, res, next) {
 
 router.post('/createTrip', async function (req, res, next) {
     let datas = req.body;
+
+    console.log('lineID event 1: ' + datas.lineID.data)
+    console.log('displayName event 1: ' + datas.displayName.data)
+    console.log('pictureURL event 1: ' + datas.pictureURL.data)
+    console.log('lineGroupID event 1: ' + datas.lineGroupID.data)
+    console.log('tripName event 1: ' + datas.tripName.data)
+    console.log('province event 1: ' + datas.province.data)
+    console.log('startDate event 1: ' + datas.startDate.data)
+    console.log('endDate event 1: ' + datas.endDate.data)
+    console.log('tripStatus event 1: ' + datas.tripStatus.data)
+    console.log('event event 1: ' + datas.event.data)
+
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
+        datas.displayName == undefined || datas.displayName == null || datas.displayName == '' ||
+        datas.pictureURL == undefined || datas.pictureURL == null || datas.pictureURL == '' ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '' ||
         datas.tripName == undefined || datas.tripName == null || datas.tripName == '' ||
         datas.province == undefined || datas.province == null || datas.province == '' ||
@@ -227,7 +241,7 @@ async function generateTripID() {
                 if (!doc.exists) {
                     checkDocumentisEmpty = false;
                     result = 'T_' + id;
-                    console.log('You can use Trip ID : ' + result);
+                    // console.log('You can use Trip ID : ' + result);
                 }
             })
     } while (checkDocumentisEmpty == true)
@@ -236,7 +250,9 @@ async function generateTripID() {
 
 async function createTripList(datas) {
     let genTripID = await generateTripID();
-    console.log('tripID : ' + genTripID);
+
+    console.log('data event 2: ' + datas.event.data())
+
     let CheckLineChatAccountRef = await db.collection('LineChatAccount').doc(datas.lineID);
     CheckLineChatAccountRef.get().then(async data => {
         // กรณี : User เคยใช้งาน Bot แล้ว(มี Account ในระบบ) และต้องการจะ Create Trip ใหม่
@@ -244,7 +260,6 @@ async function createTripList(datas) {
             await CheckLineChatAccountRef.update({
                 lineID: datas.lineID,
                 displayName: datas.displayName,
-                email: datas.email,
                 pictureURL: datas.pictureURL
             })
             let saveTripIDinTripListRef = await CheckLineChatAccountRef.collection('Group').doc(datas.lineGroupID);
@@ -259,7 +274,7 @@ async function createTripList(datas) {
             saveMemberRef.set({
                 lineID: datas.lineID
             })
-            let saveTripIDinGroup = awaitsaveGroupIDinGroupRef.collection('Trip').doc(genTripID);
+            let saveTripIDinGroup = await saveGroupIDinGroupRef.collection('Trip').doc(genTripID);
             saveTripIDinGroup.set({
                 tripID: genTripID
             })
@@ -291,7 +306,6 @@ async function createTripList(datas) {
             await CheckLineChatAccountRef.set({
                 lineID: datas.lineID,
                 displayName: datas.displayName,
-                email: datas.email,
                 pictureURL: datas.pictureURL
             })
             let saveTripIDinTripListRef = await CheckLineChatAccountRef.collection('Group').doc(datas.lineGroupID);
