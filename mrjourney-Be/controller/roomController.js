@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var firebase = require('firebase-admin');
+var storage = firebase.storage();
 let db = firebase.firestore();
 
 //---------------- Controller ----------------//
@@ -174,6 +175,19 @@ async function generateRoomID() {
     } while (checkDocumentisEmpty == true)
     return result;
 };
+
+async function uploadPictureToCloudStorage(datas) {
+    var storageRef = storage.ref();
+    var imageRef = storageRef.child("RoomCover");
+    var fileName = datas.roomCover;
+    var spaceRef = imageRef.child(fileName);
+
+    console.log('Path: ' + spaceRef.fullPath);
+
+    var upload = spaceRef.put(fileName);
+
+
+}
 
 async function createRoom(datas) {
     let genRoomID = await generateRoomID();
