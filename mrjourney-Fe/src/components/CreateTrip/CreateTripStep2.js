@@ -51,8 +51,8 @@ function CreateTripStep2(props) {
             lineGroupID: lineGroupID,
             tripName: Trip.tripName,
             province: Trip.province,
-            startDate: momentjs(Trip.date),
-            endDate: momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day'),
+            startDate: momentjs(Trip.date).format('ll'),
+            endDate: momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day').format('ll'),
             tripStatus: tripStatus,
             event: Trip.totalDate
         }
