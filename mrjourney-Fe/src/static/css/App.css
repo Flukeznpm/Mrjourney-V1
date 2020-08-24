@@ -54,3 +54,7 @@ body {
 .fade-enter, .fade-leave-to {
     opacity: 0;
 }
+
+.color-default {
+    color: rgb(230, 111, 15);
+}
