@@ -62,14 +62,12 @@ function MyOwnerRoom(props) {
                                                 <div class="card-text py-2">
                                                     <button
                                                         type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
-                                                        {momentjs(new Date()).format('ll')}
-                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                                        {momentjs(ownerRoom.startDate).format('ll')}                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                                     </button>
                                                     &nbsp;-&nbsp;
                                                 <button
                                                         type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
-                                                        {momentjs(new Date()).format('ll')}
-                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                                        {momentjs(ownerRoom.endDate).format('ll')}                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                                     </button>
                                                 </div>
                                                 <div className="card-text py-2">
@@ -81,7 +79,7 @@ function MyOwnerRoom(props) {
                                                     </span>
                                                 </div>
                                                 <div className="owner-trip-profile py-2">
-                                                    <span className="pl-1 pr-2"><img src="../static/img/logojourney.png" class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
+                                                    <span className="pl-1 pr-2"><img src={ownerRoom.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
                                                     <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {ownerRoom.ownerRoomName}</span>
                                                 </div>
                                                 <button type="button" class="col-5 mx-2 btn btn-outline-danger round">

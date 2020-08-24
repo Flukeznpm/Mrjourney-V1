@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var firebase = require('firebase-admin');
-let db = firebase.firestore();
+const db = firebase.firestore();
 
 //---------------- Controller ----------------//
 // GET : /accountProfile  (แสดง profile ทั้งหมด ของ user)
@@ -107,13 +107,13 @@ router.delete('/deleteAccount', async function (req, res, next) {
 });
 
 router.get('/ownerRoom', async function (req, res, next) {
-    let datas = req.query;
+    const datas = req.query;
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
         res.status(400).json({
             message: "The Data was empty or undefined"
         })
     } else {
-        let ownerRoomList = await getOwnerRoomByID(datas);
+        const ownerRoomList = await getOwnerRoomByID(datas);
         res.status(200).json(ownerRoomList);
     }
 });
@@ -164,20 +164,20 @@ async function deleteAccount(datas) {
 };
 
 async function getOwnerRoomByID(datas) {
-    let ownerRoomList = [];
-    let showDataOwnerRoomSnapshot = db.collection("Room").where('ownerRoomID', '==', datas.lineID).get();
+    const ownerRoomList = [];
+    const showDataOwnerRoomSnapshot = db.collection('Room');
+    const query = showDataOwnerRoomSnapshot.where('ownerRoomID', '==', datas.lineID);
+    await query.get().then(async res => {
 
-    if (showDataOwnerRoomSnapshot.empty) {
-        console.log('No matching documents.');
-        return;
-    }
+        if (query.empty) {
+            console.log('No matching documents.');
+            return;
+        }
 
-    showDataOwnerRoomSnapshot.forEach(doc => {
-        ownerRoomList.push(doc.data());
-    });
-
-    console.log('Data snapshot: ' + ownerRoomList)
-
+        await res.forEach(async doc => {
+            ownerRoomList.push(doc.data());
+        });
+    })
     return ownerRoomList;
 };
 
