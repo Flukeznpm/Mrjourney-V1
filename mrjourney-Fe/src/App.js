@@ -8,8 +8,9 @@ import {
 import CreateTrip from './linepage/CreateTrip';
 import Home from './webpage/Home';
 import CreateJoinRoom from './webpage/CreateJoinRoom';
-import JoinedRoom from './webpage/JoinedRoom';
-import MyOwnerRoom from './webpage/MyOwnerRoom';
+import JoinRoom from './webpage/JoinRoom';
+import AllMyOwnerRoom from './webpage/AllMyOwnerRoom';
+import AllMyJoinedRoom from './webpage/AllMyJoinedRoom';
 import CurrentJoinRoom from './webpage/CurrentJoinRoom';
 import Profile from './webpage/Profile';
 import CheckTrip from './linepage/CheckTrip';
@@ -32,14 +33,17 @@ function App() {
         <Route path="/CreateJoinRoom" >
           <CreateJoinRoom />
         </Route>
-        <Route path="/JoinedRoom">
-          <JoinedRoom />
+        <Route path="/JoinRoom">
+          <JoinRoom />
         </Route>
         <Route path="/Profile">
           <Profile />
         </Route>
-        <Route path="/MyOwnerRoom">
-          <MyOwnerRoom />
+        <Route path="/AllMyOwnerRoom">
+          <AllMyOwnerRoom />
+        </Route>
+        <Route path="/AllMyJoinedRoom">
+          <AllMyJoinedRoom />
         </Route>
         <Route path="/CurrentJoinRoom">
           <CurrentJoinRoom />

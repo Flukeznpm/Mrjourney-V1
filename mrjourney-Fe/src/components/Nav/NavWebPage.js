@@ -175,10 +175,10 @@ function NavWebPage(props) {
                                                 <a href="/Profile" className="dropdown-see-profile">ดูโปรไฟล์ของฉัน</a>
                                             </div>
                                         </div>
-                                        <a href="/Profile" className="my-2 dropdown-item a-dropdown">
+                                        <a href="/AllMyJoinedRoom" className="my-2 dropdown-item a-dropdown">
                                             <i class="fas fa-door-open pr-1 fa-lg" /> Join Room
                                             </a>
-                                        <a href="/Profile" className="my-2 dropdown-item a-dropdown">
+                                        <a href="/AllMyOwnerRoom" className="my-2 dropdown-item a-dropdown">
                                             <i class="fas fa-house-user pr-1 fa-lg" /> Owner Room
                                             </a>
                                         <div className="my-2 dropdown-item signout-btn a-dropdown" style={{ color: "#C25738" }}>

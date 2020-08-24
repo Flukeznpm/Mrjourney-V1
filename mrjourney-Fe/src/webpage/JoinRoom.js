@@ -9,7 +9,7 @@ import FooterWebPage from '../components/Footer/FooterWebPage';
 
 
 
-class JoinedRoom extends React.Component {
+class JoinRoom extends React.Component {
     render() {
         return (
             <div className="flex-wrapper">
@@ -41,6 +41,6 @@ class JoinedRoom extends React.Component {
     }
 }
 
-export default JoinedRoom;
+export default JoinRoom;
 
 
