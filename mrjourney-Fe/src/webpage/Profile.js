@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
 import ProfileImg from '../static/img/bg-slide-test-1.jpg';
 import '../static/css/App.css';
+import '../static/css/Profile.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import { Tabs, Tab } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom';
@@ -109,15 +110,15 @@ function Profile(props) {
                     <div className="Profile-Details text-center">
                         <img src={pictureURL} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
                         <div className="line-name pt-2" style={{ fontSize: "28px" }}>คุณ : {displayName}</div>
-                        <div className="detail-web pt-2">
+                        <div className="personal-details">
                             {acc.map((acc) => {
                                 return (
-                                    <>
+                                    <div className="edit-profile">
                                         {isEditProfile ?
                                             <form className="w-75" onSubmit={handleSubmit(onSubmit)}>
-                                                <div className="form-group row d-flex justify-content-center">
-                                                    <label for="First Name" class="col-sm-2 col-form-label">ชื่อ </label>
-                                                    <div class="col-sm-10">
+                                                <div className="form-group row">
+                                                    <label for="First Name" class="col-sm-4 col-form-label detail-label">ชื่อ </label>
+                                                    <div class="col-sm-5">
                                                         <input type="text" className="form-control"
                                                             name="fName"
                                                             value={AccProfile.fName}
@@ -126,9 +127,9 @@ function Profile(props) {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="form-group row d-flex justify-content-center">
-                                                    <label for="Last Name" class="col-sm-2 col-form-label">นามสกุล </label>
-                                                    <div class="col-sm-10">
+                                                <div className="form-group row">
+                                                    <label for="Last Name" class="col-sm-4 col-form-label detail-label">นามสกุล </label>
+                                                    <div class="col-sm-5">
                                                         <input type="text" className="form-control"
                                                             name="lName"
                                                             value={AccProfile.lName}
@@ -137,9 +138,9 @@ function Profile(props) {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="form-group row d-flex justify-content-center">
-                                                    <label for="Gender" class="col-sm-2 col-form-label">เพศ </label>
-                                                    <div class="col-sm-10">
+                                                <div className="form-group row">
+                                                    <label for="Gender" class="col-sm-4 col-form-label detail-label">เพศ </label>
+                                                    <div class="col-sm-5">
                                                         <select className=" btn province-btn dropdown-toggle"
                                                             name="gender"
                                                             value={AccProfile.gender}
@@ -155,9 +156,9 @@ function Profile(props) {
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div className="form-group row d-flex justify-content-center">
-                                                    <label for="Birth" class="col-sm-2 col-form-label">วันเกิด </label>
-                                                    <div class="col-sm-10">
+                                                <div className="form-group row">
+                                                    <label for="Birth" class="col-sm-4 col-form-label detail-label">วันเกิด </label>
+                                                    <div class="col-sm-5">
                                                         <input type="date" className="form-control"
                                                             name="birthday"
                                                             value={AccProfile.birthday}
@@ -166,9 +167,9 @@ function Profile(props) {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="form-group row d-flex justify-content-center">
-                                                    <label for="Tel" class="col-sm-2 col-form-label">เบอร์โทรศัพท์ </label>
-                                                    <div class="col-sm-10">
+                                                <div className="form-group row">
+                                                    <label for="Tel" class="col-sm-4 col-form-label detail-label">เบอร์โทรศัพท์ </label>
+                                                    <div class="col-sm-5">
                                                         <input type="tel" size="10" className="form-control"
                                                             name="tel"
                                                             value={AccProfile.tel}
@@ -177,22 +178,24 @@ function Profile(props) {
                                                         />
                                                     </div>
                                                 </div>
-                                                <button className="btn btn-danger" onClick={() => onCancel()}>cancel</button>
-                                                <button type="submit" className="btn btn-success" onClick={() => onSubmit()}>Submit</button>
+                                                <div className="p-3">
+                                                    <button className="btn btn-danger mx-2" onClick={() => onCancel()}>cancel</button>
+                                                    <button type="submit" className="btn btn-success mx-2" onClick={() => onSubmit()}>Submit</button>
+                                                </div>
                                             </form>
                                             :
-                                            <>
-                                                < span > ชื่อ : {acc.fName} </span>
-                                                <p />< span > นามสกุล : {acc.lName} </span>
-                                                <p /><span>เพศ : {acc.gender}</span>
-                                                <p /><span>วันเกิด : {momentjs(acc.birthday).format('ll')}</span>
-                                                <p /><span>เบอร์โทรศัพท์ : {acc.tel}</span>
-                                                <p>
+                                            <div className="show-profile">
+                                                <div className="detail-text"> ชื่อ : {acc.fName} </div>
+                                                <div className="detail-text"> นามสกุล : {acc.lName} </div>
+                                                <div className="detail-text">เพศ : {acc.gender}</div>
+                                                <div className="detail-text">วันเกิด : {momentjs(acc.birthday).format('ll')}</div>
+                                                <div className="detail-text">เบอร์โทรศัพท์ : {acc.tel}</div>
+                                                <div className="p-3">
                                                     <button type="submit" className="btn btn-primary" onClick={() => setEditProfile(true)}>Edit</button>
-                                                </p>
-                                            </>
+                                                </div>
+                                            </div>
                                         }
-                                    </>
+                                    </div>
                                 )
                             })}
                         </div>
