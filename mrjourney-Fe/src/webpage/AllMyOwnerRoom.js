@@ -8,7 +8,8 @@ import BgSlide1 from '../static/img/pr-01.png';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+import { Link } from 'react-router-dom';
 
 function MyOwnerRoom(props) {
 
@@ -101,10 +102,12 @@ function MyOwnerRoom(props) {
                                                         </div>
                                                         <button type="button" class="col-5 mx-2 btn btn-outline-danger round">
                                                             ลบห้อง
-                                            </button>
-                                                        <button type="button" className="btn mx-2 col-5 btn-join-color round text-white">
-                                                            ข้อมูลห้อง
-                                            </button>
+                                                        </button>
+                                                        <Link to="/JoinRoom">
+                                                            <button type="button" className="btn mx-2 col-5 btn-join-color round text-white">
+                                                                ข้อมูลห้อง
+                                                        </button>
+                                                        </Link>
                                                     </div>
                                                 </div>
                                             </div>

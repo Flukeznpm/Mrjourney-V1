@@ -28,7 +28,6 @@ class RoomDetails extends React.Component {
                             ชื่อทริป : เชียงใหม่ GoGoGo
                     </div>
                         <div style={{ fontSize: "18px" }}>
-                            {/* หน้าปก : {this.props.RoomForm.roomCover} <br /> */}
                             <div className="ShowRoom-TripProvince py-1">
                                 <span className="pr-2"> จังหวัด </span>
                                 <button
@@ -66,21 +65,19 @@ class RoomDetails extends React.Component {
                                         <button
                                             type="button" class="show-details-btn btn p-1 ">
                                             ไม่จำกัดช่วงอายุ
-                                 </button>
+                                        </button>
                                     </span>
                                 </div>
                             </div>
                             <div class="pt-4">
                                 <label for="exampleInputEmail1">รายละเอียด</label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-
                                 />
                             </div>
                             <div className="ShowRoom-QrCode py-1">
                                 QrCode
                                 <div className=" text-center">
                                     <img src={TestQrCode} alt="QrCode" width="150" height="150" />
-
                                 </div>
                             </div>
                         </div>
