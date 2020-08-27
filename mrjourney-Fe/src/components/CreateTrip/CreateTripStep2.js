@@ -16,7 +16,6 @@ import RequiredForm from "../Required/RequiredForm"
 
 function CreateTripStep2(props) {
     const { nextStep, prevStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
-
     const [lineID, setLineID] = useState("")
     const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
     const [displayName, setDisplayName] = useState("")
@@ -36,14 +35,8 @@ function CreateTripStep2(props) {
         }
     }, [])
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        console.log('Fe startDate: ' + momentjs(Trip.date))
-        console.log('Fe ednDate: ' + momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day'))
-        console.log('Fe event: ' + Trip.totalDate)
-
         let dataTrip = {
             lineID: lineID,
             displayName: displayName,
