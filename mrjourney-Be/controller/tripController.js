@@ -86,16 +86,7 @@ router.get('/tripperday', async function (req, res, next) {
 router.post('/createTrip', async function (req, res, next) {
     let datas = req.body;
 
-    // console.log('lineID event 1: ' + datas.lineID)
-    // console.log('displayName event 1: ' + datas.displayName)
-    // console.log('pictureURL event 1: ' + datas.pictureURL)
-    // console.log('lineGroupID event 1: ' + datas.lineGroupID)
-    // console.log('tripName event 1: ' + datas.tripName)
-    // console.log('province event 1: ' + datas.province)
-    // console.log('startDate event 1: ' + datas.startDate)
-    // console.log('endDate event 1: ' + datas.endDate)
-    // console.log('tripStatus event 1: ' + datas.tripStatus)
-    // console.log('event event 1: ' + datas.event)
+    console.log('event 1: ' + datas.event)
 
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.displayName == undefined || datas.displayName == null || datas.displayName == '' ||
