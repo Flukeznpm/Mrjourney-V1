@@ -56,8 +56,8 @@ function RoomDetails(props) {
                             <span className="pr-2"> จังหวัด </span>
                             <button
                                 type="button" class="show-details-btn btn p-1 ">
-                                เชียงใหม่
-                                 </button>
+                                {props.roomDetail.province}
+                            </button>
                         </div>
                         <div className="ShowRoom-Date py-1 ">
                             วันเริ่ม - จบทริป
@@ -65,13 +65,13 @@ function RoomDetails(props) {
                                 <span className="Show-Date pl-3 pr-3 ">
                                     <button
                                         type="button" class="show-details-btn btn p-1 ">
-                                        {momentjs('2020-05-05').format('DD/MM/YYYY')}
+                                        {momentjs(props.roomDetail.startDate).format('DD/MM/YYYY')}
                                         <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                     </button>
                                     <span className="pl-2 p-2">-</span>
                                     <button
                                         type="button" class="show-details-btn btn p-1">
-                                        {momentjs('2020-05-08').format('DD/MM/YYYY')}
+                                        {momentjs(props.roomDetail.endDate).format('DD/MM/YYYY')}
                                         <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                     </button>
                                 </span>
@@ -80,23 +80,38 @@ function RoomDetails(props) {
                         <div className="ShowRoom-Condition py-1">
                             เงื่อนไข
                          <div className="py-2">
-                                <span className="Show-genderCondition pl-2 pr-2">
-                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                </span>
+                                {props.roomDetail.genderCondition === 'ชาย' ?
+                                    <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                        <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                    </span>
+                                    :
+                                    ""}
+                                {props.roomDetail.genderCondition === 'หญิง' ?
+                                    <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                        <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                    </span>
+                                    :
+                                    ""}
+                                {props.roomDetail.genderCondition === 'ไม่จำกัดเพศ' ?
+                                    <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                        <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                        <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                    </span>
+                                    :
+                                    ""}
                                 <span className="Show-ageCondition pl-2">
                                     <span className="pr-2"> อายุ </span>
                                     <button
                                         type="button" class="show-details-btn btn p-1 ">
-                                        ไม่จำกัดช่วงอายุ
-                                        </button>
+                                        {props.roomDetail.ageCondition}
+                                    </button>
                                 </span>
                             </div>
                         </div>
                         <div class="pt-4">
                             <label for="exampleInputEmail1">รายละเอียด</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                            />
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" value={props.roomDetail.tripDetails}>
+                            </textarea>
                         </div>
                         <div className="ShowRoom-QrCode py-1">
                             QrCode
@@ -106,7 +121,7 @@ function RoomDetails(props) {
                         </div>
                     </div>
                     <div className="container text-center py-3">
-                        <button type="button" className="btn btn-warning mr-3 text-white">แก้ไขห้อง</button>
+                        <button type="button" className="btn btn-warning mr-3 text-white" onClick={onSubmit}>แก้ไขห้อง</button>
                         <button type="button" className="btn btn-warning ml-3 text-white" onClick={AlertCloseRoom}>ปิดห้อง</button>
                     </div>
                 </div>

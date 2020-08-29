@@ -133,22 +133,14 @@ async function getAllRoom() {
 };
 
 async function getRoomDetail(datas) {
-    let message;
     let RoomDetail = [];
-    let CheckRoomID = await db.collection('Room').doc(datas.roomID);
-    await CheckRoomID.get().then(async data => {
-        if (data.exists) {
-            message = "room ID is null"
-            return message;
-        } else {
-            await CheckRoomID.get().then(doc => {
-                RoomDetail.push(doc.data());
-            })
-                .catch(err => {
-                    console.log('Error getting Room detail', err);
-                });
-        }
+    let CheckRoomID = db.collection('Room').doc(datas.roomID);
+    await CheckRoomID.get().then(doc => {
+        RoomDetail.push(doc.data());
     })
+        .catch(err => {
+            console.log('Error getting Room detail', err);
+        });
     return RoomDetail;
 };
 

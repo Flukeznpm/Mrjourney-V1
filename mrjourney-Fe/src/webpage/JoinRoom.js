@@ -10,11 +10,8 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 
-
-
 function JoinRoom(props) {
     const { joinRoomID } = useContext(HookContext)
-
     const [lineID, setLineID] = useState("")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
@@ -36,6 +33,7 @@ function JoinRoom(props) {
                 setShowRoomDetail(res.data)
             })
     }, [])
+
     return (
         <div className="flex-wrapper">
             <div className="top-page">
