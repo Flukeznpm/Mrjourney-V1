@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
 import '../static/css/Show-Room.css';
 import "../static/css/Nav.css";
@@ -10,9 +10,11 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { Link } from 'react-router-dom';
+import { HookContext } from '../store/HookProvider'
+import JoinRoom from './JoinRoom';
 
 function MyOwnerRoom(props) {
-
+    const { setJoinRoom, joinRoomID } = useContext(HookContext)
     const [lineID, setLineID] = useState("")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
@@ -105,7 +107,8 @@ function MyOwnerRoom(props) {
                                                                 ลบห้อง
                                                         </button>
                                                             <Link to="/JoinRoom">
-                                                                <button type="button" className="btn mx-2 col-5 btn-join-color round text-white">
+
+                                                                <button type="button" className="btn mx-2 col-5 btn-join-color round text-white" onClick={() => setJoinRoom(ownerRoom.roomID)}>
                                                                     ข้อมูลห้อง
                                                         </button>
                                                             </Link>

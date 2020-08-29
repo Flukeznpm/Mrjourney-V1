@@ -11,24 +11,6 @@ function RoomDetails(props) {
     const [lineID, setLineID] = useState("")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
-    const [roomDetail, setShowRoomDetail] = useState([{}])
-
-    useEffect(() => {
-        let loadJWT = cookie.load('jwt');
-        console.log(loadJWT)
-        if (loadJWT === undefined) {
-            props.history.push('/Home');
-        } else {
-            var user = jwt.verify(loadJWT, 'secreatKey');
-            setDisplayName(user.displayName)
-            setPictureURL(user.pictureURL)
-            setLineID(user.lineID)
-        }
-        axios.get(`http://localhost:5000/room/roomDetail?roomID=${props.roomID}`)
-            .then(res => {
-                setShowRoomDetail(res.data)
-            })
-    }, [])
 
     const onSubmit = async () => {
         let dataUpdateRoom = {
@@ -67,7 +49,7 @@ function RoomDetails(props) {
             <div className="Room-details py-3">
                 <div className="container">
                     <div className="ShowRoom-TripName py-1" style={{ fontSize: "30px" }}>
-                        ชื่อทริป : เชียงใหม่ GoGoGo
+                        ชื่อทริป : {props.roomDetail.roomName}
                     </div>
                     <div style={{ fontSize: "18px" }}>
                         <div className="ShowRoom-TripProvince py-1">
