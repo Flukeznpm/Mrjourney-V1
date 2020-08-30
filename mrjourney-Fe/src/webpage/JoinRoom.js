@@ -28,9 +28,13 @@ function JoinRoom(props) {
             setPictureURL(user.pictureURL)
             setLineID(user.lineID)
         }
-        axios.get(`http://localhost:5000/room/roomDetail?roomID=${joinRoomID}`)
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        let getRoomID = params.get('roomID');
+        axios.get(`http://localhost:5000/room/roomDetail?roomID=${getRoomID}`)
             .then(res => {
                 setShowRoomDetail(res.data)
+                console.log(getRoomID);
             })
     }, [])
 

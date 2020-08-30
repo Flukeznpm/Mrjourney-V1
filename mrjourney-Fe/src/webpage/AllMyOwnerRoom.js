@@ -106,11 +106,12 @@ function MyOwnerRoom(props) {
                                                             <button type="button" class="col-5 mx-2 btn btn-outline-danger round">
                                                                 ลบห้อง
                                                         </button>
-                                                            <Link to="/JoinRoom">
-
-                                                                <button type="button" className="btn mx-2 col-5 btn-join-color round text-white" onClick={() => setJoinRoom(ownerRoom.roomID)}>
+                                                            <Link to={`/JoinRoom?roomID=${ownerRoom.roomID}`}>
+                                                                <button type="button"
+                                                                    className="btn mx-2 col-5 btn-join-color round text-white"
+                                                                    onClick={() => setJoinRoom(ownerRoom.roomID)}>
                                                                     ข้อมูลห้อง
-                                                        </button>
+                                                                </button>
                                                             </Link>
                                                         </div>
                                                     </div>
