@@ -34,11 +34,6 @@ function JoinRoom(props) {
             .then(res => {
                 setShowRoomDetail(res.data)
             })
-
-        axios.get(`http://localhost:5000/room/members?roomID=${getRoomID}`)
-            .then(res => {
-                setMember(res.data)
-            })
     }, [])
 
     return (
@@ -59,10 +54,11 @@ function JoinRoom(props) {
                                         return (
                                             <>
                                                 <RoomDetails roomDetail={roomDetail}></RoomDetails>
+                                                <ShowMembers />
                                             </>
                                         )
                                     })}
-                                    <ShowMembers />
+                                    
                                 </div>
                             </div>
                         </div>

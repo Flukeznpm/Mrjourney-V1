@@ -38,36 +38,26 @@ function ShowMembers(props) {
                     <h1>Members</h1>
                     <div className="showmembers-list">
                         <div class="showmember" >
-                            <div class="row">
-                                {members.map((members) => {
-                                    return (
-                                        <>
+                            {members.map((members, key) => {
+                                return (
+                                    <>
+                                        <div class="row py-2">
                                             <div class="col-3">
                                                 <img src={members.pictureURL} class="image_outer_container" />
                                             </div>
                                             <div class="col-9 mt-2">
                                                 {members.fName}
-                                                <i class="fas fa-crown text-warning float-right"></i>
+                                                {key === 0 ? <i class="fas fa-crown text-warning float-right" /> : null}
                                             </div>
-                                        </>
-                                    )
-                                })}
-                            </div>
+                                        </div>
+                                    </>
+                                )
+                            })}
                         </div>
-                        {/* <div class="showmember">
-                            <div class="row">
-                                <div class="col-3">
-                                    <img src={props.members.pictureURL} class="image_outer_container" />
-                                </div>
-                                <div class="col-9 mt-2">
-                                    {props.members.fName}
-                                </div>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 export default ShowMembers;
