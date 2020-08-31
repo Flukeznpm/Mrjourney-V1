@@ -1,17 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
 import '../static/css/App.css';
 import ShowMembers from '../components/JoinedRoom/ShowMembers';
 import RoomDetails from '../components/JoinedRoom/RoomDetails';
 import BgSlide1 from '../static/img/pr-01.png';
-import { HookContext } from '../store/HookProvider'
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 
 function JoinRoom(props) {
-    const { joinRoomID } = useContext(HookContext)
     const [lineID, setLineID] = useState("")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
@@ -57,7 +55,6 @@ function JoinRoom(props) {
                         <div className="container">
                             <div className="col-12">
                                 <div className="row text-black">
-
                                     {roomDetail.map((roomDetail) => {
                                         return (
                                             <>
@@ -65,16 +62,7 @@ function JoinRoom(props) {
                                             </>
                                         )
                                     })}
-
-                                    {members.map((members) => {
-                                        return (
-                                            <>
-                                                <ShowMembers members={members}></ShowMembers>
-                                            </>
-                                        )
-                                    })
-                                    }
-
+                                    <ShowMembers />
                                 </div>
                             </div>
                         </div>
