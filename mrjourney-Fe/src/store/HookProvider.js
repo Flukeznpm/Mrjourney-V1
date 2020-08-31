@@ -62,8 +62,7 @@ const initialState = {
     birthday: '',
     gender: '',
     tel: ''
-  },
-  joinRoomID: ''
+  }
 }
 
 const hookReducer = (state, action) => {
@@ -250,11 +249,6 @@ const hookReducer = (state, action) => {
         addModalShow: false,
         keyModal: action.payload
       }
-    case "SET_JOINROOM":
-      return {
-        ...state,
-        joinRoomID: action.payload
-      }
 
     case "NEXT_STEP_1":
       let AllTripDate = []
@@ -282,7 +276,7 @@ export const HookProvider = ({ children }) => {
     initialState
   )
 
-  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal, Room, toDate, AccProfile, joinRoomID } = hookState
+  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal, Room, toDate, AccProfile } = hookState
 
   const addCounter = payload =>
     hookDispatch({ type: "ADD_COUNTER", payload }) // ส่ง type ADD_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
@@ -330,9 +324,6 @@ export const HookProvider = ({ children }) => {
     hookDispatch({ type: "SHOW_ROOM_MODAL_SHOW", payload })
   const showRoomModalClose = payload =>
     hookDispatch({ type: "SHOW_ROOM_MODAL_CLOSE", payload })
-  const setJoinRoom = payload =>
-    hookDispatch({ type: "SET_JOINROOM", payload })
-
   return (
     <HookContext.Provider
       value={{
@@ -346,7 +337,6 @@ export const HookProvider = ({ children }) => {
         Room,
         toDate,
         AccProfile,
-        joinRoomID,
         addCounter,
         subCounter,
         nextStep,
@@ -370,7 +360,6 @@ export const HookProvider = ({ children }) => {
         deleteEvent,
         showRoomModalShow,
         showRoomModalClose,
-        setJoinRoom
       }}>
       {children}
     </HookContext.Provider>
