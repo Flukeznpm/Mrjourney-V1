@@ -16,7 +16,6 @@ function JoinRoom(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [roomDetail, setShowRoomDetail] = useState([{}])
-    const [ownerMembers, setOwnerMember] = useState([{}])
     const [members, setMember] = useState([{}])
 
     useEffect(() => {
@@ -38,16 +37,9 @@ function JoinRoom(props) {
                 setShowRoomDetail(res.data)
             })
 
-        // axios.get(`http://localhost:5000/room/ownerMember?roomID=${getRoomID}`)
-        //     .then(res => {
-        //         setOwnerMember(res.data)
-        //     })
-
         axios.get(`http://localhost:5000/room/members?roomID=${getRoomID}`)
             .then(res => {
                 setMember(res.data)
-                console.log('Fe res: ' + res)
-                console.log('Fe members: ' + members)
             })
     }, [])
 
@@ -74,18 +66,14 @@ function JoinRoom(props) {
                                         )
                                     })}
 
-                                    {/* {ownerMembers.map((ownerMembers) => { */}
-                                    {
-                                        members.map((members) => {
-                                            return (
-                                                <>
-                                                    {/* <ShowMembers ownerMembers={ownerMembers} members={members}></ShowMembers> */}
-                                                    <ShowMembers members={members}></ShowMembers>
-                                                </>
-                                            )
-                                        })
+                                    {members.map((members) => {
+                                        return (
+                                            <>
+                                                <ShowMembers members={members}></ShowMembers>
+                                            </>
+                                        )
+                                    })
                                     }
-                                    {/* })} */}
 
                                 </div>
                             </div>

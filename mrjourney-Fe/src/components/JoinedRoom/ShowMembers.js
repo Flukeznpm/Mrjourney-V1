@@ -13,16 +13,15 @@ function ShowMembers(props) {
                         <div class="showmember" >
                             <div class="row">
                                 <div class="col-3">
-                                <img src={Logo} class="image_outer_container" />
-                                    {/* <img src={props.ownerMembers.pictureURL} class="image_outer_container" /> */}
+                                    <img src={props.members.pictureURL} class="image_outer_container" />
                                 </div>
                                 <div class="col-9 mt-2">
-                                    {/* {props.ownerMembers.fName} */}
+                                    {props.members.fName}
                                     <i class="fas fa-crown text-warning float-right"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="showmember">
+                        {/* <div class="showmember">
                             <div class="row">
                                 <div class="col-3">
                                     <img src={props.members.pictureURL} class="image_outer_container" />
@@ -31,20 +30,8 @@ function ShowMembers(props) {
                                     {props.members.fName}
                                 </div>
                             </div>
-                        </div>
-                        {/* <div class="showmember">
-                            <div class="row">
-                                <div class="col-3">
-                                    <img src={Logo} class="image_outer_container" />
-                                </div>
-                                <div class="col-9 mt-2">
-                                    nattapong
-                            </div>
-                            </div>
                         </div> */}
                     </div>
-
-
                 </div>
             </div>
         </div>

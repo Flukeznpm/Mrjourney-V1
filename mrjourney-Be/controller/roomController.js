@@ -7,7 +7,6 @@ let db = firebase.firestore();
 //---------------- Controller ----------------//
 // GET /room  (แสดง room ทั้งหมดใน feed page)
 // GET /roomDetail (แสดงรายละเอียดของแต่ละ room)
-// GET /ownerMember (แสดงรายชื่อหัวหน้าห้องใน room)
 // GET /members (แสดงรายชื่อสมาชิกใน room)
 // POST /room/createRoom  (สร้าง room)
 // PUT /room/editRoom (แก้ไขข้อมูล room)
@@ -30,18 +29,6 @@ router.get('/roomDetail', async function (req, res, next) {
     }
 });
 
-router.get('/ownerMember', async function (req, res, next) {
-    let datas = req.query;
-    if (datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
-        res.status(400).json({
-            message: "The Data was empty or undefined"
-        })
-    } else {
-        let OwnerMember = await getRoomOwnerMember(datas);
-        res.status(200).json(OwnerMember);
-    }
-})
-
 router.get('/members', async function (req, res, next) {
     let datas = req.query;
     if (datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
@@ -50,7 +37,6 @@ router.get('/members', async function (req, res, next) {
         })
     } else {
         let Members = await getRoomMembers(datas);
-        console.log('Be member: ' + Members)
         res.status(200).json(Members);
     }
 })
@@ -171,25 +157,22 @@ async function getRoomDetail(datas) {
     return RoomDetail;
 };
 
-async function getRoomOwnerMember(datas) {
-    let OwnerProfileMember = [];
+async function getRoomMembers(datas) {
+    let Members = [];
     let OwnerMember = [];
     let getOwnerRoomIDRef = db.collection('Room').doc(datas.roomID);
+
     await getOwnerRoomIDRef.get().then(doc1 => {
         OwnerMember.push(doc1.data());
     })
 
-    console.log('Be OwnerMember: ' + OwnerMember)
+    let OwnerRoomID = OwnerMember.map(a => a.ownerRoomID).toString();
+    let getOwnerProfileMember = db.collection('AccountProfile').doc(OwnerRoomID);
 
-    let getOwnerProfileMember = db.collection('AccountProfile').doc(OwnerMember.ownerRoomID);
     await getOwnerProfileMember.get().then(doc2 => {
-        OwnerProfileMember.push(doc2.data());
+        Members.push(doc2.data());
     })
-    return OwnerProfileMember;
-};
 
-async function getRoomMembers(datas) {
-    let Members = [];
     let showAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
     await showAllMembersRef.get().then(snapshot => {
         snapshot.forEach(doc => {
@@ -199,6 +182,7 @@ async function getRoomMembers(datas) {
         .catch(err => {
             console.log('Error getting Room Members', err);
         });
+
     return Members;
 };
 
