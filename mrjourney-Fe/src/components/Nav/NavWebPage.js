@@ -19,13 +19,11 @@ function NavWebPage(props) {
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
-        console.log('load', loadJWT);
         if (loadJWT === undefined) {
             setLineName("")
             setLinePicture("")
             setLineEmail("")
         } else {
-            console.log("get jwt")
             var user = jwt.verify(loadJWT, 'secreatKey');
             setLineName(user.displayName)
             setLinePicture(user.pictureURL)

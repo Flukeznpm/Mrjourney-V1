@@ -16,10 +16,11 @@ function JoinRoom(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [roomDetail, setShowRoomDetail] = useState([{}])
+    const [ownerMembers, setOwnerMember] = useState([{}])
+    const [members, setMember] = useState([{}])
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
-        console.log(loadJWT)
         if (loadJWT === undefined) {
             props.history.push('/Home');
         } else {
@@ -31,10 +32,22 @@ function JoinRoom(props) {
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let getRoomID = params.get('roomID');
+
         axios.get(`http://localhost:5000/room/roomDetail?roomID=${getRoomID}`)
             .then(res => {
                 setShowRoomDetail(res.data)
-                console.log(getRoomID);
+            })
+
+        // axios.get(`http://localhost:5000/room/ownerMember?roomID=${getRoomID}`)
+        //     .then(res => {
+        //         setOwnerMember(res.data)
+        //     })
+
+        axios.get(`http://localhost:5000/room/members?roomID=${getRoomID}`)
+            .then(res => {
+                setMember(res.data)
+                console.log('Fe res: ' + res)
+                console.log('Fe members: ' + members)
             })
     }, [])
 
@@ -52,6 +65,7 @@ function JoinRoom(props) {
                         <div className="container">
                             <div className="col-12">
                                 <div className="row text-black">
+
                                     {roomDetail.map((roomDetail) => {
                                         return (
                                             <>
@@ -59,7 +73,20 @@ function JoinRoom(props) {
                                             </>
                                         )
                                     })}
-                                    <ShowMembers></ShowMembers>
+
+                                    {/* {ownerMembers.map((ownerMembers) => { */}
+                                    {
+                                        members.map((members) => {
+                                            return (
+                                                <>
+                                                    {/* <ShowMembers ownerMembers={ownerMembers} members={members}></ShowMembers> */}
+                                                    <ShowMembers members={members}></ShowMembers>
+                                                </>
+                                            )
+                                        })
+                                    }
+                                    {/* })} */}
+
                                 </div>
                             </div>
                         </div>

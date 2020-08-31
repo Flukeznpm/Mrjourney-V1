@@ -50,6 +50,7 @@ router.get('/members', async function (req, res, next) {
         })
     } else {
         let Members = await getRoomMembers(datas);
+        console.log('Be member: ' + Members)
         res.status(200).json(Members);
     }
 })
@@ -175,12 +176,12 @@ async function getRoomOwnerMember(datas) {
     let OwnerMember = [];
     let getOwnerRoomIDRef = db.collection('Room').doc(datas.roomID);
     await getOwnerRoomIDRef.get().then(doc1 => {
-        OwnerMember.push(doc1.ownerRoomID.data());
+        OwnerMember.push(doc1.data());
     })
 
-    console.log('OwnerMember: ' + OwnerMember)
+    console.log('Be OwnerMember: ' + OwnerMember)
 
-    let getOwnerProfileMember = db.collection('AccountProfile').doc(OwnerMember);
+    let getOwnerProfileMember = db.collection('AccountProfile').doc(OwnerMember.ownerRoomID);
     await getOwnerProfileMember.get().then(doc2 => {
         OwnerProfileMember.push(doc2.data());
     })
@@ -193,11 +194,11 @@ async function getRoomMembers(datas) {
     await showAllMembersRef.get().then(snapshot => {
         snapshot.forEach(doc => {
             Members.push(doc.data());
-        })
-            .catch(err => {
-                console.log('Error getting Room Members', err);
-            });
+        });
     })
+        .catch(err => {
+            console.log('Error getting Room Members', err);
+        });
     return Members;
 };
 
