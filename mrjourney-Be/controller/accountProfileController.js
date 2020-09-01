@@ -6,7 +6,8 @@ const db = firebase.firestore();
 //---------------- Controller ----------------//
 // GET : /accountProfile  (แสดง profile ทั้งหมด ของ user)
 // POST : /accountProfile/createAccountDetail  (set profile)
-// POST : /accountProfile/editAccountDetail (Edit profile)
+// PUT : /accountProfile/editAccountDetail (Edit profile)
+// PUT : /accountProfile/editBio (Edit bio)
 // DELETE : /accountProfile/deleteAccount  (Delete Account)
 // GET : /accountProfile/trip (ดูทริปที่เคยสร้าง)
 // GET : /accountProfile/roomJoin (ดูทริปที่เคยJoin)
@@ -78,6 +79,24 @@ router.put('/editAccountDetail', async function (req, res, next) {
             }
         })
     }
+});
+
+router.put('/editBio', async function (req, res, next) {
+    let datas = req.body;
+    let CheckPermission = await db.collection('AccountProfile').doc(datas.lineID);
+    CheckPermission.get().then(async data => {
+        if (data.exists) {
+            await updateBio(datas);
+            console.log('Alert: Edit Bio Success"')
+            res.status(201).json({
+                message: "Edit Bio Success"
+            })
+        } else {
+            return res.status(400).json({
+                message: "You do not have permission to update Bio"
+            })
+        }
+    })
 });
 
 router.delete('/deleteAccount', async function (req, res, next) {
@@ -157,6 +176,13 @@ async function updateAccountDetail(datas) {
         birthday: datas.birthday,
         tel: datas.tel,
         //rating: datas.rating
+    });
+};
+
+
+async function updateBio(datas) {
+    await db.collection('AccountProfile').doc(datas.lineID).update({
+        bio: datas.bio
     });
 };
 
