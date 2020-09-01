@@ -140,7 +140,8 @@ async function createAccountDetail(datas) {
         lName: datas.lName,
         gender: datas.gender,
         birthday: datas.birthday,
-        tel: datas.tel
+        tel: datas.tel,
+        bio: datas.bio
     });
 };
 

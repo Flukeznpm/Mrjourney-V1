@@ -14,6 +14,7 @@ function FirstTimeLogin(props) {
     const [lineID, setLineID] = useState("")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
+    const [bio, setBio] = useState(" ")
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -37,7 +38,8 @@ function FirstTimeLogin(props) {
             lName: AccProfile.lName,
             gender: AccProfile.gender,
             birthday: AccProfile.birthday,
-            tel: AccProfile.tel
+            tel: AccProfile.tel,
+            bio: bio
         }
 
         await axios.post('http://localhost:5000/accountProfile/createAccountDetail', dataProfile)
