@@ -85,9 +85,6 @@ router.get('/tripperday', async function (req, res, next) {
 
 router.post('/createTrip', async function (req, res, next) {
     let datas = req.body;
-
-    console.log('event 1: ' + datas.event)
-
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.displayName == undefined || datas.displayName == null || datas.displayName == '' ||
         datas.pictureURL == undefined || datas.pictureURL == null || datas.pictureURL == '' ||
@@ -97,7 +94,7 @@ router.post('/createTrip', async function (req, res, next) {
         datas.startDate == undefined || datas.startDate == null || datas.startDate == '' ||
         datas.endDate == undefined || datas.endDate == null || datas.endDate == '' ||
         datas.tripStatus == undefined || datas.tripStatus == null || datas.tripStatus == false ||
-        datas.event == undefined || datas.event == null || datas.event == false) {
+        datas.events == undefined || datas.events == null || datas.events == false) {
         return res.status(400).json({
             message: "The Data was empty or undefined"
         })
@@ -120,7 +117,7 @@ router.put('/editTrip', async function (req, res, next) {
         datas.startDate == undefined || datas.startDate == null || datas.startDate == '' ||
         datas.endDate == undefined || datas.endDate == null || datas.endDate == '' ||
         datas.tripStatus == undefined || datas.tripStatus == null || datas.tripStatus == false ||
-        datas.event == undefined || datas.event == null || datas.event == false) {
+        datas.events == undefined || datas.events == null || datas.events == false) {
         return res.status(400).json({
             message: "The Data was empty or undefined"
         })
@@ -277,7 +274,7 @@ async function createTripList(datas) {
             })
             let saveTripPerDay = await db.collection('TripPerDay').doc(genTripID).set({
                 tripID: genTripID,
-                event: datas.event
+                events: datas.events
             })
             // await saveTripPerDay.collection('Day').doc().set({
             //     eventDate: datas.eventDate,
@@ -320,7 +317,7 @@ async function createTripList(datas) {
             })
             let saveTripPerDay = await db.collection('TripPerDay').doc(genTripID).set({
                 tripID: genTripID,
-                event: datas.event
+                events: datas.events
             })
             // await saveTripPerDay.collection('Day').doc().set({
             //     eventDate: datas.eventDate,
@@ -370,7 +367,7 @@ async function updateTrip(datas) {
                                                         checkTripPerDay.get().then(data => {
                                                             if (data.exists) {
                                                                 checkTripPerDay.update({
-                                                                    event: datas.event
+                                                                    events: datas.events
                                                                 })
                                                                 // checkTripPerDay.collection('Day').doc().update({
                                                                 //     eventDate: datas.eventDate,
