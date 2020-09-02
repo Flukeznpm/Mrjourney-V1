@@ -251,42 +251,6 @@ async function createRoom(datas) {
                 ageCondition: datas.ageCondition,
                 roomStatus: datas.roomStatus
             })
-            // } else {
-            //     let saveUserRef = db.collection('AccountProfile').doc(datas.lineID);
-            //     saveUserRef.update({
-            //         lineID: datas.lineID,
-            //         displayName: datas.displayName,
-            //         pictureURL: data.pictureURL,
-            //         fname: data.fname,
-            //         lname: data.lname,
-            //         bio: datas.bio,
-            //         gender: datas.gender,
-            //         birthday: datas.birthday,
-            //         phone: datas.phone,
-            //         rating: datas.rating
-            //     })
-            //     let saveRoomIDinAccountRef = saveUserRef.collection('Room').doc(genRoomID);
-            //     saveRoomIDinAccountRef.set({
-            //         roomID: genRoomID
-            //     })
-            //     let saveRoomID = db.collection('Room').doc(genRoomID)
-            //     saveRoomID.set({
-            //         roomID: genRoomID,
-            //         ownerRoomID: datas.lineID,
-            //         ownerRoomName: datas.displayName,
-            //         ownerPicRoom: datas.pictureURL,
-            //         roomName: datas.roomName,
-            //         // roomCover: datas.roomCover,
-            //         province: datas.province,
-            //         startDate: datas.startDate,
-            //         endDate: datas.endDate,
-            //         tripDetails: datas.tripDetails,
-            //         // qrCode: datas.qrCode,
-            //         maxMember: datas.maxMember,
-            //         genderCondition: datas.genderCondition,
-            //         ageCondition: datas.ageCondition,
-            //         roomStatus: datas.roomStatus
-            //     })
         }
     });
 };
