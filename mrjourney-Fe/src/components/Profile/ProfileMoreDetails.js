@@ -9,15 +9,38 @@ import '../../static/css/App.css';
 import '../../static/css/Profile.css';
 
 function ProfileMoreDetails(props) {
+    const [lineID, setLineID] = useState("")
     const [BioDetails, setBioDetails] = useState("");
     const [editBio, setEditBio] = useState(false);
     const { handleSubmit, errors } = useForm();
+
+    useEffect(() => {
+        let loadJWT = cookie.load('jwt');
+        console.log(loadJWT)
+        if (loadJWT === undefined) {
+            props.history.push('/Home');
+        } else {
+            var user = jwt.verify(loadJWT, 'secreatKey');
+            setLineID(user.lineID)
+        }
+    }, [])
+
     const handleBio = (e) => {
         setBioDetails(e)
     }
+
     const onSubmit = () => {
+        let dataUpdateBio = {
+            lineID: lineID,
+            bio: BioDetails
+        }
+        axios.put('http://localhost:5000/accountProfile/editBio', dataUpdateBio)
+            .then(async (res) => {
+                console.log(res)
+            })
         setEditBio(false)
     };
+
     return (
         <div>
             <Tabs
