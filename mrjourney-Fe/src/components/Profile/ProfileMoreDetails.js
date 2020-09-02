@@ -16,7 +16,6 @@ function ProfileMoreDetails(props) {
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
-        console.log(loadJWT)
         if (loadJWT === undefined) {
             props.history.push('/Home');
         } else {

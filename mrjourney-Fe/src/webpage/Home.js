@@ -20,12 +20,10 @@ function Home() {
             code: code
         }
         if (code != null) {
-            console.log("Jokkk");
             axios.post('http://localhost:5000/getToken', data).then((res) => {
                 if (res.status === 202) {
                     cookie.save('jwt', res.data);
                     var decoded = jwt.verify(res.data, 'secreatKey');
-                    console.log(decoded);
                     Swal.fire({
                         title: 'คุณยังไม่เคยลงทะเบียน!',
                         text: 'กรุณาลงทะเบียนเพื่อเข้าใช้เว็บไซต์',
@@ -35,7 +33,7 @@ function Home() {
                 } else {
                     cookie.save('jwt', res.data);
                     var decoded = jwt.verify(res.data, 'secreatKey');
-                    console.log('decode', decoded);
+                    // console.log('decode', decoded);
                     setLogin(true)
                 }
             }).catch((e) => {

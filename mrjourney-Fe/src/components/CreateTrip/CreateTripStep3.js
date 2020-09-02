@@ -25,7 +25,6 @@ class CreateTripStep3 extends React.Component {
 
     componentDidMount() {
         let loadJWT = cookie.load('jwt');
-        console.log(loadJWT)
         if (loadJWT === undefined) {
             this.props.history.push('/Home');
         } else {
