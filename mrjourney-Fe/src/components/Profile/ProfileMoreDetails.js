@@ -11,7 +11,7 @@ import '../../static/css/Profile.css';
 function ProfileMoreDetails(props) {
     const [lineID, setLineID] = useState("")
     const [BioDetails, setBioDetails] = useState("");
-    const [editBio, setEditBio] = useState(false);
+    const [isEditBio, setEditBio] = useState(false);
     const { handleSubmit, errors } = useForm();
 
     useEffect(() => {
@@ -26,6 +26,15 @@ function ProfileMoreDetails(props) {
 
     const handleBio = (e) => {
         setBioDetails(e)
+    }
+
+    const onEditBio = (bio) => {
+        setEditBio(true)
+        setBioDetails(bio)
+    }
+
+    const onCancel = (e) => {
+        setEditBio(false)
     }
 
     const onSubmit = () => {
@@ -47,13 +56,13 @@ function ProfileMoreDetails(props) {
                 defaultActiveKey="Bio">
                 <Tab eventKey="Bio" title="Bio">
                     <div className="py-3">
-                        {editBio === false ?
+                        {isEditBio === false ?
                             <>
                                 {props.accBio.bio !== "" ?
                                     <>{props.accBio.bio}</>
                                     : `กรุณาเพิ่มข้อมูลของคุณ`}
                                 <button type="submit" className="mt-3 btn btn-warning btn-block text-white"
-                                    onClick={() => setEditBio(true)}>แก้ไขข้อมูล</button>
+                                    onClick={() => onEditBio(props.accBio.bio)}>แก้ไขข้อมูล</button>
                             </>
                             :
                             <form onSubmit={handleSubmit(onSubmit)}>
@@ -63,8 +72,16 @@ function ProfileMoreDetails(props) {
                                     value={BioDetails}
                                     onChange={(e) => handleBio(e.target.value, e.target.name)}
                                 />
-                                <button type="submit" className="mt-3 btn btn-warning btn-block text-white"
-                                    onClick={() => onSubmit()}>ยืนยันข้อมูล</button>
+                                <div className="row mt-3">
+                                    <div className="col-6">
+                                        <button type="button" className="btn-block btn btn-danger text-white"
+                                            onClick={() => onCancel()}>ยกเลิกแก้ไข</button>
+                                    </div>
+                                    <div className="col-6">
+                                        <button type="submit" className="btn-block btn btn-success text-white"
+                                            onClick={() => onSubmit()}>ยืนยันข้อมูล</button>
+                                    </div>
+                                </div>
                             </form>
                         }
                     </div>
