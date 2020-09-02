@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+import ProfileMoreDetails from '../components/Profile/ProfileMoreDetails';
 
 function Profile(props) {
     const { AccProfile, handleAccProfileForm } = useContext(HookContext)
@@ -83,22 +84,6 @@ function Profile(props) {
         AccProfile.birthday = "";
         AccProfile.tel = "";
         setEditProfile(false)
-    }
-
-    const ProfileMoreDetail = () => {
-        const [key, setKey] = useState('Bio');
-        return (
-            <div>
-                <Tabs
-                    id="controlled-tab-example"
-                    activeKey={key}
-                    onSelect={(k) => setKey(k)}>
-                    <Tab eventKey="Bio" title="Bio">Welcome to MyProfile</Tab>
-                    <Tab eventKey="HisRoom" title="History Room">ShowRoom</Tab>
-                    <Tab eventKey="HisTrip" title="History Trip">ShowTrip</Tab>
-                </Tabs>
-            </div>
-        )
     }
 
     return (
@@ -202,7 +187,11 @@ function Profile(props) {
                     </div>
                     <div className="container">
                         <div className="Profile-show-box mt-2" >
-                            <ProfileMoreDetail></ProfileMoreDetail>
+                            {acc.map((acc) => {
+                                return (
+                                    <ProfileMoreDetails accBio={acc}></ProfileMoreDetails>
+                                )
+                            })}
                         </div>
                         <div className="Profile-score py-2 mt-5">
                             <div className="container">
