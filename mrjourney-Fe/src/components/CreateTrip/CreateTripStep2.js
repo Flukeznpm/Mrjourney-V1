@@ -46,7 +46,7 @@ function CreateTripStep2(props) {
             startDate: momentjs(Trip.date).format('ll'),
             endDate: momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day').format('ll'),
             tripStatus: tripStatus,
-            event: Trip.totalDate
+            events: Trip.totalDate
         }
         await axios.post('http://localhost:5000/trip/createTrip', dataTrip)
             .then(res => {
