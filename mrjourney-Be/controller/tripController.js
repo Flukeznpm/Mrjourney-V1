@@ -166,22 +166,23 @@ router.delete('/deleteTrip', async function (req, res, next) {
 //---------------- Function ----------------//
 async function getAllTripByGroupID(lineGroupID) {
     let dataTripAllDay = [];
+    let tripIDList = [];
     let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID);
-    let getTripID = await checkTripIDRef.collection('Trip').get()
-        .then(doc => {
-            tripID = doc.data();
-        });
+    await checkTripIDRef.collection('Trip').get().then(doc => {
+        tripIDList.push(doc.data());
+    });
 
-    console.log('tripID : ' + getTripID);
-    console.log('tripID : ' + getTripID.data());
+    let tripID = tripIDList.map(t => t.tripID).toString();
+    console.log('Trip ID: ' + tripID);
 
-    let showAllTrip = await db.collection('TripPerDay').doc(getTripID);
+    let showAllTrip = db.collection('TripPerDay').doc(tripID);
     await showAllTrip.get().then(doc => {
         dataTripAllDay.push(doc.data());
     })
         .catch(err => {
-            console.log('Error getting documents', err);
+            console.log('Error getting All Trip detail', err);
         });
+
     return dataTripAllDay;
 };
 
