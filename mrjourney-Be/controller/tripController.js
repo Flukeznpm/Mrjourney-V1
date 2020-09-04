@@ -48,12 +48,13 @@ router.get('/', async function (req, res, next) {
 router.get('/tripperday', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
     let lineID = req.query.lineID;
-    // Check : Date from Frontend ?
-    let Dates = req.query.Date;
+    let DateOfTrip = req.query.Date;
+
+    console.log('DateOfTrip: ', DateOfTrip)
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
         lineID == undefined || lineID == null || lineID == '' ||
-        Dates == undefined || Dates == null || Dates == '') {
+        DateOfTrip == undefined || DateOfTrip == null || DateOfTrip == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400).json({
             message: "The Data was empty or undefined"
@@ -65,7 +66,7 @@ router.get('/tripperday', async function (req, res, next) {
                 let checkUserRef = await checkGroup.collection('Member').doc(lineID);
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
-                        let result = await getTripPerDayByDate(lineGroupID, Dates)
+                        let result = await getTripPerDayByDate(lineGroupID, DateOfTrip)
                         console.log('Get Trip per day success')
                         res.status(200).json(result);
                     } else {
@@ -187,27 +188,24 @@ async function getAllTripByGroupID(lineGroupID) {
 };
 
 async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
-
-    console.log(DateOfTrip);
-
     let dataTripPerDay = [];
-    let day = DateOfTrip;
-    let checkTripIDRef = await db.collection('LineGroup').doc(lineGroupID);
-    let getTripID = await checkTripIDRef.collection('Trip').get()
-        .then(doc => {
-            tripID = doc.data();
-        });
+    let tripIDList = [];
+    let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID);
+    await checkTripIDRef.collection('Trip').get().then(doc => {
+        tripIDList.push(doc.data());
+    });
 
-    console.log('tripID : ' + getTripID);
-    console.log('tripID : ' + getTripID.data());
+    let tripID = tripIDList.map(t => t.tripID).toString();
+    console.log('Trip ID: ' + tripID);
 
-    let showTripPerDay = await db.collection('TripPerDay').doc(getTripID).where(new firestore.FieldPath('', ''), '==', day);
+    let showTripPerDay = await db.collection('TripPerDay').doc(tripID).where(new firestore.FieldPath('', ''), '==', DateOfTrip);
     await showTripPerDay.get().then(doc => {
         dataTripPerDay.push(doc.data());
     })
         .catch(err => {
-            console.log('Error getting documents', err);
+            console.log('Error getting Trip per day', err);
         });
+
     return dataTripPerDay;
 };
 
