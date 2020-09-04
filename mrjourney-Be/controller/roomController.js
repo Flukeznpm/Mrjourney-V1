@@ -69,13 +69,14 @@ router.post('/createRoom', async function (req, res, next) {
 
 router.put('/editRoom', async function (req, res, next) {
     let datas = req.body;
+
     if (datas.roomID == undefined || datas.roomID == null || datas.roomID == '' ||
-        datas.ownerRoom == undefined || datas.ownerRoom == null || datas.ownerRoom == '' ||
         datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.roomName == undefined || datas.roomName == null || datas.roomName == '' ||
         datas.province == undefined || datas.province == null || datas.province == '' ||
         datas.startDate == undefined || datas.startDate == null || datas.startDate == '' ||
         datas.endDate == undefined || datas.endDate == null || datas.endDate == '' ||
+        datas.tripDetails == undefined || datas.tripDetails == null || datas.tripDetails == '' ||
         datas.maxMember == undefined || datas.maxMember == null || datas.maxMember == '' ||
         datas.genderCondition == undefined || datas.genderCondition == null || datas.genderCondition == '' ||
         datas.ageCondition == undefined || datas.ageCondition == null || datas.ageCondition == '' ||
@@ -86,8 +87,8 @@ router.put('/editRoom', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        let checkPermission = await db.collection('Room').where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID)
-        checkPermission.get().then(async data => {
+        let checkPermission =  db.collection('Room').where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID);
+        await checkPermission.get().then(async data => {
             if (data.exists) {
                 await updateRoom(datas);
                 console.log('Alert: Edit Room Success')
@@ -263,9 +264,9 @@ async function updateRoom(datas) {
         province: datas.province,
         startDate: datas.startDate,
         endDate: datas.endDate,
-        tripDetails: datas.detail,
+        tripDetails: datas.tripDetails,
         // qrCode: datas.qrCode,
-        maxMember: datas.maxuser,
+        maxMember: datas.maxMember,
         genderCondition: datas.genderCondition,
         ageCondition: datas.ageCondition,
         roomStatus: datas.roomStatus
