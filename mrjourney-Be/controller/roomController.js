@@ -85,30 +85,19 @@ router.put('/editRoom', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-
-        console.log(datas.roomID)
-        console.log(datas.lineID)
-
-        let roomRef = db.collection('Room');
-        let checkPermission = roomRef.where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID);
-        await checkPermission.get().then(async data => {
-            console.log('data: ', data)
+        const roomRef = db.collection('Room');
+        const checkPermissionRef = roomRef.where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID);
+        await checkPermissionRef.get().then(async data => {
+            if (data.empty) {
+                console.log('No matching documents.');
+                return;
+            } else {
+                await updateRoom(datas);
+                res.status(201).json({
+                    message: "Edit Room Success",
+                })
+            }
         })
-
-        // .then(async data => {
-        //     if (data.exists) {
-        //         await updateRoom(datas);
-        //         console.log('Alert: Edit Room Success')
-        //         res.status(201).json({
-        //             message: "Edit Room Success",
-        //         })
-        //     } else {
-        //         console.log('Alert: You can not edit Room ')
-        //         res.status(400).json({
-        //             message: "You can not edit Room",
-        //         })
-        //     }
-        // })
     }
 });
 
