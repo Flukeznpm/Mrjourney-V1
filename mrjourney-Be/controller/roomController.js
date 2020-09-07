@@ -59,11 +59,9 @@ router.post('/createRoom', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        await createRoom(datas);
+        let createRooms = await createRoom(datas);
         console.log('Alert: Create Room Success')
-        res.status(201).json({
-            message: "Create Room Success",
-        })
+        res.status(201).json(createRooms)
     }
 });
 
@@ -87,21 +85,30 @@ router.put('/editRoom', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        let checkPermission =  db.collection('Room').where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID);
+
+        console.log(datas.roomID)
+        console.log(datas.lineID)
+
+        let roomRef = db.collection('Room');
+        let checkPermission = roomRef.where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID);
         await checkPermission.get().then(async data => {
-            if (data.exists) {
-                await updateRoom(datas);
-                console.log('Alert: Edit Room Success')
-                res.status(201).json({
-                    message: "Edit Room Success",
-                })
-            } else {
-                console.log('Alert: You can not edit Room ')
-                res.status(400).json({
-                    message: "You can not edit Room",
-                })
-            }
+            console.log('data: ', data)
         })
+
+        // .then(async data => {
+        //     if (data.exists) {
+        //         await updateRoom(datas);
+        //         console.log('Alert: Edit Room Success')
+        //         res.status(201).json({
+        //             message: "Edit Room Success",
+        //         })
+        //     } else {
+        //         console.log('Alert: You can not edit Room ')
+        //         res.status(400).json({
+        //             message: "You can not edit Room",
+        //         })
+        //     }
+        // })
     }
 });
 
@@ -253,7 +260,8 @@ async function createRoom(datas) {
                 roomStatus: datas.roomStatus
             })
         }
-    });
+    })
+    return genRoomID;
 };
 
 async function updateRoom(datas) {
