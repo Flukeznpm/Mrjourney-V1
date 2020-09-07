@@ -55,8 +55,6 @@ function CreateRoomStep3(props) {
         }
         await axios.post('http://localhost:5000/room/createRoom', dataRoom)
             .then(res => {
-                console.log(res)
-                console.log(res.data)
                 Swal.fire({
                     icon: 'success',
                     title: 'สร้างห้องสำเร็จ!',
