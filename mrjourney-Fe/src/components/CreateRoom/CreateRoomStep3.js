@@ -56,16 +56,17 @@ function CreateRoomStep3(props) {
         await axios.post('http://localhost:5000/room/createRoom', dataRoom)
             .then(res => {
                 console.log(res)
+                console.log(res.data)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'สร้างห้องสำเร็จ!',
+                    text: 'ขอให้คุณสนุกกับการท่องเที่ยว',
+                    showCancelButton: true,
+                    confirmButtonText: `<a href="/JoinRoom?roomID=${res.data}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
+                    confirmButtonColor: '#31CC71',
+                    cancelButtonText: '<a href="/Home" id="alert-confirm-button">กลับสู่หน้าหลัก</a>',
+                })
             });
-        Swal.fire({
-            icon: 'success',
-            title: 'สร้างห้องสำเร็จ!',
-            text: 'ขอให้คุณสนุกกับการท่องเที่ยว',
-            showCancelButton: true,
-            confirmButtonText: '<a href="/Joined-Room" id="alert-confirm-button">เข้าสู่ห้อง</a>',
-            confirmButtonColor: '#31CC71',
-            cancelButtonText: '<a href="/Home" id="alert-confirm-button">กลับสู่หน้าหลัก</a>',
-        })
     }
 
     return (
