@@ -88,8 +88,7 @@ function MoreRoomDetailModal(props) {
                         </div>
                         <div className="trip-detail-modal py-1">
                             รายละเอียดแผนการท่องเที่ยว
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled
                             >
                                 {props.room.tripDetails}
 

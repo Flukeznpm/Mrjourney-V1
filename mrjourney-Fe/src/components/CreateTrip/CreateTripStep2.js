@@ -52,6 +52,7 @@ function CreateTripStep2(props) {
             .then(res => {
                 console.log(res)
             });
+        nextStep(1)
     }
 
     return (
