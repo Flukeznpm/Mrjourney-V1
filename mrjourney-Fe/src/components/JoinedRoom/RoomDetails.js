@@ -70,7 +70,6 @@ function RoomDetails(props) {
             tripDetails: Room.tripDetails,
             roomStatus: roomStatus
         }
-        alert(dataUpdateRoom.tripDetails)
         await axios.put('http://localhost:5000/room/editRoom', dataUpdateRoom)
             .then(async (res) => {
                 console.log(res)
@@ -88,6 +87,18 @@ function RoomDetails(props) {
         Room.genderCondition = "";
         Room.tripDetails = "";
         setEditRoom(false)
+    }
+    
+    const onEditRoom = (room) => {
+        Room.roomName = room.roomName
+        Room.province = room.province
+        Room.startDate = room.startDate
+        Room.endDate = room.endDate
+        Room.maxMember = room.maxMember
+        Room.ageCondition = room.ageCondition
+        Room.genderCondition = room.genderCondition
+        Room.tripDetails = room.tripDetails
+        setEditRoom(true)
     }
 
     const AlertCloseRoom = () => {
@@ -190,7 +201,7 @@ function RoomDetails(props) {
                             </div>
                         </div>
                         <div className="container text-center py-3">
-                            <button type="button" className="btn btn-warning mr-3 text-white" onClick={() => setEditRoom(true)}>แก้ไขห้อง</button>
+                            <button type="button" className="btn btn-warning mr-3 text-white" onClick={() => onEditRoom(props.roomDetail)}>แก้ไขห้อง</button>
                             <button type="button" className="btn btn-warning ml-3 text-white" onClick={AlertCloseRoom}>ปิดห้อง</button>
                         </div>
                     </div>
