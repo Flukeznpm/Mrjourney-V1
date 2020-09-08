@@ -50,11 +50,11 @@ router.get('/tripperday', async function (req, res, next) {
     let lineID = req.query.lineID;
     let DateOfTrip = req.query.Date;
 
-    console.log('DateOfTrip: ', DateOfTrip)
+    console.log('DateOfTrip: ', dateOfTrip)
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
         lineID == undefined || lineID == null || lineID == '' ||
-        DateOfTrip == undefined || DateOfTrip == null || DateOfTrip == '') {
+        dateOfTrip == undefined || dateOfTrip == null || dateOfTrip == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400).json({
             message: "The Data was empty or undefined"

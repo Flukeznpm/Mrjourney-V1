@@ -30,23 +30,21 @@ function CreateTripStep3() {
         }
     }, [])
 
-    const checkTripList = async () => {
-        let dataCheckTrip = {
-            lineGroupID: this.state.lineGroupID,
-            lineID: this.state.lineID,
-        }
-        await axios.get(`http://localhost:5000/trip?lineGroupID=${this.state.lineGroupID}&lineID=${this.state.lineID}`)
-            .then(async checkTrip => {
-                console.log('Data from API : ' + checkTrip.data)
-                this.setState({
-                    trip: checkTrip.data
-                });
+    const getTripList = async () => {
+        await axios.get(`http://localhost:5000/trip?lineGroupID=${lineGroupID}&lineID=${lineID}`)
+            .then(res => {
+                console.log('getTripList: ', res.data)
             });
-        console.log('Data from State : ' + this.state.trip);
+    }
+
+    const getTripPerDay = async () => {
+        await axios.get(`http://localhost:5000/trip/tripperday?lineGroupID=${lineGroupID}&lineID=${lineID}&dateOfTrip=${dateOfTrip}`)
+            .then(res => {
+                console.log('getTripPerDay: ', res.data)
+            });
     }
 
     return (
-
         <div className="top-page">
             <div className="step-progress step-3 mt-3 pt-2">
                 <ul>
@@ -86,10 +84,13 @@ function CreateTripStep3() {
                                             <div className="row">
                                                 <div className="col-3"></div>
                                                 <div className="col-6 my-2">
-                                                    <Link to="/CheckTrip" style={{ textDecoration: "none" }}>
-                                                        <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                            onClick={this.checkTripList.bind(this)} >ดูแผนการเดินทางทั้งหมด</button>
-                                                    </Link>
+                                                    {/* <Link to="/CheckTrip" style={{ textDecoration: "none" }}> */}
+                                                    <button type="button" class="btn btn-warning btn-lg btn-block text-white"
+                                                        onClick={getTripList} >ดูแผนการเดินทางทั้งหมด</button>
+                                                    <br />
+                                                    <button type="button" class="btn btn-warning btn-lg btn-block text-white"
+                                                        onClick={getTripPerDay} >ดูแผนการเดินทางรายวัน</button>
+                                                    {/* </Link> */}
                                                 </div>
                                                 <div className="col-3"></div>
                                             </div>
