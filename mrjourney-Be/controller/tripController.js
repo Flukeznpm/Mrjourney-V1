@@ -174,7 +174,7 @@ async function getAllTripByGroupID(lineGroupID) {
     });
 
     let tripID = tripIDList.map(t => t.tripID).toString();
-    console.log('Trip ID: ' + tripID);
+    console.log('Trip ID: ' , tripID);
 
     let showAllTrip = db.collection('TripPerDay').doc(tripID);
     await showAllTrip.get().then(doc => {
@@ -196,7 +196,7 @@ async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     });
 
     let tripID = tripIDList.map(t => t.tripID).toString();
-    console.log('Trip ID: ' + tripID);
+    console.log('Trip ID: ' , tripID);
 
     let showTripPerDay = await db.collection('TripPerDay').doc(tripID).where(new firestore.FieldPath('', ''), '==', DateOfTrip);
     await showTripPerDay.get().then(doc => {
