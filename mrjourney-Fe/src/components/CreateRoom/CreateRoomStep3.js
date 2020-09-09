@@ -175,7 +175,8 @@ function CreateRoomStep3(props) {
                                                 <div className="Show-Textdetails pt-1">
 
                                                 {/* <div class="alert show-details-box "> */}
-                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                                <textarea disabled class="form-control" 
+                                                    id="exampleFormControlTextarea1" rows="3"
                                                     value={Room.tripDetails}
                                                 >
                                                 </textarea>

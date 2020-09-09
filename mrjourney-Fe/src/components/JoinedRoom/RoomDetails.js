@@ -190,7 +190,7 @@ function RoomDetails(props) {
                             </div>
                             <div class="pt-4">
                                 <label for="exampleInputEmail1">รายละเอียด</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" value={props.roomDetail.tripDetails}>
+                                <textarea disabled class="form-control" id="exampleFormControlTextarea1" rows="3" value={props.roomDetail.tripDetails}>
                                 </textarea>
                             </div>
                             <div className="ShowRoom-QrCode py-1">
