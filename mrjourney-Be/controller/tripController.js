@@ -362,7 +362,7 @@ async function updateTrip(datas) {
                                                 tripStatus: datas.tripStatus
                                             })
                                             let CheckTripPerDay = db.collection('TripPerDay').doc(datas.tripID);
-                                            await CheckTripPerDay.get().then(data => {
+                                            await CheckTripPerDay.get().then(async data => {
                                                 if (data.exists) {
                                                     await CheckTripPerDay.update({
                                                         events: datas.events
@@ -407,7 +407,6 @@ async function updateTrip(datas) {
         }
     })
 };
-
 
 async function deleteTrip(datas) {
     await db.collection('TripList').doc(datas.tripID).delete();
