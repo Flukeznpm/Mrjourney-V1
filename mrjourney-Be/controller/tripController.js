@@ -200,7 +200,7 @@ async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     let tripID = tripIDList.map(t => t.tripID).toString();
     console.log('Trip ID: ', tripID);
 
-    let showTripPerDay = await db.collection('TripPerDay').doc(tripID).where(new firestore.FieldPath('', ''), '==', DateOfTrip);
+    let showTripPerDay = await db.collection('TripPerDay').where('tripID', '==', tripID).where(new firestore.FieldPath('events', 'eventDate'), '==', DateOfTrip);
     await showTripPerDay.get().then(doc => {
         dataTripPerDay.push(doc.data());
     })
