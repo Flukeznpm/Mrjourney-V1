@@ -24,11 +24,11 @@ router.get('/', async function (req, res, next) {
         let checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         checkGroupRef.get().then(async data => {
             if (data.exists) {
-                let checkUserRef = await checkGroup.collection('Member').doc(lineID);
+                let checkUserRef = await checkGroupRef.collection('Member').doc(lineID);
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
                         let result = await getAllTripByGroupID(lineGroupID);
-                        console.log('Get Trip list ßsuccess')
+                        console.log('Get Trip list success: ', result)
                         res.status(200).json(result);
                     } else {
                         console.log('Alert: You cannot check this Trip')
@@ -63,7 +63,7 @@ router.get('/tripperday', async function (req, res, next) {
         let checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         checkGroupRef.get().then(async data => {
             if (data.exists) {
-                let checkUserRef = await checkGroup.collection('Member').doc(lineID);
+                let checkUserRef = await checkGroupRef.collection('Member').doc(lineID);
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
                         let result = await getTripPerDayByDate(lineGroupID, DateOfTrip)
@@ -168,13 +168,14 @@ router.delete('/deleteTrip', async function (req, res, next) {
 async function getAllTripByGroupID(lineGroupID) {
     let dataTripAllDay = [];
     let tripIDList = [];
-    let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID);
-    await checkTripIDRef.collection('Trip').get().then(doc => {
-        tripIDList.push(doc.data());
-    });
+    let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip');
+    await checkTripIDRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+            tripIDList.push(doc.data());
+        })
+    })
 
     let tripID = tripIDList.map(t => t.tripID).toString();
-    console.log('Trip ID: ' , tripID);
 
     let showAllTrip = db.collection('TripPerDay').doc(tripID);
     await showAllTrip.get().then(doc => {
@@ -196,7 +197,7 @@ async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     });
 
     let tripID = tripIDList.map(t => t.tripID).toString();
-    console.log('Trip ID: ' , tripID);
+    console.log('Trip ID: ', tripID);
 
     let showTripPerDay = await db.collection('TripPerDay').doc(tripID).where(new firestore.FieldPath('', ''), '==', DateOfTrip);
     await showTripPerDay.get().then(doc => {
