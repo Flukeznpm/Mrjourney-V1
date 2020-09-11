@@ -17,7 +17,7 @@ function CreateTripStep3() {
     const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
-    const [dateOfTrip, setDateOfTrip] = useState("")
+    const [dateOfTrip, setDateOfTrip] = useState("20 ก.ย. 2020")
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');

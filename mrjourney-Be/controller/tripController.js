@@ -24,11 +24,11 @@ router.get('/', async function (req, res, next) {
         let checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         checkGroupRef.get().then(async data => {
             if (data.exists) {
-                let checkUserRef = await checkGroup.collection('Member').doc(lineID);
+                let checkUserRef = await checkGroupRef.collection('Member').doc(lineID);
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
                         let result = await getAllTripByGroupID(lineGroupID);
-                        console.log('Get Trip list ßsuccess')
+                        console.log('Get Trip list success: ', result)
                         res.status(200).json(result);
                     } else {
                         console.log('Alert: You cannot check this Trip')
@@ -63,7 +63,7 @@ router.get('/tripperday', async function (req, res, next) {
         let checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         checkGroupRef.get().then(async data => {
             if (data.exists) {
-                let checkUserRef = await checkGroup.collection('Member').doc(lineID);
+                let checkUserRef = await checkGroupRef.collection('Member').doc(lineID);
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
                         let result = await getTripPerDayByDate(lineGroupID, DateOfTrip)
@@ -110,7 +110,7 @@ router.post('/createTrip', async function (req, res, next) {
 router.put('/editTrip', async function (req, res, next) {
     let datas = req.body;
     if (datas.tripID == undefined || datas.tripID == null || datas.tripID == '' ||
-        datas.OwnerTrip == undefined || datas.OwnerTrip == null || datas.OwnerTrip == '' ||
+        datas.ownerTrip == undefined || datas.ownerTrip == null || datas.ownerTrip == '' ||
         datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '' ||
         datas.tripName == undefined || datas.tripName == null || datas.tripName == '' ||
@@ -123,16 +123,15 @@ router.put('/editTrip', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        //let checkPermission = await db.collection('TripList').doc(datas.tripID).collection('Owner').doc(datas.OwnerTrip);
-        let checkPermission = await db.collection('TripList').where('tripID', '==', datas.tripID).where('OwnerTrip', '==', datas.OwnerTrip);
-        checkPermission.get().then(async data => {
-            if (data.exists) {
-                await updateTrip(datas).then(res => {
-                    return res
-                })
+        const checkPermissionRef = db.collection('TripList').where('tripID', '==', datas.tripID).where('ownerTrip', '==', datas.lineID);
+        await checkPermissionRef.get().then(async data => {
+            if (data.empty) {
+                console.log('You do not have permission to update trip');
+                return;
             } else {
-                return res.status(400).json({
-                    message: "You do not have permission to update trip"
+                await updateTrip(datas)
+                res.status(201).json({
+                    message: "Edit Room Success"
                 })
             }
         })
@@ -147,8 +146,8 @@ router.delete('/deleteTrip', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        //let checkPermission = await db.collection('TripList').doc(datas.tripID).collection('Owner').doc(datas.OwnerTrip);
-        let checkPermission = await db.collection('TripList').where('tripID', '==', datas.tripID).where('OwnerTrip', '==', datas.OwnerTrip);
+        //let checkPermission = await db.collection('TripList').doc(datas.tripID).collection('Owner').doc(datas.ownerTrip);
+        let checkPermission = await db.collection('TripList').where('tripID', '==', datas.tripID).where('ownerTrip', '==', datas.ownerTrip);
         checkPermission.get().then(async data => {
             if (data.exists) {
                 await deleteTrip(req.body)
@@ -168,13 +167,14 @@ router.delete('/deleteTrip', async function (req, res, next) {
 async function getAllTripByGroupID(lineGroupID) {
     let dataTripAllDay = [];
     let tripIDList = [];
-    let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID);
-    await checkTripIDRef.collection('Trip').get().then(doc => {
-        tripIDList.push(doc.data());
-    });
+    let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip');
+    await checkTripIDRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+            tripIDList.push(doc.data());
+        })
+    })
 
     let tripID = tripIDList.map(t => t.tripID).toString();
-    console.log('Trip ID: ' , tripID);
 
     let showAllTrip = db.collection('TripPerDay').doc(tripID);
     await showAllTrip.get().then(doc => {
@@ -190,15 +190,17 @@ async function getAllTripByGroupID(lineGroupID) {
 async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     let dataTripPerDay = [];
     let tripIDList = [];
-    let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID);
-    await checkTripIDRef.collection('Trip').get().then(doc => {
-        tripIDList.push(doc.data());
-    });
+    let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip');
+    await checkTripIDRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+            tripIDList.push(doc.data());
+        })
+    })
 
     let tripID = tripIDList.map(t => t.tripID).toString();
-    console.log('Trip ID: ' , tripID);
+    console.log('Trip ID: ', tripID);
 
-    let showTripPerDay = await db.collection('TripPerDay').doc(tripID).where(new firestore.FieldPath('', ''), '==', DateOfTrip);
+    let showTripPerDay = await db.collection('TripPerDay').where('tripID', '==', tripID).where(new firestore.FieldPath('events', 'eventDate'), '==', DateOfTrip);
     await showTripPerDay.get().then(doc => {
         dataTripPerDay.push(doc.data());
     })
@@ -264,7 +266,7 @@ async function createTripList(datas) {
             })
             let saveTripList = await db.collection('TripList').doc(genTripID).set({
                 tripID: genTripID,
-                OwnerTrip: datas.lineID,
+                ownerTrip: datas.lineID,
                 tripName: datas.tripName,
                 province: datas.province,
                 startDate: datas.startDate,
@@ -307,7 +309,7 @@ async function createTripList(datas) {
             })
             let saveTripList = await db.collection('TripList').doc(genTripID).set({
                 tripID: genTripID,
-                OwnerTrip: datas.lineID,
+                ownerTrip: datas.lineID,
                 tripName: datas.tripName,
                 province: datas.province,
                 startDate: datas.startDate,
@@ -340,84 +342,67 @@ async function updateTrip(datas) {
                 email: datas.email,
                 pictureURL: datas.pictureURL
             })
-            let CheckLineGroupinLineChatAccount = CheckLineChatAccountRef.collection('Group').doc(datas.lineGroupID)
-            CheckLineGroupinLineChatAccount.get().then(async data => {
+            let CheckLineGroupinLineChatAccount = CheckLineChatAccountRef.collection('Group').doc(datas.lineGroupID);
+            await CheckLineGroupinLineChatAccount.get().then(async data => {
                 if (data.exists) {
-                    let CheckTripRef = await db.collection('LineGroup').doc(datas.lineGroupID);
-                    CheckTripRef.get().then(async data => {
+                    let CheckTripRef = db.collection('LineGroup').doc(datas.lineGroupID);
+                    await CheckTripRef.get().then(async data => {
                         if (data.exists) {
-                            let CheckTripinLineGroup = await checkTripRef.collection('Trip').doc(datas.tripID)
-                                .get().then(async data => {
-                                    if (data.exists) {
-                                        let CheckTripListRef = await db.collection('TripList').doc(datas.tripID);
-                                        CheckTripListRef.get().then(async data => {
-                                            if (data.exists) {
-                                                let checkOwnerTrip = await db.collection('TripList').where('tripID', '==', datas.tripID).where('OwnerTrip', '==', datas.OwnerTrip);
-                                                checkOwnerTrip.get().then(async data => {
-                                                    if (data.exists) {
-                                                        saveTripListRef.update({
-                                                            tripName: datas.tripName,
-                                                            province: datas.province,
-                                                            startDate: datas.startDate,
-                                                            endDate: datas.endDate,
-                                                            tripStatus: datas.tripStatus
-                                                        })
-                                                        let checkTripPerDay = db.collection('TripPerDay').doc(datas.tripID);
-                                                        checkTripPerDay.get().then(data => {
-                                                            if (data.exists) {
-                                                                checkTripPerDay.update({
-                                                                    events: datas.events
-                                                                })
-                                                                // checkTripPerDay.collection('Day').doc().update({
-                                                                //     eventDate: datas.eventDate,
-                                                                //     eventName: datas.eventName,
-                                                                //     startEventTime: datas.startEventTime,
-                                                                //     endEventTime: datas.endEventTime,
-                                                                //     eventType: datas.eventType
-                                                                // }) 
-                                                                return res.status(201).json({
-                                                                    message: 'Edit trip success'
-                                                                })
-                                                            } else {
-                                                                console.log('Error Update Trip: TripPerDay not found')
-                                                                return res.status(400).json({
-                                                                    message: 'Error Update Trip: TripPerDay not found'
-                                                                })
-                                                            }
-                                                        })
-                                                    } else {
-                                                        console.log('Error Update Trip: Permission not found')
-                                                        return res.status(400).json({
-                                                            message: 'Error Update Trip: Owner not found'
-                                                        })
-                                                    }
-                                                })
-                                            } else {
-                                                console.log('Error Update Trip: TripList not found')
-                                                return res.status(400).json({
-                                                    message: 'Error Update Trip: TripList not found'
-                                                })
-                                            }
-                                        })
-                                    } else {
-                                        console.log('Error Update Trip: Trip not found')
-                                        return res.status(400).json({
-                                            message: 'Error Update Trip: Trip not found'
-                                        })
-                                    }
-                                })
+                            let CheckTripinLineGroup = await checkTripRef.collection('Trip').doc(datas.tripID);
+                            await CheckTripinLineGroup.get().then(async data => {
+                                if (data.exists) {
+                                    let CheckTripListRef = db.collection('TripList').doc(datas.tripID);
+                                    await CheckTripListRef.get().then(async data => {
+                                        if (data.exists) {
+                                            CheckTripListRef.update({
+                                                tripName: datas.tripName,
+                                                province: datas.province,
+                                                startDate: datas.startDate,
+                                                endDate: datas.endDate,
+                                                tripStatus: datas.tripStatus
+                                            })
+                                            let CheckTripPerDay = db.collection('TripPerDay').doc(datas.tripID);
+                                            await CheckTripPerDay.get().then(async data => {
+                                                if (data.exists) {
+                                                    await CheckTripPerDay.update({
+                                                        events: datas.events
+                                                    })
+                                                    // CheckTripPerDay.collection('Day').doc().update({
+                                                    //     eventDate: datas.eventDate,
+                                                    //     eventName: datas.eventName,
+                                                    //     startEventTime: datas.startEventTime,
+                                                    //     endEventTime: datas.endEventTime,
+                                                    //     eventType: datas.eventType
+                                                    // }) 
+                                                } else {
+                                                    console.log('Error Update Trip: TripPerDay not found')
+                                                    return res.status(400).json({
+                                                        message: 'Error Update Trip: TripPerDay not found'
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    console.log('Error Update Trip: TripList not found')
+                                    return res.status(400).json({
+                                        message: 'Error Update Trip: TripList not found'
+                                    })
+                                }
+                            })
                         } else {
-                            console.log('Error Update Trip: LineGroup not found')
+                            console.log('Error Update Trip: Trip not found')
                             return res.status(400).json({
-                                message: 'Error Update Trip: LineGroup not found'
+                                message: 'Error Update Trip: Trip not found'
                             })
                         }
                     })
+                } else {
+                    console.log('Error Update Trip: LineGroup not found')
+                    return res.status(400).json({
+                        message: 'Error Update Trip: LineGroup not found'
+                    })
                 }
-            })
-        } else {
-            return res.status(400).json({
-                message: 'Error Update Trip: Permission not found'
             })
         }
     })
