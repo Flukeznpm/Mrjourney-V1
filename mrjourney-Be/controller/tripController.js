@@ -48,13 +48,13 @@ router.get('/', async function (req, res, next) {
 router.get('/tripperday', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
     let lineID = req.query.lineID;
-    let DateOfTrip = req.query.Date;
+    let DateOfTrip = req.query.dateOfTrip;
 
-    console.log('DateOfTrip: ', dateOfTrip)
+    console.log('DateOfTrip: ', DateOfTrip)
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
         lineID == undefined || lineID == null || lineID == '' ||
-        dateOfTrip == undefined || dateOfTrip == null || dateOfTrip == '') {
+        DateOfTrip == undefined || DateOfTrip == null || DateOfTrip == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400).json({
             message: "The Data was empty or undefined"
@@ -200,8 +200,9 @@ async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     let tripID = tripIDList.map(t => t.tripID).toString();
     console.log('Trip ID: ', tripID);
 
-    let showTripPerDay = await db.collection('TripPerDay').where('tripID', '==', tripID).where(new firestore.FieldPath('events', 'eventDate'), '==', DateOfTrip);
-    await showTripPerDay.get().then(doc => {
+    const showTripPerDay = db.collection('TripPerDay')
+    const queryTripPerDay = showTripPerDay.where('tripID', '==', tripID).where(new firestore.FieldPath('events', 'eventDate'), '==', DateOfTrip);
+    await queryTripPerDay.get().then(doc => {
         dataTripPerDay.push(doc.data());
     })
         .catch(err => {
