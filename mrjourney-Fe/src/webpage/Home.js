@@ -11,45 +11,40 @@ import cookie from 'react-cookies'
 import Swal from 'sweetalert2';
 
 function Home() {
-    const [login, setLogin] = useState(false)
-    useEffect(() => {
-        let search = window.location.search;
-        let params = new URLSearchParams(search);
-        let code = params.get('code');
-        let data = {
-            code: code
-        }
-        if (code != null) {
-            axios.post('http://localhost:5000/getToken', data).then((res) => {
-                if (res.status === 202) {
-                    cookie.save('jwt', res.data);
-                    var decoded = jwt.verify(res.data, 'secreatKey');
-                    Swal.fire({
-                        title: 'คุณยังไม่เคยลงทะเบียน!',
-                        text: 'กรุณาลงทะเบียนเพื่อเข้าใช้เว็บไซต์',
-                        confirmButtonText: '<a href="/FirstTimeLogin" id="alert-confirm-button">ลงทะเบียน</a>',
-                        confirmButtonColor: '#F37945',
-                    })
-                } else {
-                    cookie.save('jwt', res.data);
-                    var decoded = jwt.verify(res.data, 'secreatKey');
-                    // console.log('decode', decoded);
-                    setLogin(true)
-                }
-            }).catch((e) => {
-                console.log(e)
-            })
-        }
-    }, [])
-
-    const setLogout = () =>{
-        setLogin(false)
-    }
+    // useEffect(() => {
+    //     let search = window.location.search;
+    //     let params = new URLSearchParams(search);
+    //     let code = params.get('code');
+    //     let data = {
+    //         code: code
+    //     }
+    //     if (code != null) {
+    //         axios.post('http://localhost:5000/getToken', data).then((res) => {
+    //             if (res.status === 202) {
+    //                 cookie.save('jwt', res.data);
+    //                 var decoded = jwt.verify(res.data, 'secreatKey');
+    //                 Swal.fire({
+    //                     title: 'คุณยังไม่เคยลงทะเบียน!',
+    //                     text: 'กรุณาลงทะเบียนเพื่อเข้าใช้เว็บไซต์',
+    //                     confirmButtonText: '<a href="/FirstTimeLogin" id="alert-confirm-button">ลงทะเบียน</a>',
+    //                     confirmButtonColor: '#F37945',
+    //                 })
+    //             } else {
+    //                 cookie.save('jwt', res.data);
+    //                 var decoded = jwt.verify(res.data, 'secreatKey');
+    //                 // console.log('decode', decoded);
+    //                 setLogin(true)
+    //             }
+    //         }).catch((e) => {
+    //             console.log(e)
+    //         })
+    //     }
+    // }, [])
 
     return (
         <div className="flex-wrapper">
             <div className="top-page">
-                <NavWebPage login={login} setLogout={setLogout} />
+                <NavWebPage/>
                 <div className="content-page">
                     <div className="Carousel-Header">
                         <CarouselHeader></CarouselHeader>

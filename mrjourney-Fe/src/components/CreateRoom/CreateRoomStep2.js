@@ -1,22 +1,24 @@
 import React, { useContext, useState, useEffect } from 'react';
 import '../../static/css/Stepper.css';
-import LogoStep1 from '../../static/img/LogoStep1.png'
-import LogoStep2 from '../../static/img/LogoStep2.png'
-import LogoStep3 from '../../static/img/LogoStep3.png'
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
-import { useForm } from "react-hook-form";
 import { HookContext } from '../../store/HookProvider'
-import RequiredForm from "../Required/RequiredForm"
+import {
+    Form as AntForm,
+    Input as AntInput,
+    Button as AntButton,
+    Select as AntSelect,
+    Steps,
+    InputNumber
+} from 'antd';
 
 function CreateRoomStep2(props) {
     const { nextStep, prevStep, handleRoomForm, Room, plusMember, minusMember } = useContext(HookContext)
     const [gender, selectGender] = useState(["ชาย", "หญิง", "ไม่จำกัดเพศ"])
     const [age, selectAge] = useState(["18 ปีขึ้นไป", "20 ปีขึ้นไป", "ไม่จำกัดช่วงอายุ"])
     const [lineID, setLineID] = useState("")
-    const { register, handleSubmit, watch, errors } = useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -28,47 +30,80 @@ function CreateRoomStep2(props) {
         }
     }, [])
 
-    const onSubmit = () => {
-        if (Room.maxMember && Room.maxMember !== 0 && Room.ageCondition && Room.genderCondition) {
-            nextStep(1)
-        } else {
-            return false
-        }
+    const onFinish = values => {
+        handleRoomForm(values.maxMember, 'maxMember')
+        handleRoomForm(values.genderCondition, 'genderCondition')
+        handleRoomForm(values.ageCondition, 'ageCondition')
+        nextStep(1)
     };
 
+    const { Step } = Steps;
+    const { Option } = AntSelect;
     return (
         <div>
-            <div className="show-step-room py-2">
-                <div className="step-progress step-2 mt-3 pt-2">
-                    <ul>
-                        <li>
-                            <img src={LogoStep1} style={{ opacity: "20%" }} /><br />
-                            <i class="fas fa-sync-alt"></i>
-                            <p>สร้างห้อง</p>
-                        </li>
-                        <li>
-                            <img src={LogoStep2} style={{ opacity: '80%' }} /><br />
-                            <i class="fas fa-times"></i>
-                            <p>ระบุเงื่อนไข</p>
-                        </li>
-                        <li>
-                            <img src={LogoStep3} style={{ opacity: '20%' }} /><br />
-                            <i class="fas fa-times"></i>
-                            <p>ตรวจสอบ</p>
-                        </li>
-                    </ul>
-                </div>
-
+            <div className="container py-2 mt-5">
+                <Steps current={1}>
+                    <Step title="Finished" description="This is a description." />
+                    <Step title="In Progress" subTitle="Left 00:00:08" description="This is a description." />
+                    <Step title="Waiting" description="This is a description." />
+                </Steps>
             </div>
-            <div className="create-room-form py-3">
+            <div className="create-room-form pt-3">
                 <div className="col-12">
                     <div className="row">
-                        <div className="col-2"></div>
-                        <div className="col-8">
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <div className="form-group">
-                                    <div className="container">
-                                        <div className="pt-4">
+                        <div className="col-3"></div>
+                        <div className="col-6">
+                            <AntForm onFinish={onFinish}>
+                                <AntForm.Item name="maxMember" label="จำนวนที่เปิดรับ" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                    <InputNumber min={1} defaultValue={1} style={{ width: "100%" }} />
+                                </AntForm.Item>
+                                <AntForm.Item name="genderCondition" labelCol={{ span: 24 }} label="เพศที่อนุญาต" rules={[{ required: true }]}>
+                                    <AntSelect
+                                        placeholder="กรุณาเลือกเพศที่อนุญาตให้ร่วมการท่องเที่ยว"
+                                    >
+                                        {gender.map((showGender) => {
+                                            return (
+                                                <Option value={showGender}>{showGender}</Option>
+                                            )
+                                        })}
+                                    </AntSelect>
+                                </AntForm.Item>
+                                <AntForm.Item name="ageCondition" labelCol={{ span: 24 }} label="ช่วงอายุ" rules={[{ required: true }]}>
+                                    <AntSelect
+                                        placeholder="กรุณาเลือกช่วงอายุที่อนุญาตให้ร่วมการท่องเที่ยว"
+                                    >
+                                        {age.map((showAge) => {
+                                            return (
+                                                <Option value={showAge}>{showAge}</Option>
+                                            )
+                                        })}
+                                    </AntSelect>
+                                </AntForm.Item>
+                                <div className="buttom-page pt-3">
+                                    <AntForm.Item>
+                                        <div className="col-12">
+                                            <div className="row">
+                                                <div className="col-6 d-flex align-items-center">
+                                                    <AntButton
+                                                        type="primary"
+                                                        size={"large"}
+                                                        block htmlType="button"
+                                                        onClick={() => prevStep(1)}
+                                                    >ย้อนกลับ</AntButton>
+                                                </div>
+                                                <div className="col-6 d-flex align-items-center">
+                                                    <AntButton
+                                                        type="primary"
+                                                        size={"large"}
+                                                        block htmlType="submit"
+                                                    >ยืนยัน</AntButton>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </AntForm.Item>
+                                </div>
+                            </AntForm>
+                            {/* <div className="pt-4">
                                             <label htmlFor="example-date-input">จำนวนคนที่เปิดรับ<span className="p-1" style={{ color: "red" }}>*</span></label>
                                             <div className="input-group">
 
@@ -82,7 +117,7 @@ function CreateRoomStep2(props) {
                                                     name="maxMember"
                                                     className="form-control input-number"
                                                     value={Room.maxMember}
-                                                    ref={register({ required: true })}
+
                                                 />
                                                 <span className="input-group-btn">
                                                     <button type="button" className="btn btn-default btn-number"
@@ -91,69 +126,10 @@ function CreateRoomStep2(props) {
                                                     </button>
                                                 </span>
                                             </div>
-                                            {errors.maxMember && <RequiredForm />}
 
-                                        </div>
-                                        <div class="pt-4">
-                                            <label for="exampleInputEmail1" >เพศที่ต้องการให้ร่วมการท่องเที่ยว<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                            <div className="btn-group pl-5">
-                                                <select className=" btn province-btn dropdown-toggle"
-                                                    name="genderCondition"
-                                                    value={Room.genderCondition}
-                                                    onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
-                                                    id="dropdownMenuButton"
-                                                    ref={register({ required: true })}
-                                                >
-                                                    <option value="" selected>กรุณาเลือกเพศ</option>
-                                                    {gender.map((ShowGender) => {
-                                                        return (
-                                                            <option value={ShowGender}>{ShowGender}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                            </div>
-                                            {errors.genderCondition && <RequiredForm />}
-                                        </div>
-                                        <div class="pt-4">
-                                            <label for="exampleInputEmail1" >ช่วงอายุที่ต้องการให้ร่วมการท่องเที่ยว<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                            <div className="btn-group pl-5">
-                                                <select className=" btn province-btn dropdown-toggle"
-                                                    name="ageCondition"
-                                                    value={Room.ageCondition}
-                                                    onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
-                                                    id="dropdownMenuButton"
-                                                    ref={register({ required: true })}
-                                                >
-                                                    <option value="" selected>กรุณาเลือกช่วงอายุ</option>
-                                                    {age.map((ShowAge) => {
-                                                        return (
-                                                            <option value={ShowAge}>{ShowAge}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                            </div>
-                                            {errors.ageCondition && <RequiredForm />}
-                                        </div>
-
-                                        <div className="buttom-page py-3">
-                                            <div className="py-3" style={{ marginBottom: "25px", marginTop: "20px" }}>
-                                                <div className="row">
-                                                    <div className="next-btn col-6">
-                                                        <button type="button" className="btn btn-warning btn-lg btn-block text-white"
-                                                            onClick={() => prevStep(1)}>ย้อนกลับ</button>
-                                                    </div>
-                                                    <div className="next-btn col-6">
-                                                        <button type="submit" className="btn btn-warning btn-lg btn-block text-white"
-                                                            onClick={() => onSubmit()}>ต่อไป</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                                        </div> */}
                         </div>
-                        <div className="col-2"></div>
+                        <div className="col-3"></div>
                     </div>
                 </div>
             </div>
