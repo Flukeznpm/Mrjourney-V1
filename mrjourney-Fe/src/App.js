@@ -16,6 +16,7 @@ import Profile from './webpage/Profile';
 import CheckTrip from './linepage/CheckTrip';
 import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
+import 'antd/dist/antd.css'; 
 
 function App() {
   return (

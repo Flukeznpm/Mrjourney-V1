@@ -6,16 +6,16 @@ import "../../static/css/App.css";
 import Swal from 'sweetalert2';
 import { Link, withRouter } from 'react-router-dom';
 import '../../static/css/Nav.css'
+import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 
 function NavWebPage(props) {
-
+    const [login, setLogin] = useState(false)
     const [showSearch, setSearch] = useState(false);
     const [displayName, setLineName] = useState("")
     const [pictureURL, setLinePicture] = useState("")
     const [email, setLineEmail] = useState("")
-    const [logout, setLogout] = useState(false)
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -29,7 +29,37 @@ function NavWebPage(props) {
             setLinePicture(user.pictureURL)
             setLineEmail(user.email)
         }
-    }, [props.login])
+    }, [login])
+
+    useEffect(() => {
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        let code = params.get('code');
+        let data = {
+            code: code
+        }
+        if (code != null) {
+            axios.post('http://localhost:5000/getToken', data).then((res) => {
+                if (res.status === 202) {
+                    cookie.save('jwt', res.data);
+                    var decoded = jwt.verify(res.data, 'secreatKey');
+                    Swal.fire({
+                        title: 'คุณยังไม่เคยลงทะเบียน!',
+                        text: 'กรุณาลงทะเบียนเพื่อเข้าใช้เว็บไซต์',
+                        confirmButtonText: '<a href="/FirstTimeLogin" id="alert-confirm-button">ลงทะเบียน</a>',
+                        confirmButtonColor: '#F37945',
+                    })
+                } else {
+                    cookie.save('jwt', res.data);
+                    var decoded = jwt.verify(res.data, 'secreatKey');
+                    // console.log('decode', decoded);
+                    setLogin(true)
+                }
+            }).catch((e) => {
+                console.log(e)
+            })
+        }
+    }, [])
 
     const AlertRoom = () => {
 
@@ -67,7 +97,7 @@ function NavWebPage(props) {
 
     const onLogout = () => {
         cookie.remove('jwt');
-        props.setLogout();
+        setLogin(false)
         props.history.push('/Home');
     }
 
@@ -166,11 +196,15 @@ function NavWebPage(props) {
                                     </button>
                                     <div className="dropdown-menu dropdown-menu-right dropdown-info"
                                     >
-                                        <div className="ml-1 mr-1 dropdown-show-profile px-2">
-                                            <img src={pictureURL} class="login-profile" height="50px" width="50px" alt="owner-img" />
-                                            <div className="btn ml-1 dropdown-profile-label">
-                                                <div style={{ fontSize: "20px", fontWeight: "bold" }}>Hi! {displayName}</div>
-                                                <a href="/Profile" className="dropdown-see-profile">ดูโปรไฟล์ของฉัน</a>
+                                        <div className=" dropdown-show-profile px-2">
+                                            <div className="col-12">
+                                                <div className="row">
+                                                    <div className="col-3 p-0 m-0"><img src={pictureURL} class="login-profile" height="50px" width="50px" alt="owner-img" /></div>
+                                                    <div className="col-9 p-0 m-0 btn dropdown-profile-label">
+                                                        <div style={{ fontSize: "20px", fontWeight: "bold" }}>Hi! {displayName}</div>
+                                                        <a href="/Profile" className="dropdown-see-profile">ดูโปรไฟล์ของฉัน</a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <a href="/AllMyOwnerRoom" className="my-2 dropdown-item a-dropdown">

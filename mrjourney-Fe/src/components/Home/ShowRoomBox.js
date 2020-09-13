@@ -33,7 +33,7 @@ function ShowRoomBox() {
                     const sortProperty = types[type];
                     const sorted = [...res.data].sort((a, b) => {
                         if (sortProperty === 'recent') {
-                            return a-b;
+                            return a - b;
                         } else if (sortProperty === 'province') {
                             return a.province.localeCompare(b.province);
                         } else if (sortProperty === 'maxMembers') {
@@ -42,6 +42,7 @@ function ShowRoomBox() {
                     });
                     setShowRoom(sorted);
                 };
+                console.log(res.data);
                 sortArray(sortType);
             });
 
@@ -111,81 +112,82 @@ function ShowRoomBox() {
             </select>
             <div className="row">
                 {room.map((room, key) => {
-                        return (
-                            <div className="col-md-4 col-sm-12 d-flex justify-content-center py-2">
-                                <div class="card" style={{ width: "18rem" }}>
-                                    <img class="card-img-top" src={BgSlide1} alt="Card image cap" />
-                                    <div class="card-body">
-                                        <h4 class="card-title">
-                                            {room.roomName} &nbsp;
+                    return (
+                        <div className="col-md-4 col-sm-12 d-flex justify-content-center py-2">
+                            <div class="card" style={{ width: "18rem" }}>
+                                <img class="card-img-top" src={BgSlide1} alt="Card image cap" />
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        {room.roomName} &nbsp;
                                             <button
-                                                type="button" class="float-right maxMember-btn btn p-0 "
-                                                style={{ fontSize: "10px" }} >
-                                                0/
+                                            type="button" class="float-right maxMember-btn btn p-0 "
+                                            style={{ fontSize: "10px" }} >
+                                            0/
                                             {room.maxMember}
-                                            </button>
-                                        </h4>
-                                        <div class="card-text">จ. {room.province}</div>
-                                        <div class="card-text py-2">
-                                            <button
-                                                type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
-                                                {momentjs(room.startDate).format('ll')}
-                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                            </button>
+                                        </button>
+                                    </h4>
+                                    <div class="card-text">จ. {room.province}</div>
+                                    <div class="card-text py-2">
+                                        <button
+                                            type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                                            {momentjs(room.startDate).format('ll')}
+                                            <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                        </button>
                                                     &nbsp;-&nbsp;
                                                 <button
-                                                type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
-                                                {momentjs(room.endDate).format('ll')}
-                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                            </button>
-                                        </div>
-                                        <div className="card-text py-2">
-                                            {room.genderCondition === 'ชาย' ?
-                                                <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                </span>
-                                                :
-                                                ""}
-                                            {room.genderCondition === 'หญิง' ?
-                                                <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                </span>
-                                                :
-                                                ""}
-                                            {room.genderCondition === 'ไม่จำกัดเพศ' ?
-                                                <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                </span>
-                                                :
-                                                ""}
-                                            <span className="mt-0 ml-2" style={{ fontSize: "12px" }}>
-                                                อายุ &nbsp;{room.ageCondition}
-                                            </span>
-                                        </div>
-                                        <div className="owner-trip-profile py-2">
-                                            <span className="pl-1 pr-2"><img src={room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
-                                            <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoomName}</span>
-                                        </div>
-                                        <button type="button" class="col-9 btn btn-join-color round text-white" onClick={AlertJoinWrongCondition}>เข้าร่วม</button>
-
-                                        <button type="button" className="btn col-3"
-                                            onClick={() => {
-                                                setRoomModal(room)
-                                                showRoomModalShow()
-                                            }}>
-                                            <img src={SearchRoom} class="btn-see-room image_outer_container" height="30px" width="30px" alt="owner-img" />
+                                            type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                                            {momentjs(room.endDate).format('ll')}
+                                            <i class="far fa-calendar-alt ml-2 mr-1"></i>
                                         </button>
-                                        <MoreRoomDetailModal
-                                            show={addModalShow}
-                                            onHide={() => showRoomModalClose()} //use for closeButton
-                                            room={roomModal}
-                                        ></MoreRoomDetailModal>
                                     </div>
+                                    <div className="card-text py-2">
+                                        {room.genderCondition === 'ชาย' ?
+                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                            </span>
+                                            :
+                                            ""}
+                                        {room.genderCondition === 'หญิง' ?
+                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                            </span>
+                                            :
+                                            ""}
+                                        {room.genderCondition === 'ไม่จำกัดเพศ' ?
+                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                            </span>
+                                            :
+                                            ""}
+                                        <span className="mt-0 ml-2" style={{ fontSize: "12px" }}>
+                                            อายุ &nbsp;{room.ageCondition}
+                                        </span>
+                                    </div>
+                                    <div className="owner-trip-profile py-2">
+                                        <span className="pl-1 pr-2"><img src={room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
+                                        <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoomName}</span>
+                                    </div>
+                                    <button type="button" class="col-9 btn btn-join-color round text-white" onClick={AlertJoinWrongCondition}>เข้าร่วม</button>
+
+                                    <button type="button" className="btn col-3"
+                                        onClick={() => {
+                                            setRoomModal(room)
+                                            showRoomModalShow()
+                                        }}>
+                                        <img src={SearchRoom} class="btn-see-room image_outer_container" height="30px" width="30px" alt="owner-img" />
+                                    </button>
+
                                 </div>
                             </div>
-                        )
-                    })}
+                        </div>
+                    )
+                })}
+                <MoreRoomDetailModal
+                    show={addModalShow}
+                    onHide={() => showRoomModalClose()} //use for closeButton
+                    room={roomModal}
+                ></MoreRoomDetailModal>
             </div>
         </div>
 
