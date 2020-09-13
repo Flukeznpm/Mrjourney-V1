@@ -46,9 +46,9 @@ router.get('/', async function (req, res, next) {
 });
 
 router.get('/tripperday', async function (req, res, next) {
-    let lineGroupID = req.query.lineGroupID;
-    let lineID = req.query.lineID;
-    let DateOfTrip = req.query.dateOfTrip;
+    const lineGroupID = req.query.lineGroupID;
+    const lineID = req.query.lineID;
+    const DateOfTrip = req.query.dateOfTrip;
 
     console.log('DateOfTrip: ', DateOfTrip)
 
@@ -60,24 +60,25 @@ router.get('/tripperday', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        let checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
+        const checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         checkGroupRef.get().then(async data => {
             if (data.exists) {
-                let checkUserRef = await checkGroupRef.collection('Member').doc(lineID);
+                const checkUserRef = await checkGroupRef.collection('Member').doc(lineID);
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
-                        let result = await getTripPerDayByDate(lineGroupID, DateOfTrip)
+                        const result = await getTripPerDayByDate(lineGroupID, DateOfTrip)
                         console.log('Get Trip per day success')
+                        console.log(result)
                         res.status(200).json(result);
                     } else {
                         console.log('Alert: You cannot check this Trip per day')
-                        let message = "You cannot check this Trip per day"
+                        const message = "You cannot check this Trip per day"
                         return res.status(400).json(message);
                     }
                 })
             } else {
                 console.log('Alert: No Trip in the group , Please create trip.')
-                let message = "No Trip in the group , Please create trip."
+                const message = "No Trip in the group , Please create trip."
                 return res.status(400).json(message);
             }
         });
@@ -188,9 +189,9 @@ async function getAllTripByGroupID(lineGroupID) {
 };
 
 async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
-    let dataTripPerDay = [];
-    let tripIDList = [];
-    let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip');
+    const dataTripPerDay = [];
+    const tripIDList = [];
+    const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip');
     await checkTripIDRef.get().then(snapshot => {
         snapshot.forEach(doc => {
             tripIDList.push(doc.data());
@@ -200,14 +201,18 @@ async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     let tripID = tripIDList.map(t => t.tripID).toString();
     console.log('Trip ID: ', tripID);
 
-    const showTripPerDay = db.collection('TripPerDay')
-    const queryTripPerDay = showTripPerDay.where('tripID', '==', tripID).where(new firestore.FieldPath('events', 'eventDate'), '==', DateOfTrip);
-    await queryTripPerDay.get().then(doc => {
-        dataTripPerDay.push(doc.data());
-    })
-        .catch(err => {
-            console.log('Error getting Trip per day', err);
+    const showTripPerDay = db.collection('TripPerDay');
+    const queryTripPerDay = await showTripPerDay.where('tripID', '==', tripID).where(new firestore.FieldPath('events', 'eventDate'), '==', DateOfTrip);
+
+    await queryTripPerDay.get().then(async res => {
+        if (queryTripPerDay.empty) {
+            console.log('No matching documents.');
+            return;
+        }
+        await res.forEach(async doc => {
+            dataTripPerDay.push(doc.data());
         });
+    })
 
     return dataTripPerDay;
 };

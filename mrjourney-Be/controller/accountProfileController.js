@@ -179,7 +179,6 @@ async function updateAccountDetail(datas) {
     });
 };
 
-
 async function updateBio(datas) {
     await db.collection('AccountProfile').doc(datas.lineID).update({
         bio: datas.bio
