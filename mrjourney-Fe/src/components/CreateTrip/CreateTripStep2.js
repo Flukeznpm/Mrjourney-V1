@@ -2,21 +2,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import '../../static/css/App.css';
 import "../../static/css/Event-Trip.css";
 import CreateTripModal from '../Modal/CreateTripModal'
-import LogoStep1 from '../../static/img/LogoStep1.png'
-import LogoStep2 from '../../static/img/LogoStep2.png'
-import LogoStep3 from '../../static/img/LogoStep3.png'
 import momentjs from 'moment'
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
-import { useForm } from "react-hook-form";
-import RequiredForm from "../Required/RequiredForm"
 import Stepper from '../components/Stepper';
 
 function CreateTripStep2(props) {
-    const { nextStep, prevStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
+    const { nextTripStep, prevTripStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
     const [lineID, setLineID] = useState("")
     const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
     const [displayName, setDisplayName] = useState("")
@@ -53,7 +48,7 @@ function CreateTripStep2(props) {
             .then(res => {
                 console.log(res)
             });
-        nextStep(1)
+        nextTripStep(1)
     }
 
     return (
@@ -163,11 +158,10 @@ function CreateTripStep2(props) {
                                         <div className="container py-3">
                                             <div className="col-2 float-left ml-4">
                                                 <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                    onClick={() => prevStep(1)}>ย้อนกลับ</button>
+                                                    onClick={() => prevTripStep(1)}>ย้อนกลับ</button>
                                             </div>
                                             <div className=" col-2 float-right mr-4">
                                                 <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                    // onClick={() => nextStep(1)}>เสร็จสิ้น</button>
                                                     onClick={handleSubmit}>เสร็จสิ้น</button>
                                             </div>
                                         </div>
