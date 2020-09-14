@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
+import Stepper from '../components/Stepper';
 
 function CreateTripStep3() {
 
@@ -47,25 +48,9 @@ function CreateTripStep3() {
 
     return (
         <div className="top-page">
-            <div className="step-progress step-3 mt-3 pt-2">
-                <ul>
-                    <li>
-                        <img src={LogoStep1} style={{ opacity: "20%" }} /><br />
-                        <i class="fas fa-check"></i>
-                        <p>สร้างแผน</p>
-                    </li>
-                    <li>
-                        <img src={LogoStep2} style={{ opacity: '20%' }} /><br />
-                        <i class="fas fa-check"></i>
-                        <p>ระบุรายละเอียด</p>
-                    </li>
-                    <li>
-                        <img src={LogoStep3} style={{ opacity: '80%' }} /><br />
-                        <i class="fas fa-check"></i>
-                        <p>เสร็จสิ้น</p>
-                    </li>
-                </ul>
-            </div>
+             <div className="container py-2 mt-3">
+                    <Stepper typeStep="trip" step={3} />
+                </div>
 
             <div className="content-page py-2">
                 <div className="col-12">

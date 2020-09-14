@@ -49,23 +49,23 @@ function Stepper(props) {
                 <>
                     {props.step === 1 ?
                         <AntSteps current={0}>
-                            <Step title="Finished" icon={<LoadingOutlined />} />
-                            <Step title="In Progress" icon={<SettingOutlined />} />
-                            <Step title="Waiting" icon={<SmileOutlined />} />
+                            <Step title="สร้างทริป" icon={<LoadingOutlined />} />
+                            <Step title="ระบุรายละเอียด" icon={<SettingOutlined />} />
+                            <Step title="เสร็จสิ้น" icon={<SmileOutlined />} />
                         </AntSteps>
                         : null}
                     {props.step === 2 ?
                         <AntSteps current={1}>
-                            <Step title="Finished" icon={<SolutionOutlined />} description="This is a description." />
-                            <Step title="In Progress" icon={<LoadingOutlined />} description="This is a description." />
-                            <Step title="Waiting" icon={<SmileOutlined />} description="This is a description." />
+                            <Step title="สร้างทริป" icon={<SolutionOutlined />} />
+                            <Step title="ระบุรายละเอียด" icon={<LoadingOutlined />} />
+                            <Step title="เสร็จสิ้น" icon={<SmileOutlined />} />
                         </AntSteps>
                         : null}
                     {props.step === 3 ?
-                        <AntSteps direction="horizontal" current={2}>
-                            <Step title="Finished" icon={<SolutionOutlined />} description="This is a description." />
-                            <Step title="In Progress" icon={<SettingOutlined />} description="This is a description." />
-                            <Step title="Waiting" icon={<SmileOutlined />} description="This is a description." />
+                        <AntSteps current={2}>
+                            <Step title="สร้างทริป" icon={<SolutionOutlined />} />
+                            <Step title="ระบุรายละเอียด" icon={<SettingOutlined />} />
+                            <Step title="เสร็จสิ้น" icon={<SmileOutlined />} />
                         </AntSteps>
                         : null}
                 </>

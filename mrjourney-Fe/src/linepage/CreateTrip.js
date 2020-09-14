@@ -30,9 +30,6 @@ function CreateTrip() {
                     {handleTripComponent()}
                 </div>
             </div>
-            <div className="footer-page">
-                <FooterWebPage></FooterWebPage>
-            </div>
         </div>
     )
 }
