@@ -65,9 +65,12 @@ router.get('/tripperday', async function (req, res, next) {
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
                         const result = await getTripPerDayByDate(lineGroupID, dateOfTrip)
-                        console.log('Get Trip per day success')
+                            .then(data => {
+                                res.status(200).json(data);
+                            })
+                        // console.log('Get Trip per day success')
                         // console.log(result)
-                        res.status(200).json(result);
+                        // res.status(200).json(result);
                     } else {
                         console.log('Alert: You cannot check this Trip per day')
                         const message = "You cannot check this Trip per day"
@@ -198,30 +201,34 @@ async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
 
     let tripID = tripIDList.map(t => t.tripID).toString();
     console.log('Trip ID: ', tripID);
-
     console.log('Date: ', dateOfTrip)
 
+    //WAY 1
     const showTripPerDay = db.collection('TripPerDay');
-    const queryTPD1 = showTripPerDay.where('tripID', '==', tripID);
-    // const queryTPD2 = queryTripPerDay1.where(new firestore.FieldPath()
-    // const queryTPD2 = queryTPD1.where('events.eventDate', '==', dateOfTrip);
-    // const queryTPD2 = queryTPD1.where('events', 'array-contains', { eventDate: "Sep 17, 2020" });
-    // const queryTPD2 = queryTPD1.where('eventDate', '==', "Sep 17, 2020");
+    const queryTPD1 = showTripPerDay.where('tripID', '==', tripID).where('events', 'array-contains',
+        { event: [{ endEvent: "04:59", eventName: "บ้านกินเส้น", eventType: "eating", startEvent: "04:59" }], eventDate: "16 Sep 2020" });
+
+    //WAY 2
+    // const fieldPath = new firestore.FieldPath('events', 'event');
+    // const queryTPD2 = await showTripPerDay.where('tripID', '==', tripID).where(fieldPath, 'array-contains', { eventType: "eating" });
+
+    //WAY 3
+    // const queryTPD3 = showTripPerDay.where(`events.${dateOfTrip}.eventDate`, '==', dateOfTrip);
 
     await queryTPD1.get().then(async res => {
         if (queryTPD1.empty) {
             console.log('No matching documents.');
             return;
+        } else {
+            await res.forEach(async doc => {
+                console.log('>>> Debug forEach get trip per day <<<');
+                await dataTripPerDay.push(doc.data());
+                console.log('doc: ', doc.data())
+            });
         }
-        await res.forEach(async doc => {
-            dataTripPerDay.push(doc.data());
-            console.log('doc: ', doc.data())
-        });
     })
-    console.log('dataTripPerDay: ', dataTripPerDay)
 
-    const d = dataTripPerDay.map(a => a.events.evenDate).toString();
-    console.log('dbug: ', d)
+    console.log('dataTripPerDay: ', dataTripPerDay)
 
     return dataTripPerDay;
 };
