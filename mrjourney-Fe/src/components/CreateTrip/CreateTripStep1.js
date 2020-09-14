@@ -70,7 +70,7 @@ function CreateTripStep1(props) {
     const onFinish = values => {
         handleTripForm(values.tripName, 'tripName')
         handleTripForm(values.province, 'province')
-        handleTripForm(values.date, 'date')
+        handleTripForm(momentjs(values.date).format('ll'), 'date')
         handleTripForm(values.numberAddDate, 'numberAddDate')
         confirmTripStep(1)
     };
@@ -105,12 +105,15 @@ function CreateTripStep1(props) {
                                     <div className="row">
                                         <div className="col-6">
                                             <AntForm.Item name="date" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                                <DatePicker defaultValue={momentjs(new Date(), dateFormat)} format={dateFormat} style={{ width: "100%" }} />
+                                                <DatePicker style={{ width: "100%" }}
+                                                    disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
+                                                    format={dateFormat}
+                                                />
                                             </AntForm.Item>
                                         </div>
                                         <div className="col-6">
                                             <AntForm.Item name="numberAddDate" label="จำนวนวันเดินทาง" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                                <InputNumberComponent min={1} defaultValue={1} style={{ width: "100%" }} />
+                                                <InputNumberComponent min={1} style={{ width: "100%" }} placeholder="จำนวนวันเดินทาง" />
                                             </AntForm.Item>
                                         </div>
                                     </div>

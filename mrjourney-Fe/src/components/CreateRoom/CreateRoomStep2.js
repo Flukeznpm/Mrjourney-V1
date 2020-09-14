@@ -83,7 +83,7 @@ function CreateRoomStep2(props) {
                         <div className="col-md-6">
                             <AntForm onFinish={onFinish}>
                                 <AntForm.Item name="maxMember" label="จำนวนที่เปิดรับ" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                    <InputNumberComponent min={1} defaultValue={Room.maxMember} style={{ width: "100%" }} />
+                                    <InputNumberComponent min={1} style={{ width: "100%" }} />
                                 </AntForm.Item>
                                 <AntForm.Item name="genderCondition" labelCol={{ span: 24 }} label="เพศที่อนุญาต" rules={[{ required: true }]}>
                                     <AntSelect
