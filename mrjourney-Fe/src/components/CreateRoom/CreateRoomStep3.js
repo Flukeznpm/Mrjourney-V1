@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import '../../static/css/Stepper.css';
+import styled from "styled-components";
 import '../../static/css/App.css';
 import '../../static/css/CreateRoom.css';
 import BgSlide1 from '../../static/img/pr-01.png';
@@ -19,7 +19,30 @@ import {
     Steps,
     InputNumber
 } from 'antd';
+import Stepper from '../components/Stepper';
 
+const PrimaryButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const OutlineButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    border: 1px solid ${props => (props.theme.color.primary)};
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        border: 1px solid ${props => (props.theme.color.primaryPress)};
+        color: ${props => (props.theme.color.primary)};
+        background: #F7F7F7;
+    }
+`;
 
 function CreateRoomStep3(props) {
     const { Room, prevStep } = useContext(HookContext)
@@ -29,7 +52,9 @@ function CreateRoomStep3(props) {
     const [pictureURL, setPictureURL] = useState("")
     const [roomID, setRoomID] = useState("")
     const [roomStatus, setStatus] = useState(true)
-
+    
+    const { Step } = Steps;
+    const { TextArea } = AntInput;
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
         if (loadJWT === undefined) {
@@ -72,22 +97,16 @@ function CreateRoomStep3(props) {
                 })
             });
     }
-    const { Step } = Steps;
-    const { TextArea } = AntInput;
     return (
         <div>
-            <div className="container py-2 mt-5">
-                <Steps current={1}>
-                    <Step title="Finished" description="This is a description." />
-                    <Step title="In Progress" subTitle="Left 00:00:08" description="This is a description." />
-                    <Step title="Waiting" description="This is a description." />
-                </Steps>
+           <div className="container py-2 mt-3">
+                <Stepper typeStep="room" step={3} />
             </div>
             <div className="create-room-form py-2">
                 <div className="col-12">
                     <div className="row">
-                        <div className="col-3"></div>
-                        <div className="col-6">
+                    <div className="col-md-3"></div>
+                        <div className="col-md-6">
                             <div>
                                 <img class="d-block w-100" src={BgSlide1} alt="First slide" />
                             </div>
@@ -161,7 +180,7 @@ function CreateRoomStep3(props) {
                                     </div>
                                     <div className="ShowRoom-TripDetails py-1">
                                         รายละเอียด
-                                         <TextArea value={Room.tripDetails} rows={3} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" disabled />
+                                         <TextArea value={Room.tripDetails} rows={4} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" disabled />
                                     </div>
                                     <div className="ShowRoom-QrCode py-1">
                                         QrCode
@@ -176,20 +195,19 @@ function CreateRoomStep3(props) {
                                         <div className="col-12">
                                             <div className="row">
                                                 <div className="col-6 d-flex align-items-center">
-                                                    <AntButton
-                                                        type="primary"
+                                                    <OutlineButton
                                                         size={"large"}
                                                         block htmlType="button"
                                                         onClick={() => prevStep(1)}
-                                                    >ย้อนกลับ</AntButton>
+                                                    >ย้อนกลับ</OutlineButton>
                                                 </div>
                                                 <div className="col-6 d-flex align-items-center">
-                                                    <AntButton
+                                                    <PrimaryButton
                                                         type="primary"
                                                         size={"large"}
                                                         block htmlType="button"
                                                         onClick={handleSubmit}
-                                                    >submit</AntButton>
+                                                    >submit</PrimaryButton>
                                                 </div>
                                             </div>
                                         </div>
@@ -197,7 +215,7 @@ function CreateRoomStep3(props) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-3"></div>
+                        <div className="col-md-3"></div>
                     </div>
                 </div>
             </div>

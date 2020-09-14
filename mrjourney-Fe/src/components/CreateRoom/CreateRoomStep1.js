@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import '../../static/css/Stepper.css';
+import styled from "styled-components";
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
@@ -9,14 +9,39 @@ import {
     Input as AntInput,
     Button as AntButton,
     Select as AntSelect,
-    Steps,
     DatePicker
 } from 'antd';
 import momentjs from 'moment';
+import Stepper from '../components/Stepper';
+
+
+const PrimaryButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const InputComponent = styled(AntInput)`
+    border-radius: 4px;
+    height: 40px;
+    font-size: 16px;
+    align-items: center;
+    &:hover , &:active {
+        border-color: ${props => (props.theme.color.primary)};
+    }
+`;
 
 function CreateRoomStep1(props) {
     const { thaiprovince, nextStep, handleRoomForm, Room } = useContext(HookContext)
     const [lineID, setLineId] = useState("");
+    const { Option } = AntSelect;
+    const { TextArea } = AntInput;
+    const dateFormat = 'DD/MM/YYYY';
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -27,6 +52,7 @@ function CreateRoomStep1(props) {
             setLineId(user.lineID)
         }
     }, [])
+
     const onFinish = values => {
         handleRoomForm(values.roomName, 'roomName')
         handleRoomForm(values.province, 'province')
@@ -36,27 +62,19 @@ function CreateRoomStep1(props) {
         nextStep(1)
     };
 
-    const { Step } = Steps;
-    const { Option } = AntSelect;
-    const { TextArea } = AntInput;
-    const dateFormat = 'DD/MM/YYYY';
     return (
         <div>
-            <div className="container py-2 mt-5">
-                <Steps current={1}>
-                    <Step title="Finished" description="This is a description." />
-                    <Step title="In Progress" subTitle="Left 00:00:08" description="This is a description." />
-                    <Step title="Waiting" description="This is a description." />
-                </Steps>
+            <div className="container py-2 mt-3">
+                <Stepper typeStep="room" step={1} />
             </div>
             <div className="create-room-form pt-3">
                 <div className="col-12">
                     <div className="row">
-                        <div className="col-3"></div>
-                        <div className="col-6">
+                        <div className="col-md-3"></div>
+                        <div className="col-md-6">
                             <AntForm onFinish={onFinish}>
                                 <AntForm.Item name="roomName" label="ชื่อทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                    <AntInput placeholder="ใส่ชื่อทริปของคุณ" />
+                                    <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
                                 </AntForm.Item>
                                 {/* <div class="pt-4 ">
                                     <label for="exampleInputEmail1">หน้าปกทริป<span className="p-1" style={{ color: "red", fontSize: "12px" }}>(ขนาดไม่เกิน 800px)</span></label>
@@ -97,7 +115,7 @@ function CreateRoomStep1(props) {
                                     </div>
                                 </div>
                                 <AntForm.Item name="tripDetails" label="รายละเอียดการท่องเที่ยว" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                    <TextArea rows={3} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" />
+                                    <TextArea rows={4} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" />
                                 </AntForm.Item>
                                 {/* <div class="pt-4">
                                     <label for="exampleInputEmail1">คิวอาร์โค้ด<span className="p-1" style={{ color: "red" }}>*</span></label>
@@ -114,12 +132,12 @@ function CreateRoomStep1(props) {
                                 </div> */}
                                 <div className="buttom-page pt-3">
                                     <AntForm.Item>
-                                        <AntButton type="primary" size={"large"} block htmlType="ถัดไป">submit</AntButton>
+                                        <PrimaryButton type="primary" size={"large"} block htmlType="ถัดไป">ถัดไป</PrimaryButton>
                                     </AntForm.Item>
                                 </div>
                             </AntForm>
                         </div>
-                        <div className="col-3"></div>
+                        <div className="col-md-3"></div>
                     </div>
                 </div>
             </div>
