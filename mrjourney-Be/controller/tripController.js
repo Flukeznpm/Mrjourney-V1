@@ -24,7 +24,7 @@ router.get('/', async function (req, res, next) {
         let checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         checkGroupRef.get().then(async data => {
             if (data.exists) {
-                let checkUserRef = await checkGroupRef.collection('Member').doc(lineID);
+                let checkUserRef = await checkGroupRef.collection('Members').doc(lineID);
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
                         let result = await getAllTripByGroupID(lineGroupID);
