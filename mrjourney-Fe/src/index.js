@@ -36,6 +36,18 @@ const GlobalStyle = createGlobalStyle`
         line-height: 0px;
         top: -2px;
     }
+    .ant-progress-success-bg, .ant-progress-bg {
+        background-color: rgb(230, 111, 15);
+    }
+    div.ant-typography, .ant-typography p {
+        margin: 0px;
+    }
+    .ant-btn-icon-only {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
 `
 
 ReactDOM.render(

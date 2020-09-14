@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
-import { useForm } from "react-hook-form";
 import Stepper from '../components/Stepper';
 import {
     Form as AntForm,

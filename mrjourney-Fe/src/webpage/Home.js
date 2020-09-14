@@ -49,7 +49,7 @@ function Home() {
                     <div className="Carousel-Header">
                         <CarouselHeader></CarouselHeader>
                     </div>
-                    <div class="container h-100 my-3 py-2">
+                    {/* <div class="container h-100 my-3 py-2">
                         <div class="d-flex justify-content-center h-100">
                             <div class="searchbar">
                                 <span class="search_icon"><i class="fas fa-search"></i></span>
@@ -57,7 +57,7 @@ function Home() {
                                 <span class="search_button" onClick="">Search</span>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <ShowRoomBox></ShowRoomBox>
                 </div>
             </div>

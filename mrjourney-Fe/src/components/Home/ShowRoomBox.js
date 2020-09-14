@@ -1,15 +1,49 @@
 import React, { useContext, useEffect, useState } from 'react';
+import styled from "styled-components";
 import "../../static/css/Show-Room.css";
 import "../../static/css/Nav.css";
 import "../../static/css/App.css";
 import BgSlide1 from '../../static/img/pr-01.png';
 import Logo from '../../static/img/logojourney.png';
-import SearchRoom from '../../static/img/search-room.png';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import momentjs, { max } from 'moment'
+import momentjs from 'moment'
 import { HookContext } from '../../store/HookProvider'
 import MoreRoomDetailModal from '../Modal/MoreRoomDetailModal';
+import { Progress, Typography } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import {
+    Button as AntButton,
+} from 'antd';
+
+const { Paragraph } = Typography;
+const AntParagraph = styled(Paragraph)`
+    font-size: 10px;
+    .ant-typography-expand, .ant-typography-edit, .ant-typography-copy {
+        color: gray;
+    }
+    .ant-typography-copy-success, .ant-typography-copy-success:hover, .ant-typography-copy-success:focus {
+        color: ${props => (props.theme.color.primary)};
+    }
+`
+const PrimaryButton = styled(AntButton)`
+    border-radius: 8px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const SeeButton = styled(AntButton)`
+    font-size: 16px;
+    &:hover , &:active, &:focus {
+        border: 1px solid ${props => (props.theme.color.primary)};
+        color: ${props => (props.theme.color.primary)};
+    }
+`
 
 function ShowRoomBox() {
     const { addModalShow, showRoomModalClose, showRoomModalShow } = useContext(HookContext)
@@ -17,7 +51,6 @@ function ShowRoomBox() {
     const [room, setShowRoom] = useState([{}])
     const [sortType, setSortType] = useState('recent');
     const [roomModal, setRoomModal] = useState({})
-
     useEffect(() => {
         axios.get('http://localhost:5000/room')
             .then(async res => {
@@ -117,16 +150,23 @@ function ShowRoomBox() {
                             <div class="card" style={{ width: "18rem" }}>
                                 <img class="card-img-top" src={BgSlide1} alt="Card image cap" />
                                 <div class="card-body">
+                                    <div class="card-text text-right p-0">
+                                        <AntParagraph copyable>{room.roomID}</AntParagraph>
+                                    </div>
                                     <h4 class="card-title">
                                         {room.roomName} &nbsp;
-                                            <button
-                                            type="button" class="float-right maxMember-btn btn p-0 "
-                                            style={{ fontSize: "10px" }} >
-                                            0/
-                                            {room.maxMember}
-                                        </button>
                                     </h4>
-                                    <div class="card-text">จ. {room.province}</div>
+                                    <div class="card-text">
+                                        จ. {room.province}
+                                    </div>
+                                    <div className="col-12 p-0">
+                                        <div class="card-text row">
+                                            <div className="col-9"><Progress percent={30} showInfo={false} /></div>
+                                            <div className="col-3" style={{ fontSize: "12px", paddingTop: "4px" }}>
+                                                0/{room.maxMember}
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="card-text py-2">
                                         <button
                                             type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
@@ -168,16 +208,23 @@ function ShowRoomBox() {
                                         <span className="pl-1 pr-2"><img src={room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
                                         <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoomName}</span>
                                     </div>
-                                    <button type="button" class="col-9 btn btn-join-color round text-white" onClick={AlertJoinWrongCondition}>เข้าร่วม</button>
-
-                                    <button type="button" className="btn col-3"
-                                        onClick={() => {
-                                            setRoomModal(room)
-                                            showRoomModalShow()
-                                        }}>
-                                        <img src={SearchRoom} class="btn-see-room image_outer_container" height="30px" width="30px" alt="owner-img" />
-                                    </button>
-
+                                    <div class="col-12 p-0">
+                                        <div class="row">
+                                            <div class="col-9 px-1">
+                                                <PrimaryButton type="primary" onClick={AlertJoinWrongCondition} block>เข้าร่วม</PrimaryButton>
+                                            </div>
+                                            <div class="col-3 px-1 text-center">
+                                                <SeeButton
+                                                    shape="circle" 
+                                                    onClick={() => {
+                                                        setRoomModal(room)
+                                                        showRoomModalShow()
+                                                    }}
+                                                    icon={<SearchOutlined />}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
