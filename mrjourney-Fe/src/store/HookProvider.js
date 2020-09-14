@@ -7,6 +7,7 @@ export const HookContext = createContext({})
 const initialState = {
   counter: 0,
   step: 1,
+  tripStep: 1,
   thaiprovince:
     [
       'กรุงเทพมหานคร', 'กระบี่', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร',
@@ -52,7 +53,7 @@ const initialState = {
     endDate: '',
     tripDetails: '',
     qrCode: '',
-    maxMember: 0,
+    maxMember: 1,
     genderCondition: '',
     ageCondition: '',
   },
@@ -78,6 +79,11 @@ const hookReducer = (state, action) => {
         counter: state.counter - action.payload // set state counter
       }
     // Step
+    case "RESET_STEP":
+      return {
+        ...state,
+        step: action.payload
+      }
     case "NEXT_STEP":
       return {
         ...state,
@@ -88,8 +94,34 @@ const hookReducer = (state, action) => {
         ...state,
         step: state.step - action.payload
       }
+    // "TripStep":
     case "CONFIRM_TRIP_STEP1":
-
+      let AllTripDate = []
+      for (let index = 0; index < state.Trip.numberAddDate; index++) {
+        let ShowBox = {
+          eventDate: momentjs(state.Trip.date).add(index, 'day').format('ll'),
+          event: []
+        }
+        AllTripDate.push(ShowBox)
+      }
+      return {
+        ...state,
+        Trip: {
+          ...state.Trip,
+          totalDate: AllTripDate
+        },
+        tripStep: state.tripStep + action.payload
+      }
+    case "NEXT_TRIP_STEP":
+      return {
+        ...state,
+        tripStep: state.tripStep + action.payload
+      }
+    case "PREV_TRIP_STEP":
+      return {
+        ...state,
+        tripStep: state.tripStep - action.payload
+      }
     // Handle
     case "HANDLE_TRIP":
       return {
@@ -249,24 +281,6 @@ const hookReducer = (state, action) => {
         addModalShow: false,
         keyModal: action.payload
       }
-
-    case "NEXT_STEP_1":
-      let AllTripDate = []
-      for (let index = 0; index < state.Trip.numberAddDate; index++) {
-        let ShowBox = {
-          eventDate: momentjs(state.Trip.date).add(index, 'day').format('ll'),
-          event: []
-        }
-        AllTripDate.push(ShowBox)
-      }
-      return {
-        ...state,
-        Trip: {
-          ...state.Trip,
-          totalDate: AllTripDate
-        },
-        step: state.step + action.payload
-      }
   }
 }
 
@@ -276,7 +290,7 @@ export const HookProvider = ({ children }) => {
     initialState
   )
 
-  const { counter, step, thaiprovince, Trip, Event, addModalShow, keyModal, Room, toDate, AccProfile } = hookState
+  const { counter, step, tripStep, thaiprovince, Trip, Event, addModalShow, keyModal, Room, toDate, AccProfile } = hookState
 
   const addCounter = payload =>
     hookDispatch({ type: "ADD_COUNTER", payload }) // ส่ง type ADD_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
@@ -288,6 +302,12 @@ export const HookProvider = ({ children }) => {
     hookDispatch({ type: "PREV_STEP", payload }) // ส่ง type SUB_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
   const resetStep = payload =>
     hookDispatch({ type: "RESET_STEP", payload }) // ส่ง type SUB_COUNTER และ payload เพื่อให้ conterReducer ไปใช้งานต่อ
+  const confirmTripStep = payload =>
+    hookDispatch({ type: "CONFIRM_TRIP_STEP1", payload })
+  const nextTripStep = payload =>
+    hookDispatch({ type: "NEXT_TRIP_STEP", payload })
+  const prevTripStep = payload =>
+    hookDispatch({ type: "PREV_TRIP_STEP", payload })
   const handleTripForm = (value, name) =>
     hookDispatch({ type: "HANDLE_TRIP", value, name })
   const handleEventForm = (value, name) =>
@@ -316,8 +336,6 @@ export const HookProvider = ({ children }) => {
     hookDispatch({ type: "SELECT_EVENT_TYPE", payload })
   const eventModalShow = payload =>
     hookDispatch({ type: "EVENT_MODAL_SHOW", payload })
-  const confirmTripStep = payload =>
-    hookDispatch({ type: "NEXT_STEP_1", payload })
   const deleteEvent = (eventDetail, key) =>
     hookDispatch({ type: "DELETE_EVENT", eventDetail, key })
   const showRoomModalShow = payload =>
@@ -329,6 +347,7 @@ export const HookProvider = ({ children }) => {
       value={{
         counter,
         step,
+        tripStep,
         thaiprovince,
         Trip,
         Event,
@@ -341,6 +360,9 @@ export const HookProvider = ({ children }) => {
         subCounter,
         nextStep,
         prevStep,
+        nextTripStep,
+        prevTripStep,
+        confirmTripStep,
         resetStep,
         handleTripForm,
         handleEventForm,
@@ -356,7 +378,6 @@ export const HookProvider = ({ children }) => {
         eventModalClose,
         selectEventType,
         eventModalShow,
-        confirmTripStep,
         deleteEvent,
         showRoomModalShow,
         showRoomModalClose,

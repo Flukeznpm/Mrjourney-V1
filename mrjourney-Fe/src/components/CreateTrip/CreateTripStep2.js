@@ -13,6 +13,7 @@ import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
 import { useForm } from "react-hook-form";
 import RequiredForm from "../Required/RequiredForm"
+import Stepper from '../components/Stepper';
 
 function CreateTripStep2(props) {
     const { nextStep, prevStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
@@ -58,24 +59,8 @@ function CreateTripStep2(props) {
     return (
         <div>
             <div className="top-page mb-3">
-                <div className=" step-progress step-2 mt-3 pt-2">
-                    <ul>
-                        <li>
-                            <img src={LogoStep1} style={{ opacity: "20%" }} /><br />
-                            <i class="fas fa-check"></i>
-                            <p>สร้างแผน</p>
-                        </li>
-                        <li>
-                            <img src={LogoStep2} style={{ opacity: '80%' }} /><br />
-                            <i class="fas fa-sync-alt"></i>
-                            <p>ระบุรายละเอียด</p>
-                        </li>
-                        <li>
-                            <img src={LogoStep3} style={{ opacity: '20%' }} /><br />
-                            <i class="fas fa-times"></i>
-                            <p>เสร็จสิ้น</p>
-                        </li>
-                    </ul>
+                <div className="container py-2 mt-3">
+                    <Stepper typeStep="trip" step={2} />
                 </div>
                 <div className="content-page py-2">
                     <div className="col-12">

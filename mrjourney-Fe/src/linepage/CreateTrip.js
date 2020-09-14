@@ -8,14 +8,14 @@ import CreateTripStep3 from '../components/CreateTrip/CreateTripStep3';
 import { HookContext } from '../store/HookProvider'
 
 function CreateTrip() {
-    const { step } = useContext(HookContext)
+    const { tripStep } = useContext(HookContext)
 
     const handleTripComponent = () => {
-        if (step === 1) {
+        if (tripStep === 1) {
             return <CreateTripStep1></CreateTripStep1>
-        } if (step === 2) {
+        } if (tripStep === 2) {
             return <CreateTripStep2></CreateTripStep2>
-        } if (step === 3) {
+        } if (tripStep === 3) {
             return <CreateTripStep3></CreateTripStep3>
         }
     }
@@ -29,9 +29,6 @@ function CreateTrip() {
                 <div className="Content-Component">
                     {handleTripComponent()}
                 </div>
-            </div>
-            <div className="footer-page">
-                <FooterWebPage></FooterWebPage>
             </div>
         </div>
     )
