@@ -202,10 +202,12 @@ async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     console.log('Trip ID: ', tripID);
 
     const showTripPerDay = db.collection('TripPerDay');
-    const queryTripPerDay = await showTripPerDay.where('tripID', '==', tripID).where(new firestore.FieldPath('events', 'eventDate'), '==', DateOfTrip);
+    const queryTPD1 = showTripPerDay.where('tripID', '==', tripID);
+    // const queryTPD2 = queryTripPerDay1.where(new firestore.FieldPath()
+    const queryTPD2 = queryTPD1.where('events.eventDate', '==', DateOfTrip);
 
-    await queryTripPerDay.get().then(async res => {
-        if (queryTripPerDay.empty) {
+    await queryTPD2.get().then(async res => {
+        if (queryTPD2.empty) {
             console.log('No matching documents.');
             return;
         }
