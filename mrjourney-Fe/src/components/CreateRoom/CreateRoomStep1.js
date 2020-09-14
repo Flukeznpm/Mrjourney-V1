@@ -41,7 +41,7 @@ function CreateRoomStep1(props) {
     const [lineID, setLineId] = useState("");
     const { Option } = AntSelect;
     const { TextArea } = AntInput;
-    const dateFormat = 'DD/MM/YYYY';
+    const dateFormat = 'DD-MM-YYYY';
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -56,11 +56,15 @@ function CreateRoomStep1(props) {
     const onFinish = values => {
         handleRoomForm(values.roomName, 'roomName')
         handleRoomForm(values.province, 'province')
-        handleRoomForm(values.startDate, 'startDate')
-        handleRoomForm(values.endDate, 'endDate')
+        handleRoomForm(momentjs(values.startDate).format('ll'), 'startDate')
+        handleRoomForm(momentjs(values.endDate).format('ll'), 'endDate')
         handleRoomForm(values.tripDetails, 'tripDetails')
         nextStep(1)
     };
+
+    const onStartDateChange = (date, dateString) => {
+        handleRoomForm(momentjs(date).format('YYYY-MM-DD'), 'startDate')
+    }
 
     return (
         <div>
@@ -104,12 +108,16 @@ function CreateRoomStep1(props) {
                                     <div className="row">
                                         <div className="col-6">
                                             <AntForm.Item name="startDate" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                                <DatePicker defaultValue={momentjs(new Date(), dateFormat)} format={dateFormat} />
+                                                <DatePicker onChange={onStartDateChange}
+                                                    disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
+                                                    format={dateFormat} />
                                             </AntForm.Item>
                                         </div>
                                         <div className="col-6">
                                             <AntForm.Item name="endDate" label="วันสิ้นสุดทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                                <DatePicker defaultValue={momentjs(new Date(), dateFormat)} format={dateFormat} />
+                                                <DatePicker
+                                                    disabledDate={d => !d || d.isSameOrBefore(Room.startDate)}
+                                                    format={dateFormat} />
                                             </AntForm.Item>
                                         </div>
                                     </div>
@@ -132,7 +140,7 @@ function CreateRoomStep1(props) {
                                 </div> */}
                                 <div className="buttom-page pt-3">
                                     <AntForm.Item>
-                                        <PrimaryButton type="primary" size={"large"} block htmlType="ถัดไป">ถัดไป</PrimaryButton>
+                                        <PrimaryButton type="primary" size={"large"} block htmlType="submit">ถัดไป</PrimaryButton>
                                     </AntForm.Item>
                                 </div>
                             </AntForm>

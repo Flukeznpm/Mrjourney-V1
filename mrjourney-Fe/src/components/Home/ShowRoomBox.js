@@ -14,6 +14,8 @@ import { Progress, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import {
     Button as AntButton,
+    Card, Col, Row,
+    Tooltip
 } from 'antd';
 
 const { Paragraph } = Typography;
@@ -138,11 +140,37 @@ function ShowRoomBox() {
 
     return (
         <div className="container py-3">
-            <select onChange={e => setSortType(e.target.value)}>
-                <option value="recent">ล่าสุด</option>
-                <option value="maxMembers">จำนวนที่เปิดรับ</option>
-                <option value="province">ชือจังหวัด</option>
-            </select>
+
+            <Row justify="center" gutter={18}>
+                <Col lg={{ span: 6 }}>
+                    <Row justify="center">
+                        <select onChange={e => setSortType(e.target.value)}>
+                            <option value="recent">ล่าสุด</option>
+                            <option value="maxMembers">จำนวนที่เปิดรับ</option>
+                            <option value="province">ชือจังหวัด</option>
+                        </select>
+                    </Row>
+                </Col>
+                <Col lg={{ span: 6 }} >
+                    <Row justify="center">
+                        <select onChange={e => setSortType(e.target.value)}>
+                            <option value="recent">ล่าสุด</option>
+                            <option value="maxMembers">จำนวนที่เปิดรับ</option>
+                            <option value="province">ชือจังหวัด</option>
+                        </select>
+                    </Row>
+                </Col>
+                <Col lg={{ span: 6 }} >
+                    <Row justify="center">
+                        <select onChange={e => setSortType(e.target.value)}>
+                            <option value="recent">ล่าสุด</option>
+                            <option value="maxMembers">จำนวนที่เปิดรับ</option>
+                            <option value="province">ชือจังหวัด</option>
+                        </select>
+                    </Row>
+                </Col>
+            </Row>
+
             <div className="row">
                 {room.map((room, key) => {
                     return (
@@ -210,18 +238,20 @@ function ShowRoomBox() {
                                     </div>
                                     <div class="col-12 p-0">
                                         <div class="row">
-                                            <div class="col-9 px-1">
+                                            <div class="col-9">
                                                 <PrimaryButton type="primary" onClick={AlertJoinWrongCondition} block>เข้าร่วม</PrimaryButton>
                                             </div>
-                                            <div class="col-3 px-1 text-center">
-                                                <SeeButton
-                                                    shape="circle" 
-                                                    onClick={() => {
-                                                        setRoomModal(room)
-                                                        showRoomModalShow()
-                                                    }}
-                                                    icon={<SearchOutlined />}
-                                                />
+                                            <div class="col-3 text-center">
+                                                <Tooltip title="ดูข้อมูลเพิ่มเติม">
+                                                    <SeeButton
+                                                        shape="circle"
+                                                        onClick={() => {
+                                                            setRoomModal(room)
+                                                            showRoomModalShow()
+                                                        }}
+                                                        icon={<SearchOutlined />}
+                                                    />
+                                                </Tooltip>
                                             </div>
                                         </div>
                                     </div>
