@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Logo from '../../static/img/MrJ-Logo.png';
 import DropDownArrow from '../../static/img/dropdown.svg';
 import IconProfile from '../../static/img/Guest-Logo.svg';
@@ -8,9 +8,11 @@ import { Link, withRouter } from 'react-router-dom';
 import '../../static/css/Nav.css'
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+import { HookContext } from '../../store/HookProvider'
 
 function NavWebPage(props) {
+    const { resetStep } = useContext(HookContext)
     const [login, setLogin] = useState(false)
     const [showSearch, setSearch] = useState(false);
     const [displayName, setLineName] = useState("")
@@ -182,8 +184,8 @@ function NavWebPage(props) {
                                 </li>
 
                                 <li className="nav-item mt-1 pt-1">
-                                    <Link to="/CreateJoinRoom">
-                                        <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Room
+                                    <Link to="/CreateJoinRoom" >
+                                        <button type="button" onClick={() => resetStep(1)} className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Room
                                                  <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
                                         </button>
                                     </Link>

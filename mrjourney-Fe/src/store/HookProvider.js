@@ -53,7 +53,7 @@ const initialState = {
     endDate: '',
     tripDetails: '',
     qrCode: '',
-    maxMember: 0,
+    maxMember: 1,
     genderCondition: '',
     ageCondition: '',
   },
@@ -79,6 +79,11 @@ const hookReducer = (state, action) => {
         counter: state.counter - action.payload // set state counter
       }
     // Step
+    case "RESET_STEP":
+      return {
+        ...state,
+        step: action.payload
+      }
     case "NEXT_STEP":
       return {
         ...state,
