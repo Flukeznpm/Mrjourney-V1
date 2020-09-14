@@ -48,13 +48,11 @@ router.get('/', async function (req, res, next) {
 router.get('/tripperday', async function (req, res, next) {
     const lineGroupID = req.query.lineGroupID;
     const lineID = req.query.lineID;
-    const DateOfTrip = req.query.dateOfTrip;
-
-    console.log('DateOfTrip: ', DateOfTrip)
+    const dateOfTrip = req.query.dateOfTrip;
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
         lineID == undefined || lineID == null || lineID == '' ||
-        DateOfTrip == undefined || DateOfTrip == null || DateOfTrip == '') {
+        dateOfTrip == undefined || dateOfTrip == null || dateOfTrip == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400).json({
             message: "The Data was empty or undefined"
@@ -63,12 +61,12 @@ router.get('/tripperday', async function (req, res, next) {
         const checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         checkGroupRef.get().then(async data => {
             if (data.exists) {
-                const checkUserRef = await checkGroupRef.collection('Member').doc(lineID);
+                const checkUserRef = await checkGroupRef.collection('Members').doc(lineID);
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
-                        const result = await getTripPerDayByDate(lineGroupID, DateOfTrip)
+                        const result = await getTripPerDayByDate(lineGroupID, dateOfTrip)
                         console.log('Get Trip per day success')
-                        console.log(result)
+                        // console.log(result)
                         res.status(200).json(result);
                     } else {
                         console.log('Alert: You cannot check this Trip per day')
@@ -188,7 +186,7 @@ async function getAllTripByGroupID(lineGroupID) {
     return dataTripAllDay;
 };
 
-async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
+async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
     const dataTripPerDay = [];
     const tripIDList = [];
     const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip');
@@ -201,20 +199,29 @@ async function getTripPerDayByDate(lineGroupID, DateOfTrip) {
     let tripID = tripIDList.map(t => t.tripID).toString();
     console.log('Trip ID: ', tripID);
 
+    console.log('Date: ', dateOfTrip)
+
     const showTripPerDay = db.collection('TripPerDay');
     const queryTPD1 = showTripPerDay.where('tripID', '==', tripID);
     // const queryTPD2 = queryTripPerDay1.where(new firestore.FieldPath()
-    const queryTPD2 = queryTPD1.where('events.eventDate', '==', DateOfTrip);
+    // const queryTPD2 = queryTPD1.where('events.eventDate', '==', dateOfTrip);
+    // const queryTPD2 = queryTPD1.where('events', 'array-contains', { eventDate: "Sep 17, 2020" });
+    // const queryTPD2 = queryTPD1.where('eventDate', '==', "Sep 17, 2020");
 
-    await queryTPD2.get().then(async res => {
-        if (queryTPD2.empty) {
+    await queryTPD1.get().then(async res => {
+        if (queryTPD1.empty) {
             console.log('No matching documents.');
             return;
         }
         await res.forEach(async doc => {
             dataTripPerDay.push(doc.data());
+            console.log('doc: ', doc.data())
         });
     })
+    console.log('dataTripPerDay: ', dataTripPerDay)
+
+    const d = dataTripPerDay.map(a => a.events.evenDate).toString();
+    console.log('dbug: ', d)
 
     return dataTripPerDay;
 };
@@ -264,7 +271,7 @@ async function createTripList(datas) {
             saveGroupIDinGroupRef.set({
                 lineGroupID: datas.lineGroupID,
             })
-            let saveMemberinGroup = await saveGroupIDinGroupRef.collection('Member').doc(datas.lineID);
+            let saveMemberinGroup = await saveGroupIDinGroupRef.collection('Members').doc(datas.lineID);
             saveMemberinGroup.set({
                 lineID: datas.lineID
             })
@@ -307,7 +314,7 @@ async function createTripList(datas) {
             saveGroupIDinGroupRef.set({
                 lineGroupID: datas.lineGroupID,
             })
-            let saveMemberinGroup = await saveGroupIDinGroupRef.collection('Member').doc(datas.lineID);
+            let saveMemberinGroup = await saveGroupIDinGroupRef.collection('Members').doc(datas.lineID);
             saveMemberinGroup.set({
                 lineID: datas.lineID
             })
