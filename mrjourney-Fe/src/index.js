@@ -4,9 +4,9 @@ import App from './App';
 import { HookProvider } from './store/HookProvider'
 import momentjs from 'moment'
 import { createGlobalStyle } from "styled-components";
-import 'moment/locale/th';
+import 'moment/locale/en-gb';
 import { Theme } from "./static/Theme";
-momentjs.locale('th')
+momentjs.locale('en-gb')
 
 const GlobalStyle = createGlobalStyle`
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
