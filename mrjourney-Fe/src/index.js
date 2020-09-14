@@ -18,13 +18,17 @@ const GlobalStyle = createGlobalStyle`
             border-color: rgb(230, 111, 15);
         }
     }
-    .ant-picker {
-        height: 40px;
+.edit-profile {
+    .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
         border-radius: 4px;
+        font-size: 14px;
+        align-items: center;
         &:hover , &:active {
             border-color: rgb(230, 111, 15);
         }
     }
+}
+   
     textarea.ant-input {
         font-size: 16px;
         border-radius: 4px;

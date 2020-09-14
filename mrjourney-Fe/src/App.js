@@ -12,11 +12,12 @@ import JoinRoom from './webpage/JoinRoom';
 import AllMyOwnerRoom from './webpage/AllMyOwnerRoom';
 import AllMyJoinedRoom from './webpage/AllMyJoinedRoom';
 import CurrentJoinRoom from './webpage/CurrentJoinRoom';
-import Profile from './webpage/Profile';
+import KeepProfile from './webpage/Keep-Profile';
 import CheckTrip from './linepage/CheckTrip';
 import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
-import 'antd/dist/antd.css'; 
+import 'antd/dist/antd.css';
+import Profile from './webpage/Profile';
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
         </Route>
         <Route path="/Profile">
           <Profile />
+        </Route>
+        <Route path="/KeepProfile">
+          <KeepProfile />
         </Route>
         <Route path="/AllMyOwnerRoom">
           <AllMyOwnerRoom />

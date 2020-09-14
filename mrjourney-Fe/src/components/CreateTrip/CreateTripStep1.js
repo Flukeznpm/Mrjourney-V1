@@ -27,6 +27,14 @@ const PrimaryButton = styled(AntButton)`
     }
 `;
 
+const DatePickerComponent = styled(DatePicker)`
+    height: 40px;
+    border-radius: 4px;
+    &:hover , &:active {
+        border-color: rgb(230, 111, 15);
+    }
+`
+
 const InputComponent = styled(AntInput)`
     border-radius: 4px;
     height: 40px;
@@ -105,7 +113,7 @@ function CreateTripStep1(props) {
                                     <div className="row">
                                         <div className="col-6">
                                             <AntForm.Item name="date" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                                <DatePicker style={{ width: "100%" }}
+                                                <DatePickerComponent style={{ width: "100%" }}
                                                     disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
                                                     format={dateFormat}
                                                 />

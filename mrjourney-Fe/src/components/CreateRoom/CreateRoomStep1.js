@@ -36,6 +36,14 @@ const InputComponent = styled(AntInput)`
     }
 `;
 
+const DatePickerComponent = styled(DatePicker)`
+    height: 40px;
+    border-radius: 4px;
+    &:hover , &:active {
+        border-color: rgb(230, 111, 15);
+    }
+`
+
 function CreateRoomStep1(props) {
     const { thaiprovince, nextStep, handleRoomForm, Room } = useContext(HookContext)
     const [lineID, setLineId] = useState("");
@@ -108,14 +116,14 @@ function CreateRoomStep1(props) {
                                     <div className="row">
                                         <div className="col-6">
                                             <AntForm.Item name="startDate" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                                <DatePicker onChange={onStartDateChange}
+                                                <DatePickerComponent onChange={onStartDateChange}
                                                     disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
                                                     format={dateFormat} />
                                             </AntForm.Item>
                                         </div>
                                         <div className="col-6">
                                             <AntForm.Item name="endDate" label="วันสิ้นสุดทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                                <DatePicker
+                                                <DatePickerComponent
                                                     disabledDate={d => !d || d.isSameOrBefore(Room.startDate)}
                                                     format={dateFormat} />
                                             </AntForm.Item>
