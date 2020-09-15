@@ -11,6 +11,7 @@ let db = firebase.firestore();
 // POST /room/createRoom  (สร้าง room)
 // PUT /room/editRoom (แก้ไขข้อมูล room)
 // DELETE /room/deleteRoom  (ลบ room)
+// POST /room/uploadImage (ส่งรูปมาใน Cloud storage)
 
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
@@ -127,6 +128,14 @@ router.delete('/deleteRoom', async function (req, res, next) {
     }
 });
 
+router.post('/uploadImage', async function (req, res, next) {
+    const image = req.body;
+    // console.log('datas: ', datas)
+    const imageURL = await uploadPictureToCloudStorage(image)
+    res.status(200).json(imageURL);
+    console.log('Response Image URL to Frontend ', imageURL);
+});
+
 //---------------- Function ----------------//
 async function getAllRoom() {
     let RoomList = [];
@@ -209,16 +218,15 @@ async function generateRoomID() {
 };
 
 async function uploadPictureToCloudStorage(datas) {
-    var storageRef = storage.ref();
-    var imageRef = storageRef.child("RoomCover");
-    var fileName = datas.roomCover;
-    var spaceRef = imageRef.child(fileName);
-
-    console.log('Path: ' + spaceRef.fullPath);
-
-    var upload = spaceRef.put(fileName);
-
-
+    const storageRef = storage.ref();
+    const fileRef = storageRef.child(datas.name);
+    await fileRef.put(datas);
+    return (await fileRef.getDownloadURL());
+    // var imageRef = storageRef.child("RoomCover");
+    // var fileName = datas.roomCover;
+    // var spaceRef = imageRef.child(fileName);
+    // console.log('Path: ' + spaceRef.fullPath);
+    // var upload = spaceRef.put(fileName);
 }
 
 async function createRoom(datas) {
