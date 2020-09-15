@@ -269,7 +269,7 @@ async function createRoom(datas) {
                 ownerRoomName: datas.displayName,
                 ownerPicRoom: datas.pictureURL,
                 roomName: datas.roomName,
-                // roomCover: datas.roomCover,
+                roomCover: datas.roomCover,
                 province: datas.province,
                 startDate: datas.startDate,
                 endDate: datas.endDate,

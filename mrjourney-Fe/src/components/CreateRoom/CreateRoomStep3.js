@@ -75,6 +75,7 @@ function CreateRoomStep3(props) {
             pictureURL: pictureURL,
             roomID: roomID,
             roomName: Room.roomName,
+            roomCover: Room.roomCover,
             province: Room.province,
             startDate: momentjs(Room.startDate).format('ll'),
             endDate: momentjs(Room.endDate).format('ll'),
@@ -108,7 +109,7 @@ function CreateRoomStep3(props) {
                     <div className="col-md-3"></div>
                         <div className="col-md-6">
                             <div>
-                                <img class="d-block w-100" src={BgSlide1} alt="First slide" />
+                                <img class="d-block w-100" src={Room.roomCover} alt="First slide" />
                             </div>
                             <div className="container">
                                 <div className="Room-Details py-3">

@@ -69,6 +69,7 @@ function CreateRoomStep1(props) {
         handleRoomForm(momentjs(values.startDate).format('ll'), 'startDate')
         handleRoomForm(momentjs(values.endDate).format('ll'), 'endDate')
         handleRoomForm(values.tripDetails, 'tripDetails')
+        handleRoomForm(roomCoverImg, 'roomCover')
         nextStep(1)
     };
 
@@ -82,14 +83,16 @@ function CreateRoomStep1(props) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = async () => {
+            let generateNameImage = 'roomCover' + new Date().getTime();
             let dataBase64 = {
                 image: reader.result,
-                nameImage: 'roomCover'
+                nameImage: generateNameImage
             }
-            await axios.post('http://localhost:5000/room/uploadImage', dataBase64)
+            console.log(dataBase64.nameImage)
+            await axios.post('http://localhost:5000/room/uploadRoomCoverImage', dataBase64)
                 .then(res => {
                     console.log('URL: ', res)
-                    setRoomCoverImg(res)
+                    setRoomCoverImg(res.data)
                 })
         }
     }
@@ -109,6 +112,7 @@ function CreateRoomStep1(props) {
                                     <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
                                 </AntForm.Item>
                                 <input type="file" onChange={onFileChange}></input>
+                                <img width="100px" src={roomCoverImg}></img>
                                 {/* <div class="pt-4 ">
                                     <label for="exampleInputEmail1">หน้าปกทริป<span className="p-1" style={{ color: "red", fontSize: "12px" }}>(ขนาดไม่เกิน 800px)</span></label>
                                     <div class="custom-file">
