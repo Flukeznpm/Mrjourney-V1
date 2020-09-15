@@ -13,7 +13,7 @@ const gcs = require('@google-cloud/storage');
 // POST /room/createRoom  (สร้าง room)
 // PUT /room/editRoom (แก้ไขข้อมูล room)
 // DELETE /room/deleteRoom  (ลบ room)
-// POST /room/uploadImage (ส่งรูปมาใน Cloud storage)
+// POST /room/uploadRoomCoverImage (ส่งรูปมาใน Cloud storage)
 
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
@@ -130,11 +130,11 @@ router.delete('/deleteRoom', async function (req, res, next) {
     }
 });
 
-router.post('/uploadImage', async function (req, res, next) {
+router.post('/uploadRoomCoverImage', async function (req, res, next) {
     let image = req.body.image;
     let name = req.body.nameImage;
     console.log('request image: ', image);
-    let imageURL = await uploadPictureToCloudStorage(image + '', name);
+    let imageURL = await uploadRoomCoverImageToCloudStorage(image + '', name);
     console.log('Response Image URL to Frontend ', imageURL);
     res.status(200).json(imageURL);
 });
@@ -220,7 +220,7 @@ async function generateRoomID() {
     return result;
 };
 
-async function uploadPictureToCloudStorage(image, name) {
+async function uploadRoomCoverImageToCloudStorage(image, name) {
     let singnedUrls = 'xxx';
 
     //save image to project
