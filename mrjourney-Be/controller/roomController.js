@@ -14,6 +14,7 @@ const gcs = require('@google-cloud/storage');
 // PUT /room/editRoom (แก้ไขข้อมูล room)
 // DELETE /room/deleteRoom  (ลบ room)
 // POST /room/uploadRoomCoverImage (ส่งรูปมาใน Cloud storage)
+// POST /room/uploadRoomQrCodeImage (ส่งรูปมาใน Cloud storage)
 
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
@@ -135,7 +136,16 @@ router.post('/uploadRoomCoverImage', async function (req, res, next) {
     let name = req.body.nameImage;
     console.log('request image: ', image);
     let imageURL = await uploadRoomCoverImageToCloudStorage(image + '', name);
-    console.log('Response Image URL to Frontend ', imageURL);
+    console.log('Response Image URL to Frontend: ', imageURL);
+    res.status(200).json(imageURL);
+});
+
+router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
+    let image = req.body.image;
+    let name = req.body.nameImage;
+    console.log('request image: ', image);
+    let imageURL = await uploadRoomQrCodeImageToCloudStorage(image + '', name);
+    console.log('Response Image URL to Frontend:', imageURL);
     res.status(200).json(imageURL);
 });
 
@@ -221,8 +231,6 @@ async function generateRoomID() {
 };
 
 async function uploadRoomCoverImageToCloudStorage(image, name) {
-    let singnedUrls = 'xxx';
-
     //save image to project
     let base64Image = image.split(';base64,').pop();
     fs.writeFile(`./controller/${name}.png`, base64Image, { encoding: 'base64' }, function (err) {
@@ -238,11 +246,44 @@ async function uploadRoomCoverImageToCloudStorage(image, name) {
             cacheControl: 'public, max-age=31536000'
         }
     }).then(() => {
-
-    }) //delete image from project
+        //delete image from project
+        fs.unlink(`./controller/${name}.png`);
+    })
 
     //get URL to frontend
     let file = storageRef.file(`RoomCover/${name}.png`);
+    await file.getSignedUrl({
+        action: 'read',
+        expires: '03-09-2491'
+    }).then(signedUrls => {
+        singnedUrls = signedUrls[0];
+    });
+
+    return singnedUrls;
+}
+
+async function uploadRoomQrCodeImageToCloudStorage(image, name) {
+    //save image to project
+    let base64Image = image.split(';base64,').pop();
+    fs.writeFile(`./controller/${name}.png`, base64Image, { encoding: 'base64' }, function (err) {
+        console.log('File created');
+    });
+
+    //upload to cloud storage
+    let storageRef = storage.bucket();
+    await storageRef.upload(`./controller/${name}.png`, {
+        destination: `RoomQrCode/${name}.png`,
+        gzip: true,
+        metadata: {
+            cacheControl: 'public, max-age=31536000'
+        }
+    }).then(() => {
+        //delete image from project
+        fs.unlink(`./controller/${name}.png`);
+    })
+
+    //get URL to frontend
+    let file = storageRef.file(`RoomQrCode/${name}.png`);
     await file.getSignedUrl({
         action: 'read',
         expires: '03-09-2491'
