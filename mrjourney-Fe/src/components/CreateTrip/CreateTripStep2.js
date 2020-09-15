@@ -13,7 +13,7 @@ import Stepper from '../components/Stepper';
 function CreateTripStep2(props) {
     const { nextTripStep, prevTripStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
     const [lineID, setLineID] = useState("")
-    const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
+    const [lineGroupID, setLineGroupID] = useState("Line_Group_002")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [tripStatus, setTripStatus] = useState(true)
