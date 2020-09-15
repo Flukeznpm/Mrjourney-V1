@@ -9,6 +9,11 @@ import { Theme } from "./static/Theme";
 momentjs.locale('en-gb')
 
 const GlobalStyle = createGlobalStyle`
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Kanit', sans-serif;
+  }
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
         border-radius: 4px;
         height: 40px;
