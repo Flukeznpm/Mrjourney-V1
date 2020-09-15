@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import styled from "styled-components";
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
@@ -50,6 +51,7 @@ function CreateRoomStep1(props) {
     const { Option } = AntSelect;
     const { TextArea } = AntInput;
     const dateFormat = 'DD-MM-YYYY';
+    const [roomCoverImg, setRoomCoverImg] = useState(null)
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -73,7 +75,16 @@ function CreateRoomStep1(props) {
     const onStartDateChange = (date, dateString) => {
         handleRoomForm(momentjs(date).format('YYYY-MM-DD'), 'startDate')
     }
-
+    const onFileChange = async (e) => {
+        const file = e.target.files[0]
+        let dataFile = {
+            file: file
+        }
+        await axios.post('http://localhost:5000/room/uploadImage', dataFile)
+        .then(res => {
+            setRoomCoverImg(res)
+        })
+    }
     return (
         <div>
             <div className="container py-2 mt-3">
@@ -88,6 +99,7 @@ function CreateRoomStep1(props) {
                                 <AntForm.Item name="roomName" label="ชื่อทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                     <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
                                 </AntForm.Item>
+                                <input type="file" onChange={onFileChange}></input>
                                 {/* <div class="pt-4 ">
                                     <label for="exampleInputEmail1">หน้าปกทริป<span className="p-1" style={{ color: "red", fontSize: "12px" }}>(ขนาดไม่เกิน 800px)</span></label>
                                     <div class="custom-file">
