@@ -315,7 +315,7 @@ async function createRoom(datas) {
                 startDate: datas.startDate,
                 endDate: datas.endDate,
                 tripDetails: datas.tripDetails,
-                // qrCode: datas.qrCode,
+                qrCode: datas.qrCode,
                 maxMember: datas.maxMember,
                 genderCondition: datas.genderCondition,
                 ageCondition: datas.ageCondition,

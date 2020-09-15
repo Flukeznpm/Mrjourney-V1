@@ -76,6 +76,7 @@ function CreateRoomStep3(props) {
             roomID: roomID,
             roomName: Room.roomName,
             roomCover: Room.roomCover,
+            qrCode: Room.qrCode,
             province: Room.province,
             startDate: momentjs(Room.startDate).format('ll'),
             endDate: momentjs(Room.endDate).format('ll'),
@@ -186,8 +187,7 @@ function CreateRoomStep3(props) {
                                     <div className="ShowRoom-QrCode py-1">
                                         QrCode
                                                 <div className=" text-center">
-                                            <img src={TestQrCode} alt="QrCode" width="150" height="150" />
-                                            {/* QR code : {this.props.RoomForm.qrCode} <br /> */}
+                                            <img src={Room.qrCode} alt="QrCode" width="150" height="150" />
                                         </div>
                                     </div>
                                 </div>
@@ -208,7 +208,7 @@ function CreateRoomStep3(props) {
                                                         size={"large"}
                                                         block htmlType="button"
                                                         onClick={handleSubmit}
-                                                    >submit</PrimaryButton>
+                                                    >ยืนยัน</PrimaryButton>
                                                 </div>
                                             </div>
                                         </div>

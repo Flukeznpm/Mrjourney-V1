@@ -196,7 +196,7 @@ function RoomDetails(props) {
                             <div className="ShowRoom-QrCode py-1">
                                 QrCode
                                 <div className=" text-center">
-                                    <img src={TestQrCode} alt="QrCode" width="150" height="150" />
+                                    <img src={props.roomDetail.qrCode} alt="QrCode" width="150" height="150" />
                                 </div>
                             </div>
                         </div>
