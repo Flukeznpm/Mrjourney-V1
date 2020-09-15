@@ -13,8 +13,8 @@ const gcs = require('@google-cloud/storage');
 // POST /room/createRoom  (สร้าง room)
 // PUT /room/editRoom (แก้ไขข้อมูล room)
 // DELETE /room/deleteRoom  (ลบ room)
-// POST /room/uploadRoomCoverImage (ส่งรูปมาใน Cloud storage)
-// POST /room/uploadRoomQrCodeImage (ส่งรูปมาใน Cloud storage)
+// POST /room/uploadRoomCoverImage (ส่งรูป RoomCover มาเก็บใน Cloud storage)
+// POST /room/uploadRoomQrCodeImage (ส่งรูป RoomQrCode มาเก็บใน Cloud storage)
 
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
@@ -247,7 +247,7 @@ async function uploadRoomCoverImageToCloudStorage(image, name) {
         }
     }).then(() => {
         //delete image from project
-        fs.unlink(`./controller/${name}.png`);
+        // fs.unlink(`./controller/${name}.png`);
     })
 
     //get URL to frontend
@@ -279,7 +279,7 @@ async function uploadRoomQrCodeImageToCloudStorage(image, name) {
         }
     }).then(() => {
         //delete image from project
-        fs.unlink(`./controller/${name}.png`);
+        // fs.unlink(`./controller/${name}.png`);
     })
 
     //get URL to frontend
