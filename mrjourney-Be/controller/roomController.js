@@ -3,6 +3,8 @@ var router = express.Router();
 var firebase = require('firebase-admin');
 var storage = firebase.storage();
 let db = firebase.firestore();
+var fs = require('fs');
+const gcs = require('@google-cloud/storage');
 
 //---------------- Controller ----------------//
 // GET /room  (แสดง room ทั้งหมดใน feed page)
@@ -129,11 +131,12 @@ router.delete('/deleteRoom', async function (req, res, next) {
 });
 
 router.post('/uploadImage', async function (req, res, next) {
-    const image = req.body;
-    // console.log('datas: ', datas)
-    const imageURL = await uploadPictureToCloudStorage(image)
-    res.status(200).json(imageURL);
+    let image = req.body.image;
+    let name = req.body.nameImage;
+    console.log('request image: ', image);
+    let imageURL = await uploadPictureToCloudStorage(image + '', name);
     console.log('Response Image URL to Frontend ', imageURL);
+    res.status(200).json(imageURL);
 });
 
 //---------------- Function ----------------//
@@ -217,16 +220,37 @@ async function generateRoomID() {
     return result;
 };
 
-async function uploadPictureToCloudStorage(datas) {
-    const storageRef = storage.ref();
-    const fileRef = storageRef.child(datas.name);
-    await fileRef.put(datas);
-    return (await fileRef.getDownloadURL());
-    // var imageRef = storageRef.child("RoomCover");
-    // var fileName = datas.roomCover;
-    // var spaceRef = imageRef.child(fileName);
-    // console.log('Path: ' + spaceRef.fullPath);
-    // var upload = spaceRef.put(fileName);
+async function uploadPictureToCloudStorage(image, name) {
+    let singnedUrls = 'xxx';
+
+    //save image to project
+    let base64Image = image.split(';base64,').pop();
+    fs.writeFile(`./controller/${name}.png`, base64Image, { encoding: 'base64' }, function (err) {
+        console.log('File created');
+    });
+
+    //upload to cloud storage
+    let storageRef = storage.bucket();
+    await storageRef.upload(`./controller/${name}.png`, {
+        destination: `RoomCover/${name}.png`,
+        gzip: true,
+        metadata: {
+            cacheControl: 'public, max-age=31536000'
+        }
+    }).then(() => {
+
+    }) //delete image from project
+
+    //get URL to frontend
+    let file = storageRef.file(`RoomCover/${name}.png`);
+    await file.getSignedUrl({
+        action: 'read',
+        expires: '03-09-2491'
+    }).then(signedUrls => {
+        singnedUrls = signedUrls[0];
+    });
+
+    return singnedUrls;
 }
 
 async function createRoom(datas) {

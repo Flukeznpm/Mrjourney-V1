@@ -75,17 +75,25 @@ function CreateRoomStep1(props) {
     const onStartDateChange = (date, dateString) => {
         handleRoomForm(momentjs(date).format('YYYY-MM-DD'), 'startDate')
     }
+
     const onFileChange = async (e) => {
-        // let file = e.target.files[0]
-        // const dataFile = {
+        let base64;
         const file = e.target.files[0];
-        // }
-        console.log('file: ', file);
-        await axios.post('http://localhost:5000/room/uploadImage', file)
-            .then(res => {
-                setRoomCoverImg(res)
-            })
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async () => {
+            let dataBase64 = {
+                image: reader.result,
+                nameImage: 'roomCover'
+            }
+            await axios.post('http://localhost:5000/room/uploadImage', dataBase64)
+                .then(res => {
+                    console.log('URL: ', res)
+                    setRoomCoverImg(res)
+                })
+        }
     }
+
     return (
         <div>
             <div className="container py-2 mt-3">
