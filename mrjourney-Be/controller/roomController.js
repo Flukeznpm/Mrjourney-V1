@@ -134,18 +134,18 @@ router.delete('/deleteRoom', async function (req, res, next) {
 router.post('/uploadRoomCoverImage', async function (req, res, next) {
     let image = req.body.image;
     let name = req.body.nameImage;
-    console.log('request image: ', image);
+    // console.log('request image: ', image);
     let imageURL = await uploadRoomCoverImageToCloudStorage(image + '', name);
-    console.log('Response Image URL to Frontend: ', imageURL);
+    // console.log('Response Image URL to Frontend: ', imageURL);
     res.status(200).json(imageURL);
 });
 
 router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
     let image = req.body.image;
     let name = req.body.nameImage;
-    console.log('request image: ', image);
+    // console.log('request image: ', image);
     let imageURL = await uploadRoomQrCodeImageToCloudStorage(image + '', name);
-    console.log('Response Image URL to Frontend:', imageURL);
+    // console.log('Response Image URL to Frontend:', imageURL);
     res.status(200).json(imageURL);
 });
 
@@ -233,8 +233,8 @@ async function generateRoomID() {
 async function uploadRoomCoverImageToCloudStorage(image, name) {
     //save image to project
     let base64Image = image.split(';base64,').pop();
-    fs.writeFile(`./controller/${name}.png`, base64Image, { encoding: 'base64' }, function (err) {
-        console.log('File created');
+    await fs.writeFile(`./controller/${name}.png`, base64Image, { encoding: 'base64' }, function (err) {
+        console.log('>>> File created <<<');
     });
 
     //upload to cloud storage
@@ -245,9 +245,15 @@ async function uploadRoomCoverImageToCloudStorage(image, name) {
         metadata: {
             cacheControl: 'public, max-age=31536000'
         }
-    }).then(() => {
+    }).then(async () => {
         //delete image from project
-        // fs.unlink(`./controller/${name}.png`);
+        let path = `./controller/${name}.png`;
+        await fs.unlink(path, (err) => {
+            if (err) {
+                console.error(err)
+            }
+            console.log('>>> File remove <<<')
+        })
     })
 
     //get URL to frontend
@@ -265,8 +271,8 @@ async function uploadRoomCoverImageToCloudStorage(image, name) {
 async function uploadRoomQrCodeImageToCloudStorage(image, name) {
     //save image to project
     let base64Image = image.split(';base64,').pop();
-    fs.writeFile(`./controller/${name}.png`, base64Image, { encoding: 'base64' }, function (err) {
-        console.log('File created');
+    await fs.writeFile(`./controller/${name}.png`, base64Image, { encoding: 'base64' }, function (err) {
+        console.log('>>> File created <<<');
     });
 
     //upload to cloud storage
@@ -277,9 +283,15 @@ async function uploadRoomQrCodeImageToCloudStorage(image, name) {
         metadata: {
             cacheControl: 'public, max-age=31536000'
         }
-    }).then(() => {
+    }).then(async () => {
         //delete image from project
-        // fs.unlink(`./controller/${name}.png`);
+        let path = `./controller/${name}.png`;
+        await fs.unlink(path, (err) => {
+            if (err) {
+                console.error(err)
+            }
+            console.log('>>> File remove <<<')
+        })
     })
 
     //get URL to frontend
