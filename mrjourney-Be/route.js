@@ -19,6 +19,7 @@ var accountProfileRouter = require('./controller/accountProfileController');
 var tripRouter = require('./controller/tripController');
 var roomRouter = require('./controller/roomController');
 var updateRouter = require('./controller/updateController');
+var bot = require('./lineBot/bot');
 
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,6 +39,7 @@ app.use("/update", updateRouter);
 app.use("/accountProfile", accountProfileRouter);
 app.use("/trip", tripRouter);
 app.use("/room", roomRouter);
+app.use("/bot", bot);
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`server is listening to port ${process.env.PORT || 5000}...`);
