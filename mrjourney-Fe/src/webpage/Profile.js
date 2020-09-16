@@ -59,6 +59,14 @@ const AntFormItem = styled(AntForm.Item)`
     margin-bottom: 0px;
 `;
 
+const SwitchComponent = styled(Switch)`
+  background-color: #E9DDD1;
+
+  &.ant-switch-checked {
+    background-color: ${props => (props.theme.color.primary)};
+  }
+`;
+
 function Profile(props) {
     const { AccProfile, handleAccProfileForm } = useContext(HookContext)
     const [lineID, setLineID] = useState("")
@@ -128,20 +136,21 @@ function Profile(props) {
                     <Row justify="center">
                         <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
                             <AntCard style={{ padding: 0 }}>
-                                <Row style={{ height: 200 }}>
+                                <Row style={{ height: 150 }}>
                                     <Col span={12} className="text-center pt-3">
                                         <img src={pictureURL}
                                             class="image_outer_container"
                                             height="125px" width="125px"
                                             alt="mrjourney-img" />
-                                    </Col>
-                                    <Col span={12}>
-                                        <div className="line-name" style={{ fontSize: "28px" }}>
-                                            คุณ {displayName}
+                                        <div className="line-name" style={{ fontSize: "24px" }}>
+                                            คุณ {displayName} &nbsp;
                                             <Tooltip title="เลื่อนเพื่อแก้ไขข้อมูลส่วนตัว">
-                                                <Switch defaultChecked onChange={onChange} />
+                                                < SwitchComponent defaultChecked onChange={onChange} />
                                             </Tooltip>
                                         </div>
+                                    </Col>
+                                    <Col span={12}>
+
                                         <div className="personal-profile-details" >
 
                                             {acc.map((acc) => {
@@ -149,9 +158,10 @@ function Profile(props) {
                                                     <>
                                                         {isEditProfile === false ?
                                                             <div>
-                                                                <div className="detail">{acc.fName} {acc.lName}  </div>
-                                                                <div className="detail">{acc.gender}</div>
-                                                                <div className="detail">{acc.birthday}</div>
+                                                                <div className="detail">ชื่อ {acc.fName}</div>
+                                                                <div className="detail">นามสกุล {acc.lName}</div>
+                                                                <div className="detail">เพศ {acc.gender}</div>
+                                                                <div className="detail">อายุ {acc.birthday}</div>
                                                                 <div className="detail">{acc.tel}</div>
                                                             </div>
                                                             :
@@ -186,8 +196,8 @@ function Profile(props) {
                                                                         <div className="col-12">
                                                                             <div className="row">
                                                                                 <div className="col-6">
-                                                                                    <PrimaryButton type="primary" size={"small"} block htmlType="submit" 
-                                                                                    onClick={() => setEditProfile(false)}>ยกเลิก</PrimaryButton>
+                                                                                    <PrimaryButton type="primary" size={"small"} block htmlType="submit"
+                                                                                        onClick={() => setEditProfile(false)}>ยกเลิก</PrimaryButton>
                                                                                 </div>
                                                                                 <div className="col-6">
                                                                                     <PrimaryButton type="primary" size={"small"} block htmlType="submit">ยืนยัน</PrimaryButton>
