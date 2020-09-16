@@ -8,7 +8,11 @@ router.post('/webhook', (req, res) => {
     let msg = req.body.events[0].message.text
     if (msg === "อาจารย์โอ๋") {
         replyRom(reply_token, msg)
-    } else {
+       
+    }  else if(msg === "กัน"){
+        replyGun(reply_token, msg)
+    }
+    else {
         reply(reply_token, msg)
     }
     res.sendStatus(200)
@@ -115,5 +119,28 @@ function replyRom(reply_token, msg) {
     });
 }
 
+function replyGun(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
 
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: 'สวัสดีจ้า'
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
 module.exports = router;
