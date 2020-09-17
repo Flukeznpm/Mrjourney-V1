@@ -12,6 +12,7 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 import momentjs from 'moment'
 import ProfileMoreDetails from '../components/Profile/ProfileMoreDetails';
+import { EditOutlined } from '@ant-design/icons';
 import {
     Card,
     Row,
@@ -34,9 +35,12 @@ const AntCard = styled(Card)`
 `;
 const { Paragraph } = Typography;
 const AntParagraph = styled(Paragraph)`
-    border: 2px solid ${props => (props.theme.color.primary)};
+    border: 2px solid  #f7f7f7;
     border-radius: 8px;
     padding: 5px;
+    .ant-typography-expand, .ant-typography-edit, .ant-typography-copy {
+         color: ${props => (props.theme.color.primary)};
+    }
 `;
 const InputComponent = styled(AntInput)`
     border-radius: 4px;
@@ -56,16 +60,30 @@ const PrimaryButton = styled(AntButton)`
     }
 `;
 
+const OutlineButton = styled(AntButton)`
+    border-radius: 4px;
+    border: 1px solid ${props => (props.theme.color.primary)};
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        border: 1px solid ${props => (props.theme.color.primaryPress)};
+        color: ${props => (props.theme.color.primary)};
+        background: #F7F7F7;
+    }
+`;
+
+const EditProfileButton = styled(AntButton)`
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        color: ${props => (props.theme.color.primary)};
+    }
+`
+
 const AntFormItem = styled(AntForm.Item)`
     margin-bottom: 0px;
 `;
 
-const SwitchComponent = styled(Switch)`
-  background-color: #E9DDD1;
-
-  &.ant-switch-checked {
-    background-color: ${props => (props.theme.color.primary)};
-  }
+const LineNameText = styled.text`
+    color: ${props => (props.theme.color.primary)};
 `;
 
 function Profile(props) {
@@ -77,6 +95,7 @@ function Profile(props) {
     const [gender, selectGender] = useState(["ชาย", "หญิง"])
     const [isEditProfile, setEditProfile] = useState(false)
     const [isEditBio, setEditBio] = useState(false);
+    const [defaultBio, setDefaultBio] = useState("")
     const { Option } = AntSelect;
     const dateFormat = 'DD-MM-YYYY';
 
@@ -108,7 +127,7 @@ function Profile(props) {
         setEditBio(false)
     }
 
-    const onChange = () => {
+    const onEditProfile = () => {
         setEditProfile(!isEditProfile)
     }
 
@@ -117,8 +136,7 @@ function Profile(props) {
         var birthDate = new Date(dob);  // create a date object directly from `dob1` argument
         var age_now = today.getFullYear() - birthDate.getFullYear();
         var m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
-        {
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
             age_now--;
         }
         console.log(age_now);
@@ -134,7 +152,7 @@ function Profile(props) {
             lName: value.lName,
             gender: value.gender,
             birthday: value.birthday,
-            tel: value.tel
+            // tel: value.tel
         }
         await axios.put('http://localhost:5000/accountProfile/editAccountDetail', dataUpdateProfile)
             .then(async (res) => {
@@ -142,7 +160,6 @@ function Profile(props) {
             })
         setEditProfile(false)
     };
-
     return (
         <div className="flex-wrapper">
             <div className="top-page">
@@ -158,21 +175,24 @@ function Profile(props) {
                                             height="125px" width="125px"
                                             alt="mrjourney-img" />
                                         <div className="line-name" style={{ fontSize: "24px" }}>
-                                            คุณ {displayName} &nbsp;
-                                            <Tooltip title="เลื่อนเพื่อแก้ไขข้อมูลส่วนตัว">
-                                                < SwitchComponent defaultChecked onChange={onChange} />
-                                            </Tooltip>
+                                            คุณ <LineNameText>{displayName}</LineNameText>
                                         </div>
                                     </Col>
                                     <Col span={12}>
-
                                         <div className="personal-profile-details" >
-
+                                            {isEditProfile === false ?
+                                                <EditProfileButton type="link" icon={<EditOutlined />}
+                                                    style={{ marginLeft: "auto", marginRight: "0px" }}
+                                                    onClick={onEditProfile}
+                                                />
+                                                :
+                                                null
+                                            }
                                             {acc.map((acc) => {
                                                 return (
                                                     <>
                                                         {isEditProfile === false ?
-                                                            <div>
+                                                            <div style={{ fontSize: "16px" }}>
                                                                 <div className="detail">ชื่อ {acc.fName}</div>
                                                                 <div className="detail">นามสกุล {acc.lName}</div>
                                                                 <div className="detail">เพศ {acc.gender}</div>
@@ -180,7 +200,7 @@ function Profile(props) {
                                                                 {/* <div className="detail">{acc.tel}</div> */}
                                                             </div>
                                                             :
-                                                            <div>
+                                                            <div className="pt-4">
                                                                 <AntForm onFinish={onFinish}>
                                                                     <AntFormItem name="fName">
                                                                         <InputComponent size="small" placeholder="กรอกชื่อของคุณ" />
@@ -204,15 +224,15 @@ function Profile(props) {
                                                                         <DatePicker size="small" style={{ width: "100%" }}
                                                                             format={dateFormat} />
                                                                     </AntFormItem>
-                                                                    <AntFormItem name="tel">
+                                                                    {/* <AntFormItem name="tel">
                                                                         <InputComponent size="small" placeholder="กรอกเบอร์โทรศัพท์ของคุณ" />
-                                                                    </AntFormItem>
+                                                                    </AntFormItem> */}
                                                                     <AntForm.Item>
                                                                         <div className="col-12">
                                                                             <div className="row">
                                                                                 <div className="col-6">
-                                                                                    <PrimaryButton type="primary" size={"small"} block htmlType="submit"
-                                                                                        onClick={() => setEditProfile(false)}>ยกเลิก</PrimaryButton>
+                                                                                    <OutlineButton size={"small"} block htmlType="submit"
+                                                                                        onClick={() => setEditProfile(false)}>ยกเลิก</OutlineButton>
                                                                                 </div>
                                                                                 <div className="col-6">
                                                                                     <PrimaryButton type="primary" size={"small"} block htmlType="submit">ยืนยัน</PrimaryButton>
@@ -234,7 +254,7 @@ function Profile(props) {
                                 <div className="Bio-page pt-4 mt-1 container">
                                     <Row>
                                         <Col span={24}>
-                                            <Tooltip title="ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
+                                            <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
                                                 Bio
                                             </Tooltip>
                                             {acc.map((acc) => {

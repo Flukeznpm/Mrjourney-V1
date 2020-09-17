@@ -37,7 +37,7 @@ function FirstTimeLogin(props) {
             lName: AccProfile.lName,
             gender: AccProfile.gender,
             birthday: AccProfile.birthday,
-            tel: AccProfile.tel,
+            // tel: AccProfile.tel,
             bio: bio
         }
 
@@ -102,23 +102,22 @@ function FirstTimeLogin(props) {
                                 <option value="หญิง">หญิง</option>
                             </select>
                         </div>
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <label>Phone</label>
                             <input type="tel" size="10" className="form-control"
                                 name="tel"
                                 value={AccProfile.tel}
                                 onChange={(e) => handleAccProfileForm(e.target.value, e.target.name)}
                                 placeholder="Enter your phone number" />
-                        </div>
+                        </div> */}
 
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <div className="custom-control custom-checkbox">
                                 <input type="checkbox" className="custom-control-input " id="customCheck1" />
                                 <label className="custom-control-label" htmlFor="customCheck1">ยอมรับว่าข้อมูลข้างต้นเป็นจริงทุกประการ</label>
                             </div>
-
-                        </div>
-                        <button type="submit" className="btn firstLogin-btn btn-block" onClick={() => onSubmit()}>Submit</button>
+                        </div> */}
+                        <button type="submit" className="btn firstLogin-btn btn-block" onClick={() => onSubmit()}>ยืนยัน</button>
                     </form>
                 </div>
             </div>
