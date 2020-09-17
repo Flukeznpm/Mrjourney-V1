@@ -46,26 +46,30 @@ function JoinRoom(props) {
                 <div className="Nav-header">
                     <NavWebPage></NavWebPage>
                 </div>
+
                 <div className="content-page">
-                    <div>
-                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                    </div>
-                    <div className="Details-JoinedRoom">
-                        <div className="container">
-                            <div className="col-12">
-                                <div className="row text-black">
-                                    {roomDetail.map((roomDetail) => {
-                                        return (
-                                            <>
+                    {roomDetail.map((roomDetail) => {
+                        return (
+                            <>
+                                <div className="Details-JoinedRoom">
+                                    <div className="container">
+                                        <div>
+                                            <img class="d-block w-100" src={roomDetail.roomCover} alt="First slide" />
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="row text-black">
+                                                {/* // <> */}
                                                 <RoomDetails roomDetail={roomDetail} members={members.length}></RoomDetails>
                                                 <ShowMembers />
-                                            </>
-                                        )
-                                    })}
+                                                {/* </> */}
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                            </>
+                        )
+                    })}
                 </div>
             </div>
             <div className="buttom-page">
@@ -73,7 +77,7 @@ function JoinRoom(props) {
             </div>
         </div>
     )
-} 
+}
 
 export default JoinRoom;
 

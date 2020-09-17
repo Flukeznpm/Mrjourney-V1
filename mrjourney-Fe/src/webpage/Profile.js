@@ -152,7 +152,6 @@ function Profile(props) {
             lName: value.lName,
             gender: value.gender,
             birthday: value.birthday,
-            // tel: value.tel
         }
         await axios.put('http://localhost:5000/accountProfile/editAccountDetail', dataUpdateProfile)
             .then(async (res) => {
@@ -197,7 +196,6 @@ function Profile(props) {
                                                                 <div className="detail">นามสกุล {acc.lName}</div>
                                                                 <div className="detail">เพศ {acc.gender}</div>
                                                                 <div className="detail">อายุ {calculateDate(acc.birthday)} ปี</div>
-                                                                {/* <div className="detail">{acc.tel}</div> */}
                                                             </div>
                                                             :
                                                             <div className="pt-4">
@@ -224,9 +222,6 @@ function Profile(props) {
                                                                         <DatePicker size="small" style={{ width: "100%" }}
                                                                             format={dateFormat} />
                                                                     </AntFormItem>
-                                                                    {/* <AntFormItem name="tel">
-                                                                        <InputComponent size="small" placeholder="กรอกเบอร์โทรศัพท์ของคุณ" />
-                                                                    </AntFormItem> */}
                                                                     <AntForm.Item>
                                                                         <div className="col-12">
                                                                             <div className="row">
