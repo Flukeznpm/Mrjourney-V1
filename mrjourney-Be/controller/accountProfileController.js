@@ -5,7 +5,7 @@ const db = firebase.firestore();
 
 //---------------- Controller ----------------//
 // GET : /accountProfile  (แสดง profile ทั้งหมด ของ user)
-// POST : /accountProfile/createAccountDetail  (set profile)
+// POST : /accountProfile/createAccountDetail  (First time login to create profile)
 // PUT : /accountProfile/editAccountDetail (Edit profile)
 // PUT : /accountProfile/editBio (Edit bio)
 // DELETE : /accountProfile/deleteAccount  (Delete Account)
@@ -34,8 +34,7 @@ router.post('/createAccountDetail', async function (req, res, next) {
         datas.fName == undefined || datas.fName == null || datas.fName == '' ||
         datas.lName == undefined || datas.lName == null || datas.lName == '' ||
         datas.gender == undefined || datas.gender == null || datas.gender == '' ||
-        datas.birthday == undefined || datas.birthday == null || datas.birthday == '' ||
-        datas.tel == undefined || datas.tel == null || datas.tel == '') {
+        datas.birthday == undefined || datas.birthday == null || datas.birthday == '') {
         res.status(400).json({
             message: "The Data was empty or undefined"
         })
@@ -58,8 +57,7 @@ router.put('/editAccountDetail', async function (req, res, next) {
         datas.fName == undefined || datas.fName == null || datas.fName == '' ||
         datas.lName == undefined || datas.lName == null || datas.lName == '' ||
         datas.gender == undefined || datas.gender == null || datas.gender == '' ||
-        datas.birthday == undefined || datas.birthday == null || datas.birthday == '' ||
-        datas.tel == undefined || datas.tel == null || datas.tel == '') {
+        datas.birthday == undefined || datas.birthday == null || datas.birthday == '') {
         res.status(400).json({
             message: "The Data was empty or undefined"
         })
@@ -159,7 +157,6 @@ async function createAccountDetail(datas) {
         lName: datas.lName,
         gender: datas.gender,
         birthday: datas.birthday,
-        tel: datas.tel,
         bio: datas.bio
     });
 };
@@ -171,10 +168,8 @@ async function updateAccountDetail(datas) {
         pictureURL: datas.pictureURL,
         fName: datas.fName,
         lName: datas.lName,
-        //bio: datas.bio,
         gender: datas.gender,
         birthday: datas.birthday,
-        tel: datas.tel,
         //rating: datas.rating
     });
 };

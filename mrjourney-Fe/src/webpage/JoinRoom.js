@@ -62,7 +62,6 @@ function JoinRoom(props) {
                                             </>
                                         )
                                     })}
-
                                 </div>
                             </div>
                         </div>
@@ -74,7 +73,8 @@ function JoinRoom(props) {
             </div>
         </div>
     )
-}
+} 
+
 export default JoinRoom;
 
 
