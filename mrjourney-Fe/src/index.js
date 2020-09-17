@@ -33,7 +33,6 @@ body {
         }
     }
 }
-   
     textarea.ant-input {
         font-size: 16px;
         border-radius: 4px;

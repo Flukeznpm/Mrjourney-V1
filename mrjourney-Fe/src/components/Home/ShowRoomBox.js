@@ -15,7 +15,9 @@ import { SearchOutlined } from '@ant-design/icons';
 import {
     Button as AntButton,
     Card, Col, Row,
-    Tooltip
+    Tooltip,
+    Input as AntInput,
+    Select as AntSelect
 } from 'antd';
 
 const { Paragraph } = Typography;
@@ -45,14 +47,29 @@ const SeeButton = styled(AntButton)`
         border: 1px solid ${props => (props.theme.color.primary)};
         color: ${props => (props.theme.color.primary)};
     }
-`
+`;
+
+const { Search } = AntInput;
+const SearchComponent = styled(Search)`
+    height: 40px;
+    border-radius: 4px;
+    &:hover , &:active {
+            border-color: rgb(230, 111, 15);
+    }
+    .ant-input {
+        font-size: 16px;
+    }
+`;
 
 function ShowRoomBox() {
-    const { addModalShow, showRoomModalClose, showRoomModalShow } = useContext(HookContext)
+    const { addModalShow, showRoomModalClose, showRoomModalShow, thaiprovince } = useContext(HookContext)
     const [data, setData] = useState([]);
     const [room, setShowRoom] = useState([{}])
     const [sortType, setSortType] = useState('recent');
     const [roomModal, setRoomModal] = useState({})
+    const [filterRoomID, setFilterRoomID] = useState(null)
+    const [filterRoomProvince, setFilterRoomProvince] = useState(null)
+    const { Option } = AntSelect;
     useEffect(() => {
         axios.get('http://localhost:5000/room')
             .then(async res => {
@@ -138,128 +155,159 @@ function ShowRoomBox() {
         })
     }
 
+    const onFilterRoomID = (roomID) => {
+        if (!filterRoomID) {
+            return roomID
+        } else {
+            return filterRoomID
+        }
+
+    }
+
+    const onFilterRoomProvince = (roomProvince) => {
+        if (!filterRoomProvince) {
+            return roomProvince
+        } else {
+            return filterRoomProvince
+        }
+
+    }
+
     return (
         <div className="container py-3">
 
             <Row justify="center" gutter={18}>
-                <Col lg={{ span: 6 }}>
+                <Col lg={6} sm={24}>
                     <Row justify="center">
-                        <select onChange={e => setSortType(e.target.value)}>
-                            <option value="recent">ล่าสุด</option>
-                            <option value="maxMembers">จำนวนที่เปิดรับ</option>
-                            <option value="province">ชือจังหวัด</option>
-                        </select>
+                        <SearchComponent
+                            placeholder="input search text"
+                            onSearch={value => setFilterRoomID(value)}
+                        />
                     </Row>
                 </Col>
-                <Col lg={{ span: 6 }} >
+                <Col lg={6} sm={24} >
                     <Row justify="center">
-                        <select onChange={e => setSortType(e.target.value)}>
-                            <option value="recent">ล่าสุด</option>
-                            <option value="maxMembers">จำนวนที่เปิดรับ</option>
-                            <option value="province">ชือจังหวัด</option>
-                        </select>
+                        <AntSelect
+                            placeholder="เลือกจังหวัดที่ต้องการ"
+                            style={{ width: "100%" }}
+                            onChange={e => setFilterRoomProvince(e)}
+                        >   
+                            <Option value="">แสดงทุกจังหวัด</Option>
+                            {thaiprovince.map((ThaiProvinceShow) => {
+                                return (
+                                    <Option value={ThaiProvinceShow}>{ThaiProvinceShow}</Option>
+                                )
+                            })}
+                        </AntSelect>
                     </Row>
                 </Col>
-                <Col lg={{ span: 6 }} >
+                <Col lg={6} sm={24} >
                     <Row justify="center">
-                        <select onChange={e => setSortType(e.target.value)}>
-                            <option value="recent">ล่าสุด</option>
-                            <option value="maxMembers">จำนวนที่เปิดรับ</option>
-                            <option value="province">ชือจังหวัด</option>
-                        </select>
+                        <AntSelect
+                            defaultValue="recent"
+                            onChange={e => setSortType(e)}
+                            style={{ width: "100%" }}
+                        >
+                            <Option value="recent">ล่าสุด</Option>
+                            <Option value="maxMembers">จำนวนที่เปิดรับ</Option>
+                            <Option value="province">ชือจังหวัด</Option>
+                        </AntSelect>
                     </Row>
                 </Col>
             </Row>
 
             <div className="row">
-                {room.map((room, key) => {
-                    return (
-                        <div className="col-md-4 col-sm-12 d-flex justify-content-center py-2">
-                            <div class="card" style={{ width: "18rem" }}>
-                                <img class="card-img-top" src={BgSlide1} alt="Card image cap" />
-                                <div class="card-body">
-                                    <div class="card-text text-right p-0">
-                                        <AntParagraph copyable>{room.roomID}</AntParagraph>
-                                    </div>
-                                    <h4 class="card-title">
-                                        {room.roomName} &nbsp;
+                {room
+                    .filter(room => room.roomID === onFilterRoomID(room.roomID))
+                    .filter(room => room.province === onFilterRoomProvince(room.province))
+                    .map((room, key) => {
+                        return (
+                            <div className="col-md-4 col-sm-12 d-flex justify-content-center py-2">
+                                <div class="card" style={{ width: "18rem" }}>
+                                    <img class="card-img-top" src={BgSlide1} alt="Card image cap" />
+                                    <div class="card-body">
+                                        <div class="card-text text-right p-0">
+                                            <AntParagraph copyable>{room.roomID}</AntParagraph>
+                                        </div>
+                                        <h4 class="card-title">
+                                            {room.roomName} &nbsp;
                                     </h4>
-                                    <div class="card-text">
-                                        จ. {room.province}
-                                    </div>
-                                    <div className="col-12 p-0">
-                                        <div class="card-text row">
-                                            <div className="col-9"><Progress percent={30} showInfo={false} /></div>
-                                            <div className="col-3" style={{ fontSize: "12px", paddingTop: "4px" }}>
-                                                0/{room.maxMember}
+                                        <div class="card-text">
+                                            จ. {room.province}
+                                        </div>
+                                        <div className="col-12 p-0">
+                                            <div class="card-text row">
+                                                <div className="col-9"><Progress percent={30} showInfo={false} /></div>
+                                                <div className="col-3" style={{ fontSize: "12px", paddingTop: "4px" }}>
+                                                    0/{room.maxMember}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="card-text py-2">
-                                        <button
-                                            type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
-                                            {momentjs(room.startDate).format('ll')}
-                                            <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                        </button>
+                                        <div class="card-text py-2">
+                                            <button
+                                                type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                                                {momentjs(room.startDate).format('ll')}
+                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                            </button>
                                                     &nbsp;-&nbsp;
                                                 <button
-                                            type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
-                                            {momentjs(room.endDate).format('ll')}
-                                            <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                        </button>
-                                    </div>
-                                    <div className="card-text py-2">
-                                        {room.genderCondition === 'ชาย' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                                type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                                                {momentjs(room.endDate).format('ll')}
+                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                            </button>
+                                        </div>
+                                        <div className="card-text py-2">
+                                            {room.genderCondition === 'ชาย' ?
+                                                <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                                </span>
+                                                :
+                                                ""}
+                                            {room.genderCondition === 'หญิง' ?
+                                                <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                                </span>
+                                                :
+                                                ""}
+                                            {room.genderCondition === 'ไม่จำกัดเพศ' ?
+                                                <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                                </span>
+                                                :
+                                                ""}
+                                            <span className="mt-0 ml-2" style={{ fontSize: "12px" }}>
+                                                อายุ &nbsp;{room.ageCondition}
                                             </span>
-                                            :
-                                            ""}
-                                        {room.genderCondition === 'หญิง' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                            </span>
-                                            :
-                                            ""}
-                                        {room.genderCondition === 'ไม่จำกัดเพศ' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                            </span>
-                                            :
-                                            ""}
-                                        <span className="mt-0 ml-2" style={{ fontSize: "12px" }}>
-                                            อายุ &nbsp;{room.ageCondition}
-                                        </span>
-                                    </div>
-                                    <div className="owner-trip-profile py-2">
-                                        <span className="pl-1 pr-2"><img src={room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
-                                        <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoomName}</span>
-                                    </div>
-                                    <div class="col-12 p-0">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <PrimaryButton type="primary" onClick={AlertJoinWrongCondition} block>เข้าร่วม</PrimaryButton>
-                                            </div>
-                                            <div class="col-3 text-center">
-                                                <Tooltip title="ดูข้อมูลเพิ่มเติม">
-                                                    <SeeButton
-                                                        shape="circle"
-                                                        onClick={() => {
-                                                            setRoomModal(room)
-                                                            showRoomModalShow()
-                                                        }}
-                                                        icon={<SearchOutlined />}
-                                                    />
-                                                </Tooltip>
+                                        </div>
+                                        <div className="owner-trip-profile py-2">
+                                            <span className="pl-1 pr-2"><img src={room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
+                                            <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoomName}</span>
+                                        </div>
+                                        <div class="col-12 p-0">
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <PrimaryButton type="primary" onClick={AlertJoinWrongCondition} block>เข้าร่วม</PrimaryButton>
+                                                </div>
+                                                <div class="col-3 text-center">
+                                                    <Tooltip title="ดูข้อมูลเพิ่มเติม">
+                                                        <SeeButton
+                                                            shape="circle"
+                                                            onClick={() => {
+                                                                setRoomModal(room)
+                                                                showRoomModalShow()
+                                                            }}
+                                                            icon={<SearchOutlined />}
+                                                        />
+                                                    </Tooltip>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )
-                })}
+                        )
+                    })}
                 <MoreRoomDetailModal
                     show={addModalShow}
                     onHide={() => showRoomModalClose()} //use for closeButton
