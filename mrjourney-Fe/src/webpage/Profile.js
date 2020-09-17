@@ -10,6 +10,7 @@ import { HookContext } from '../store/HookProvider';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+import momentjs from 'moment'
 import ProfileMoreDetails from '../components/Profile/ProfileMoreDetails';
 import {
     Card,
@@ -75,7 +76,7 @@ function Profile(props) {
     const [acc, setShowAcc] = useState([{}])
     const [gender, selectGender] = useState(["ชาย", "หญิง"])
     const [isEditProfile, setEditProfile] = useState(false)
-    const [isEditBio, setIsEditBio] = useState(true);
+    const [isEditBio, setEditBio] = useState(false);
     const { Option } = AntSelect;
     const dateFormat = 'DD-MM-YYYY';
 
@@ -104,10 +105,24 @@ function Profile(props) {
             .then(async (res) => {
                 console.log(res)
             })
+        setEditBio(false)
     }
 
     const onChange = () => {
         setEditProfile(!isEditProfile)
+    }
+
+    const calculateDate = (dob) => {
+        var today = new Date();
+        var birthDate = new Date(dob);  // create a date object directly from `dob1` argument
+        var age_now = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
+        {
+            age_now--;
+        }
+        console.log(age_now);
+        return age_now;
     }
 
     const onFinish = async (value) => {
@@ -161,8 +176,8 @@ function Profile(props) {
                                                                 <div className="detail">ชื่อ {acc.fName}</div>
                                                                 <div className="detail">นามสกุล {acc.lName}</div>
                                                                 <div className="detail">เพศ {acc.gender}</div>
-                                                                <div className="detail">อายุ {acc.birthday}</div>
-                                                                <div className="detail">{acc.tel}</div>
+                                                                <div className="detail">อายุ {calculateDate(acc.birthday)} ปี</div>
+                                                                {/* <div className="detail">{acc.tel}</div> */}
                                                             </div>
                                                             :
                                                             <div>
@@ -229,6 +244,7 @@ function Profile(props) {
                                                             editable={{
                                                                 onChange: (handleBio),
                                                                 maxLength: 60,
+                                                                onStart: () => setEditBio(true)
                                                             }}
                                                         >
                                                             {acc.bio}
