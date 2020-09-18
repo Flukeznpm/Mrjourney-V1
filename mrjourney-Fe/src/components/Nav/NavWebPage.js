@@ -17,21 +17,7 @@ function NavWebPage(props) {
     const [showSearch, setSearch] = useState(false);
     const [displayName, setLineName] = useState("")
     const [pictureURL, setLinePicture] = useState("")
-    const [email, setLineEmail] = useState("")
-
-    useEffect(() => {
-        let loadJWT = cookie.load('jwt');
-        if (loadJWT === undefined) {
-            setLineName("")
-            setLinePicture("")
-            setLineEmail("")
-        } else {
-            var user = jwt.verify(loadJWT, 'secreatKey');
-            setLineName(user.displayName)
-            setLinePicture(user.pictureURL)
-            setLineEmail(user.email)
-        }
-    }, [login])
+    const [lineID, setLineID] = useState("")
 
     useEffect(() => {
         let search = window.location.search;
@@ -40,6 +26,7 @@ function NavWebPage(props) {
         let data = {
             code: code
         }
+
         if (code != null) {
             axios.post('http://localhost:5000/getToken', data).then((res) => {
                 if (res.status === 202) {
@@ -56,15 +43,65 @@ function NavWebPage(props) {
                     var decoded = jwt.verify(res.data, 'secreatKey');
                     // console.log('decode', decoded);
                     setLogin(true)
+
                 }
             }).catch((e) => {
                 console.log(e)
             })
         }
-    }, [])
+
+        let loadJWT = cookie.load('jwt');
+        if (loadJWT === undefined) {
+            setLineName("")
+            setLinePicture("")
+            setLineID("")
+        } else {
+            var user = jwt.verify(loadJWT, 'secreatKey');
+            setLineName(user.displayName)
+            setLinePicture(user.pictureURL)
+            setLineID(user.lineID)
+
+            let dataSyncLine = {
+                lineID: user.lineID,
+                displayName: user.displayName,
+                pictureURL: user.pictureURL
+            }
+            // console.log('dataSyncLine: ', dataSyncLine)
+            axios.post('http://localhost:5000/update/syncLine', dataSyncLine)
+                .then((res) => {
+                    console.log(res)
+                });
+        }
+
+    }, [login])
+
+    // useEffect(() => {
+    //     let loadJWT = cookie.load('jwt');
+    //     if (loadJWT === undefined) {
+    //         setLineName("")
+    //         setLinePicture("")
+    //         setLineID("")
+    //     } else {
+    //         var user = jwt.verify(loadJWT, 'secreatKey');
+    //         setLineName(user.displayName)
+    //         setLinePicture(user.pictureURL)
+    //         setLineID(user.lineID)
+
+    //         let dataSyncLine = {
+    //             lineID: lineID,
+    //             displayName: displayName,
+    //             pictureURL: pictureURL
+    //         }
+    //         console.log('dataSyncLine: ', lineID)
+    //         console.log('dataSyncLine: ', dataSyncLine)
+    //         axios.post('http://localhost:5000/update/syncLine', dataSyncLine)
+    //             .then((res) => {
+    //                 console.log(res)
+    //             });
+    //     }
+    // }, [login])
 
     const AlertRoom = () => {
-
         Swal.fire({
             title: 'อยากสร้างห้องงั้นหรอ?',
             text: 'Login ก่อนสิ!',
@@ -75,7 +112,6 @@ function NavWebPage(props) {
     }
 
     const AlertTrip = () => {
-
         Swal.fire({
             title: 'อยากสร้างทริปงั้นหรอ?',
             text: 'Login ก่อนสิ!',
