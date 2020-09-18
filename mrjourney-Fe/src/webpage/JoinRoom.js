@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
+import styled from "styled-components";
 import '../static/css/App.css';
 import ShowMembers from '../components/JoinedRoom/ShowMembers';
 import RoomDetails from '../components/JoinedRoom/RoomDetails';
@@ -8,6 +9,13 @@ import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+
+const ImgCover = styled.img`
+    height: 325px;
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+`
 
 function JoinRoom(props) {
     const [lineID, setLineID] = useState("")
@@ -54,7 +62,7 @@ function JoinRoom(props) {
                                 <div className="Details-JoinedRoom">
                                     <div className="container">
                                         <div>
-                                            <img class="d-block w-100" src={roomDetail.roomCover} alt="First slide" />
+                                            <ImgCover class="d-block w-100" src={roomDetail.roomCover} alt="First slide" />
                                         </div>
                                         <div className="col-12">
                                             <div className="row text-black">

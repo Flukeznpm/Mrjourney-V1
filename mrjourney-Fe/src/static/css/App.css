@@ -19,6 +19,11 @@
     border-color: #d6d6d6;
 }
 
+.test-color-n {
+    border-color: #e66f0f;
+}
+
+
 body {
     font-family: 'Kanit', sans-serif;
 }

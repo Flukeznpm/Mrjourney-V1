@@ -29,7 +29,7 @@ import {
 
 const AntCard = styled(Card)`
   border-radius: 8px;
-  box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12);
+  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
   margin: 10px 0px 10px 0px;
   padding: 15px 0px 15px 0px;
 `;

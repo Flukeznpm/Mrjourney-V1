@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from "styled-components";
 import { Modal, Button } from 'react-bootstrap';
 import '../../static/css/App.css'
 import "../../static/css/Event-Trip.css";
@@ -6,19 +7,27 @@ import BgSlide1 from '../../static/img/pr-01.png';
 import momentjs from 'moment'
 import Logo from '../../static/img/logojourney.png';
 
+const ImgCover = styled.img`
+    height: 155px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    /* border-top-right-radius: 20px;
+    border-top-left-radius: 20px; */
+`;
+
 function MoreRoomDetailModal(props) {
 
     return (
         <div>
             <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
-                <Modal.Header closeButton>
+                <Modal.Header closeButton style={{border:"none"}}>
                     <Modal.Title id="contained-modal-title-vcenter">
-
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="container">
-                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
+                        <ImgCover class="d-block w-100" src={props.room.roomCover} alt="First slide" />
                         <div className="pt-3" style={{ fontSize: "20px", fontWeight: 'bold' }}>
                             {props.room.roomName} &nbsp;
                                 <button
@@ -96,7 +105,7 @@ function MoreRoomDetailModal(props) {
                         </div>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer style={{border:"none"}}>
                     <Button style={{ color: "white", backgroundColor: "orange", borderColor: "orange" }}
                         onClick={props.onHide}>Join</Button>
                 </Modal.Footer>

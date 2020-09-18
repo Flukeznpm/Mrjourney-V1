@@ -61,6 +61,14 @@ const SearchComponent = styled(Search)`
     }
 `;
 
+const ImgCover = styled.img`
+    height: 155px;
+    width: 100%;
+    object-fit: cover;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+`;
+
 function ShowRoomBox() {
     const { addModalShow, showRoomModalClose, showRoomModalShow, thaiprovince } = useContext(HookContext)
     const [data, setData] = useState([]);
@@ -191,7 +199,7 @@ function ShowRoomBox() {
                             placeholder="เลือกจังหวัดที่ต้องการ"
                             style={{ width: "100%" }}
                             onChange={e => setFilterRoomProvince(e)}
-                        >   
+                        >
                             <Option value="">แสดงทุกจังหวัด</Option>
                             {thaiprovince.map((ThaiProvinceShow) => {
                                 return (
@@ -222,9 +230,9 @@ function ShowRoomBox() {
                     .filter(room => room.province === onFilterRoomProvince(room.province))
                     .map((room, key) => {
                         return (
-                            <div className="col-md-4 col-sm-12 d-flex justify-content-center py-2">
+                            <div className="col-md-4 col-sm-12 d-flex justify-content-center py-3">
                                 <div class="card" style={{ width: "18rem" }}>
-                                    <img class="card-img-top" src={BgSlide1} alt="Card image cap" />
+                                    <ImgCover src={room.roomCover} alt="Card image cap" />
                                     <div class="card-body">
                                         <div class="card-text text-right p-0">
                                             <AntParagraph copyable>{room.roomID}</AntParagraph>

@@ -44,6 +44,13 @@ const OutlineButton = styled(AntButton)`
     }
 `;
 
+const ImgCover = styled.img`
+    height: 300px;
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+`
+
 function CreateRoomStep3(props) {
     const { Room, prevStep } = useContext(HookContext)
 
@@ -110,7 +117,7 @@ function CreateRoomStep3(props) {
                     <div className="col-md-3"></div>
                         <div className="col-md-6">
                             <div>
-                                <img class="d-block w-100" src={Room.roomCover} alt="First slide" />
+                                <ImgCover class="d-block w-100" src={Room.roomCover} alt="First slide" />
                             </div>
                             <div className="container">
                                 <div className="Room-Details py-3">
