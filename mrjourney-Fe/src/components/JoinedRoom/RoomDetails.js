@@ -9,15 +9,19 @@ import { useForm } from "react-hook-form";
 import { HookContext } from '../../store/HookProvider';
 
 function RoomDetails(props) {
-    const { thaiprovince, handleRoomForm, Room, plusMember, minusMember } = useContext(HookContext)
-    const [lineID, setLineID] = useState("")
-    const [displayName, setDisplayName] = useState("")
-    const [pictureURL, setPictureURL] = useState("")
-    const [gender, selectGender] = useState(["ชาย", "หญิง", "ไม่จำกัดเพศ"])
-    const [age, selectAge] = useState(["18 ปีขึ้นไป", "20 ปีขึ้นไป", "ไม่จำกัดช่วงอายุ"])
-    const [roomStatus, setStatus] = useState(true)
-    const [isEditRoom, setEditRoom] = useState(false)
+    const { thaiprovince, handleRoomForm, Room, plusMember, minusMember } = useContext(HookContext);
+    const [lineID, setLineID] = useState("");
+    const [displayName, setDisplayName] = useState("");
+    const [pictureURL, setPictureURL] = useState("");
+    const [gender, selectGender] = useState(["ชาย", "หญิง", "ไม่จำกัดเพศ"]);
+    const [age, selectAge] = useState(["18 ปีขึ้นไป", "20 ปีขึ้นไป", "ไม่จำกัดช่วงอายุ"]);
+    const [roomStatus, setStatus] = useState(true);
+    const [isEditRoom, setEditRoom] = useState(false);
     const { register, handleSubmit, watch, errors } = useForm();
+    const [fileRoomCover, setFileRoomCover] = useState('รูปหน้าปกห้อง');
+    const [fileQrCode, setFileQrCode] = useState('คิวอาร์โค้ดกลุ่มไลน์');
+    const [roomCoverImg, setRoomCoverImg] = useState(null);
+    const [roomQrCodeImg, setRoomQrCodeImg] = useState(null);
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -32,33 +36,33 @@ function RoomDetails(props) {
     }, [])
 
     const onSubmit = async () => {
-        if(!Room.roomName) {
+        if (!Room.roomName) {
             Room.roomName = props.roomDetail.roomName
         }
-        if(!Room.province) {
+        if (!Room.province) {
             Room.province = props.roomDetail.province
         }
-        if(!Room.roomName) {
+        if (!Room.roomName) {
             Room.roomName = props.roomDetail.startDate
         }
-        if(!Room.startDate) {
+        if (!Room.startDate) {
             Room.endDate = props.roomDetail.endDate
         }
-        if(!Room.maxMember || Room.maxMember === 0) {
+        if (!Room.maxMember || Room.maxMember === 0) {
             Room.maxMember = props.roomDetail.maxMember
         }
-        if(!Room.ageCondition) {
+        if (!Room.ageCondition) {
             Room.ageCondition = props.roomDetail.ageCondition
         }
-        if(!Room.genderCondition) {
+        if (!Room.genderCondition) {
             Room.genderCondition = props.roomDetail.genderCondition
         }
-        if(!Room.tripDetails) {
+        if (!Room.tripDetails) {
             Room.tripDetails = props.roomDetail.tripDetails
         }
+
         let dataUpdateRoom = {
             roomID: props.roomDetail.roomID,
-            // ownerRoom: ownerRoom,
             lineID: lineID,
             roomName: Room.roomName,
             province: Room.province,
@@ -68,8 +72,11 @@ function RoomDetails(props) {
             genderCondition: Room.genderCondition,
             ageCondition: Room.ageCondition,
             tripDetails: Room.tripDetails,
-            roomStatus: roomStatus
+            roomStatus: roomStatus,
+            roomCover: Room.roomCvoer,
+            qrCode: Room.qrCode
         }
+
         await axios.put('http://localhost:5000/room/editRoom', dataUpdateRoom)
             .then(async (res) => {
                 console.log(res)
@@ -88,7 +95,7 @@ function RoomDetails(props) {
         Room.tripDetails = "";
         setEditRoom(false)
     }
-    
+
     const onEditRoom = (room) => {
         Room.roomName = room.roomName
         Room.province = room.province
@@ -111,6 +118,46 @@ function RoomDetails(props) {
             confirmButtonColor: '#F37945',
             cancelButtonText: 'กลับสู่ห้อง',
         })
+    }
+
+    const onFileCoverChange = async (e) => {
+        const file = e.target.files[0];
+        setFileRoomCover(file.name)
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async () => {
+            let generateNameImage = 'roomCover' + new Date().getTime();
+            let dataBase64 = {
+                image: reader.result,
+                nameImage: generateNameImage
+            }
+            console.log(dataBase64.nameImage)
+            await axios.post('http://localhost:5000/room/uploadRoomCoverImage', dataBase64)
+                .then(res => {
+                    console.log('URL: ', res)
+                    setRoomCoverImg(res.data)
+                })
+        }
+    }
+
+    const onFileQrCodeChange = async (e) => {
+        const file = e.target.files[0];
+        setFileQrCode(file.name)
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async () => {
+            let generateQrCodeName = 'roomQrCode' + new Date().getTime();
+            let dataBase64 = {
+                image: reader.result,
+                nameImage: generateQrCodeName
+            }
+            console.log(dataBase64.nameImage)
+            await axios.post('http://localhost:5000/room/uploadRoomQrCodeImage', dataBase64)
+                .then(res => {
+                    console.log('URL: ', res)
+                    setRoomQrCodeImg(res.data)
+                })
+        }
     }
 
     return (

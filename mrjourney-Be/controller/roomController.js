@@ -71,7 +71,6 @@ router.post('/createRoom', async function (req, res, next) {
 
 router.put('/editRoom', async function (req, res, next) {
     let datas = req.body;
-
     if (datas.roomID == undefined || datas.roomID == null || datas.roomID == '' ||
         datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.roomName == undefined || datas.roomName == null || datas.roomName == '' ||
@@ -83,6 +82,7 @@ router.put('/editRoom', async function (req, res, next) {
         datas.genderCondition == undefined || datas.genderCondition == null || datas.genderCondition == '' ||
         datas.ageCondition == undefined || datas.ageCondition == null || datas.ageCondition == '' ||
         //datas.qrCode == undefined || datas.qrCode == null || datas.qrCode == '' ||
+        //datas.roomCover == undefined || datas.roomCover == null || datas.roomCover == '' ||
         datas.roomStatus == undefined || datas.roomStatus == null || datas.roomStatus == '') {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
@@ -339,15 +339,15 @@ async function createRoom(datas) {
 };
 
 async function updateRoom(datas) {
-    let editRoomRef = await db.collection('Room').doc(datas.roomID);
-    editRoomRef.update({
+    let editRoomRef = db.collection('Room').doc(datas.roomID);
+    await editRoomRef.update({
         roomName: datas.roomName,
-        // roomCover: datas.roomCover,
+        roomCover: datas.roomCover,
         province: datas.province,
         startDate: datas.startDate,
         endDate: datas.endDate,
         tripDetails: datas.tripDetails,
-        // qrCode: datas.qrCode,
+        qrCode: datas.qrCode,
         maxMember: datas.maxMember,
         genderCondition: datas.genderCondition,
         ageCondition: datas.ageCondition,
