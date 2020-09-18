@@ -9,8 +9,39 @@ router.post('/webhook', (req, res) => {
     if (msg === "อาจารย์โอ๋") {
         replyRom(reply_token, msg)
        
-    }  else if(msg === "กัน"){
-        replyGun(reply_token, msg)
+    }
+    else if(msg === "#สร้างทริป"){
+        replyCreate(reply_token, msg)
+    }
+    else if(msg === "#ดูแผน"){
+        replyPlan(reply_token, msg)
+    }
+    // else if(msg === "#สร้างบิล"){
+    //     replyCreateBill(reply_token, msg)
+    // }
+    // else if(msg === "#ดูบิล"){
+    //     replyCreate(reply_token, msg)
+    // }
+    else if(msg === "#ช่วย"){
+        replyHelp(reply_token, msg)
+    }
+    else if(msg === "#แนะนำ"){
+        replyRecommend(reply_token, msg)
+    }
+    else if(msg === "#อากาศ"){
+        replyWeather(reply_token, msg)
+    }
+    else if(msg === "#ติดต่อ"){
+        replyContact(reply_token, msg)
+    }
+    else if(msg === "#บิล"){
+        replyBill(reply_token, msg)
+    }
+    else if(msg === "#สร้างบิล"){
+        replyCreateBill(reply_token, msg)
+    }
+    else if(msg === "#ดูบิล"){
+        replySeeBill(reply_token, msg)
     }
     else {
         reply(reply_token, msg)
@@ -18,7 +49,89 @@ router.post('/webhook', (req, res) => {
     res.sendStatus(200)
 })
 
-function reply(reply_token, msg) {
+
+function replyRom(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: '♥'
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+function replyGun(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: 'สวัสดีจ้า'
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+//each function
+
+function replyCreate(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "text",
+                text: "สร้างทริป"
+            },
+            {
+                 type: "uri",
+                 uri: "https://linecorp.com"
+                        
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyPlan(reply_token, msg) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -93,8 +206,8 @@ function reply(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
-  
-function replyRom(reply_token, msg) {
+
+function replyBill(reply_token, msg) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -104,9 +217,31 @@ function replyRom(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: 'text',
-                text: '♥'
-            }
+                type: "text",
+                text: "อยากให้ผมสอนอะไรครับ ?",
+                quickReply: {
+                  items: [
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/sushi.png",
+                      action: {
+                        type: "message",
+                        label: "สร้างบิล",
+                        text: "สร้างบิล"
+                      }
+                    },
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/tempura.png",
+                      action: {
+                        type: "message",
+                        label: "ดูบิล",
+                        text: "ดูบิล"
+                      }
+                    }
+                  ]
+                }
+              }
         ]
     })
 
@@ -119,7 +254,7 @@ function replyRom(reply_token, msg) {
     });
 }
 
-function replyGun(reply_token, msg) {
+function replyCreateBill(reply_token, msg) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -129,9 +264,31 @@ function replyGun(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: 'text',
-                text: 'สวัสดีจ้า'
-            }
+                type: "text",
+                text: "อยากให้ผมสอนอะไรครับ ?",
+                quickReply: {
+                  items: [
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/sushi.png",
+                      action: {
+                        type: "message",
+                        label: "สร้างบิล",
+                        text: "สร้างบิล"
+                      }
+                    },
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/tempura.png",
+                      action: {
+                        type: "message",
+                        label: "ดูบิล",
+                        text: "ดูบิล"
+                      }
+                    }
+                  ]
+                }
+              }
         ]
     })
 
@@ -143,4 +300,235 @@ function replyGun(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
+
+function replySeeBill(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "text",
+                text: "อยากให้ผมสอนอะไรครับ ?",
+                quickReply: {
+                  items: [
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/sushi.png",
+                      action: {
+                        type: "message",
+                        label: "สร้างบิล",
+                        text: "สร้างบิล"
+                      }
+                    },
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/tempura.png",
+                      action: {
+                        type: "message",
+                        label: "ดูบิล",
+                        text: "ดูบิล"
+                      }
+                    }
+                  ]
+                }
+              }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyHelp(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "text",
+                text: "อยากให้ผมสอนอะไรครับ ?",
+                quickReply: {
+                  items: [
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/sushi.png",
+                      action: {
+                        type: "message",
+                        label: "สร้างทริป",
+                        text: "สร้างทริป"
+                      }
+                    },
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/tempura.png",
+                      action: {
+                        type: "message",
+                        label: "ดูแผน",
+                        text: "ดูแผน"
+                      }
+                    },
+                    {
+                      type: "action",
+                      action: {
+                        type: "บิลเก็บเงิน",
+                        label: "บิลเก็บเงิน"
+                      }
+                    }
+                  ]
+                }
+              }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRecommend(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "text",
+                text: "อยากให้ผมแนะนำอะไรดีค้าบ?",
+                quickReply: {
+                  items: [
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/sushi.png",
+                      action: {
+                        type: "message",
+                        label: "ที่กิน",
+                        text: "ที่กิน"
+                      }
+                    },
+                    {
+                      type: "action",
+                      imageUrl: "https://example.com/tempura.png",
+                      action: {
+                        type: "message",
+                        label: "ที่เที่ยว",
+                        text: "ที่เที่ยว"
+                      }
+                    },
+                    {
+                        type: "action",
+                        imageUrl: "https://example.com/tempura.png",
+                        action: {
+                          type: "message",
+                          label: "ที่พัก",
+                          text: "ที่พัก"
+                        }
+                    }
+                  ]
+                }
+              }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyWeather(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "text",
+                text: "อยากรู้สภาพอากาศแถวไหนครับ ?",
+                quickReply: {
+                  items: [
+                    {
+                      type: "action",
+                      action: {
+                        type: "Location",
+                        label: "Location"
+                      }
+                    }
+                  ]
+                }
+              }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyContact(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "text",
+                text: "ติดต่อเจ้าหน้าที่",
+                quickReply: {
+                  items: [
+                    {
+                      type: "action",
+                      action: {
+                        type: "Location",
+                        label: "Location"
+                      }
+                    }
+                  ]
+                }
+              }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+
 module.exports = router;
