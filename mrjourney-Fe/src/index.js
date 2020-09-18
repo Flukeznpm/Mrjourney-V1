@@ -14,6 +14,11 @@ body {
     padding: 0;
     font-family: 'Kanit', sans-serif;
   }
+  .modal-content {
+    box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+    border: none;
+    border-radius: 13px;
+  }
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
         border-radius: 4px;
         height: 40px;
