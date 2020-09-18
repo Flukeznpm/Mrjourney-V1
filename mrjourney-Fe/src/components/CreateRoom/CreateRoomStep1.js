@@ -183,13 +183,15 @@ function CreateRoomStep1(props) {
                                 <AntForm.Item name="tripDetails" label="รายละเอียดการท่องเที่ยว" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                     <TextArea rows={4} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" />
                                 </AntForm.Item>
-                                <div class="input-group pt-3 pb-2">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                            aria-describedby="inputGroupFileAddon01" onChange={onFileQrCodeChange} />
-                                        <label class="custom-file-label" for="inputGroupFile01">{fileQrCode}</label>
+                                <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
+                                    <div class="input-group pt-3 pb-2">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                                aria-describedby="inputGroupFileAddon01" onChange={onFileQrCodeChange} />
+                                            <label class="custom-file-label" for="inputGroupFile01">{fileQrCode}</label>
+                                        </div>
                                     </div>
-                                </div>
+                                </Tooltip>
                                 <Tooltip title="รูปคิวอาร์โค้ดกลุ่มไลน์">
                                     <div className="text-center pt-2">
                                         <img width="150px" src={roomQrCodeImg} />

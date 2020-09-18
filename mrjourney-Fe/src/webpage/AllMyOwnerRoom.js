@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from "styled-components";
 import NavWebPage from '../components/Nav/NavWebPage';
 import '../static/css/Show-Room.css';
 import "../static/css/Nav.css";
@@ -11,6 +12,14 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { Link } from 'react-router-dom';
 import JoinRoom from './JoinRoom';
+
+const ImgCover = styled.img`
+    height: 155px;
+    width: 100%;
+    object-fit: cover;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+`;
 
 function MyOwnerRoom(props) {
     const [lineID, setLineID] = useState("")
@@ -49,7 +58,7 @@ function MyOwnerRoom(props) {
                                             <>
                                                 <div className="col-md-4 col-sm-12 d-flex justify-content-center py-2">
                                                     <div class="card" style={{ width: "18rem" }}>
-                                                        <img class="card-img-top" src={BgSlide1} alt="Card image cap" />
+                                                        <ImgCover class="card-img-top" src={ownerRoom.roomCover} alt="Card image cap" />
                                                         <div class="card-body">
                                                             <h4 class="card-title">
                                                                 {ownerRoom.roomName} &nbsp;

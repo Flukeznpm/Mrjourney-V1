@@ -7,6 +7,14 @@ import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 import { useForm } from "react-hook-form";
 import { HookContext } from '../../store/HookProvider';
+import {
+    Form as AntForm,
+    Input as AntInput,
+    Button as AntButton,
+    Select as AntSelect,
+    DatePicker,
+    Tooltip,
+} from 'antd';
 
 function RoomDetails(props) {
     const { thaiprovince, handleRoomForm, Room, plusMember, minusMember } = useContext(HookContext);
@@ -114,8 +122,8 @@ function RoomDetails(props) {
             ageCondition: Room.ageCondition,
             tripDetails: Room.tripDetails,
             roomStatus: roomStatus,
-            roomCover: Room.roomCvoer,
-            qrCode: Room.qrCode
+            roomCover: roomCoverImg,
+            qrCode: roomQrCodeImg
         }
 
         await axios.put('http://localhost:5000/room/editRoom', dataUpdateRoom)
@@ -258,6 +266,20 @@ function RoomDetails(props) {
                     <div className="ShowRoom-Edit-Details" style={{ fontSize: "18px" }}>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="ShowRoom-TripName py-1">
+                                <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
+                                    <div class="input-group pt-3">
+                                        <div class="custom-file" >
+                                            <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                                aria-describedby="inputGroupFileAddon01" onChange={onFileCoverChange} />
+                                            <label class="custom-file-label" for="inputGroupFile01">{fileRoomCover}</label>
+                                        </div>
+                                    </div>
+                                </Tooltip>
+                                <Tooltip title="รูปปกห้อง">
+                                    <div className="text-center pt-2">
+                                        <img width="150px" src={roomCoverImg} />
+                                    </div>
+                                </Tooltip>
                                 <div className="form-group row d-flex align-items-center">
                                     <label for="RoomName" class="col-sm-3 col-form-label">ชื่อทริป : </label>
                                     <div class="col-sm-6">
@@ -383,12 +405,20 @@ function RoomDetails(props) {
                                     placeholder={props.roomDetail.tripDetails}
                                 />
                             </div>
-                            <div className="ShowRoom-QrCode py-1">
-                                QrCode
-                                <div className=" text-center">
-                                    <img src={TestQrCode} alt="QrCode" width="150" height="150" />
+                            <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
+                                <div class="input-group pt-3 pb-2">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                            aria-describedby="inputGroupFileAddon01" onChange={onFileQrCodeChange} />
+                                        <label class="custom-file-label" for="inputGroupFile01">{fileQrCode}</label>
+                                    </div>
                                 </div>
-                            </div>
+                            </Tooltip>
+                            <Tooltip title="รูปคิวอาร์โค้ดกลุ่มไลน์">
+                                <div className="text-center pt-2">
+                                    <img width="150px" src={roomQrCodeImg} />
+                                </div>
+                            </Tooltip>
 
                             <div className="container text-center py-3">
                                 <button type="button"
