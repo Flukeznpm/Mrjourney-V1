@@ -35,6 +35,47 @@ function RoomDetails(props) {
         }
     }, [])
 
+
+    const onFileCoverChange = async (e) => {
+        const file = e.target.files[0];
+        setFileRoomCover(file.name)
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async () => {
+            let generateNameImage = 'roomCover' + new Date().getTime();
+            let dataBase64 = {
+                image: reader.result,
+                nameImage: generateNameImage
+            }
+            console.log(dataBase64.nameImage)
+            await axios.post('http://localhost:5000/room/uploadRoomCoverImage', dataBase64)
+                .then(res => {
+                    console.log('URL: ', res)
+                    setRoomCoverImg(res.data)
+                })
+        }
+    }
+
+    const onFileQrCodeChange = async (e) => {
+        const file = e.target.files[0];
+        setFileQrCode(file.name)
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async () => {
+            let generateQrCodeName = 'roomQrCode' + new Date().getTime();
+            let dataBase64 = {
+                image: reader.result,
+                nameImage: generateQrCodeName
+            }
+            console.log(dataBase64.nameImage)
+            await axios.post('http://localhost:5000/room/uploadRoomQrCodeImage', dataBase64)
+                .then(res => {
+                    console.log('URL: ', res)
+                    setRoomQrCodeImg(res.data)
+                })
+        }
+    }
+
     const onSubmit = async () => {
         if (!Room.roomName) {
             Room.roomName = props.roomDetail.roomName
@@ -118,46 +159,6 @@ function RoomDetails(props) {
             confirmButtonColor: '#F37945',
             cancelButtonText: 'กลับสู่ห้อง',
         })
-    }
-
-    const onFileCoverChange = async (e) => {
-        const file = e.target.files[0];
-        setFileRoomCover(file.name)
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = async () => {
-            let generateNameImage = 'roomCover' + new Date().getTime();
-            let dataBase64 = {
-                image: reader.result,
-                nameImage: generateNameImage
-            }
-            console.log(dataBase64.nameImage)
-            await axios.post('http://localhost:5000/room/uploadRoomCoverImage', dataBase64)
-                .then(res => {
-                    console.log('URL: ', res)
-                    setRoomCoverImg(res.data)
-                })
-        }
-    }
-
-    const onFileQrCodeChange = async (e) => {
-        const file = e.target.files[0];
-        setFileQrCode(file.name)
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = async () => {
-            let generateQrCodeName = 'roomQrCode' + new Date().getTime();
-            let dataBase64 = {
-                image: reader.result,
-                nameImage: generateQrCodeName
-            }
-            console.log(dataBase64.nameImage)
-            await axios.post('http://localhost:5000/room/uploadRoomQrCodeImage', dataBase64)
-                .then(res => {
-                    console.log('URL: ', res)
-                    setRoomQrCodeImg(res.data)
-                })
-        }
     }
 
     return (
