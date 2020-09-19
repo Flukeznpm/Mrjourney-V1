@@ -7,8 +7,7 @@ router.post('/webhook', (req, res) => {
     let reply_token = req.body.events[0].replyToken
     let msg = req.body.events[0].message.text
     if (msg === "อาจารย์โอ๋") {
-        replyRom(reply_token, msg)
-
+        replyProfessor(reply_token, msg)
     }
     else if (msg === "#สร้างทริป") {
         replyCreate(reply_token, msg)
@@ -22,12 +21,6 @@ router.post('/webhook', (req, res) => {
     else if (msg === "ดูแผนวันนี้") {
         replyPlanPerDay(reply_token, msg)
     }
-    // else if(msg === "#สร้างบิล"){
-    //     replyCreateBill(reply_token, msg)
-    // }
-    // else if(msg === "#ดูบิล"){
-    //     replySeeBill(reply_token, msg)
-    // }
     else if (msg === "#ช่วย") {
         replyHelp(reply_token, msg)
     }
@@ -55,6 +48,7 @@ router.post('/webhook', (req, res) => {
     else if (msg === "#อากาศ") {
         replyWeather(reply_token, msg)
     }
+    // get locations here
     else if (msg === "#ติดต่อ") {
         replyContact(reply_token, msg)
     }
@@ -74,7 +68,7 @@ router.post('/webhook', (req, res) => {
 })
 
 
-function replyRom(reply_token, msg) {
+function replyProfessor(reply_token, msg) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -98,30 +92,7 @@ function replyRom(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
-function replyGun(reply_token, msg) {
-    let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
-    }
 
-    let body = JSON.stringify({
-        replyToken: reply_token,
-        messages: [
-            {
-                type: 'text',
-                text: 'สวัสดีจ้า'
-            }
-        ]
-    })
-
-    request.post({
-        url: 'https://api.line.me/v2/bot/message/reply',
-        headers: headers,
-        body: body
-    }, (err, res, body) => {
-        console.log('status = ' + res.statusCode);
-    });
-}
 
 //each function
 
@@ -135,14 +106,9 @@ function replyCreate(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "text",
-                text: "สร้างทริป"
+                type: 'text',
+                text: "Line Liff here"
             },
-            {
-                type: "uri",
-                uri: "https://linecorp.com"
-
-            }
         ]
     })
 
@@ -365,8 +331,6 @@ function replySeeBill(reply_token, msg) {
                 quickReply: {
                     items: [
                         {
-                            type: "action",
-                            imageUrl: "https://example.com/sushi.png",
                             action: {
                                 type: "message",
                                 label: "สร้างบิล",
@@ -374,8 +338,6 @@ function replySeeBill(reply_token, msg) {
                             }
                         },
                         {
-                            type: "action",
-                            imageUrl: "https://example.com/tempura.png",
                             action: {
                                 type: "message",
                                 label: "ดูบิล",
@@ -507,41 +469,86 @@ function replySeeBill(reply_token, msg) {
 //     });
 // }
 
+// function replyWeather(reply_token, msg) {
+//     let headers = {
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+//     }
+
+//     let body = JSON.stringify({
+//         replyToken: reply_token,
+//         messages: [
+//             {
+//                 type: "text",
+//                 text: " อยากรู้สภาพอากาศที่ไหนครับ?",
+//                 quickReply: {
+//                     items: [
+//                         {
+//                             type: "action",
+//                             action: {
+//                                 type: "location",
+//                                 label: "Location"
+//                             }
+//                         }
+//                     ]
+//                 }
+//             }
+//         ]
+//     })
+
+//     request.post({
+//         url: 'https://api.line.me/v2/bot/message/reply',
+//         headers: headers,
+//         body: body
+//     }, (err, res, body) => {
+//         console.log('status = ' + res.statusCode);
+//     });
+// }
+
 function replyWeather(reply_token, msg) {
-    let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
-    }
+const functions = require('firebase-functions');
+const request = require('request-promise');
 
-    let body = JSON.stringify({
-        replyToken: reply_token,
-        messages: [
-            {
-                type: "text",
-                text: " อยากรู้สภาพอากาศที่ไหนครับ?",
-                quickReply: {
-                    items: [
-                        {
-                            type: "action",
-                            action: {
-                                type: "location",
-                                label: "Location"
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
+const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
+const LINE_HEADER = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+};
+
+exports.LineBotPush = functions.https.onRequest((req, res) => {
+  return request({
+    method: `GET`,
+    uri: `https://api.openweathermap.org/data/2.5/weather?units=metric&type=accurate&zip=10330,th&appid=f356a3b088a90918fa91d1ace7506841`,
+    json: true
+  }).then((response) => {
+    const message = `City: ${response.name}\nWeather: ${response.weather[0].description}\nTemperature: ${response.main.temp}`;
+    return push(res, message);
+  }).catch((error) => {
+    return res.status(500).send(error);
+  });
+});
+
+const push = (res, msg) => {
+  return request({
+    method: `POST`,
+    uri: `${LINE_MESSAGING_API}/push`,
+    headers: LINE_HEADER,
+    body: JSON.stringify({
+      messages: [
+        {
+          type: `text`,
+          text: msg
+        }
+      ]
     })
-
-    request.post({
-        url: 'https://api.line.me/v2/bot/message/reply',
-        headers: headers,
-        body: body
-    }, (err, res, body) => {
-        console.log('status = ' + res.statusCode);
-    });
+  }).then(() => {
+    return res.status(200).send(`Done`);
+  }).catch((error) => {
+    return Promise.reject(error);
+  });
 }
+}
+
 function replyContact(reply_token, msg) {
     let headers = {
         'Content-Type': 'application/json',
@@ -552,78 +559,43 @@ function replyContact(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "text",
-                text: "ติดต่อเจ้าหน้าที่",
-                quickReply: {
-                    items: [
-                        {
-                            type: "action",
-                            action: {
-                                type: "Location",
-                                label: "Location"
-                            }
-                        }
-                    ]
-                }
-            }
+                  type: "template",
+                  altText: "This is a buttons template",
+                  template: {
+                      type: "buttons",
+                      thumbnailImageUrl: "https://1.bp.blogspot.com/-U90M8DyKu7Q/W9EtONMCf6I/AAAAAAAAW_4/7L_jB_Rg9oweu2HKhULNdu9WNefw9zf9wCLcBGAs/s1600/sao-full.jpg",
+                      imageAspectRatio: "rectangle",
+                      imageSize: "cover",
+                      imageBackgroundColor: "#FFFFFF",
+                      title: "ติดต่อเจ้าหน้าที่",
+                      defaultAction: {
+                          type: "uri",
+                          label: "contact",
+                          uri: "https://www.google.com"
+                      },
+                      actions: [
+                          {
+                            type: "text",
+                            label: "อีเมลล์",
+                            text: "mrjourney@"
+                          },
+                          {
+                            type: "postback",
+                            label: "เพิ่มลงรถเข็น",
+                            data: "action=add&itemid=123"
+                          },
+                          {
+                            type: "uri",
+                            label: "อ่านรายละเอียด",
+                            uri: "https://www.google.com"
+                          }
+                      ]
+                  }
+                
+              }
         ]
     })
 
-    request.post({
-        url: 'https://api.line.me/v2/bot/message/reply',
-        headers: headers,
-        body: body
-    }, (err, res, body) => {
-        console.log('status = ' + res.statusCode);
-    });
-}
-
-function replyHelp(reply_token, msg) {
-    let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
-    }
-
-    let body = JSON.stringify({
-        replyToken: reply_token,
-        messages: [
-            {
-                type: "text",
-                text: " อยากให้ช่วยเรื่องอะไรดีครับ?",
-                quickReply: {
-                    items: [
-                        {
-                            type: "action",
-                            imageUrl: "https://example.com/sushi.png",
-                            action: {
-                                type: "message",
-                                label: "สร้างทริป",
-                                text: "วิธีการสร้างทริป"
-                            }
-                        },
-                        {
-                            type: "action",
-                            imageUrl: "https://example.com/tempura.png",
-                            action: {
-                                type: "message",
-                                label: "ดูแผน",
-                                text: "วิธีการดูแผน"
-                            }
-                        },
-                        {
-                            type: "action",
-                            imageUrl: "https://example.com/tempura.png",
-                            action: {
-                                type: "message",
-                                label: "บิลเก็บเงิน",
-                                text: "วิธีการจัดการบิล"
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    })
     request.post({
         url: 'https://api.line.me/v2/bot/message/reply',
         headers: headers,
@@ -889,6 +861,61 @@ function replyRecommendEat(reply_token, msg) {
     });
 }
 
+function replyHelp(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "text",
+                text: " อยากให้ช่วยเรื่องอะไรดีครับ?",
+                quickReply: {
+                    items: [
+                        {
+                            type: "action",
+                            imageUrl: "https://example.com/sushi.png",
+                            action: {
+                                type: "message",
+                                label: "สร้างทริป",
+                                text: "วิธีการสร้างทริป"
+                            }
+                        },
+                        {
+                            type: "action",
+                            imageUrl: "https://example.com/tempura.png",
+                            action: {
+                                type: "message",
+                                label: "ดูแผน",
+                                text: "วิธีการดูแผน"
+                            }
+                        },
+                        {
+                            type: "action",
+                            imageUrl: "https://example.com/tempura.png",
+                            action: {
+                                type: "message",
+                                label: "บิลเก็บเงิน",
+                                text: "วิธีการจัดการบิล"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
 function replyHelpCreateTrip(reply_token, msg) {
     let headers = {
         'Content-Type': 'application/json',
@@ -907,9 +934,6 @@ function replyHelpCreateTrip(reply_token, msg) {
                         {
                             "type": "image",
                             "url": "https://www.linefriends.com/content/banner/201804/3b5364c97c2d4a26988f85acdc78514e.jpg",
-                            "size": "full",
-                            "aspectRatio": "16:9",
-                            "aspectMode": "cover"
                         }
                     ]
                 }
