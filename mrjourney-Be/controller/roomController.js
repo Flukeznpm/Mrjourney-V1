@@ -57,7 +57,8 @@ router.post('/createRoom', async function (req, res, next) {
         datas.genderCondition == undefined || datas.genderCondition == null || datas.genderCondition == '' ||
         datas.ageCondition == undefined || datas.ageCondition == null || datas.ageCondition == '' ||
         //datas.qrCode == undefined || datas.qrCode == null || datas.qrCode == '' ||
-        datas.roomStatus == undefined || datas.roomStatus == null || datas.roomStatus == '') {
+        datas.roomStatus == undefined || datas.roomStatus == null || datas.roomStatus == '' ||
+        datas.createDate == undefined || datas.createDate == null || datas.createDate == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400).json({
             message: "The Data was empty or undefined"
@@ -152,6 +153,7 @@ router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
 //---------------- Function ----------------//
 async function getAllRoom() {
     let RoomList = [];
+    // let showAllRoomRef = db.collection("Room").orderBy("createDate","asc");
     let showAllRoomRef = db.collection("Room");
     await showAllRoomRef.get().then(snapshot => {
         snapshot.forEach(doc => {
@@ -331,7 +333,8 @@ async function createRoom(datas) {
                 maxMember: datas.maxMember,
                 genderCondition: datas.genderCondition,
                 ageCondition: datas.ageCondition,
-                roomStatus: datas.roomStatus
+                roomStatus: datas.roomStatus,
+                // createDate: datas.createDate
             })
         }
     })
