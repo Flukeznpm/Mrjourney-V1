@@ -335,7 +335,7 @@ async function createRoom(datas) {
                 genderCondition: datas.genderCondition,
                 ageCondition: datas.ageCondition,
                 roomStatus: datas.roomStatus,
-                // createDate: datas.createDate
+                createDate: datas.createDate
             })
         }
     })
