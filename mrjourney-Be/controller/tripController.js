@@ -244,7 +244,7 @@ async function generateTripID() {
 
     do {
         let id = await ran();
-        let CheckTripIDRef = db.collection('Room');
+        let CheckTripIDRef = db.collection('TripList');
         let tripID = 'T_' + id;
         let query = await CheckTripIDRef.doc(tripID).get()
             .then(doc => {
