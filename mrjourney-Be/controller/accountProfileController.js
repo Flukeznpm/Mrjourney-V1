@@ -16,7 +16,7 @@ const db = firebase.firestore();
 
 router.get('/', async function (req, res, next) {
     let datas = req.query;
-    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
+    if (datas.userID == undefined || datas.userID == null || datas.userID == '') {
         res.status(400).json({
             message: "The Data was empty or undefined"
         })
@@ -138,27 +138,27 @@ router.get('/ownerRoom', async function (req, res, next) {
 //---------------- Function ----------------//
 async function getAccountByID(datas) {
     let dataAcc = [];
-    // let showDataAcc = db.collection("AccountProfile").doc(datas.lineID);
-    // await showDataAcc.get().then(doc => {
-    //     dataAcc.push(doc.data());
-    // })
-    //     .catch(err => {
-    //         console.log('Error getting AccountPorfile', err);
-    //     });
-    // return dataAcc;
+    let showDataAcc = db.collection("AccountProfile").doc(datas.userID);
+    await showDataAcc.get().then(doc => {
+        dataAcc.push(doc.data());
+    })
+        .catch(err => {
+            console.log('Error getting AccountPorfile', err);
+        });
+    return dataAcc;
 
-    let showDataAcc = db.collection("AccountProfile").where('userID', '==', datas.userID);
-    if (showDataAcc.empty) {
-        console.log('No matching data')
-        return;
-    } else {
-        await showDataAcc.get().then(doc => {
-            dataAcc.push(doc.data());
-        })
-            .catch(err => {
-                console.log('Error getting AccountPorfile', err);
-            });
-    }
+    // let showDataAcc = db.collection("AccountProfile").where('userID', '==', datas.userID);
+    // if (showDataAcc.empty) {
+    //     console.log('No matching data')
+    //     return;
+    // } else {
+    //     await showDataAcc.get().then(doc => {
+    //         dataAcc.push(doc.data());
+    //     })
+    //         .catch(err => {
+    //             console.log('Error getting AccountPorfile', err);
+    //         });
+    // }
     // return dataAcc;
 };
 
@@ -189,7 +189,7 @@ async function generateUserID() {
 };
 
 async function createAccountDetail(datas) {
-    let genUserID = await generateUserID();
+    // let genUserID = await generateUserID();
     await db.collection('AccountProfile').doc(datas.lineID).set({
         lineID: datas.lineID,
         displayName: datas.displayName,
@@ -199,7 +199,7 @@ async function createAccountDetail(datas) {
         gender: datas.gender,
         birthday: datas.birthday,
         bio: datas.bio,
-        userID: genUserID
+        userID: datas.lineID
     });
 };
 
