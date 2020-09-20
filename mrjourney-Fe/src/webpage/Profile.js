@@ -168,123 +168,123 @@ function Profile(props) {
             <div className="top-page">
                 <NavWebPage />
                 <div className="Profile-page py-4">
-                    <Row justify="center">
-                        <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                            <AntCard style={{ padding: 0 }}>
-                                <Row style={{ height: 150 }}>
-                                    <Col span={12} className="text-center pt-3">
-                                        {acc.map((acc) => {
-                                            return (
-                                                <>
-                                                    <img src={acc.pictureURL}
-                                                        class="image_outer_container"
-                                                        height="125px" width="125px"
-                                                        alt="mrjourney-img" />
-                                                    <div className="line-name" style={{ fontSize: "24px" }}>
-                                                        คุณ <LineNameText>{acc.displayName}</LineNameText>
-                                                    </div>
-                                                </>
-                                            )
-                                        })}
+                    {acc.map((acc) => {
+                        return (
+                            <Row justify="center">
+                                <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                    <AntCard style={{ padding: 0 }}>
+                                        <Row style={{ height: 150 }}>
+                                            <Col span={12} className="text-center pt-3">
 
-                                    </Col>
-                                    <Col span={12}>
-                                        <div className="personal-profile-details" >
-                                            {isEditProfile === false ?
-                                                <EditProfileButton type="link" icon={<EditOutlined />}
-                                                    style={{ marginLeft: "auto", marginRight: "0px" }}
-                                                    onClick={onEditProfile}
-                                                />
-                                                :
-                                                null
-                                            }
-                                            {acc.map((acc) => {
-                                                return (
-                                                    <>
-                                                        {isEditProfile === false ?
-                                                            <div style={{ fontSize: "16px" }}>
-                                                                <div className="detail">ชื่อ {acc.fName}</div>
-                                                                <div className="detail">นามสกุล {acc.lName}</div>
-                                                                <div className="detail">เพศ {acc.gender}</div>
-                                                                <div className="detail">อายุ {calculateDate(acc.birthday)} ปี</div>
-                                                            </div>
-                                                            :
-                                                            <div className="pt-4">
-                                                                <AntForm onFinish={onFinish}>
-                                                                    <AntFormItem name="fName">
-                                                                        <InputComponent size="small" placeholder="กรอกชื่อของคุณ" />
-                                                                    </AntFormItem>
-                                                                    <AntFormItem name="lName">
-                                                                        <InputComponent size="small" placeholder="กรอกนามสกุลของคุณ" />
-                                                                    </AntFormItem>
-                                                                    <AntFormItem name="gender" className="edit-profile">
-                                                                        <AntSelect
-                                                                            placeholder="เพศของคุณ"
-                                                                            size="small"
-                                                                        >
-                                                                            {gender.map((ShowGender) => {
-                                                                                return (
-                                                                                    <Option value={ShowGender}>{ShowGender}</Option>
-                                                                                )
-                                                                            })}
-                                                                        </AntSelect>
-                                                                    </AntFormItem>
-                                                                    <AntFormItem name="birthday">
-                                                                        <DatePicker size="small" style={{ width: "100%" }}
-                                                                            format={dateFormat} />
-                                                                    </AntFormItem>
-                                                                    <AntForm.Item>
-                                                                        <div className="col-12">
-                                                                            <div className="row">
-                                                                                <div className="col-6">
-                                                                                    <OutlineButton size={"small"} block htmlType="submit"
-                                                                                        onClick={() => setEditProfile(false)}>ยกเลิก</OutlineButton>
-                                                                                </div>
-                                                                                <div className="col-6">
-                                                                                    <PrimaryButton type="primary" size={"small"} block htmlType="submit">ยืนยัน</PrimaryButton>
-                                                                                </div>
+                                                <img src={acc.pictureURL}
+                                                    class="image_outer_container"
+                                                    height="125px" width="125px"
+                                                    alt="mrjourney-img" />
+                                                <div className="line-name" style={{ fontSize: "24px" }}>
+                                                    คุณ <LineNameText>{acc.displayName}</LineNameText>
+                                                </div>
+                                            </Col>
+                                            <Col span={12}>
+                                                <div className="personal-profile-details" >
+                                                    {lineID === acc.lineID ?
+                                                        <>
+                                                            {isEditProfile === false ?
+                                                                <EditProfileButton type="link" icon={<EditOutlined />}
+                                                                    style={{ marginLeft: "auto", marginRight: "0px" }}
+                                                                    onClick={onEditProfile}
+                                                                />
+                                                                :
+                                                                null
+                                                            }
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+                                                    {isEditProfile === false ?
+                                                        <div style={{ fontSize: "16px" }}>
+                                                            <div className="detail">ชื่อ {acc.fName}</div>
+                                                            <div className="detail">นามสกุล {acc.lName}</div>
+                                                            <div className="detail">เพศ {acc.gender}</div>
+                                                            <div className="detail">อายุ {calculateDate(acc.birthday)} ปี</div>
+                                                        </div>
+                                                        :
+                                                        <div className="pt-4">
+                                                            <AntForm onFinish={onFinish}>
+                                                                <AntFormItem name="fName">
+                                                                    <InputComponent size="small" placeholder="กรอกชื่อของคุณ" />
+                                                                </AntFormItem>
+                                                                <AntFormItem name="lName">
+                                                                    <InputComponent size="small" placeholder="กรอกนามสกุลของคุณ" />
+                                                                </AntFormItem>
+                                                                <AntFormItem name="gender" className="edit-profile">
+                                                                    <AntSelect
+                                                                        placeholder="เพศของคุณ"
+                                                                        size="small"
+                                                                    >
+                                                                        {gender.map((ShowGender) => {
+                                                                            return (
+                                                                                <Option value={ShowGender}>{ShowGender}</Option>
+                                                                            )
+                                                                        })}
+                                                                    </AntSelect>
+                                                                </AntFormItem>
+                                                                <AntFormItem name="birthday">
+                                                                    <DatePicker size="small" style={{ width: "100%" }}
+                                                                        format={dateFormat} />
+                                                                </AntFormItem>
+                                                                <AntForm.Item>
+                                                                    <div className="col-12">
+                                                                        <div className="row">
+                                                                            <div className="col-6">
+                                                                                <OutlineButton size={"small"} block htmlType="submit"
+                                                                                    onClick={() => setEditProfile(false)}>ยกเลิก</OutlineButton>
+                                                                            </div>
+                                                                            <div className="col-6">
+                                                                                <PrimaryButton type="primary" size={"small"} block htmlType="submit">ยืนยัน</PrimaryButton>
                                                                             </div>
                                                                         </div>
-                                                                    </AntForm.Item>
-                                                                </AntForm>
-                                                            </div>
-                                                        }
-                                                    </>
-                                                )
-                                            }
-                                            )}
+                                                                    </div>
+                                                                </AntForm.Item>
+                                                            </AntForm>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        <div className="Bio-page pt-4 mt-1 container">
+                                            <Row>
+                                                <Col span={24}>
+                                                    {lineID === acc.lineID ?
+                                                        <>
+                                                            <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
+                                                                Bio
+                                                    </Tooltip>
+                                                            <AntParagraph
+                                                                editable={{
+                                                                    onChange: (handleBio),
+                                                                    maxLength: 60,
+                                                                    onStart: () => setEditBio(true)
+                                                                }}
+                                                            >
+                                                                {acc.bio}
+                                                            </AntParagraph>
 
-                                        </div>
-                                    </Col>
-                                </Row>
-                                <div className="Bio-page pt-4 mt-1 container">
-                                    <Row>
-                                        <Col span={24}>
-                                            <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
-                                                Bio
-                                            </Tooltip>
-                                            {acc.map((acc) => {
-                                                return (
-                                                    <>
+                                                        </>
+                                                        :
                                                         <AntParagraph
-                                                            editable={{
-                                                                onChange: (handleBio),
-                                                                maxLength: 60,
-                                                                onStart: () => setEditBio(true)
-                                                            }}
+                                                            copyable
                                                         >
                                                             {acc.bio}
                                                         </AntParagraph>
-                                                    </>
-                                                )
-                                            }
-                                            )}
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </AntCard>
-                        </Col>
-                    </Row>
+                                                    }
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                    </AntCard>
+                                </Col>
+                            </Row>
+                        )
+                    })}
                     <Row justify="center">
                         <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
                             <AntCard>

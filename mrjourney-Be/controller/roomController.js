@@ -152,7 +152,7 @@ router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
 //---------------- Function ----------------//
 async function getAllRoom() {
     let RoomList = [];
-    let showAllRoomRef = db.collection("Room").orderBy("createDate","asc");
+    let showAllRoomRef = db.collection("Room").orderBy("createDate","desc");
     // let showAllRoomRef = db.collection("Room");
     await showAllRoomRef.get().then(snapshot => {
         snapshot.forEach(doc => {
