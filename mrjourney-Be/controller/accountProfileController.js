@@ -138,14 +138,28 @@ router.get('/ownerRoom', async function (req, res, next) {
 //---------------- Function ----------------//
 async function getAccountByID(datas) {
     let dataAcc = [];
-    let showDataAcc = db.collection("AccountProfile").doc(datas.lineID);
-    await showDataAcc.get().then(doc => {
-        dataAcc.push(doc.data());
-    })
-        .catch(err => {
-            console.log('Error getting AccountPorfile', err);
-        });
-    return dataAcc;
+    // let showDataAcc = db.collection("AccountProfile").doc(datas.lineID);
+    // await showDataAcc.get().then(doc => {
+    //     dataAcc.push(doc.data());
+    // })
+    //     .catch(err => {
+    //         console.log('Error getting AccountPorfile', err);
+    //     });
+    // return dataAcc;
+
+    let showDataAcc = db.collection("AccountProfile").where('userID', '==', datas.userID);
+    if (showDataAcc.empty) {
+        console.log('No matching data')
+        return;
+    } else {
+        await showDataAcc.get().then(doc => {
+            dataAcc.push(doc.data());
+        })
+            .catch(err => {
+                console.log('Error getting AccountPorfile', err);
+            });
+    }
+    // return dataAcc;
 };
 
 async function generateUserID() {
