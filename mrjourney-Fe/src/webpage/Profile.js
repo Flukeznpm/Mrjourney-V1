@@ -258,7 +258,7 @@ function Profile(props) {
                                                         <>
                                                             <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
                                                                 Bio
-                                                    </Tooltip>
+                                                            </Tooltip>
                                                             <AntParagraph
                                                                 editable={{
                                                                     onChange: (handleBio),
@@ -271,11 +271,16 @@ function Profile(props) {
 
                                                         </>
                                                         :
-                                                        <AntParagraph
-                                                            copyable
-                                                        >
-                                                            {acc.bio}
-                                                        </AntParagraph>
+                                                        <>
+                                                            <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
+                                                                Bio
+                                                            </Tooltip>
+                                                            <AntParagraph
+                                                                copyable
+                                                            >
+                                                                {acc.bio}
+                                                            </AntParagraph>
+                                                        </>
                                                     }
                                                 </Col>
                                             </Row>
