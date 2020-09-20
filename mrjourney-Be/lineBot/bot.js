@@ -8,88 +8,109 @@ router.post('/webhook', (req, res) => {
     let reply_token = req.body.events[0].replyToken
     let msg = req.body.events[0]
     // let msg = req.body.events[0].message.text
-    if (msg.type === "message" && msg.message.type === "text") {
-        if (msg === "อาจารย์โอ๋") {
-            replyProfessor(reply_token, msg)
-        }
-        else if (msg === "#สร้างทริป") {
-            replyCreate(reply_token, msg)
-        }
-        else if (msg === "#ดูแผน") {
-            replyPlan(reply_token, msg)
-        }
-        else if (msg === "ดูแผนทั้งหมด") {
-            replyPlanPerDay(reply_token, msg)
-        }
-        else if (msg === "ดูแผนวันนี้") {
-            replyPlanPerDay(reply_token, msg)
-        }
-        else if (msg === "#ช่วย") {
-            replyHelp(reply_token, msg)
-        }
-        else if (msg === "วิธีการสร้างทริป") {
-            replyHelpCreateTrip(reply_token, msg)
-        }
-        else if (msg === "วิธีการดูแผน") {
-            replyHelpPlan(reply_token, msg)
-        }
-        else if (msg === "วิธีการจัดการบิล") {
-            replyHelpBill(reply_token, msg)
-        }
-        else if (msg === "#แนะนำ") {
-            replyRecommend(reply_token, msg)
-        }
-        else if (msg === "ที่กิน") {
-            replyRecommendEat(reply_token, msg)
-        }
-        else if (msg === "ที่เที่ยว") {
-            replyRecommendTravel(reply_token, msg)
-        }
-        else if (msg === "ที่พัก") {
-            replyRecommendSleep(reply_token, msg)
-        }
-        else if (msg === "#อากาศ") {
-            replyWeather(reply_token, msg)
-        }
-        // get locations here
-        else if (msg === "#ติดต่อ") {
-            replyContact(reply_token, msg)
-        }
-        else if (msg === "#บิล") {
-            replyBill(reply_token, msg)
-        }
-        else if (msg === "#สร้างบิล") {
-            replyCreateBill(reply_token, msg)
-        }
-        else if (msg === "#ดูบิล") {
-            replySeeBill(reply_token, msg)
-        }
-        else if (ev) {
-            replyWeatherMaps(reply_token, msg)
-        }
-    } else if (msg.type === "message" && msg.message.type === "location") {
-        const reply = req => {
-            return request.post({
-              uri: `${LINE_MESSAGING_API}/reply`,
-              headers: LINE_HEADER,
-              body: JSON.stringify({
-                replyToken: req.body.events[0].replyToken,
-                messages: [
-                  {
-                    type: "text",
-                    text: JSON.stringify(req.body)
-                  }
-                ]
-              })
-            });
-          };
-        replyWeatherMaps(reply_token, msg)
-    }
-    else {
-        reply(req);
-    }
+    // if (msg.type === "message" && msg.message.type === "text") {
+    //     if (msg === "อาจารย์โอ๋") {
+    //         replyProfessor(reply_token, msg)
+    //     }
+    //     else if (msg === "#สร้างทริป") {
+    //         replyCreate(reply_token, msg)
+    //     }
+    //     else if (msg === "#ดูแผน") {
+    //         replyPlan(reply_token, msg)
+    //     }
+    //     else if (msg === "ดูแผนทั้งหมด") {
+    //         replyPlanPerDay(reply_token, msg)
+    //     }
+    //     else if (msg === "ดูแผนวันนี้") {
+    //         replyPlanPerDay(reply_token, msg)
+    //     }
+    //     else if (msg === "#ช่วย") {
+    //         replyHelp(reply_token, msg)
+    //     }
+    //     else if (msg === "วิธีการสร้างทริป") {
+    //         replyHelpCreateTrip(reply_token, msg)
+    //     }
+    //     else if (msg === "วิธีการดูแผน") {
+    //         replyHelpPlan(reply_token, msg)
+    //     }
+    //     else if (msg === "วิธีการจัดการบิล") {
+    //         replyHelpBill(reply_token, msg)
+    //     }
+    //     else if (msg === "#แนะนำ") {
+    //         replyRecommend(reply_token, msg)
+    //     }
+    //     else if (msg === "ที่กิน") {
+    //         replyRecommendEat(reply_token, msg)
+    //     }
+    //     else if (msg === "ที่เที่ยว") {
+    //         replyRecommendTravel(reply_token, msg)
+    //     }
+    //     else if (msg === "ที่พัก") {
+    //         replyRecommendSleep(reply_token, msg)
+    //     }
+    //     else if (msg === "#อากาศ") {
+    //         replyWeather(reply_token, msg)
+    //     }
+    //     // get locations here
+    //     else if (msg === "#ติดต่อ") {
+    //         replyContact(reply_token, msg)
+    //     }
+    //     else if (msg === "#บิล") {
+    //         replyBill(reply_token, msg)
+    //     }
+    //     else if (msg === "#สร้างบิล") {
+    //         replyCreateBill(reply_token, msg)
+    //     }
+    //     else if (msg === "#ดูบิล") {
+    //         replySeeBill(reply_token, msg)
+    //     }
+    //     else if (ev) {
+    //         replyWeatherMaps(reply_token, msg)
+    //     }
+    //     else{
+    //         replyBased(reply_token, msg)
+    //     }
+    // } else if (msg.type === "message" && msg.message.type === "location") {
+    //     const reply = req => {
+    //         return request.post({
+    //           uri: `${LINE_MESSAGING_API}/reply`,
+    //           headers: LINE_HEADER,
+    //           body: JSON.stringify({
+    //             replyToken: req.body.events[0].replyToken,
+    //             messages: [
+    //               {
+    //                 type: "text",
+    //                 text: JSON.stringify(req.body)
+    //               }
+    //             ]
+    //           })
+    //         });
+    //       };
+    //     replyWeatherMaps(reply_token, msg)
+    // }
+    // else {
+    //     reply(req);
+    // }
+    reply(req)
     res.sendStatus(200)
 })
+
+
+const reply = req => {
+    return request.post({
+      uri: `${LINE_MESSAGING_API}/reply`,
+      headers: LINE_HEADER,
+      body: JSON.stringify({
+        replyToken: req.body.events[0].replyToken,
+        messages: [
+          {
+            type: "text",
+            text: JSON.stringify(req.body)
+          }
+        ]
+      })
+    });
+  };
 
 function replyBased(reply_token, msg) {
     let headers = {
