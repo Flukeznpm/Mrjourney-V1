@@ -12,6 +12,7 @@ import { HookContext } from '../../store/HookProvider'
 import MoreRoomDetailModal from '../Modal/MoreRoomDetailModal';
 import { Progress, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 import {
     Button as AntButton,
     Card, Col, Row,
@@ -290,7 +291,9 @@ function ShowRoomBox() {
                                         </div>
                                         <div className="owner-trip-profile py-2">
                                             <span className="pl-1 pr-2"><img src={room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
-                                            <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoomName}</span>
+                                            
+                                            <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : <Link to={`/Profile?userID=${room.ownerRoomID}`}>{room.ownerRoomName}</Link></span>
+                                            
                                         </div>
                                         <div class="col-12 p-0">
                                             <div class="row">

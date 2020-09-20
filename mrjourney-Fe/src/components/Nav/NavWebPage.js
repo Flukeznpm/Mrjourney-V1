@@ -240,7 +240,7 @@ function NavWebPage(props) {
                                                     <div className="col-3 p-0 m-0"><img src={pictureURL} class="login-profile" height="50px" width="50px" alt="owner-img" /></div>
                                                     <div className="col-9 p-0 m-0 btn dropdown-profile-label">
                                                         <div style={{ fontSize: "20px", fontWeight: "bold" }}>Hi! {displayName}</div>
-                                                        <a href="/Profile" className="dropdown-see-profile">ดูโปรไฟล์ของฉัน</a>
+                                                        <a href={`/Profile?userID=${lineID}`} className="dropdown-see-profile">ดูโปรไฟล์ของฉัน</a>
                                                     </div>
                                                 </div>
                                             </div>

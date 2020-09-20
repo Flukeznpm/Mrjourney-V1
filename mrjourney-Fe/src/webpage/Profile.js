@@ -109,7 +109,11 @@ function Profile(props) {
             setPictureURL(user.pictureURL)
             setLineID(user.lineID)
         }
-        axios.get(`http://localhost:5000/accountProfile?lineID=${user.lineID}`)
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        let getUserID = params.get('userID');
+
+        axios.get(`http://localhost:5000/accountProfile?userID=${getUserID}`)
             .then(res => {
                 setShowAcc(res.data)
             })
@@ -169,13 +173,20 @@ function Profile(props) {
                             <AntCard style={{ padding: 0 }}>
                                 <Row style={{ height: 150 }}>
                                     <Col span={12} className="text-center pt-3">
-                                        <img src={pictureURL}
-                                            class="image_outer_container"
-                                            height="125px" width="125px"
-                                            alt="mrjourney-img" />
-                                        <div className="line-name" style={{ fontSize: "24px" }}>
-                                            คุณ <LineNameText>{displayName}</LineNameText>
-                                        </div>
+                                        {acc.map((acc) => {
+                                            return (
+                                                <>
+                                                    <img src={acc.pictureURL}
+                                                        class="image_outer_container"
+                                                        height="125px" width="125px"
+                                                        alt="mrjourney-img" />
+                                                    <div className="line-name" style={{ fontSize: "24px" }}>
+                                                        คุณ <LineNameText>{acc.displayName}</LineNameText>
+                                                    </div>
+                                                </>
+                                            )
+                                        })}
+
                                     </Col>
                                     <Col span={12}>
                                         <div className="personal-profile-details" >

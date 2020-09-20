@@ -91,7 +91,8 @@ function CreateRoomStep3(props) {
             maxMember: Room.maxMember,
             genderCondition: Room.genderCondition,
             ageCondition: Room.ageCondition,
-            roomStatus: roomStatus
+            roomStatus: roomStatus,
+            createDate: new Date()
         }
         await axios.post('http://localhost:5000/room/createRoom', dataRoom)
             .then(res => {
