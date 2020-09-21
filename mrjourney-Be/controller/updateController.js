@@ -39,7 +39,9 @@ router.post('/checkUserRegister', async function (req, res, next) {
 
 //---------------- Function ----------------//
 async function updateProfile(datas) {
-    // >>> Sync: AccountProfile Db , Room Db
+    // >>> Sync: AccountProfile Db , Room Db <<< //
+
+    // Update profile on AccountProfile of User //
     const updateAccRef = db.collection('AccountProfile').doc(datas.lineID);
     await updateAccRef.get().then(async data => {
         if (data.exists) {
@@ -53,6 +55,7 @@ async function updateProfile(datas) {
         }
     });
 
+    // Update profile on all showRoom of User //
     let getRoom = [];
     const updateRoomRef = db.collection('Room').where('ownerRoomID', '==', datas.lineID);
     await updateRoomRef.get().then(async data => {
@@ -77,6 +80,20 @@ async function updateProfile(datas) {
                 });
             }
         }
+
+        // Update profile Members on all room of User //
+        // const updateAccMembersRef = db.collection('Room').doc(datas.lineID);
+        // await updateAccRef.get().then(async data => {
+        //     if (data.exists) {
+        //         await updateAccRef.update({
+        //             displayName: datas.displayName,
+        //             pictureURL: datas.pictureURL
+        //         })
+        //     } else {
+        //         console.log('No matching documents.');
+        //         return;
+        //     }
+        // });
     })
 };
 
