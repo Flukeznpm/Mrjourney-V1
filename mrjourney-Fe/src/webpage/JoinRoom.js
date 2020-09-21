@@ -61,15 +61,15 @@ function JoinRoom(props) {
                             <>
                                 <div className="Details-JoinedRoom">
                                     <div className="container">
-                                        <div>
-                                            <ImgCover class="d-block w-100" src={roomDetail.roomCover} alt="First slide" />
+                                        <div className="col-12 pt-2">
+                                            <div className="row">
+                                                <ImgCover class="d-block w-100" src={roomDetail.roomCover} alt="First slide" />
+                                            </div>
                                         </div>
                                         <div className="col-12">
                                             <div className="row text-black">
-                                                {/* // <> */}
                                                 <RoomDetails roomDetail={roomDetail} members={members.length}></RoomDetails>
                                                 <ShowMembers />
-                                                {/* </> */}
                                             </div>
                                         </div>
                                     </div>

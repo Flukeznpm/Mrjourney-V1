@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import momentjs from 'moment'
+import styled from "styled-components";
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
@@ -13,7 +13,59 @@ import {
     Select as AntSelect,
     DatePicker,
     Tooltip,
+    InputNumber
 } from 'antd';
+import momentjs from 'moment';
+
+const PrimaryButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    background: #D91E36;
+    border: #D91E36;
+    &:hover , &:active, &:focus {
+        background: #A21629;
+        border: #A21629;
+    }
+`;
+
+const OutlineButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    border: 1px solid ${props => (props.theme.color.primary)};
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        border: 1px solid ${props => (props.theme.color.primaryPress)};
+        color: ${props => (props.theme.color.primary)};
+        background: #F7F7F7;
+    }
+`;
+
+const InputComponent = styled(AntInput)`
+    border-radius: 4px;
+    height: 40px;
+    font-size: 16px;
+    align-items: center;
+    &:hover , &:active {
+        border-color: ${props => (props.theme.color.primary)};
+    }
+`;
+
+const DatePickerComponent = styled(DatePicker)`
+    height: 40px;
+    border-radius: 4px;
+    &:hover , &:active {
+        border-color: rgb(230, 111, 15);
+    }
+`;
+const InputNumberComponent = styled(InputNumber)`
+    border-radius: 4px;
+    height: 40px;
+    font-size: 16px;
+    align-content: center;
+    &:hover , &:active {
+        border-color: ${props => (props.theme.color.primary)};
+    }
+`;
 
 function EditJoinRoom(props) {
     const { thaiprovince, handleRoomForm, Room, plusMember, minusMember } = useContext(HookContext);
@@ -23,11 +75,13 @@ function EditJoinRoom(props) {
     const [gender, selectGender] = useState(["ชาย", "หญิง", "ไม่จำกัดเพศ"]);
     const [age, selectAge] = useState(["18 ปีขึ้นไป", "20 ปีขึ้นไป", "ไม่จำกัดช่วงอายุ"]);
     const [roomStatus, setStatus] = useState(true);
-    const { register, handleSubmit, watch, errors } = useForm();
     const [fileRoomCover, setFileRoomCover] = useState('รูปหน้าปกห้อง');
     const [fileQrCode, setFileQrCode] = useState('คิวอาร์โค้ดกลุ่มไลน์');
     const [roomCoverImg, setRoomCoverImg] = useState(null);
     const [roomQrCodeImg, setRoomQrCodeImg] = useState(null);
+    const { Option } = AntSelect;
+    const { TextArea } = AntInput;
+    const dateFormat = 'DD-MM-YYYY';
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -82,99 +136,208 @@ function EditJoinRoom(props) {
         }
     }
 
-    const onSubmit = async () => {
-        if (!Room.roomName) {
-            Room.roomName = props.roomDetail.roomName
-        }
-        if (!Room.province) {
-            Room.province = props.roomDetail.province
-        }
-        if (!Room.roomName) {
-            Room.roomName = props.roomDetail.startDate
-        }
-        if (!Room.startDate) {
-            Room.endDate = props.roomDetail.endDate
-        }
-        if (!Room.maxMember || Room.maxMember === 0) {
-            Room.maxMember = props.roomDetail.maxMember
-        }
-        if (!Room.ageCondition) {
-            Room.ageCondition = props.roomDetail.ageCondition
-        }
-        if (!Room.genderCondition) {
-            Room.genderCondition = props.roomDetail.genderCondition
-        }
-        if (!Room.tripDetails) {
-            Room.tripDetails = props.roomDetail.tripDetails
-        }
+    // const onSubmit = async () => {
+    //     if (!Room.roomName) {
+    //         Room.roomName = props.roomDetail.roomName
+    //     }
+    //     if (!Room.province) {
+    //         Room.province = props.roomDetail.province
+    //     }
+    //     if (!Room.roomName) {
+    //         Room.roomName = props.roomDetail.startDate
+    //     }
+    //     if (!Room.startDate) {
+    //         Room.endDate = props.roomDetail.endDate
+    //     }
+    //     if (!Room.maxMember || Room.maxMember === 0) {
+    //         Room.maxMember = props.roomDetail.maxMember
+    //     }
+    //     if (!Room.ageCondition) {
+    //         Room.ageCondition = props.roomDetail.ageCondition
+    //     }
+    //     if (!Room.genderCondition) {
+    //         Room.genderCondition = props.roomDetail.genderCondition
+    //     }
+    //     if (!Room.tripDetails) {
+    //         Room.tripDetails = props.roomDetail.tripDetails
+    //     }
+
+    //     let dataUpdateRoom = {
+    //         roomID: props.roomDetail.roomID,
+    //         lineID: lineID,
+    //         roomName: Room.roomName,
+    //         province: Room.province,
+    //         startDate: Room.startDate,
+    //         endDate: Room.endDate,
+    //         maxMember: Room.maxMember,
+    //         genderCondition: Room.genderCondition,
+    //         ageCondition: Room.ageCondition,
+    //         tripDetails: Room.tripDetails,
+    //         roomStatus: roomStatus,
+    //         roomCover: roomCoverImg,
+    //         qrCode: roomQrCodeImg
+    //     }
+
+    //     await axios.put('http://localhost:5000/room/editRoom', dataUpdateRoom)
+    //         .then(async (res) => {
+    //             console.log(res)
+    //         })
+    //     props.setEditRoom(false)
+    // }
+
+    const onCancelEditRoom = () => {
+        props.setEditRoom(false)
+    }
+
+    const onFinish = async (value) => {
 
         let dataUpdateRoom = {
             roomID: props.roomDetail.roomID,
             lineID: lineID,
-            roomName: Room.roomName,
-            province: Room.province,
-            startDate: Room.startDate,
-            endDate: Room.endDate,
-            maxMember: Room.maxMember,
-            genderCondition: Room.genderCondition,
-            ageCondition: Room.ageCondition,
-            tripDetails: Room.tripDetails,
+            roomName: value.roomName,
+            province: value.province,
+            startDate: momentjs(value.startDate).format('ll'),
+            endDate: momentjs(value.endDate).format('ll'),
+            maxMember: value.maxMember,
+            genderCondition: value.genderCondition,
+            ageCondition: value.ageCondition,
+            tripDetails: value.tripDetails,
             roomStatus: roomStatus,
             roomCover: roomCoverImg,
             qrCode: roomQrCodeImg
         }
-
         await axios.put('http://localhost:5000/room/editRoom', dataUpdateRoom)
             .then(async (res) => {
                 console.log(res)
             })
         props.setEditRoom(false)
-    }
+    };
 
-    const onCancelEditRoom = () => {
-        Room.roomName = "";
-        Room.province = "";
-        Room.startDate = "";
-        Room.endDate = "";
-        Room.maxMember = "";
-        Room.ageCondition = "";
-        Room.genderCondition = "";
-        Room.tripDetails = "";
-        props.setEditRoom(false)
-    }
-
-    const AlertCloseRoom = () => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'คุณแน่ใจหรือไม่ที่จะต้องการปิดห้อง?',
-            text: 'เมื่อทำการปิดห้อง จะทำให้ไม่สามารถรับสมาชิกเพิ่มได้',
-            showCancelButton: true,
-            confirmButtonText: 'ปิดห้อง',
-            confirmButtonColor: '#F37945',
-            cancelButtonText: 'กลับสู่ห้อง',
-        })
+    const onStartDateChange = (date, dateString) => {
+        handleRoomForm(momentjs(date).format('YYYY-MM-DD'), 'startDate')
     }
 
     return (
 
-        <div className="ShowRoom-Edit-Details" style={{ fontSize: "18px" }}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="ShowRoom-TripName py-1">
-                    <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
-                        <div class="input-group pt-3">
-                            <div class="custom-file" >
-                                <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                    aria-describedby="inputGroupFileAddon01" onChange={onFileCoverChange} />
-                                <label class="custom-file-label" for="inputGroupFile01">{fileRoomCover}</label>
+        <div className="ShowRoom-Edit-Details">
+
+
+            <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
+                <div class="input-group pt-3">
+                    <div class="custom-file" >
+                        <input type="file" class="custom-file-input" id="inputGroupFile01"
+                            aria-describedby="inputGroupFileAddon01" onChange={onFileCoverChange} />
+                        <label class="custom-file-label" for="inputGroupFile01">{fileRoomCover}</label>
+                    </div>
+                </div>
+            </Tooltip>
+            <Tooltip title="รูปปกห้อง">
+                <div className="text-center pt-2">
+                    <img width="150px" src={roomCoverImg} />
+                </div>
+            </Tooltip>
+
+            <AntForm onFinish={onFinish}>
+                <AntForm.Item name="roomName" label="ชื่อทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                    <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
+                </AntForm.Item>
+                <AntForm.Item name="province" labelCol={{ span: 24 }} label="จังหวัด" rules={[{ required: true }]}>
+                    <AntSelect
+                        placeholder="กรุณาเลือกจังหวัด"
+                    >
+                        {thaiprovince.map((ThaiProvinceShow) => {
+                            return (
+                                <Option value={ThaiProvinceShow}>{ThaiProvinceShow}</Option>
+                            )
+                        })}
+                    </AntSelect>
+                </AntForm.Item>
+                <div className="col-12 p-0">
+                    <div className="row">
+                        <div className="col-6">
+                            <AntForm.Item name="startDate" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                <DatePickerComponent onChange={onStartDateChange}
+                                    disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
+                                    format={dateFormat} />
+                            </AntForm.Item>
+                        </div>
+                        <div className="col-6">
+                            <AntForm.Item name="endDate" label="วันสิ้นสุดทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                <DatePickerComponent
+                                    disabledDate={d => !d || d.isSameOrBefore(Room.startDate)}
+                                    format={dateFormat} />
+                            </AntForm.Item>
+                        </div>
+                    </div>
+                </div>
+                <AntForm.Item name="maxMember" label="จำนวนที่เปิดรับ" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                    <InputNumberComponent min={1} style={{ width: "100%" }} />
+                </AntForm.Item>
+                <AntForm.Item name="genderCondition" labelCol={{ span: 24 }} label="เพศที่อนุญาต" rules={[{ required: true }]}>
+                    <AntSelect
+                        placeholder="กรุณาเลือกเพศที่อนุญาตให้ร่วมการท่องเที่ยว"
+                    >
+                        {gender.map((showGender) => {
+                            return (
+                                <Option value={showGender}>{showGender}</Option>
+                            )
+                        })}
+                    </AntSelect>
+                </AntForm.Item>
+                <AntForm.Item name="ageCondition" labelCol={{ span: 24 }} label="ช่วงอายุ" rules={[{ required: true }]}>
+                    <AntSelect
+                        placeholder="กรุณาเลือกช่วงอายุที่อนุญาตให้ร่วมการท่องเที่ยว"
+                    >
+                        {age.map((showAge) => {
+                            return (
+                                <Option value={showAge}>{showAge}</Option>
+                            )
+                        })}
+                    </AntSelect>
+                </AntForm.Item>
+                <AntForm.Item name="tripDetails" label="รายละเอียดการท่องเที่ยว" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                    <TextArea rows={4} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" />
+                </AntForm.Item>
+                <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
+                    <div class="input-group pt-3 pb-2">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                aria-describedby="inputGroupFileAddon01" onChange={onFileQrCodeChange} />
+                            <label class="custom-file-label" for="inputGroupFile01">{fileQrCode}</label>
+                        </div>
+                    </div>
+                </Tooltip>
+                <Tooltip title="รูปคิวอาร์โค้ดกลุ่มไลน์">
+                    <div className="text-center pt-2">
+                        <img width="150px" src={roomQrCodeImg} />
+                    </div>
+                </Tooltip>
+                <div className="container text-center py-3">
+                    <AntForm.Item>
+                        <div className="col-12">
+                            <div className="row">
+                                <div className="col-6 d-flex align-items-center">
+                                    <OutlineButton
+                                        size={"large"}
+                                        block htmlType="button"
+                                        onClick={() => onCancelEditRoom()}
+                                    >ยกเลิกแก้ไข</OutlineButton>
+                                </div>
+                                <div className="col-6 d-flex align-items-center">
+                                    <PrimaryButton
+                                        type="primary"
+                                        size={"large"}
+                                        block htmlType="submit"
+                                    >ยืนยันแก้ไข</PrimaryButton>
+                                </div>
                             </div>
                         </div>
-                    </Tooltip>
-                    <Tooltip title="รูปปกห้อง">
-                        <div className="text-center pt-2">
-                            <img width="150px" src={roomCoverImg} />
-                        </div>
-                    </Tooltip>
-                    <div className="form-group row d-flex align-items-center">
+                    </AntForm.Item>
+                </div>
+            </AntForm>
+            {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+            {/* <div className="ShowRoom-TripName py-1"> */}
+            {/* <div className="form-group row d-flex align-items-center">
                         <label for="RoomName" class="col-sm-3 col-form-label">ชื่อทริป : </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control"
@@ -184,9 +347,9 @@ function EditJoinRoom(props) {
                                 placeholder={props.roomDetail.roomName}
                             />
                         </div>
-                    </div>
-                </div>
-                <div className="ShowRoom-TripProvince py-1">
+                    </div> */}
+            {/* </div> */}
+            {/* <div className="ShowRoom-TripProvince py-1">
                     <div className="form-group row d-flex align-items-center">
                         <label for="RoomName" class="col-sm-3 col-form-label">จังหวัด :</label>
                         <div className="col-sm-6 btn-group">
@@ -205,8 +368,8 @@ function EditJoinRoom(props) {
                             </select>
                         </div>
                     </div>
-                </div>
-                <div className="ShowRoom-Date py-1 ">
+                </div> */}
+            {/* <div className="ShowRoom-Date py-1 ">
                     วันเริ่ม - จบทริป
                                     <div className="Show-Date pl-3 pr-3 py-2">
                         <div className="form-group row d-flex align-items-center">
@@ -225,8 +388,8 @@ function EditJoinRoom(props) {
                             />
                         </div>
                     </div>
-                </div>
-                <div className="ShowRoom-Condition py-1">
+                </div> */}
+            {/* <div className="ShowRoom-Condition py-1">
                     เงื่อนไข
                                     <div className="py-2">
                         <span className="Show-genderCondition pr-2">
@@ -266,8 +429,8 @@ function EditJoinRoom(props) {
                             </div>
                         </span>
                     </div>
-                </div>
-                <div className="ShowRoom-Maxmber py-2">
+                </div> */}
+            {/* <div className="ShowRoom-Maxmber py-2">
                     <label>จำนวนคนที่เปิดรับ</label>
                     <div className="input-group">
                         <span className="input-group-btn">
@@ -288,8 +451,8 @@ function EditJoinRoom(props) {
                             </button>
                         </span>
                     </div>
-                </div>
-                <div class="pt-4">
+                </div> */}
+            {/* <div class="pt-4">
                     <label for="exampleInputEmail1">รายละเอียด</label>
                     <textarea class="form-control" rows="3"
                         name="tripDetails"
@@ -298,35 +461,9 @@ function EditJoinRoom(props) {
                         onChange={(e) => handleRoomForm(e.target.value, e.target.name)}
                         placeholder={props.roomDetail.tripDetails}
                     />
-                </div>
-                <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
-                    <div class="input-group pt-3 pb-2">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                aria-describedby="inputGroupFileAddon01" onChange={onFileQrCodeChange} />
-                            <label class="custom-file-label" for="inputGroupFile01">{fileQrCode}</label>
-                        </div>
-                    </div>
-                </Tooltip>
-                <Tooltip title="รูปคิวอาร์โค้ดกลุ่มไลน์">
-                    <div className="text-center pt-2">
-                        <img width="150px" src={roomQrCodeImg} />
-                    </div>
-                </Tooltip>
-                <div className="container text-center py-3">
-                    <button type="button"
-                        className="btn btn-danger mr-3 text-white"
-                        onClick={() => onCancelEditRoom()}>
-                        ยกเลิกแก้ไข
-                                </button>
-                    <button type="button"
-                        className="btn btn-success ml-3 text-white"
-                        onClick={() => onSubmit()}>
-                        ยืนยันการแก้ไข
-                                </button>
-                </div>
+                </div> */}
+            {/* </form> */}
 
-            </form>
         </div>
 
     )

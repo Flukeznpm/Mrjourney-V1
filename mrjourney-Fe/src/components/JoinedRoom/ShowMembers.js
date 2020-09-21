@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import styled from "styled-components";
 import '../../static/css/Joined-Room.css';
 import "../../static/css/App.css";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+import {
+    Card,
+    Row,
+    Col
+} from 'antd';
+
+const AntCard = styled(Card)`
+  border-radius: 8px;
+  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  margin: 10px 0px 10px 0px;
+  padding: 15px 0px 15px 0px;
+`;
 
 function ShowMembers(props) {
     const [lineID, setLineID] = useState("")
@@ -32,31 +45,29 @@ function ShowMembers(props) {
     }, [])
 
     return (
-        <div className="col-3 bg-showmember pt-3">
-            <div className="Members-in-Room">
-                <div className="container">
-                    <h1>Members</h1>
+        <div className="col-3">
+            <AntCard style={{ padding: 0 }}>
+                Members
                     <div className="showmembers-list">
-                        <div class="showmember" >
-                            {members.map((members, key) => {
-                                return (
-                                    <>
-                                        <div class="row py-2">
-                                            <div class="col-3">
-                                                <img src={members.pictureURL} class="image_outer_container" />
-                                            </div>
-                                            <div class="col-9 mt-2">
-                                                {members.fName}
-                                                {key === 0 ? <i class="fas fa-crown text-warning float-right" /> : null}
-                                            </div>
-                                        </div>
-                                    </>
-                                )
-                            })}
-                        </div>
+                    <div class="showmember" >
+                        {members.map((members, key) => {
+                            return (
+                                <Row className="d-flex h-100 align-items-center py-3">
+                                    <Col span={8}>
+                                        <img src={members.pictureURL} class="image_outer_container" />
+                                    </Col>
+                                    <Col span={16}>
+                                        <Row justify="space-between">
+                                            {members.fName}
+                                            {key === 0 ? <i class="fas fa-crown text-warning" /> : null}
+                                        </Row>
+                                    </Col>
+                                </Row>
+                            )
+                        })}
                     </div>
                 </div>
-            </div>
+            </AntCard>
         </div >
     )
 }
