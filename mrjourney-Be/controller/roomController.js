@@ -106,25 +106,24 @@ router.put('/editRoom', async function (req, res, next) {
 });
 
 router.delete('/deleteRoom', async function (req, res, next) {
-    let datas = req.body;
-    if (datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
+    let datas = req.query;
+    if (datas.roomID == undefined || datas.roomID == null || datas.roomID == '' ||
+        datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
             message: "The Data was empty or undefined"
         })
     } else {
-        let checkPermission = await db.collection('Room').where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID)
-        checkPermission.get().then(async data => {
-            if (data.exists) {
-                await deleteRoom(req.body);
+        let checkPermission = await db.collection('Room').where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID);
+        await checkPermission.get().then(async data => {
+            if (data.empty) {
+                console.log('You do not have permission to delete trip');
+                return;
+            } else {
+                await deleteRoom(datas);
                 console.log('Alert: Delete Room Success')
                 res.status(200).json({
                     message: "Delete Room Success",
-                })
-            } else {
-                console.log('Alert: You can not delete Room ')
-                res.status(400).json({
-                    message: "You can not delete Room",
                 })
             }
         })
@@ -152,7 +151,7 @@ router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
 //---------------- Function ----------------//
 async function getAllRoom() {
     let RoomList = [];
-    let showAllRoomRef = db.collection("Room").orderBy("createDate","desc");
+    let showAllRoomRef = db.collection("Room").orderBy("createDate", "desc");
     // let showAllRoomRef = db.collection("Room");
     await showAllRoomRef.get().then(snapshot => {
         snapshot.forEach(doc => {
@@ -186,12 +185,12 @@ async function getRoomMembers(datas) {
         OwnerMember.push(doc1.data());
     })
 
-    let OwnerRoomID = OwnerMember.map(a => a.ownerRoomID).toString();
-    let getOwnerProfileMember = db.collection('AccountProfile').doc(OwnerRoomID);
+    // let OwnerRoomID = OwnerMember.map(a => a.ownerRoomID).toString();
+    // let getOwnerProfileMember = db.collection('AccountProfile').doc(OwnerRoomID);
 
-    await getOwnerProfileMember.get().then(doc2 => {
-        Members.push(doc2.data());
-    })
+    // await getOwnerProfileMember.get().then(doc2 => {
+    //     Members.push(doc2.data());
+    // })
 
     let showAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
     await showAllMembersRef.get().then(snapshot => {
@@ -311,14 +310,14 @@ async function uploadRoomQrCodeImageToCloudStorage(image, name) {
 async function createRoom(datas) {
     let genRoomID = await generateRoomID();
     let CheckUserRef = await db.collection('AccountProfile').doc(datas.lineID);
-    CheckUserRef.get().then(data => {
+    CheckUserRef.get().then(async data => {
         if (data.exists) {
             let saveRoomIDinAccountRef = CheckUserRef.collection('Room').doc(genRoomID);
-            saveRoomIDinAccountRef.set({
+            await saveRoomIDinAccountRef.set({
                 roomID: genRoomID
             })
             let saveRoomID = db.collection('Room').doc(genRoomID)
-            saveRoomID.set({
+            await saveRoomID.set({
                 roomID: genRoomID,
                 ownerRoomID: datas.lineID,
                 ownerRoomName: datas.displayName,
@@ -335,6 +334,12 @@ async function createRoom(datas) {
                 ageCondition: datas.ageCondition,
                 roomStatus: datas.roomStatus,
                 createDate: datas.createDate
+            })
+            let saveOwnerMembers = saveRoomID.collection('Members').doc('A');
+            await saveOwnerMembers.set({
+                lineID: datas.lineID,
+                fName: datas.displayName,
+                pictureURL: datas.pictureURL
             })
         }
     })
@@ -363,18 +368,12 @@ async function updateRoom(datas) {
 };
 
 async function deleteRoom(datas) {
+    // ลบข้อมูลของ Room ที่ User มี ใน AccountProfile ตาม Room ID นั้น
     await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(datas.roomID).delete();
-
-    // จะลบข้อมูลที่เกี่ยวกับ user คนนั้นออกให้หมดจาก DB
-    // จะลบข้อมูลของ Member ทั้งหมดใน room 
-    // await db.collection('Room').doc(datas.roomID).collection('Member').doc().delete();
-
-    await db.collection('Room').doc(datas.roomID).delete()
-        .then(function () {
-            console.log("Room successfully deleted!");
-        }).catch(function (error) {
-            console.error("Error deleted document in Room: ", error);
-        });
+    // ลบข้อมูลของ Member ทั้งหมด ใน Room ID นั้น
+    await db.collection('Room').doc(datas.roomID).collection('Members').delete();
+    // ลบข้อมูล Room ID นั้น
+    await db.collection('Room').doc(datas.roomID).delete();
 };
 
 async function setRoomHistory(datas) {
