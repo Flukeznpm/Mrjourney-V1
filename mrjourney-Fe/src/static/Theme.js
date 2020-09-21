@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 
 const theme = {
     color: {
-        primary: "rgb(230, 111, 15)",
+        primary: "#e66f0f",
         primaryPress: "#C25738"
     }
 }

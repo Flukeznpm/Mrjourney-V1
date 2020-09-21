@@ -3,7 +3,7 @@ import BgSlide1 from '../../static/img/pr-02.png';
 import styled from "styled-components";
 
 const ImgCover = styled.img`
-    height: 350px;
+    height: 100%;
     width: 100%;
     /* object-fit: cover; */
 `;

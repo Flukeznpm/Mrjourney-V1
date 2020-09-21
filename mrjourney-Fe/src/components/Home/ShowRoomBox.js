@@ -292,7 +292,7 @@ function ShowRoomBox() {
                                         <div className="owner-trip-profile py-2">
                                             <span className="pl-1 pr-2"><img src={room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
                                             
-                                            <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : <Link to={`/Profile?userID=${room.ownerRoomID}`}>{room.ownerRoomName}</Link></span>
+                                            <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : <Link to={`/Profile?userID=${room.ownerRoomID}`} style={{color:"#e66f0f"}}>{room.ownerRoomName}</Link></span>
                                             
                                         </div>
                                         <div class="col-12 p-0">
