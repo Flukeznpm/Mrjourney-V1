@@ -433,12 +433,10 @@ async function updateTrip(datas) {
 async function deleteTrip(datas) {
     await db.collection('TripList').doc(datas.tripID).delete();
     await db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').doc(datas.tripID).delete();
+    await db.collection('LineGroup').doc(datas.lineGroupID).collection('Members').doc(datas.tripID).delete();
     await db.collection('LineGroup').doc(datas.lineGroupID).delete();
     await db.collection('LineChatAccount').doc(datas.lineID).collection('Group').doc(datas.lineGroupID).delete();
-
-    // ? : ลบข้อมูลใน collection 'Day' ให้หมด ยังไง ??
-    // await db.collection('TripPerDay').doc(datas.lineGroupID).collection('Day').doc().delete();
-    await db.collection('TripPerDay').doc(datas.lineGroupID)
+    await db.collection('TripPerDay').doc(datas.lineGroupID).delete()
         .then(function () {
             console.log("Trip successfully deleted!");
         }).catch(function (error) {

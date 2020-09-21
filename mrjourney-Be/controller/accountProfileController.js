@@ -223,7 +223,38 @@ async function updateBio(datas) {
 };
 
 async function deleteAccount(datas) {
-    //ลบยัน Account ID ใน 'AccountPrifile' DB
+    // ลบ Room ตาม AccountProfile ของ User นั้นๆ
+    let getRoomID = [];
+    const GetRoomFromAccIDRef = db.collection('AccountProfile').doc(datas.lineID).collection('Room');
+    await GetRoomFromAccIDRef.get().then(async data => {
+        if (data.empty) {
+            console.log('No matching documents.');
+            return;
+        } else {
+            data.forEach(f => {
+                getRoomID.push(f.data());
+            });
+
+            let roomIDArray = getRoomID.map(r => r.roomID);
+            console.log('roomIDArray: ', roomIDArray)
+            let roomIDCount = (roomIDArray.length) - 1;
+
+            for (i = 0; i <= roomIDCount; i++) {
+                let roomID = roomIDArray[i];
+                console.log('RoomID loop: ', roomID);
+                await db.collection('Room').doc(roomID).delete();
+            }
+        }
+    });
+    // ลบ RoomID ทั้งหมดใน AccountProfile
+    await db.collection('AccountProfile').doc(datas.lineID).collection('Room').delete();
+    // ลบ AccountProfile ของ User นั้นๆ
+    await db.collection('AccountProfile').doc(datas.lineID).delete()
+    .then(function () {
+        console.log("Account successfully deleted!");
+    }).catch(function (error) {
+        console.error("Error deleted document Account: ", error);
+    });
 };
 
 async function getOwnerRoomByID(datas) {

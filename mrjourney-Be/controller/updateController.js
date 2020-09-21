@@ -80,21 +80,21 @@ async function updateProfile(datas) {
                 });
             }
         }
+    });
 
-        // Update profile Members on all room of User //
-        // const updateAccMembersRef = db.collection('Room').doc(datas.lineID);
-        // await updateAccRef.get().then(async data => {
-        //     if (data.exists) {
-        //         await updateAccRef.update({
-        //             displayName: datas.displayName,
-        //             pictureURL: datas.pictureURL
-        //         })
-        //     } else {
-        //         console.log('No matching documents.');
-        //         return;
-        //     }
-        // });
-    })
+    // Update profile Members on all room of User //
+    // const updateAccMembersRef = db.collection('Room').doc(datas.lineID);
+    // await updateAccRef.get().then(async data => {
+    //     if (data.exists) {
+    //         await updateAccRef.update({
+    //             displayName: datas.displayName,
+    //             pictureURL: datas.pictureURL
+    //         })
+    //     } else {
+    //         console.log('No matching documents.');
+    //         return;
+    //     }
+    // });
 };
 
 module.exports = router;

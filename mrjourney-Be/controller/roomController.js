@@ -373,7 +373,12 @@ async function deleteRoom(datas) {
     // ลบข้อมูลของ Member ทั้งหมด ใน Room ID นั้น
     await db.collection('Room').doc(datas.roomID).collection('Members').delete();
     // ลบข้อมูล Room ID นั้น
-    await db.collection('Room').doc(datas.roomID).delete();
+    await db.collection('Room').doc(datas.roomID).delete()
+        .then(function () {
+            console.log("Room successfully deleted!");
+        }).catch(function (error) {
+            console.error("Error deleted document room: ", error);
+        });
 };
 
 async function setRoomHistory(datas) {
