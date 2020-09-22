@@ -43,21 +43,20 @@ function MyOwnerRoom(props) {
             })
     }, [])
 
-    const checkDeleteRoom = async () => {
+    const AlertDeleteRoom = () => {
         // Swal.fire({
         //     icon: 'success',
-        //     title: 'สร้างห้องสำเร็จ!',
-        //     text: 'ขอให้คุณสนุกกับการท่องเที่ยว',
+        //     title: 'คุณแน่ใจหรือไม่ที่จะต้องการลบห้อง?',
+        //     text: 'เมื่อทำการลบห้อง ข้อมูลทั้งหมดของห้องนี้จะถูกลบออกทั้งหมด',
         //     showCancelButton: true,
-        //     confirmButtonText: `<a href="/JoinRoom?roomID=${res.data}" id="alert-confirm-button">ลบห้อง</a>`,
+        //     confirmButtonText: 'ลบห้อง',
         //     confirmButtonColor: '#31CC71',
-        //     cancelButtonText: '<a href="/Home" id="alert-confirm-button">ยกเลิก</a>',
+        //     cancelButtonText: 'ยกเลิก',
         // })
-        
-        let roomStatus = {
-            roomStatus: false
-        }
-        await axios.put(`http://localhost:5000/room/deleteRoom?roomID=${ownerRoom.roomID}&lineID=${lineID}`, roomStatus)
+    }
+
+    const DeleteRoom = async () => {
+        await axios.delete(`http://localhost:5000/room/deleteRoom?roomID=${ownerRoom.roomID}&lineID=${lineID}`)
             .then(res => {
                 console.log(res)
             })
@@ -129,7 +128,7 @@ function MyOwnerRoom(props) {
                                                                 <span className="pl-1 pr-2"><img src={ownerRoom.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
                                                                 <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {ownerRoom.ownerRoomName}</span>
                                                             </div>
-                                                            <button type="button" class="col-5 mx-2 btn btn-outline-danger round" onClick={checkDeleteRoom}>
+                                                            <button type="button" class="col-5 mx-2 btn btn-outline-danger round" onClick={AlertDeleteRoom}>
                                                                 ลบห้อง
                                                         </button>
                                                             <Link to={`/JoinRoom?roomID=${ownerRoom.roomID}`}>

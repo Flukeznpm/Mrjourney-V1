@@ -91,6 +91,16 @@ function RoomDetails(props) {
         })
     }
 
+    const CloseRoom = async () => {
+        let closeRoom = {
+            roomStatus: false
+        }
+        await axios.put(`http://localhost:5000/room/deleteRoom?roomID=${props.roomDetail.roomID}&lineID=${lineID}`, closeRoom)
+            .then(res => {
+                console.log(res)
+            })
+    }
+
     return (
         <div className="col-9">
             <AntCard style={{ padding: 0 }}>
