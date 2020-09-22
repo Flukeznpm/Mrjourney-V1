@@ -101,7 +101,7 @@ function ShowRoomBox(props) {
         <div className="container py-3">
 
             <Row justify="center" gutter={18}>
-                <Col lg={6} sm={24}>
+                <Col lg={6} md={8} sm={18} xs={18} className="py-2">
                     <Row justify="center">
                         <SearchComponent
                             placeholder="input search text"
@@ -109,7 +109,7 @@ function ShowRoomBox(props) {
                         />
                     </Row>
                 </Col>
-                <Col lg={6} sm={24} >
+                <Col lg={6} md={8} sm={18} xs={18} className="py-2">
                     <Row justify="center">
                         <AntSelect
                             placeholder="เลือกจังหวัดที่ต้องการ"
@@ -125,7 +125,7 @@ function ShowRoomBox(props) {
                         </AntSelect>
                     </Row>
                 </Col>
-                <Col lg={6} sm={24} >
+                <Col lg={6} md={8} sm={18} xs={18} className="py-2">
                     <Row justify="center">
                         <AntSelect
                             defaultValue="recent"
