@@ -135,7 +135,7 @@ router.put('/closeRoom', async function (req, res, next) {
     let roomStatus = req.body.roomStatus;
     if (datasQuery.roomID == undefined || datasQuery.roomID == null || datasQuery.roomID == '' ||
         datasQuery.lineID == undefined || datasQuery.lineID == null || datasQuery.lineID == '' ||
-        roomStatus == undefined || roomStatus == null || roomStatus == true) {
+        roomStatus == undefined || roomStatus == null) {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
             message: "The Data was empty or undefined"
@@ -162,7 +162,7 @@ router.put('/openRoom', async function (req, res, next) {
     let roomStatus = req.body.roomStatus;
     if (datasQuery.roomID == undefined || datasQuery.roomID == null || datasQuery.roomID == '' ||
         datasQuery.lineID == undefined || datasQuery.lineID == null || datasQuery.lineID == '' ||
-        roomStatus == undefined || roomStatus == null || roomStatus == true) {
+        roomStatus == undefined || roomStatus == null) {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
             message: "The Data was empty or undefined"
