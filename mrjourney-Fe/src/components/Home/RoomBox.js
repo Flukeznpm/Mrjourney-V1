@@ -12,7 +12,6 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import {
     Button as AntButton,
-    Card, Col, Row,
     Tooltip,
     Input as AntInput,
     Select as AntSelect
@@ -56,8 +55,19 @@ const ImgCover = styled.img`
 `;
 
 function RoomBox(props) {
-
     const onCheckJoinRoom = (acc, room) => {
+        const calculateDate = (dob) => {
+            var today = new Date();
+            var birthDate = new Date(dob);  // create a date object directly from `dob1` argument
+            var age_now = today.getFullYear() - birthDate.getFullYear();
+            var m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age_now--;
+            }
+            console.log(age_now);
+            return age_now;
+        }
+
         if (!acc.fName) {
             Swal.fire({
                 icon: 'warning',
@@ -69,26 +79,95 @@ function RoomBox(props) {
                 cancelButtonText: 'กลับสู่หน้าหลัก',
             })
         } else {
-            if (room.genderCondition === "ชาย" && acc.gender === "ชาย" || room.genderCondition === "ไม่จำกัดเพศ" && acc.gender === "ชาย") {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'เข้าร่วมสำเร็จ!',
-                    text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                    showCancelButton: true,
-                    confirmButtonText: 'เข้าสู่ห้อง',
-                    confirmButtonColor: '#31CC71',
-                    cancelButtonText: 'กลับสู่หน้าหลัก',
-                })
-            } else if (room.genderCondition === "หญิง" && acc.gender === "หญิง" || room.genderCondition === "ไม่จำกัดเพศ" && acc.gender === "หญิง") {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'เข้าร่วมสำเร็จ!',
-                    text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                    showCancelButton: true,
-                    confirmButtonText: 'เข้าสู่ห้อง',
-                    confirmButtonColor: '#31CC71',
-                    cancelButtonText: 'กลับสู่หน้าหลัก',
-                })
+            if (room.genderCondition === "ชาย" && acc.gender === "ชาย" || room.genderCondition === "ไม่จำกัดเพศ") {
+                if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'เข้าร่วมสำเร็จ!',
+                        text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                        showCancelButton: true,
+                        confirmButtonText: 'เข้าสู่ห้อง',
+                        confirmButtonColor: '#31CC71',
+                        cancelButtonText: 'กลับสู่หน้าหลัก',
+                    })
+                } else {
+                    if (room.ageCondition === "ต่ำกว่า 18 ปี") {
+                        if (calculateDate(acc.birthday) < 18) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'เข้าร่วมสำเร็จ!',
+                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                                showCancelButton: true,
+                                confirmButtonText: 'เข้าสู่ห้อง',
+                                confirmButtonColor: '#31CC71',
+                                cancelButtonText: 'กลับสู่หน้าหลัก',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'ขออภัย!',
+                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
+                                showCancelButton: false,
+                                confirmButtonColor: '#D33',
+                                confirmButtonText: 'กลับสู่หน้าหลัก'
+                            })
+                        }
+                    } else if (room.ageCondition === "18-25 ปี") {
+                        if (calculateDate(acc.birthday) >= 18 && calculateDate(acc.birthday) <= 25) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'เข้าร่วมสำเร็จ!',
+                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                                showCancelButton: true,
+                                confirmButtonText: 'เข้าสู่ห้อง',
+                                confirmButtonColor: '#31CC71',
+                                cancelButtonText: 'กลับสู่หน้าหลัก',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'ขออภัย!',
+                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
+                                showCancelButton: false,
+                                confirmButtonColor: '#D33',
+                                confirmButtonText: 'กลับสู่หน้าหลัก'
+                            })
+                        }
+                    } else if (room.ageCondition === "25 ปีขึ้นไป") {
+                        if (calculateDate(acc.birthday) > 25) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'เข้าร่วมสำเร็จ!',
+                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                                showCancelButton: true,
+                                confirmButtonText: 'เข้าสู่ห้อง',
+                                confirmButtonColor: '#31CC71',
+                                cancelButtonText: 'กลับสู่หน้าหลัก',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'ขออภัย!',
+                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
+                                showCancelButton: false,
+                                confirmButtonColor: '#D33',
+                                confirmButtonText: 'กลับสู่หน้าหลัก'
+                            })
+                        }
+                    }
+                }
+            } else if (room.genderCondition === "หญิง" && acc.gender === "หญิง" || room.genderCondition === "ไม่จำกัดเพศ") {
+                if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'เข้าร่วมสำเร็จ!',
+                        text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                        showCancelButton: true,
+                        confirmButtonText: 'เข้าสู่ห้อง',
+                        confirmButtonColor: '#31CC71',
+                        cancelButtonText: 'กลับสู่หน้าหลัก',
+                    })
+                }
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -130,7 +209,7 @@ function RoomBox(props) {
                             {momentjs(props.room.startDate).format('ll')}
                             <i class="far fa-calendar-alt ml-2 mr-1"></i>
                         </button>
-                                                    &nbsp;-&nbsp;
+                        &nbsp;-&nbsp;
                                                 <button
                             type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
                             {momentjs(props.room.endDate).format('ll')}
