@@ -370,8 +370,31 @@ async function updateRoom(datas) {
 async function deleteRoom(datas) {
     // ลบข้อมูลของ Room ที่ User มี ใน AccountProfile ตาม Room ID นั้น
     await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(datas.roomID).delete();
+
     // ลบข้อมูลของ Member ทั้งหมด ใน Room ID นั้น
-    await db.collection('Room').doc(datas.roomID).collection('Members').delete();
+    let getRoomID = [];
+    const GetRoomFromAccIDRef = db.collection('Room').doc(datas.roomID).collection('Members');
+    await GetRoomFromAccIDRef.get().then(async data => {
+        if (data.empty) {
+            console.log('No matching documents.');
+            return;
+        } else {
+            data.forEach(f => {
+                getRoomID.push(f.data());
+            });
+
+            let roomIDArray = getRoomID.map(r => r.roomID);
+            console.log('roomIDArray: ', roomIDArray)
+            let roomIDCount = (roomIDArray.length) - 1;
+
+            for (i = 0; i <= roomIDCount; i++) {
+                let roomID = roomIDArray[i];
+                console.log('RoomID loop: ', roomID);
+                await db.collection('Room').doc(datas.roomID).collection('Members').doc(roomID).delete();
+            }
+        }
+    });
+
     // ลบข้อมูล Room ID นั้น
     await db.collection('Room').doc(datas.roomID).delete()
         .then(function () {

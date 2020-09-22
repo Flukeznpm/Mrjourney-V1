@@ -242,19 +242,22 @@ async function deleteAccount(datas) {
             for (i = 0; i <= roomIDCount; i++) {
                 let roomID = roomIDArray[i];
                 console.log('RoomID loop: ', roomID);
+                await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(roomID).delete();
                 await db.collection('Room').doc(roomID).delete();
             }
         }
     });
+    
     // ลบ RoomID ทั้งหมดใน AccountProfile
-    await db.collection('AccountProfile').doc(datas.lineID).collection('Room').delete();
+    // await db.collection('AccountProfile').doc(datas.lineID).collection('Room').delete();
+
     // ลบ AccountProfile ของ User นั้นๆ
     await db.collection('AccountProfile').doc(datas.lineID).delete()
-    .then(function () {
-        console.log("Account successfully deleted!");
-    }).catch(function (error) {
-        console.error("Error deleted document Account: ", error);
-    });
+        .then(function () {
+            console.log("Account successfully deleted!");
+        }).catch(function (error) {
+            console.error("Error deleted document Account: ", error);
+        });
 };
 
 async function getOwnerRoomByID(datas) {
