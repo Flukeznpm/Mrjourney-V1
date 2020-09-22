@@ -405,8 +405,11 @@ async function deleteRoom(datas) {
     // ลบข้อมูลของ Room ที่ User มี ใน AccountProfile ตาม Room ID นั้น
     await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(datas.roomID).delete();
 
+    // ลบ owner room 
+    await db.collection('Room').doc(datas.roomID).collection('Members').doc('A').delete();
+
     // ลบข้อมูลของ Member ทั้งหมด ใน Room ID นั้น
-    let getRoomID = [];
+    let getMemberID = [];
     const GetRoomFromAccIDRef = db.collection('Room').doc(datas.roomID).collection('Members');
     await GetRoomFromAccIDRef.get().then(async data => {
         if (data.empty) {
@@ -414,17 +417,23 @@ async function deleteRoom(datas) {
             return;
         } else {
             data.forEach(f => {
-                getRoomID.push(f.data());
+                getMemberID.push(f.data());
             });
 
-            let roomIDArray = getRoomID.map(r => r.roomID);
-            console.log('roomIDArray: ', roomIDArray)
-            let roomIDCount = (roomIDArray.length) - 1;
+            let MemberIDArray = await getMemberID.map(r => r.lineID);
+            // console.log('MemberIDArray: ', MemberIDArray)
+            let MemberIDCount = (MemberIDArray.length);
+            // console.log('MemberIDCount: ', MemberIDCount)
 
-            for (i = 0; i <= roomIDCount; i++) {
-                let roomID = roomIDArray[i];
-                console.log('RoomID loop: ', roomID);
-                await db.collection('Room').doc(datas.roomID).collection('Members').doc(roomID).delete();
+            for (i = MemberIDCount; i <= MemberIDCount; i--) {
+                if (i > 0) {
+                    let MembersID = (MemberIDArray[i - 1]);
+                    let MembersIDString = MembersID.toString();
+                    // console.log('MembersID loop: ', MembersID);
+                    await db.collection('Room').doc(datas.roomID).collection('Members').doc(MembersIDString).delete();
+                } else {
+                    return;
+                }
             }
         }
     });

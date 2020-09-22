@@ -68,12 +68,12 @@ async function updateProfile(datas) {
             });
 
             let roomIDArray = getRoom.map(r => r.roomID);
-            console.log('roomIDArray: ', roomIDArray)
+            // console.log('roomIDArray: ', roomIDArray)
             let roomIDCount = (roomIDArray.length) - 1;
 
             for (i = 0; i <= roomIDCount; i++) {
                 let roomID = roomIDArray[i];
-                console.log('RoomID loop: ', roomID);
+                // console.log('RoomID loop: ', roomID);
                 await db.collection('Room').doc(roomID).update({
                     ownerRoomName: datas.displayName,
                     ownerPicRoom: datas.pictureURL

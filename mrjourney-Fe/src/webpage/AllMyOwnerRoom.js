@@ -57,10 +57,7 @@ function MyOwnerRoom(props) {
     }
 
     const onDeleteRoom = async (roomID) => {
-        setDeleteRoomID(roomID)
-    }
-
-    const DeleteRoom = async () => {
+        await setDeleteRoomID(roomID)
         await axios.delete(`http://localhost:5000/room/deleteRoom?roomID=${deleteRoomID}&lineID=${lineID}`)
             .then(res => {
                 console.log(res)
