@@ -15,6 +15,7 @@ import {
     Tooltip,
     Typography,
     Button as AntButton,
+    Switch
 } from 'antd';
 
 const AntCard = styled(Card)`
@@ -47,6 +48,20 @@ const OutlineButton = styled(AntButton)`
     }
 `;
 
+const SwitchComponentClose = styled(Switch)`
+  background-color: #E9DDD1;
+  &.ant-switch-checked {
+    background-color: ${props => (props.theme.color.primary)};
+  }
+`;
+
+const SwitchComponentOpen = styled(Switch)`
+  background-color: #E9DDD1;
+  &.ant-switch-checked {
+    background-color: ${props => (props.theme.color.primary)};
+  }
+`;
+
 function RoomDetails(props) {
     const { thaiprovince, handleRoomForm, Room, plusMember, minusMember } = useContext(HookContext);
     const [lineID, setLineID] = useState("");
@@ -54,7 +69,6 @@ function RoomDetails(props) {
     const [pictureURL, setPictureURL] = useState("");
     const [roomStatus, setStatus] = useState(true);
     const [isEditRoom, setEditRoom] = useState(false);
-
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -66,6 +80,7 @@ function RoomDetails(props) {
             setDisplayName(user.displayName)
             setPictureURL(user.pictureURL)
         }
+
     }, [])
 
     const onEditRoom = (room) => {
@@ -102,12 +117,34 @@ function RoomDetails(props) {
             })
     }
 
+    const OpenRoom = async (roomID) => {
+        let openRoom = {
+            roomStatus: true
+        }
+        await axios.put(`http://localhost:5000/room/openRoom?roomID=${roomID}&lineID=${lineID}`, openRoom)
+            .then(res => {
+                console.log(res)
+            })
+    }
+
+
     return (
         <div className="col-9">
             <AntCard style={{ padding: 0 }}>
                 <div className="container py-3">
                     {isEditRoom === false ?
                         <div className="ShowRoom-Details">
+                            <div className="text-right">
+                                {props.roomDetail.roomStatus === true ?
+                                    <Tooltip title="เลื่อนเพื่อปิดห้อง">
+                                        <SwitchComponentClose defaultChecked onChange={() => CloseRoom(props.roomDetail.roomID)} />
+                                    </Tooltip>
+                                    :
+                                    <Tooltip title="เลื่อนเพื่อเปิดห้อง">
+                                        <SwitchComponentOpen onChange={() => OpenRoom(props.roomDetail.roomID)} />
+                                    </Tooltip>
+                                }
+                            </div>
                             <div className="ShowRoom-TripName py-1" style={{ fontSize: "30px" }}>
                                 ชื่อทริป : {props.roomDetail.roomName}
                             </div>
@@ -194,21 +231,21 @@ function RoomDetails(props) {
                                 <div className="container text-center py-3">
                                     <div className="col-12">
                                         <div className="row">
-                                            <div className="col-6 d-flex align-items-center">
+                                            <div className="col-12 d-flex align-items-center">
                                                 <OutlineButton
                                                     size={"large"}
                                                     block htmlType="button"
                                                     onClick={() => onEditRoom(props.roomDetail)}
                                                 >แก้ไขห้อง</OutlineButton>
                                             </div>
-                                            <div className="col-6 d-flex align-items-center">
+                                            {/* <div className="col-6 d-flex align-items-center">
                                                 <PrimaryButton
                                                     type="primary"
                                                     size={"large"}
                                                     block htmlType="submit"
                                                     onClick={() => CloseRoom(props.roomDetail.roomID)}
                                                 >ปิดห้อง</PrimaryButton>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 </div>

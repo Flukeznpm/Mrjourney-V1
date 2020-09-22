@@ -5,13 +5,19 @@ import '../static/css/Show-Room.css';
 import "../static/css/Nav.css";
 import "../static/css/App.css";
 import momentjs from 'moment'
-import BgSlide1 from '../static/img/pr-01.png';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { Link } from 'react-router-dom';
 import JoinRoom from './JoinRoom';
+import {
+    Button as AntButton,
+    Tooltip,
+    Input as AntInput,
+    Select as AntSelect,
+    Progress, Typography
+} from 'antd';
 
 const ImgCover = styled.img`
     height: 155px;
@@ -19,6 +25,17 @@ const ImgCover = styled.img`
     object-fit: cover;
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
+`;
+
+const { Paragraph } = Typography;
+const AntParagraph = styled(Paragraph)`
+    font-size: 10px;
+    .ant-typography-expand, .ant-typography-edit, .ant-typography-copy {
+        color: gray;
+    }
+    .ant-typography-copy-success, .ant-typography-copy-success:hover, .ant-typography-copy-success:focus {
+        color: ${props => (props.theme.color.primary)};
+    }
 `;
 
 function MyOwnerRoom(props) {
@@ -81,16 +98,24 @@ function MyOwnerRoom(props) {
                                                     <div class="card" style={{ width: "18rem" }}>
                                                         <ImgCover class="card-img-top" src={ownerRoom.roomCover} alt="Card image cap" />
                                                         <div class="card-body">
+
+                                                            <div class="card-text text-right p-0">
+                                                                <AntParagraph copyable>{ownerRoom.roomID}</AntParagraph>
+                                                            </div>
                                                             <h4 class="card-title">
-                                                                {ownerRoom.roomName} &nbsp;
-                                                                <button
-                                                                    type="button" class="float-right maxMember-btn btn p-0 "
-                                                                    style={{ fontSize: "10px" }} >
-                                                                    0/
-                                                                    {ownerRoom.maxMember}
-                                                                </button>
+                                                                {ownerRoom.roomName}
                                                             </h4>
-                                                            <div class="card-text">จ. {ownerRoom.province}</div>
+                                                            <div class="card-text">
+                                                                จ. {ownerRoom.province}
+                                                            </div>
+                                                            <div className="col-12 p-0">
+                                                                <div class="card-text row">
+                                                                    <div className="col-9"><Progress percent={30} showInfo={false} /></div>
+                                                                    <div className="col-3" style={{ fontSize: "12px", paddingTop: "4px" }}>
+                                                                        0/{ownerRoom.maxMember}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div class="card-text py-2">
                                                                 <button
                                                                     type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>

@@ -7,14 +7,14 @@ import Logo from '../../static/img/logojourney.png';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import momentjs from 'moment'
-import { Progress, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import {
     Button as AntButton,
     Tooltip,
     Input as AntInput,
-    Select as AntSelect
+    Select as AntSelect,
+    Progress, Typography
 } from 'antd';
 
 const { Paragraph } = Typography;
@@ -26,7 +26,8 @@ const AntParagraph = styled(Paragraph)`
     .ant-typography-copy-success, .ant-typography-copy-success:hover, .ant-typography-copy-success:focus {
         color: ${props => (props.theme.color.primary)};
     }
-`
+`;
+
 const PrimaryButton = styled(AntButton)`
     border-radius: 8px;
     font-size: 16px;
