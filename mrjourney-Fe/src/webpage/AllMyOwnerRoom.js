@@ -53,8 +53,11 @@ function MyOwnerRoom(props) {
         //     confirmButtonColor: '#31CC71',
         //     cancelButtonText: '<a href="/Home" id="alert-confirm-button">ยกเลิก</a>',
         // })
-
-        await axios.post(`http://localhost:5000/room/deleteRoom?roomID=${ownerRoom.roomID}&lineID=${lineID}`)
+        
+        let roomStatus = {
+            roomStatus: false
+        }
+        await axios.put(`http://localhost:5000/room/deleteRoom?roomID=${ownerRoom.roomID}&lineID=${lineID}`, roomStatus)
             .then(res => {
                 console.log(res)
             })
