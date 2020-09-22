@@ -92,11 +92,11 @@ function RoomDetails(props) {
         })
     }
 
-    const CloseRoom = async () => {
+    const CloseRoom = async (roomID) => {
         let closeRoom = {
             roomStatus: false
         }
-        await axios.put(`http://localhost:5000/room/deleteRoom?roomID=${props.roomDetail.roomID}&lineID=${lineID}`, closeRoom)
+        await axios.put(`http://localhost:5000/room/closeRoom?roomID=${roomID}&lineID=${lineID}`, closeRoom)
             .then(res => {
                 console.log(res)
             })
@@ -206,7 +206,7 @@ function RoomDetails(props) {
                                                     type="primary"
                                                     size={"large"}
                                                     block htmlType="submit"
-                                                    onClick={AlertCloseRoom}
+                                                    onClick={() => CloseRoom(props.roomDetail.roomID)}
                                                 >ปิดห้อง</PrimaryButton>
                                             </div>
                                         </div>

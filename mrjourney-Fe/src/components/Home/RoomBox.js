@@ -253,7 +253,12 @@ function RoomBox(props) {
                     <div class="col-12 p-0">
                         <div class="row">
                             <div class="col-9">
-                                <PrimaryButton type="primary" onClick={() => onCheckJoinRoom(props.acc, props.room)} block>เข้าร่วม</PrimaryButton>
+                                {props.room.roomStatus === true
+                                    ?
+                                    <PrimaryButton type="primary" onClick={() => onCheckJoinRoom(props.acc, props.room)} block>เข้าร่วม</PrimaryButton>
+                                    :
+                                    <PrimaryButton type="primary" block disabled>เข้าร่วม</PrimaryButton>
+                                }
                             </div>
                             <div class="col-3 text-center">
                                 <Tooltip title="ดูข้อมูลเพิ่มเติม">

@@ -125,7 +125,7 @@ function ShowRoomBox(props) {
                         </AntSelect>
                     </Row>
                 </Col>
-                <Col lg={6} md={8} sm={18} xs={18} className="py-2">
+                <Col lg={6} md={8} sm={18} xs={18} className="py-2" >
                     <Row justify="center">
                         <AntSelect
                             defaultValue="recent"
