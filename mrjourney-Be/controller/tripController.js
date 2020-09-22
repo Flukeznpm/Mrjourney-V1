@@ -148,17 +148,17 @@ router.delete('/deleteTrip', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        //let checkPermission = await db.collection('TripList').doc(datas.tripID).collection('Owner').doc(datas.ownerTrip);
-        let checkPermission = await db.collection('TripList').where('tripID', '==', datas.tripID).where('ownerTrip', '==', datas.ownerTrip);
-        checkPermission.get().then(async data => {
-            if (data.exists) {
-                await deleteTrip(req.body)
-                res.status(200).json({
-                    message: "Delete Trip Success"
-                })
-            } else {
+        let checkPermission = db.collection('TripList').where('tripID', '==', datas.tripID).where('ownerTrip', '==', datas.ownerTrip);
+        await checkPermission.get().then(async data => {
+            if (data.empty) {
+                console.log("You do not have permission to delete trip")
                 return res.status(400).json({
                     message: "You do not have permission to delete trip"
+                })
+            } else {
+                await deleteTrip(datas);
+                return res.status(200).json({
+                    message: "Delete Trip Success"
                 })
             }
         })

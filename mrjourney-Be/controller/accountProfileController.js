@@ -105,10 +105,10 @@ router.delete('/deleteAccount', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        let checkPermission = await db.collection('AccountProfile').doc(data.lineID);
-        checkPermission.get().then(async data => {
+        let checkPermission = db.collection('AccountProfile').doc(datas.lineID);
+        await checkPermission.get().then(async data => {
             if (data.exists) {
-                await deleteAccount(req.body);
+                await deleteAccount(datas);
                 console.log('Alert: Delete Account Success')
                 res.status(200).json({
                     message: "Delete Account Success",
@@ -247,7 +247,7 @@ async function deleteAccount(datas) {
             }
         }
     });
-    
+
     // ลบ RoomID ทั้งหมดใน AccountProfile
     // await db.collection('AccountProfile').doc(datas.lineID).collection('Room').delete();
 
