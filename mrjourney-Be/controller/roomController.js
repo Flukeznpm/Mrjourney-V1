@@ -157,6 +157,33 @@ router.put('/closeRoom', async function (req, res, next) {
     }
 });
 
+router.put('/openRoom', async function (req, res, next) {
+    let datasQuery = req.query;
+    let roomStatus = req.body.roomStatus;
+    if (datasQuery.roomID == undefined || datasQuery.roomID == null || datasQuery.roomID == '' ||
+        datasQuery.lineID == undefined || datasQuery.lineID == null || datasQuery.lineID == '' ||
+        roomStatus == undefined || roomStatus == null || roomStatus == true) {
+        console.log('Alert: The Data was empty or undefined"')
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        let checkPermission = await db.collection('Room').where('roomID', '==', datasQuery.roomID).where('ownerRoomID', '==', datasQuery.lineID);
+        await checkPermission.get().then(async data => {
+            if (data.empty) {
+                console.log('You do not have permission to close room');
+                return;
+            } else {
+                await openRoom(datasQuery, roomStatus);
+                console.log('Alert: Close Room Success')
+                res.status(200).json({
+                    message: "Close Room Success",
+                })
+            }
+        })
+    }
+});
+
 router.post('/uploadRoomCoverImage', async function (req, res, next) {
     let image = req.body.image;
     let name = req.body.nameImage;
@@ -395,6 +422,13 @@ async function updateRoom(datas) {
 };
 
 async function closeRoom(datas, roomStatus) {
+    let closeRoomRef = db.collection('Room').doc(datas.roomID);
+    await closeRoomRef.update({
+        roomStatus: roomStatus
+    })
+};
+
+async function openRoom(datas, roomStatus) {
     let closeRoomRef = db.collection('Room').doc(datas.roomID);
     await closeRoomRef.update({
         roomStatus: roomStatus
