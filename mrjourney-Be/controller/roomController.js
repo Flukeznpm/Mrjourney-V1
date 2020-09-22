@@ -131,8 +131,8 @@ router.delete('/deleteRoom', async function (req, res, next) {
 });
 
 router.put('/closeRoom', async function (req, res, next) {
-    let datasQuery = datas.query;
-    let roomStatus = datas.body.roomStatus;
+    let datasQuery = req.query;
+    let roomStatus = req.body.roomStatus;
     if (datasQuery.roomID == undefined || datasQuery.roomID == null || datasQuery.roomID == '' ||
         datasQuery.lineID == undefined || datasQuery.lineID == null || datasQuery.lineID == '' ||
         roomStatus == undefined || roomStatus == null || roomStatus == true) {
