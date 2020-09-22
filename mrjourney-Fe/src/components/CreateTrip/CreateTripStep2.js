@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import '../../static/css/App.css';
-import "../../static/css/Event-Trip.css";
+import styled from "styled-components";
 import CreateTripModal from '../Modal/CreateTripModal'
 import momentjs from 'moment'
 import axios from 'axios';
@@ -9,6 +8,118 @@ import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
 import Stepper from '../components/Stepper';
+import {
+    Card,
+    Form as AntForm,
+    Row,
+    Col,
+    Tooltip,
+    Button as AntButton,
+} from 'antd';
+import { CaretUpOutlined, CaretDownOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import ShowStartToEnd from './components/ShowStartToEnd';
+import ShowEventBox from './components/ShowEventBox';
+
+const DateCardNotActive = styled(Card)`
+  border-radius: 8px;
+  background: ${props => (props.theme.color.primary)};
+  color: white;
+  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  margin: 10px 0px 10px 0px;
+  padding: 5px 0px 5px 0px;
+  font-size: 24px;
+  height: 100%;
+  cursor: pointer;
+  .anticon {
+      display: flex;
+      align-items: center;
+      padding: 0px 10px;
+  }
+`;
+
+const EventCard = styled(Card)`
+  border-radius: 10px;
+  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  height: 100%;
+  .ant-card-body {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 12px;
+  }
+`;
+
+const EventCardNoBg = styled(Card)`
+  border-radius: 10px;
+  height: 100%;
+  border: none;
+  .ant-card-body {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 12px;
+  }
+`;
+
+const DeleteEventCard = styled(Card)`
+  border-radius: 10px;
+  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  background: #FF4647;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  .ant-card-body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 12px;
+  }
+  height: 100%;
+`;
+
+const PrimaryButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const OutlineButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    border: 1px solid ${props => (props.theme.color.primary)};
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        border: 1px solid ${props => (props.theme.color.primaryPress)};
+        color: ${props => (props.theme.color.primary)};
+        background: #F7F7F7;
+    }
+`;
+
+const AddEventButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+    border: none;
+    margin: 10px 0px;
+    .anticon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+    &:hover , &:active , &:focus {
+        color: ${props => (props.theme.color.primary)};
+        border: none;
+        background: #F5F5F5;
+    }
+`;
+
+
 
 function CreateTripStep2(props) {
     const { nextTripStep, prevTripStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
@@ -53,126 +164,104 @@ function CreateTripStep2(props) {
 
     return (
         <div>
-            <div className="top-page mb-3">
-                <div className="container py-2 mt-3">
-                    <Stepper typeStep="trip" step={2} />
-                </div>
-                <div className="content-page py-2">
-                    <div className="col-12">
-                        <div className="row">
-                            <div className="col-2"></div>
-                            <div className="col-8">
-                                <div className="trip-perday-box py-3">
-                                    <div className="text-center " style={{ paddingBottom: "25px" }}>
-                                        <span className="show-date-to-end ">
-                                            <span className="mt-2 mb-2 ml-3 mr-3" style={{ fontWeight: "normal" }}>
-                                                <span className="p-1"> {momentjs(Trip.date).format('ll')}
-                                                </span>
-                                                    &nbsp;-&nbsp;
-                                                    <span className="p-1">{momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day').format('ll')}
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </div>
-                                    {Trip.totalDate.map((PerDay, key) => {
-                                        return (
+            <div className="container py-2 mt-3">
+                <Stepper typeStep="trip" step={2} />
+            </div>
+            <Row justify="center">
+                <div className="container">
+                    <Col span={24}>
+                        <div className="trip-perday-box py-3">
+                            <ShowStartToEnd />
+                            {Trip.totalDate.map((PerDay, key) => {
+                                return (
+                                    <div>
+                                        {Trip.activeEvent !== key ?
+                                            <DateCardNotActive onClick={() => setActiveEvent(key)}>
+                                                <Row justify="center">
+                                                    {PerDay.eventDate}
+                                                    <CaretDownOutlined />
+                                                </Row>
+                                            </DateCardNotActive>
+                                            :
                                             <div>
-
-                                                {Trip.activeEvent !== key ?
-                                                    <div class="alert event-box-disabled">
-                                                        <span className="text-white">{PerDay.eventDate}</span>
-                                                        <span className="float-right">
-                                                            <i class="fas fa-caret-down" onClick={() => setActiveEvent(key)} style={{ cursor: "pointer" }} />
-                                                        </span>
-                                                    </div>
-                                                    :
-                                                    <div class="alert event-box-active border-bottom">
-                                                        <span style={{ color: "rgb(241, 82, 19)", fontSize: "24px" }}>{PerDay.eventDate}</span>
-                                                        <span className="float-right">
-                                                            <i class="fas fa-caret-up" onClick={() => setNotActiveEvent(key)} style={{ cursor: "pointer" }} />
-                                                        </span>
-                                                        {PerDay.event.map((eventDetail) => {
-                                                            return (
+                                                <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
+                                                    <Row justify="center">
+                                                        {PerDay.eventDate}
+                                                        <CaretUpOutlined />
+                                                    </Row>
+                                                </DateCardNotActive>
+                                                {PerDay.event.map((eventDetail, eventKey) => {
+                                                    return (
+                                                        <Row>
+                                                            <Col span={19}>
                                                                 <div className="container">
-                                                                    <div className="row py-2">
-                                                                        <div className="col-9">
-                                                                            <span className="float-left">
-                                                                                {eventDetail.eventName}
-                                                                                <br />{eventDetail.startEvent}
-                                                                            </span>
-                                                                            <div className="m-2">
-                                                                                {eventDetail.eventType === 'eating' ?
-                                                                                    <button
-                                                                                        type="button" class="event-type-btn btn p-0 ml-1 float-right">
-                                                                                        <span class="shadow fas fa-utensils"></span>
-                                                                                    </button>
-                                                                                    : ""}
-                                                                                {eventDetail.eventType === 'travel' ?
-                                                                                    <button
-                                                                                        type="button" class="event-type-btn btn p-0 ml-1 float-right">
-                                                                                        <span class="shadow fas fa-car-side"></span>
-                                                                                    </button>
-                                                                                    : ""}
-
-                                                                                {eventDetail.eventType === 'sleep' ?
-                                                                                    <button
-                                                                                        type="button" class="event-type-btn btn p-0 ml-1 float-right">
-                                                                                        <span class="shadow fas fa-bed"></span>
-                                                                                    </button>
-                                                                                    : ""}
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="col-3">
-                                                                            <div className="m-2">
-                                                                                <button type="button"
-                                                                                    class="delete-event-btn p-0 ml-1 btn float-right"
-                                                                                    onClick={() => deleteEvent(eventDetail, key)}>
-                                                                                    <span class="shadow fas fa-trash-alt"></span></button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                                    {eventKey / 2 !== 0 ?
+                                                                        <EventCard>
+                                                                            <ShowEventBox eventDetail={eventDetail} />
+                                                                        </EventCard>
+                                                                        :
+                                                                        <EventCardNoBg>
+                                                                            <ShowEventBox eventDetail={eventDetail} />
+                                                                        </EventCardNoBg>
+                                                                    }
                                                                 </div>
-                                                            )
-                                                        })}
-                                                        <p className="text-center">
-                                                            <button type="button" className="add-details-btn btn p-0 pt-1"
-                                                                onClick={() => eventModalShow(key)}>
-                                                                <span className="far fa-plus-square fa-lg">
-                                                                </span>
-                                                            </button>
-                                                            <CreateTripModal
-                                                                show={addModalShow}
-                                                                onConfirm={() => setEvent(keyModal)}
-                                                                onHide={() => eventModalClose(keyModal)}
-                                                            ></CreateTripModal>
-                                                        </p>
-                                                    </div>
-                                                }
+                                                            </Col>
+                                                            <Col span={5} >
+                                                                <DeleteEventCard>
+                                                                    <DeleteOutlined onClick={() => deleteEvent(eventDetail, key)} />
+                                                                </DeleteEventCard>
+                                                            </Col>
+                                                        </Row>
 
+                                                    )
+                                                })}
+                                                <AddEventButton block
+                                                    size={"large"} htmlType="submit"
+                                                    onClick={() => eventModalShow(key)}
+                                                >
+                                                    <PlusOutlined />
+                                                </AddEventButton>
+                                                <CreateTripModal
+                                                    show={addModalShow}
+                                                    onConfirm={() => setEvent(keyModal)}
+                                                    onHide={() => eventModalClose(keyModal)}
+                                                ></CreateTripModal>
                                             </div>
-                                        )
-                                    })}
-
-                                    <div className="buttom-page py-3">
-                                        <div className="container py-3">
-                                            <div className="col-2 float-left ml-4">
-                                                <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                    onClick={() => prevTripStep(1)}>ย้อนกลับ</button>
-                                            </div>
-                                            <div className=" col-2 float-right mr-4">
-                                                <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                    onClick={handleSubmit}>เสร็จสิ้น</button>
-                                            </div>
-                                        </div>
+                                        }
                                     </div>
-                                </div>
-                                <div className="col-2"></div>
+                                )
+                            })}
+                            <div className="fixed-bottom">
+                                <AntForm>
+                                    <AntForm.Item>
+                                        <Row>
+                                            <Col span={6}>
+                                                <div className="container">
+                                                    <OutlineButton
+                                                        size={"large"}
+                                                        block htmlType="button"
+                                                        onClick={() => prevTripStep(1)}
+                                                    >ย้อนกลับ</OutlineButton>
+                                                </div>
+                                            </Col>
+                                            <Col span={18}>
+                                                <div className="container">
+                                                    <PrimaryButton
+                                                        type="primary"
+                                                        size={"large"}
+                                                        block htmlType="submit"
+                                                        onClick={handleSubmit}
+                                                    >ยืนยัน</PrimaryButton>
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                    </AntForm.Item>
+                                </AntForm>
                             </div>
                         </div>
-                    </div>
+                    </Col>
                 </div>
-            </div>
+            </Row>
         </div>
     )
 }

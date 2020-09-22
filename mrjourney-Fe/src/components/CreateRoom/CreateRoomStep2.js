@@ -130,31 +130,6 @@ function CreateRoomStep2(props) {
                                     </AntForm.Item>
                                 </div>
                             </AntForm>
-                            {/* <div className="pt-4">
-                                            <label htmlFor="example-date-input">จำนวนคนที่เปิดรับ<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                            <div className="input-group">
-
-                                                <span className="input-group-btn">
-                                                    <button type="button" className="btn btn-default btn-number"
-                                                        onClick={() => minusMember(1)}>
-                                                        <span className="fas fa-minus"></span>
-                                                    </button>
-                                                </span>
-                                                <input type="text"
-                                                    name="maxMember"
-                                                    className="form-control input-number"
-                                                    value={Room.maxMember}
-
-                                                />
-                                                <span className="input-group-btn">
-                                                    <button type="button" className="btn btn-default btn-number"
-                                                        onClick={() => plusMember(1)}>
-                                                        <span className="fas fa-plus" aria-hidden="true"></span>
-                                                    </button>
-                                                </span>
-                                            </div>
-
-                                        </div> */}
                         </div>
                         <div className="col-md-3"></div>
                     </div>
