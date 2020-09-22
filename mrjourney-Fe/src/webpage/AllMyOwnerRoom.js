@@ -26,6 +26,7 @@ function MyOwnerRoom(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [ownerRoom, setShowOwnerRoom] = useState([{}])
+    const [deleteRoomID, setDeleteRoomID] = useState("")
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -55,8 +56,12 @@ function MyOwnerRoom(props) {
         // })
     }
 
+    const onDeleteRoom = async (roomID) => {
+        setDeleteRoomID(roomID)
+    }
+
     const DeleteRoom = async () => {
-        await axios.delete(`http://localhost:5000/room/deleteRoom?roomID=${ownerRoom.roomID}&lineID=${lineID}`)
+        await axios.delete(`http://localhost:5000/room/deleteRoom?roomID=${deleteRoomID}&lineID=${lineID}`)
             .then(res => {
                 console.log(res)
             })
@@ -128,7 +133,7 @@ function MyOwnerRoom(props) {
                                                                 <span className="pl-1 pr-2"><img src={ownerRoom.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
                                                                 <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {ownerRoom.ownerRoomName}</span>
                                                             </div>
-                                                            <button type="button" class="col-5 mx-2 btn btn-outline-danger round" onClick={AlertDeleteRoom}>
+                                                            <button type="button" class="col-5 mx-2 btn btn-outline-danger round" onClick={() => onDeleteRoom(ownerRoom.roomID)}>
                                                                 ลบห้อง
                                                         </button>
                                                             <Link to={`/JoinRoom?roomID=${ownerRoom.roomID}`}>
