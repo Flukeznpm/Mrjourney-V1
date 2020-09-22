@@ -75,32 +75,6 @@ function NavWebPage(props) {
 
     }, [login])
 
-    // useEffect(() => {
-    //     let loadJWT = cookie.load('jwt');
-    //     if (loadJWT === undefined) {
-    //         setLineName("")
-    //         setLinePicture("")
-    //         setLineID("")
-    //     } else {
-    //         var user = jwt.verify(loadJWT, 'secreatKey');
-    //         setLineName(user.displayName)
-    //         setLinePicture(user.pictureURL)
-    //         setLineID(user.lineID)
-
-    //         let dataSyncLine = {
-    //             lineID: lineID,
-    //             displayName: displayName,
-    //             pictureURL: pictureURL
-    //         }
-    //         console.log('dataSyncLine: ', lineID)
-    //         console.log('dataSyncLine: ', dataSyncLine)
-    //         axios.post('http://localhost:5000/update/syncLine', dataSyncLine)
-    //             .then((res) => {
-    //                 console.log(res)
-    //             });
-    //     }
-    // }, [login])
-
     const AlertRoom = () => {
         Swal.fire({
             title: 'อยากสร้างห้องงั้นหรอ?',
@@ -118,18 +92,6 @@ function NavWebPage(props) {
             showCancelButton: false,
             confirmButtonColor: '#F37945',
             confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>'
-        })
-    }
-
-    const Alert = () => {
-        Swal.fire({
-            icon: "success",
-            title: 'สร้างห้องสำเร็จ',
-            text: 'ขอให้คุณสนุกกับการท่องเที่ยวนะ',
-            showCancelButton: true,
-            confirmButtonColor: '#31CC71',
-            confirmButtonText: 'เข้าสู่ห้อง',
-            cancelButtonText: 'กลับสู่หน้าหลัก',
         })
     }
 

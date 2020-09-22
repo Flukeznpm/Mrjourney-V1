@@ -1,0 +1,198 @@
+import React, { useContext, useEffect, useState } from 'react';
+import styled from "styled-components";
+import "../../static/css/Show-Room.css";
+import "../../static/css/Nav.css";
+import "../../static/css/App.css";
+import Logo from '../../static/img/logojourney.png';
+import Swal from 'sweetalert2';
+import axios from 'axios';
+import momentjs from 'moment'
+import { Progress, Typography } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import {
+    Button as AntButton,
+    Card, Col, Row,
+    Tooltip,
+    Input as AntInput,
+    Select as AntSelect
+} from 'antd';
+
+const { Paragraph } = Typography;
+const AntParagraph = styled(Paragraph)`
+    font-size: 10px;
+    .ant-typography-expand, .ant-typography-edit, .ant-typography-copy {
+        color: gray;
+    }
+    .ant-typography-copy-success, .ant-typography-copy-success:hover, .ant-typography-copy-success:focus {
+        color: ${props => (props.theme.color.primary)};
+    }
+`
+const PrimaryButton = styled(AntButton)`
+    border-radius: 8px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const SeeButton = styled(AntButton)`
+    font-size: 16px;
+    &:hover , &:active, &:focus {
+        border: 1px solid ${props => (props.theme.color.primary)};
+        color: ${props => (props.theme.color.primary)};
+    }
+`;
+
+const ImgCover = styled.img`
+    height: 155px;
+    width: 100%;
+    object-fit: cover;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+`;
+
+function RoomBox(props) {
+
+    const onCheckJoinRoom = (acc, room) => {
+        if (!acc.fName) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'คุณยังไม่ได้ Login!',
+                text: 'กรุณาทำการ Login ก่อนทำรายการ',
+                showCancelButton: true,
+                confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>',
+                confirmButtonColor: '#F37945',
+                cancelButtonText: 'กลับสู่หน้าหลัก',
+            })
+        } else {
+            if (room.genderCondition === "ชาย" && acc.gender === "ชาย" || room.genderCondition === "ไม่จำกัดเพศ" && acc.gender === "ชาย") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'เข้าร่วมสำเร็จ!',
+                    text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                    showCancelButton: true,
+                    confirmButtonText: 'เข้าสู่ห้อง',
+                    confirmButtonColor: '#31CC71',
+                    cancelButtonText: 'กลับสู่หน้าหลัก',
+                })
+            } else if (room.genderCondition === "หญิง" && acc.gender === "หญิง" || room.genderCondition === "ไม่จำกัดเพศ" && acc.gender === "หญิง") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'เข้าร่วมสำเร็จ!',
+                    text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                    showCancelButton: true,
+                    confirmButtonText: 'เข้าสู่ห้อง',
+                    confirmButtonColor: '#31CC71',
+                    cancelButtonText: 'กลับสู่หน้าหลัก',
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ขออภัย!',
+                    text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
+                    showCancelButton: false,
+                    confirmButtonColor: '#D33',
+                    confirmButtonText: 'กลับสู่หน้าหลัก'
+                })
+            }
+        }
+    }
+
+    return (
+        <div className="col-md-4 col-sm-12 d-flex justify-content-center py-3">
+            <div class="card" style={{ width: "18rem" }}>
+                <ImgCover src={props.room.roomCover} alt="Card image cap" />
+                <div class="card-body">
+                    <div class="card-text text-right p-0">
+                        <AntParagraph copyable>{props.room.roomID}</AntParagraph>
+                    </div>
+                    <h4 class="card-title">
+                        {props.room.roomName}
+                    </h4>
+                    <div class="card-text">
+                        จ. {props.room.province}
+                    </div>
+                    <div className="col-12 p-0">
+                        <div class="card-text row">
+                            <div className="col-9"><Progress percent={30} showInfo={false} /></div>
+                            <div className="col-3" style={{ fontSize: "12px", paddingTop: "4px" }}>
+                                0/{props.room.maxMember}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-text py-2">
+                        <button
+                            type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                            {momentjs(props.room.startDate).format('ll')}
+                            <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                        </button>
+                                                    &nbsp;-&nbsp;
+                                                <button
+                            type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                            {momentjs(props.room.endDate).format('ll')}
+                            <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                        </button>
+                    </div>
+                    <div className="card-text py-2">
+                        {props.room.genderCondition === 'ชาย' ?
+                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                            </span>
+                            :
+                            ""}
+                        {props.room.genderCondition === 'หญิง' ?
+                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                            </span>
+                            :
+                            ""}
+                        {props.room.genderCondition === 'ไม่จำกัดเพศ' ?
+                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
+                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                            </span>
+                            :
+                            ""}
+                        <span className="mt-0 ml-2" style={{ fontSize: "12px" }}>
+                            อายุ &nbsp;{props.room.ageCondition}
+                        </span>
+                    </div>
+                    <div className="owner-trip-profile py-2">
+                        <span className="pl-1 pr-2"><img src={props.room.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
+
+                        <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง :
+                            <Link to={`/Profile?userID=${props.room.ownerRoomID}`} style={{ color: "#e66f0f" }}>
+                                {props.room.ownerRoomName}
+                            </Link>
+                        </span>
+
+                    </div>
+                    <div class="col-12 p-0">
+                        <div class="row">
+                            <div class="col-9">
+                                <PrimaryButton type="primary" onClick={() => onCheckJoinRoom(props.acc, props.room)} block>เข้าร่วม</PrimaryButton>
+                            </div>
+                            <div class="col-3 text-center">
+                                <Tooltip title="ดูข้อมูลเพิ่มเติม">
+                                    <SeeButton
+                                        shape="circle"
+                                        onClick={() => {
+                                            props.setRoomModal(props.room)
+                                            props.showRoomModalShow()
+                                        }}
+                                        icon={<SearchOutlined />}
+                                    />
+                                </Tooltip>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+export default RoomBox;
