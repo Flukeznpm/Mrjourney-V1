@@ -433,7 +433,36 @@ async function updateTrip(datas) {
 async function deleteTrip(datas) {
     await db.collection('TripList').doc(datas.tripID).delete();
     await db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').doc(datas.tripID).delete();
-    await db.collection('LineGroup').doc(datas.lineGroupID).collection('Members').doc(datas.tripID).delete();
+
+    let getMemberID = [];
+    const GetMemberFromLineGroupRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Members');
+    await GetMemberFromLineGroupRef.get().then(async data => {
+        if (data.empty) {
+            console.log('No matching documents.');
+            return;
+        } else {
+            data.forEach(f => {
+                getMemberID.push(f.data());
+            });
+
+            let MemberIDArray = await getMemberID.map(r => r.lineID);
+            // console.log('MemberIDArray: ', MemberIDArray)
+            let MemberIDCount = (MemberIDArray.length);
+            // console.log('MemberIDCount: ', MemberIDCount)
+
+            for (i = MemberIDCount; i <= MemberIDCount; i--) {
+                if (i > 0) {
+                    let MembersID = (MemberIDArray[i - 1]);
+                    let MembersIDString = MembersID.toString();
+                    // console.log('MembersID loop: ', MembersID);
+                    await db.collection('LineGroup').doc(datas.lineGroupID).collection('Members').doc(MembersIDString).delete();
+                } else {
+                    return;
+                }
+            }
+        }
+    });
+
     await db.collection('LineGroup').doc(datas.lineGroupID).delete();
     await db.collection('LineChatAccount').doc(datas.lineID).collection('Group').doc(datas.lineGroupID).delete();
     await db.collection('TripPerDay').doc(datas.lineGroupID).delete()
