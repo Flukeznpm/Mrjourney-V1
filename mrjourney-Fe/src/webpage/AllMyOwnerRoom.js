@@ -10,7 +10,6 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { Link } from 'react-router-dom';
-import JoinRoom from './JoinRoom';
 import {
     Button as AntButton,
     Tooltip,
@@ -18,6 +17,7 @@ import {
     Select as AntSelect,
     Progress, Typography
 } from 'antd';
+import DeleteModal from '../components/components/DeleteModal';
 
 const ImgCover = styled.img`
     height: 155px;
@@ -43,6 +43,7 @@ function MyOwnerRoom(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [ownerRoom, setShowOwnerRoom] = useState([{}])
+    const [isVisible, setVisible] = useState(false)
     const [deleteRoomID, setDeleteRoomID] = useState("")
 
     useEffect(() => {
@@ -61,26 +62,6 @@ function MyOwnerRoom(props) {
             })
     }, [])
 
-    const AlertDeleteRoom = () => {
-        // Swal.fire({
-        //     icon: 'success',
-        //     title: 'คุณแน่ใจหรือไม่ที่จะต้องการลบห้อง?',
-        //     text: 'เมื่อทำการลบห้อง ข้อมูลทั้งหมดของห้องนี้จะถูกลบออกทั้งหมด',
-        //     showCancelButton: true,
-        //     confirmButtonText: 'ลบห้อง',
-        //     confirmButtonColor: '#31CC71',
-        //     cancelButtonText: 'ยกเลิก',
-        // })
-    }
-
-    const onDeleteRoom = async (roomID) => {
-        await setDeleteRoomID(roomID)
-        await axios.delete(`http://localhost:5000/room/deleteRoom?roomID=${deleteRoomID}&lineID=${lineID}`)
-            .then(res => {
-                console.log(res)
-            })
-    }
-
     return (
         <div className="flex-wrapper">
             <div className="top-page">
@@ -98,7 +79,6 @@ function MyOwnerRoom(props) {
                                                     <div class="card" style={{ width: "18rem" }}>
                                                         <ImgCover class="card-img-top" src={ownerRoom.roomCover} alt="Card image cap" />
                                                         <div class="card-body">
-
                                                             <div class="card-text text-right p-0">
                                                                 <AntParagraph copyable>{ownerRoom.roomID}</AntParagraph>
                                                             </div>
@@ -155,9 +135,21 @@ function MyOwnerRoom(props) {
                                                                 <span className="pl-1 pr-2"><img src={ownerRoom.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
                                                                 <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {ownerRoom.ownerRoomName}</span>
                                                             </div>
-                                                            <button type="button" class="col-5 mx-2 btn btn-outline-danger round" onClick={() => onDeleteRoom(ownerRoom.roomID)}>
+                                                            <button type="button"
+                                                                class="col-5 mx-2 btn btn-outline-danger round"
+                                                                // onClick={() => onDeleteRoom(ownerRoom.roomID)}
+                                                                onClick={() => setVisible(true)}
+                                                            >
                                                                 ลบห้อง
-                                                        </button>
+                                                            </button>
+                                                            <DeleteModal
+                                                                isVisible={isVisible}
+                                                                setVisible={setVisible}
+                                                                roomID={ownerRoom.roomID} 
+                                                                lineID={lineID} 
+                                                                deleteRoomID={deleteRoomID}
+                                                                setDeleteRoomID={setDeleteRoomID}
+                                                                />
                                                             <Link to={`/JoinRoom?roomID=${ownerRoom.roomID}`}>
                                                                 <button type="button"
                                                                     className="btn mx-2 col-5 btn-join-color round text-white"
