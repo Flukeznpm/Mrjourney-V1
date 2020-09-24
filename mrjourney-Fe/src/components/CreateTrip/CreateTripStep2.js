@@ -183,7 +183,7 @@ function CreateTripStep2(props) {
                                         {Trip.activeEvent !== key ?
                                             <DateCardNotActive onClick={() => setActiveEvent(key)}>
                                                 <Row justify="center">
-                                                    {PerDay.eventDate}
+                                                    {momentjs(PerDay.eventDate).format('ll')}
                                                     <CaretDownOutlined />
                                                 </Row>
                                             </DateCardNotActive>
@@ -191,7 +191,7 @@ function CreateTripStep2(props) {
                                             <div>
                                                 <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
                                                     <Row justify="center">
-                                                        {PerDay.eventDate}
+                                                        {momentjs(PerDay.eventDate).format('ll')}
                                                         <CaretUpOutlined />
                                                     </Row>
                                                 </DateCardNotActive>

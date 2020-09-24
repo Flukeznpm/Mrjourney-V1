@@ -1,6 +1,5 @@
 
 import React, { createContext, useReducer } from "react"
-import momentjs from 'moment'
 
 export const HookContext = createContext({})
 
@@ -27,7 +26,6 @@ const initialState = {
       'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรปราการ', 'สมุทรสงคราม', 'สมุทรสาคร', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์',
       'หนองคาย', 'หนองบัวลำภู', 'อ่างทอง', 'อุดรธานี', 'อุทัยธานี', 'อุตรดิตถ์', 'อุบลราชธานี', 'อำนาจเจริญ'
     ],
-  toDate: momentjs(new Date()).format('YYYY-MM-DD'),
   Trip: {
     activeEvent: 0,
     tripName: '',
@@ -190,9 +188,12 @@ const hookReducer = (state, action) => {
     // "TripStep":
     case "CONFIRM_TRIP_STEP1":
       let AllTripDate = []
+      var startDate = new Date(state.Trip.date);
+      var eventDate = new Date();
       for (let index = 0; index < state.Trip.numberAddDate; index++) {
+        eventDate.setDate(startDate.getDate() + index);
         let ShowBox = {
-          eventDate: momentjs(state.Trip.date).add(index, 'day').format('ll'),
+          eventDate: eventDate,
           event: []
         }
         AllTripDate.push(ShowBox)
@@ -209,7 +210,6 @@ const hookReducer = (state, action) => {
     case "SET_EVENT":
       let AllDate = state.Trip.totalDate
       AllDate[action.key].event.push(state.Event)
-      console.log('totalDate', state.Trip.totalDate)
       if (state.Event.eventName && state.Event.startEvent && state.Event.endEvent) {
         return {
           ...state,

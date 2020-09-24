@@ -78,7 +78,7 @@ function CreateTripStep1(props) {
     const onFinish = values => {
         handleTripForm(values.tripName, 'tripName')
         handleTripForm(values.province, 'province')
-        handleTripForm(momentjs(values.date).format('ll'), 'date')
+        handleTripForm(values.date, 'date')
         handleTripForm(values.numberAddDate, 'numberAddDate')
         confirmTripStep(1)
     };
