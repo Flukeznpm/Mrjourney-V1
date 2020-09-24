@@ -89,14 +89,12 @@ const PrimaryButton = styled(AntButton)`
     }
 `;
 
-const OutlineButton = styled(AntButton)`
+const PrevButton = styled(AntButton)`
     border-radius: 4px;
     font-size: 16px;
-    border: 1px solid ${props => (props.theme.color.primary)};
     color: ${props => (props.theme.color.primary)};
     &:hover , &:active {
-        border: 1px solid ${props => (props.theme.color.primaryPress)};
-        color: ${props => (props.theme.color.primary)};
+        color: ${props => (props.theme.color.primaryPress)};
         background: #F7F7F7;
     }
 `;
@@ -118,6 +116,13 @@ const AddEventButton = styled(AntButton)`
         background: #F5F5F5;
     }
 `;
+
+const Wrapper = styled.div`
+display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
+`
 
 
 
@@ -163,18 +168,18 @@ function CreateTripStep2(props) {
     }
 
     return (
-        <div>
-            <div className="container py-2 mt-3">
-                <Stepper typeStep="trip" step={2} />
-            </div>
-            <Row justify="center">
-                <div className="container">
-                    <Col span={24}>
-                        <div className="trip-perday-box py-3">
+        <Wrapper>
+            <div className="top-page">
+                <div className="container py-2 mt-3">
+                    <Stepper typeStep="trip" step={2} />
+                </div>
+                <Row justify="center">
+                    <div className="container">
+                        <Col span={24} className="py-3">
                             <ShowStartToEnd />
                             {Trip.totalDate.map((PerDay, key) => {
                                 return (
-                                    <div>
+                                    <>
                                         {Trip.activeEvent !== key ?
                                             <DateCardNotActive onClick={() => setActiveEvent(key)}>
                                                 <Row justify="center">
@@ -228,41 +233,39 @@ function CreateTripStep2(props) {
                                                 ></CreateTripModal>
                                             </div>
                                         }
-                                    </div>
+                                    </>
                                 )
                             })}
-                            <div className="fixed-bottom">
-                                <AntForm>
-                                    <AntForm.Item>
-                                        <Row>
-                                            <Col span={6}>
-                                                <div className="container">
-                                                    <OutlineButton
-                                                        size={"large"}
-                                                        block htmlType="button"
-                                                        onClick={() => prevTripStep(1)}
-                                                    >ย้อนกลับ</OutlineButton>
-                                                </div>
-                                            </Col>
-                                            <Col span={18}>
-                                                <div className="container">
-                                                    <PrimaryButton
-                                                        type="primary"
-                                                        size={"large"}
-                                                        block htmlType="submit"
-                                                        onClick={handleSubmit}
-                                                    >ยืนยัน</PrimaryButton>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                    </AntForm.Item>
-                                </AntForm>
-                            </div>
-                        </div>
-                    </Col>
-                </div>
-            </Row>
-        </div>
+
+                        </Col>
+                    </div>
+                </Row>
+            </div>
+            <div className="container">
+                <AntForm>
+                    <AntForm.Item>
+                        <Row>
+                            <Col span={8}>
+                                <PrevButton
+                                    type="link"
+                                    size={"large"}
+                                    block htmlType="button"
+                                    onClick={() => prevTripStep(1)}
+                                >ย้อนกลับ</PrevButton>
+                            </Col>
+                            <Col span={16}>
+                                <PrimaryButton
+                                    type="primary"
+                                    size={"large"}
+                                    block htmlType="submit"
+                                    onClick={handleSubmit}
+                                >ยืนยัน</PrimaryButton>
+                            </Col>
+                        </Row>
+                    </AntForm.Item>
+                </AntForm>
+            </div>
+        </Wrapper>
     )
 }
 

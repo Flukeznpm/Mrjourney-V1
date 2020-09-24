@@ -32,8 +32,8 @@ const AntCard = styled(Card)`
 
 const AntFormLogin = styled(AntForm)`
  display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+flex-direction: column;
+justify-content: space-between;
 `
 
 const InputComponent = styled(AntInput)`
