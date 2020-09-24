@@ -28,7 +28,8 @@ router.get('/', async function (req, res, next) {
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
                         let result = await getAllTripByGroupID(lineGroupID);
-                        console.log('Get Trip list success: ', result)
+                        console.log('Alert: get Trip list success')
+                        console.log(result)
                         res.status(200).json(result);
                     } else {
                         console.log('Alert: You cannot check this Trip')
@@ -65,12 +66,9 @@ router.get('/tripperday', async function (req, res, next) {
                 checkUserRef.get().then(async data => {
                     if (data.exists) {
                         const result = await getTripPerDayByDate(lineGroupID, dateOfTrip)
-                            .then(data => {
-                                res.status(200).json(data);
-                            })
-                        // console.log('Get Trip per day success')
-                        // console.log(result)
-                        // res.status(200).json(result);
+                        console.log('Alert: get Trip per day success')
+                        console.log(result)
+                        res.status(200).json(result);
                     } else {
                         console.log('Alert: You cannot check this Trip per day')
                         const message = "You cannot check this Trip per day"
@@ -178,9 +176,11 @@ async function getAllTripByGroupID(lineGroupID) {
 
     let tripID = tripIDList.map(t => t.tripID).toString();
 
-    let showAllTrip = db.collection('TripPerDay').doc(tripID);
-    await showAllTrip.get().then(doc => {
-        dataTripAllDay.push(doc.data());
+    let showAllTrip = db.collection('TripPerDay').doc(tripID).collection('Date');
+    await showAllTrip.get().then(async snapshot => {
+        snapshot.forEach(async doc => {
+            await dataTripAllDay.push([doc.id, doc.data()]);
+        })
     })
         .catch(err => {
             console.log('Error getting All Trip detail', err);
@@ -198,37 +198,21 @@ async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
             tripIDList.push(doc.data());
         })
     })
-
     let tripID = tripIDList.map(t => t.tripID).toString();
-    console.log('Trip ID: ', tripID);
-    console.log('Date: ', dateOfTrip)
+    // console.log('TripID: ', tripID);
+    // console.log('Date: ', dateOfTrip)
 
-    //WAY 1
     const showTripPerDay = db.collection('TripPerDay');
-    const queryTPD1 = showTripPerDay.where('tripID', '==', tripID).where('events', 'array-contains',
-        { event: [{ endEvent: "04:59", eventName: "บ้านกินเส้น", eventType: "eating", startEvent: "04:59" }], eventDate: "16 Sep 2020" });
+    const queryTPD = showTripPerDay.doc(tripID).collection('Date').doc(dateOfTrip);
 
-    //WAY 2
-    // const fieldPath = new firestore.FieldPath('events', 'event');
-    // const queryTPD2 = await showTripPerDay.where('tripID', '==', tripID).where(fieldPath, 'array-contains', { eventType: "eating" });
-
-    //WAY 3
-    // const queryTPD3 = showTripPerDay.where(`events.${dateOfTrip}.eventDate`, '==', dateOfTrip);
-
-    await queryTPD1.get().then(async res => {
-        if (queryTPD1.empty) {
+    await queryTPD.get().then(async res => {
+        if (queryTPD.empty) {
             console.log('No matching documents.');
             return;
         } else {
-            await res.forEach(async doc => {
-                console.log('>>> Debug forEach get trip per day <<<');
-                await dataTripPerDay.push(doc.data());
-                console.log('doc: ', doc.data())
-            });
+            await dataTripPerDay.push(res.data());
         }
     })
-
-    console.log('dataTripPerDay: ', dataTripPerDay)
 
     return dataTripPerDay;
 };
@@ -297,15 +281,31 @@ async function createTripList(datas) {
             })
             let saveTripPerDay = await db.collection('TripPerDay').doc(genTripID).set({
                 tripID: genTripID,
-                events: datas.events
             })
-            // await saveTripPerDay.collection('Day').doc().set({
-            //     eventDate: datas.eventDate,
-            //     eventName: datas.eventName,
-            //     startEventTime: datas.startEventTime,
-            //     endEventTime: datas.endEventTime,
-            //     eventType: datas.eventType
-            // })
+            for (let i = 0; i <= 0; i++) {
+                let count = (datas.events.length) - 1;
+                for (let j = 0; j <= count; j++) {
+                    if (j <= count) {
+                        let date = await datas.events[j].eventDate;
+                        let eventName = await datas.events[j].event[i].eventName;
+                        let startEvent = await datas.events[j].event[i].startEvent;
+                        let endEvent = await datas.events[j].event[i].endEvent;
+                        let eventType = await datas.events[j].event[i].eventType;
+                        console.log(eventName)
+                        console.log(startEvent)
+                        console.log(endEvent)
+                        console.log(eventType)
+                        await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(date).set({
+                            eventName: eventName,
+                            startEvent: startEvent,
+                            endEvent: endEvent,
+                            eventType: eventType
+                        })
+                    } else {
+                        console.log('Error create trip')
+                    }
+                } //loop1
+            } //loop2
         } else {
             // กรณี : User ใหม่ที่ต้องการจะ Create Trip
             await CheckLineChatAccountRef.set({
@@ -340,15 +340,34 @@ async function createTripList(datas) {
             })
             let saveTripPerDay = await db.collection('TripPerDay').doc(genTripID).set({
                 tripID: genTripID,
-                events: datas.events
             })
-            // await saveTripPerDay.collection('Day').doc().set({
-            //     eventDate: datas.eventDate,
-            //     eventName: datas.eventName,
-            //     startEventTime: datas.startEventTime,
-            //     endEventTime: datas.endEventTime,
-            //     eventType: datas.eventType
-            // })
+            datas.events.forEach(element => {
+                console.log('element: ', element)
+            });
+            for (let i = 0; i <= 0; i++) {
+                let count = (datas.events.length) - 1;
+                for (let j = 0; j <= count; j++) {
+                    if (j <= count) {
+                        let date = await datas.events[j].eventDate;
+                        let eventName = await datas.events[j].event[i].eventName;
+                        let startEvent = await datas.events[j].event[i].startEvent;
+                        let endEvent = await datas.events[j].event[i].endEvent;
+                        let eventType = await datas.events[j].event[i].eventType;
+                        console.log(eventName)
+                        console.log(startEvent)
+                        console.log(endEvent)
+                        console.log(eventType)
+                        await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(date).set({
+                            eventName: eventName,
+                            startEvent: startEvent,
+                            endEvent: endEvent,
+                            eventType: eventType
+                        })
+                    } else {
+                        console.log('Error create trip')
+                    }
+                } //loop1
+            } //loop2
         }
     })
 };
