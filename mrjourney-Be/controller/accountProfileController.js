@@ -223,7 +223,7 @@ async function updateBio(datas) {
 };
 
 async function deleteAccount(datas) {
-    // ลบ Room ตาม AccountProfile ของ User นั้นๆ
+    // ลบ Room ทั้งหมดตาม AccountProfile ของ User นั้นๆ
     let getRoomID = [];
     const GetRoomFromAccIDRef = db.collection('AccountProfile').doc(datas.lineID).collection('Room');
     await GetRoomFromAccIDRef.get().then(async data => {
@@ -235,24 +235,32 @@ async function deleteAccount(datas) {
                 getRoomID.push(f.data());
             });
 
-            let roomIDArray = getRoomID.map(r => r.roomID);
-            console.log('roomIDArray: ', roomIDArray)
-            let roomIDCount = (roomIDArray.length) - 1;
+            let RoomIDArray = await getRoomID.map(r => r.lineID);
+            // console.log('MemberIDArray: ', MemberIDArray)
+            let RoomIDCount = (RoomIDArray.length);
+            // console.log('MemberIDCount: ', MemberIDCount)
 
-            for (i = 0; i <= roomIDCount; i++) {
-                let roomID = roomIDArray[i];
-                console.log('RoomID loop: ', roomID);
-                await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(roomID).delete();
-                await db.collection('Room').doc(roomID).delete();
+            for (i = RoomIDCount; i <= RoomIDCount; i--) {
+                if (i > 0) {
+                    let RoomID = (RoomIDArray[i - 1]);
+                    let RoomIDString = RoomID.toString();
+                    // console.log('MembersID loop: ', MembersID);
+                    await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(RoomIDString).delete();
+                } else {
+                    return;
+                }
             }
         }
     });
 
-    // ลบ RoomID ทั้งหมดใน AccountProfile
-    // await db.collection('AccountProfile').doc(datas.lineID).collection('Room').delete();
-
     // ลบ AccountProfile ของ User นั้นๆ
-    await db.collection('AccountProfile').doc(datas.lineID).delete()
+    await db.collection('AccountProfile').doc(datas.lineID).delete();
+
+    // ลบ Member ใน Room ทั้งหมดของ User นั้นๆ
+
+
+    // ลบ Room ของ User นั้นๆ
+    await db.collection('Room').doc(roomID).delete()
         .then(function () {
             console.log("Account successfully deleted!");
         }).catch(function (error) {
