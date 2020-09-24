@@ -397,7 +397,7 @@ async function createTripList(datas) {
                             event: event
                         })
                     } else {
-                        console.log('Error create trip')
+                        console.log('Error create trip loop')
                     }
                 } //loop1
             } //loop2
@@ -406,7 +406,6 @@ async function createTripList(datas) {
 };
 
 async function updateTrip(datas) {
-    let message;
     let CheckLineChatAccountRef = await db.collection('LineChatAccount').doc(datas.lineID);
     CheckLineChatAccountRef.get().then(async data => {
         if (data.exists) {
@@ -441,13 +440,24 @@ async function updateTrip(datas) {
                                                     await CheckTripPerDay.update({
                                                         totalDate: datas.totalDate
                                                     })
-                                                    // CheckTripPerDay.collection('Day').doc().update({
-                                                    //     eventDate: datas.eventDate,
-                                                    //     eventName: datas.eventName,
-                                                    //     startEventTime: datas.startEventTime,
-                                                    //     endEventTime: datas.endEventTime,
-                                                    //     eventType: datas.eventType
-                                                    // }) 
+                                                    for (let i = 0; i <= 0; i++) {
+                                                        let count = (datas.totalDate.length) - 1;
+                                                        for (let j = 0; j <= count; j++) {
+                                                            if (j <= count) {
+                                                                let date = await datas.totalDate[j].eventDate;
+                                                                let event = await datas.totalDate[j].event;
+                                                                // let eventName = await datas.totalDate[j].event[i].eventName;
+                                                                // let startEvent = await datas.totalDate[j].event[i].startEvent;
+                                                                // let endEvent = await datas.totalDate[j].event[i].endEvent;
+                                                                // let eventType = await datas.totalDate[j].event[i].eventType;
+                                                                await db.collection('TripPerDay').doc(datas.tripID).collection('Date').doc(date).update({
+                                                                    event: event
+                                                                })
+                                                            } else {
+                                                                console.log('Error update trip loop')
+                                                            }
+                                                        } //loop1
+                                                    } //loop2
                                                 } else {
                                                     console.log('Error Update Trip: TripPerDay not found')
                                                     return res.status(400).json({
