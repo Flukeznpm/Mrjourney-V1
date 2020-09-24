@@ -14,8 +14,9 @@ import {
 const AntCard = styled(Card)`
   border-radius: 8px;
   box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
-  margin: 10px 0px 10px 0px;
+  /* margin: 10px 0px 10px 0px; */
   padding: 15px 0px 15px 0px;
+  height: 100%;
 `;
 
 function ShowMembers(props) {
@@ -45,7 +46,7 @@ function ShowMembers(props) {
     }, [])
 
     return (
-        <div className="col-3">
+        <div className="col-lg-3 col-sm-12 my-3">
             <AntCard style={{ padding: 0 }}>
                 Members
                     <div className="showmembers-list">

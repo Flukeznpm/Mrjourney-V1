@@ -67,7 +67,7 @@ function JoinRoom(props) {
                                             </div>
                                         </div>
                                         <div className="col-12">
-                                            <div className="row text-black">
+                                            <div className="row">
                                                 <RoomDetails roomDetail={roomDetail} members={members.length}></RoomDetails>
                                                 <ShowMembers />
                                             </div>
