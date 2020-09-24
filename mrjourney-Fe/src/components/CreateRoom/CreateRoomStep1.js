@@ -68,14 +68,19 @@ function CreateRoomStep1(props) {
     }, [])
 
     const onFinish = values => {
-        handleRoomForm(values.roomName, 'roomName')
-        handleRoomForm(values.province, 'province')
-        handleRoomForm(momentjs(values.startDate).format('ll'), 'startDate')
-        handleRoomForm(momentjs(values.endDate).format('ll'), 'endDate')
-        handleRoomForm(values.tripDetails, 'tripDetails')
-        handleRoomForm(roomCoverImg, 'roomCover')
-        handleRoomForm(roomQrCodeImg, 'qrCode')
-        nextStep(1)
+        if (!roomCoverImg || !roomQrCodeImg) {
+            return false;
+        } else {
+            handleRoomForm(values.roomName, 'roomName')
+            handleRoomForm(values.province, 'province')
+            handleRoomForm(momentjs(values.startDate).format('ll'), 'startDate')
+            handleRoomForm(momentjs(values.endDate).format('ll'), 'endDate')
+            handleRoomForm(values.tripDetails, 'tripDetails')
+            handleRoomForm(roomCoverImg, 'roomCover')
+            handleRoomForm(roomQrCodeImg, 'qrCode')
+            nextStep(1)
+        }
+
     };
 
     const onStartDateChange = (date, dateString) => {
@@ -137,13 +142,15 @@ function CreateRoomStep1(props) {
                                     <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
                                 </AntForm.Item>
                                 <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
-                                    <div class="input-group pt-3">
-                                        <div class="custom-file" >
-                                            <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                                aria-describedby="inputGroupFileAddon01" onChange={onFileCoverChange} />
-                                            <label class="custom-file-label" for="inputGroupFile01">{fileRoomCover}</label>
+                                    <AntForm.Item name="roomCover" rules={[{ required: true }]}>
+                                        <div class="input-group pt-3">
+                                            <div class="custom-file" >
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                                    aria-describedby="inputGroupFileAddon01" onChange={onFileCoverChange} />
+                                                <label class="custom-file-label" for="inputGroupFile01">{fileRoomCover}</label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </AntForm.Item>
                                 </Tooltip>
                                 <Tooltip title="รูปปกห้อง">
                                     <div className="text-center pt-2">
@@ -183,13 +190,15 @@ function CreateRoomStep1(props) {
                                     <TextArea rows={4} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" />
                                 </AntForm.Item>
                                 <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
-                                    <div class="input-group pt-3 pb-2">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                                aria-describedby="inputGroupFileAddon01" onChange={onFileQrCodeChange} />
-                                            <label class="custom-file-label" for="inputGroupFile01">{fileQrCode}</label>
+                                    <AntForm.Item name="roomQrCode" rules={[{ required: true }]}>
+                                        <div class="input-group pt-3 pb-2">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                                    aria-describedby="inputGroupFileAddon01" onChange={onFileQrCodeChange} />
+                                                <label class="custom-file-label" for="inputGroupFile01">{fileQrCode}</label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </AntForm.Item>
                                 </Tooltip>
                                 <Tooltip title="รูปคิวอาร์โค้ดกลุ่มไลน์">
                                     <div className="text-center pt-2">
