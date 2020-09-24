@@ -94,24 +94,6 @@ const hookReducer = (state, action) => {
         ...state,
         step: state.step - action.payload
       }
-    // "TripStep":
-    case "CONFIRM_TRIP_STEP1":
-      let AllTripDate = []
-      for (let index = 0; index < state.Trip.numberAddDate; index++) {
-        let ShowBox = {
-          eventDate: momentjs(state.Trip.date).add(index, 'day').format('ll'),
-          event: []
-        }
-        AllTripDate.push(ShowBox)
-      }
-      return {
-        ...state,
-        Trip: {
-          ...state.Trip,
-          totalDate: AllTripDate
-        },
-        tripStep: state.tripStep + action.payload
-      }
     case "NEXT_TRIP_STEP":
       return {
         ...state,
@@ -205,11 +187,29 @@ const hookReducer = (state, action) => {
           activeEvent: action.payload - 1
         }
       }
-
+    // "TripStep":
+    case "CONFIRM_TRIP_STEP1":
+      let AllTripDate = []
+      for (let index = 0; index < state.Trip.numberAddDate; index++) {
+        let ShowBox = {
+          eventDate: momentjs(state.Trip.date).add(index, 'day').format('ll'),
+          event: []
+        }
+        AllTripDate.push(ShowBox)
+      }
+      return {
+        ...state,
+        Trip: {
+          ...state.Trip,
+          totalDate: AllTripDate
+        },
+        tripStep: state.tripStep + action.payload
+      }
     // Event
     case "SET_EVENT":
       let AllDate = state.Trip.totalDate
       AllDate[action.key].event.push(state.Event)
+      console.log('totalDate', state.Trip.totalDate)
       if (state.Event.eventName && state.Event.startEvent && state.Event.endEvent) {
         return {
           ...state,

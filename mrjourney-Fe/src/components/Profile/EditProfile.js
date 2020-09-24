@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
-// import '../static/css/App.css';
-// import '../static/css/Profile.css';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
