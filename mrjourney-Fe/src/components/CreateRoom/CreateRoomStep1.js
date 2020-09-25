@@ -73,8 +73,8 @@ function CreateRoomStep1(props) {
         } else {
             handleRoomForm(values.roomName, 'roomName')
             handleRoomForm(values.province, 'province')
-            handleRoomForm(momentjs(values.startDate).format('ll'), 'startDate')
-            handleRoomForm(momentjs(values.endDate).format('ll'), 'endDate')
+            handleRoomForm(values.startDate, 'startDate')
+            handleRoomForm(values.endDate, 'endDate')
             handleRoomForm(values.tripDetails, 'tripDetails')
             handleRoomForm(roomCoverImg, 'roomCover')
             handleRoomForm(roomQrCodeImg, 'qrCode')

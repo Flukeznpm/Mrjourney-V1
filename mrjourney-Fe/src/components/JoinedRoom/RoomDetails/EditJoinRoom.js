@@ -68,7 +68,7 @@ const InputNumberComponent = styled(InputNumber)`
 `;
 
 function EditJoinRoom(props) {
-    const { thaiprovince, handleRoomForm, Room, plusMember, minusMember } = useContext(HookContext);
+    const { thaiprovince, handleRoomForm, Room } = useContext(HookContext);
     const [lineID, setLineID] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [pictureURL, setPictureURL] = useState("");
@@ -82,6 +82,7 @@ function EditJoinRoom(props) {
     const { Option } = AntSelect;
     const { TextArea } = AntInput;
     const dateFormat = 'DD-MM-YYYY';
+    const [form] = AntForm.useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -93,6 +94,18 @@ function EditJoinRoom(props) {
             setDisplayName(user.displayName)
             setPictureURL(user.pictureURL)
         }
+        form.setFieldsValue({
+            roomName: props.roomDetail.roomName,
+            province: props.roomDetail.province,
+            startDate: momentjs(props.roomDetail.startDate),
+            endDate: momentjs(props.roomDetail.endDate),
+            maxMember: props.roomDetail.maxMember,
+            ageCondition: props.roomDetail.ageCondition,
+            genderCondition: props.roomDetail.genderCondition,
+            tripDetails: props.roomDetail.tripDetails,
+        })
+        setRoomCoverImg(props.roomDetail.roomCover)
+        setRoomQrCodeImg(props.roomDetail.qrCode)
     }, [])
 
 
@@ -171,24 +184,7 @@ function EditJoinRoom(props) {
     return (
 
         <div className="ShowRoom-Edit-Details">
-
-
-            <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
-                <div class="input-group pt-3">
-                    <div class="custom-file" >
-                        <input type="file" class="custom-file-input" id="inputGroupFile01"
-                            aria-describedby="inputGroupFileAddon01" onChange={onFileCoverChange} />
-                        <label class="custom-file-label" for="inputGroupFile01">{fileRoomCover}</label>
-                    </div>
-                </div>
-            </Tooltip>
-            <Tooltip title="รูปปกห้อง">
-                <div className="text-center pt-2">
-                    <img width="150px" src={roomCoverImg} />
-                </div>
-            </Tooltip>
-
-            <AntForm onFinish={onFinish}>
+            <AntForm form={form} onFinish={onFinish}>
                 <AntForm.Item name="roomName" label="ชื่อทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                     <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
                 </AntForm.Item>
@@ -205,14 +201,14 @@ function EditJoinRoom(props) {
                 </AntForm.Item>
                 <div className="col-12 p-0">
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-lg-6 col-md-6 col-sm-12">
                             <AntForm.Item name="startDate" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                 <DatePickerComponent onChange={onStartDateChange}
                                     disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
                                     format={dateFormat} />
                             </AntForm.Item>
                         </div>
-                        <div className="col-6">
+                        <div className="col-lg-6 col-md-6 col-sm-12">
                             <AntForm.Item name="endDate" label="วันสิ้นสุดทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                 <DatePickerComponent
                                     disabledDate={d => !d || d.isSameOrBefore(Room.startDate)}
@@ -250,6 +246,20 @@ function EditJoinRoom(props) {
                     <TextArea rows={4} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" />
                 </AntForm.Item>
                 <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
+                    <div class="input-group pt-3">
+                        <div class="custom-file" >
+                            <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                aria-describedby="inputGroupFileAddon01" onChange={onFileCoverChange} />
+                            <label class="custom-file-label" for="inputGroupFile01">{fileRoomCover}</label>
+                        </div>
+                    </div>
+                </Tooltip>
+                <Tooltip title="รูปปกห้อง">
+                    <div className="text-center py-2">
+                        <img width="150px" src={roomCoverImg} />
+                    </div>
+                </Tooltip>
+                <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
                     <div class="input-group pt-3 pb-2">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="inputGroupFile01"
@@ -259,7 +269,7 @@ function EditJoinRoom(props) {
                     </div>
                 </Tooltip>
                 <Tooltip title="รูปคิวอาร์โค้ดกลุ่มไลน์">
-                    <div className="text-center pt-2">
+                    <div className="text-center py-2">
                         <img width="150px" src={roomQrCodeImg} />
                     </div>
                 </Tooltip>
@@ -267,14 +277,14 @@ function EditJoinRoom(props) {
                     <AntForm.Item>
                         <div className="col-12">
                             <div className="row">
-                                <div className="col-6 d-flex align-items-center">
+                                <div className="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center py-2">
                                     <OutlineButton
                                         size={"large"}
                                         block htmlType="button"
                                         onClick={() => onCancelEditRoom()}
                                     >ยกเลิกแก้ไข</OutlineButton>
                                 </div>
-                                <div className="col-6 d-flex align-items-center">
+                                <div className="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center py-2">
                                     <PrimaryButton
                                         type="primary"
                                         size={"large"}

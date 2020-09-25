@@ -124,7 +124,7 @@ function FirstTimeLogin(props) {
                     <AntCard>
                         <AntFormLogin onFinish={onFinish}>
                             <div className="input-login">
-                                <h3 className="text-center">More information</h3>
+                                <h3 className="text-center">กรอกข้อมูลเพิ่มเติม</h3>
                                 <AntForm.Item name="fName" label="ชื่อจริง" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                     <InputComponent placeholder="กรอกชื่อของคุณ" />
                                 </AntForm.Item>

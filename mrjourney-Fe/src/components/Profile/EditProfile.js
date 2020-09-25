@@ -66,6 +66,7 @@ function EditProfile(props) {
     const [gender, selectGender] = useState(["ชาย", "หญิง"])
     const { Option } = AntSelect;
     const dateFormat = 'DD-MM-YYYY';
+    const [form] = AntForm.useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -85,6 +86,12 @@ function EditProfile(props) {
             .then(res => {
                 setShowAcc(res.data)
             })
+        form.setFieldsValue({
+            fName: props.acc.fName,
+            lName: props.acc.lName,
+            gender: props.acc.gender,
+            birthday: momentjs(props.acc.birthday),
+        })
     }, [])
 
     const onFinish = async (value) => {
@@ -105,7 +112,7 @@ function EditProfile(props) {
     };
     return (
         <div className="pt-4">
-            <AntForm onFinish={onFinish}>
+            <AntForm form={form} onFinish={onFinish}>
                 <AntFormItem name="fName">
                     <InputComponent size="small" placeholder="กรอกชื่อของคุณ" />
                 </AntFormItem>

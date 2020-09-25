@@ -108,7 +108,7 @@ function ProfileDetails(props) {
                                 <div className="detail">อายุ {calculateDate(props.acc.birthday)} ปี</div>
                             </div>
                             :
-                            <EditProfile setEditProfile={setEditProfile}></EditProfile>
+                            <EditProfile setEditProfile={setEditProfile} acc={props.acc}></EditProfile>
                         }
                     </div>
                 </Col>

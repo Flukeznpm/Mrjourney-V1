@@ -238,14 +238,6 @@ function RoomDetails(props) {
                                                     onClick={() => onEditRoom(props.roomDetail)}
                                                 >แก้ไขห้อง</OutlineButton>
                                             </div>
-                                            {/* <div className="col-6 d-flex align-items-center">
-                                                <PrimaryButton
-                                                    type="primary"
-                                                    size={"large"}
-                                                    block htmlType="submit"
-                                                    onClick={() => CloseRoom(props.roomDetail.roomID)}
-                                                >ปิดห้อง</PrimaryButton>
-                                            </div> */}
                                         </div>
                                     </div>
                                 </div>
