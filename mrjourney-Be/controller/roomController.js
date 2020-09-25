@@ -214,12 +214,28 @@ router.post('/joindRoom', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        await joinedRoom(datas)
-            .then(() => {
-                res.status(201).json({
-                    message: "User Joined Room Success",
-                })
-            })
+        let checkUserRef = db.collection('AccountProfile').doc(datas.lineID);
+        await checkUserRef.get().then(async data => {
+            if (data.exists) {
+                let checkUserJoinedRoomAlready = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
+                await checkUserJoinedRoomAlready.get().then(doc => {
+                    if (doc.exists) {
+                        console.log('User have already join room');
+                        res.status(200).json('User have already join room');
+                    } else {
+                        await joinedRoom(datas)
+                            .then(() => {
+                                res.status(201).json({
+                                    message: "User Joined Room Success",
+                                })
+                            });
+                    }
+                });
+            } else {
+                console.log('User do not register on system');
+                res.status(200).json('User do not have register in system, User can not join room');
+            }
+        });
     }
 });
 
