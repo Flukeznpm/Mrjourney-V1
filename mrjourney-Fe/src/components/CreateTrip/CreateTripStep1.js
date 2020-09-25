@@ -63,6 +63,7 @@ function CreateTripStep1(props) {
 
     const { Option } = AntSelect;
     const dateFormat = 'DD/MM/YYYY';
+    const [form] = AntForm.useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -73,6 +74,9 @@ function CreateTripStep1(props) {
             setLineName(user.displayName)
             setLinePicture(user.pictureURL)
         }
+        form.setFieldsValue({
+            numberAddDate: Trip.numberAddDate
+        })
     }, [])
 
     const onFinish = values => {
@@ -94,7 +98,7 @@ function CreateTripStep1(props) {
                     <div className="row">
                         <div className="col-md-3"></div>
                         <div className="col-md-6">
-                            <AntForm onFinish={onFinish}>
+                            <AntForm form={form} onFinish={onFinish}>
                                 <AntForm.Item name="tripName" label="ชื่อทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                     <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
                                 </AntForm.Item>

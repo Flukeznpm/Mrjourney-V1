@@ -53,6 +53,7 @@ function CreateRoomStep2(props) {
     const [gender, selectGender] = useState(["ชาย", "หญิง", "ไม่จำกัดเพศ"])
     const [age, selectAge] = useState(["ต่ำกว่า 18 ปี", "18-25 ปี", "25 ปีขึ้นไป", "ไม่จำกัดช่วงอายุ"])
     const [lineID, setLineID] = useState("")
+    const [form] = AntForm.useForm();
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -62,6 +63,9 @@ function CreateRoomStep2(props) {
             var user = jwt.verify(loadJWT, 'secreatKey');
             setLineID(user.lineID)
         }
+        form.setFieldsValue({
+            maxMember: Room.maxMember
+        })
     }, [])
 
     const onFinish = values => {
@@ -81,7 +85,7 @@ function CreateRoomStep2(props) {
                     <div className="row">
                         <div className="col-md-3"></div>
                         <div className="col-md-6">
-                            <AntForm onFinish={onFinish}>
+                            <AntForm form={form} onFinish={onFinish}>
                                 <AntForm.Item name="maxMember" label="จำนวนที่เปิดรับ" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                     <InputNumberComponent min={1} style={{ width: "100%" }} />
                                 </AntForm.Item>
