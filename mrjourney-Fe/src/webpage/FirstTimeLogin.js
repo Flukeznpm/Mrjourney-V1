@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import '../static/css/Login.css';
 import styled from "styled-components";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
@@ -62,9 +61,14 @@ const DatePickerComponent = styled(DatePicker)`
     &:hover , &:active {
         border-color: rgb(230, 111, 15);
     }
-`
+`;
 
-
+const Wrapper = styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: rgb(255, 233, 208);
+`;
 
 function FirstTimeLogin(props) {
 
@@ -114,9 +118,9 @@ function FirstTimeLogin(props) {
     };
 
     return (
-        <div className="LoginPage">
+        <Wrapper>
             <RowLogin justify="center">
-                <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 20 }} xs={{ span: 22}} style={{ width: 400 }}>
+                <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 20 }} xs={{ span: 22 }} style={{ width: 400 }}>
                     <AntCard>
                         <AntFormLogin onFinish={onFinish}>
                             <div className="input-login">
@@ -152,7 +156,7 @@ function FirstTimeLogin(props) {
                     </AntCard>
                 </Col>
             </RowLogin>
-        </div >
+        </Wrapper>
     )
 }
 

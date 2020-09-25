@@ -17,6 +17,7 @@ import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
 import 'antd/dist/antd.css';
 import Profile from './webpage/Profile';
+import NotMatchPage from './NotMatchPage';
 
 function App() {
   return (
@@ -55,8 +56,11 @@ function App() {
         <Route path="/FirstTimeLogin">
           <FirstTimeLogin />
         </Route>
-        <Route path="/">
+        <Route exact path="/">
           <Home />
+        </Route>
+        <Route path="*">
+          <NotMatchPage />
         </Route>
       </Switch>
     </Router>
