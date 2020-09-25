@@ -223,7 +223,6 @@ async function updateBio(datas) {
 };
 
 async function deleteAccount(datas) {
-    // ลบ Room ทั้งหมดตาม AccountProfile ของ User นั้นๆ
     let getRoomID = [];
     const GetRoomFromAccIDRef = db.collection('AccountProfile').doc(datas.lineID).collection('Room');
     await GetRoomFromAccIDRef.get().then(async data => {
@@ -245,7 +244,46 @@ async function deleteAccount(datas) {
                     let RoomID = (RoomIDArray[i - 1]);
                     let RoomIDString = RoomID.toString();
                     // console.log('MembersID loop: ', MembersID);
+
+                    // ลบ Room ทั้งหมดตาม AccountProfile ของ User นั้นๆ //
                     await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(RoomIDString).delete();
+
+
+                    // ลบ Owner room ทั้งหมดที่ fix เอาไว้ //
+                    await db.collection('Room').doc(RoomIDString).collection('Members').doc('A').delete();
+
+                    // ลบ Member ใน Room ทั้งหมดของ User นั้นๆ //
+                    let getMemberID = [];
+                    const GetRoomFromAccIDRef = db.collection('Room').doc(datas.roomID).collection('Members');
+                    await GetRoomFromAccIDRef.get().then(async data => {
+                        if (data.empty) {
+                            console.log('No matching documents.');
+                            return;
+                        } else {
+                            data.forEach(f => {
+                                getMemberID.push(f.data());
+                            });
+
+                            let MemberIDArray = await getMemberID.map(r => r.lineID);
+                            // console.log('MemberIDArray: ', MemberIDArray)
+                            let MemberIDCount = (MemberIDArray.length);
+                            // console.log('MemberIDCount: ', MemberIDCount)
+
+                            for (i = MemberIDCount; i <= MemberIDCount; i--) {
+                                if (i > 0) {
+                                    let MembersID = (MemberIDArray[i - 1]);
+                                    let MembersIDString = MembersID.toString();
+                                    // console.log('MembersID loop: ', MembersID);
+                                    await db.collection('Room').doc(RoomIDString).collection('Members').doc(MembersIDString).delete();
+                                } else {
+                                    return;
+                                }
+                            }
+                        }
+                    });
+
+                    // ลบ Room ของ User นั้นๆทั้งหมด //
+                    await db.collection('Room').doc(RoomIDString).delete();
                 } else {
                     return;
                 }
@@ -253,14 +291,8 @@ async function deleteAccount(datas) {
         }
     });
 
-    // ลบ AccountProfile ของ User นั้นๆ
-    await db.collection('AccountProfile').doc(datas.lineID).delete();
-
-    // ลบ Member ใน Room ทั้งหมดของ User นั้นๆ
-
-
-    // ลบ Room ของ User นั้นๆ
-    await db.collection('Room').doc(roomID).delete()
+    // ลบ AccountProfile ของ User นั้นๆ //
+    await db.collection('AccountProfile').doc(datas.lineID).delete()
         .then(function () {
             console.log("Account successfully deleted!");
         }).catch(function (error) {
