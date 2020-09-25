@@ -68,7 +68,7 @@ function RoomDetails(props) {
     const [displayName, setDisplayName] = useState("");
     const [pictureURL, setPictureURL] = useState("");
     const [roomStatus, setStatus] = useState(true);
-    const [isEditRoom, setEditRoom] = useState(false);
+    // const [isEditRoom, setEditRoom] = useState(false);
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -83,16 +83,8 @@ function RoomDetails(props) {
 
     }, [])
 
-    const onEditRoom = (room) => {
-        Room.roomName = room.roomName
-        Room.province = room.province
-        Room.startDate = room.startDate
-        Room.endDate = room.endDate
-        Room.maxMember = room.maxMember
-        Room.ageCondition = room.ageCondition
-        Room.genderCondition = room.genderCondition
-        Room.tripDetails = room.tripDetails
-        setEditRoom(true)
+    const onEditRoom = () => {
+        props.setEditRoom(true)
     }
 
     const AlertCloseRoom = () => {
@@ -132,7 +124,7 @@ function RoomDetails(props) {
         <div className="col-lg-9 col-sm-12 my-3">
             <AntCard style={{ padding: 0 }}>
                 <div className="container py-3">
-                    {isEditRoom === false ?
+                    {props.isEditRoom === false ?
                         <div className="ShowRoom-Details">
                             <div className="text-right">
                                 {props.roomDetail.roomStatus === true ?
@@ -235,7 +227,7 @@ function RoomDetails(props) {
                                                 <OutlineButton
                                                     size={"large"}
                                                     block htmlType="button"
-                                                    onClick={() => onEditRoom(props.roomDetail)}
+                                                    onClick={() => onEditRoom()}
                                                 >แก้ไขห้อง</OutlineButton>
                                             </div>
                                         </div>
@@ -254,7 +246,7 @@ function RoomDetails(props) {
 
                         </div>
                         :
-                        <EditJoinRoom roomDetail={props.roomDetail} setEditRoom={setEditRoom}></EditJoinRoom>
+                        <EditJoinRoom roomDetail={props.roomDetail} setEditRoom={props.setEditRoom}></EditJoinRoom>
                     }
                 </div>
             </AntCard>

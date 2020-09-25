@@ -40,10 +40,6 @@ const LineNameText = styled.text`
 `;
 
 function ProfileDetails(props) {
-    const [isEditProfile, setEditProfile] = useState(false)
-    const [isEditBio, setEditBio] = useState(false);
-
-
 
     const handleBio = (value) => {
         let dataUpdateBio = {
@@ -54,11 +50,11 @@ function ProfileDetails(props) {
             .then(async (res) => {
                 console.log(res)
             })
-        setEditBio(false)
+        props.setEditBio(false)
     }
 
     const onEditProfile = () => {
-        setEditProfile(!isEditProfile)
+        props.setEditProfile(!props.isEditProfile)
     }
 
     const calculateDate = (dob) => {
@@ -88,7 +84,7 @@ function ProfileDetails(props) {
                     <div className="personal-profile-details" >
                         {props.lineID === props.acc.lineID ?
                             <>
-                                {isEditProfile === false ?
+                                {props.isEditProfile === false ?
                                     <EditProfileButton type="link" icon={<EditOutlined />}
                                         style={{ marginLeft: "auto", marginRight: "0px" }}
                                         onClick={onEditProfile}
@@ -100,7 +96,7 @@ function ProfileDetails(props) {
                             :
                             null
                         }
-                        {isEditProfile === false ?
+                        {props.isEditProfile === false ?
                             <div style={{ fontSize: "16px" }}>
                                 <div className="detail">ชื่อ {props.acc.fName}</div>
                                 <div className="detail">นามสกุล {props.acc.lName}</div>
@@ -108,7 +104,7 @@ function ProfileDetails(props) {
                                 <div className="detail">อายุ {calculateDate(props.acc.birthday)} ปี</div>
                             </div>
                             :
-                            <EditProfile setEditProfile={setEditProfile} acc={props.acc}></EditProfile>
+                            <EditProfile setEditProfile={props.setEditProfile} acc={props.acc}></EditProfile>
                         }
                     </div>
                 </Col>
@@ -120,12 +116,12 @@ function ProfileDetails(props) {
                             <>
                                 <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
                                     Bio
-                                                            </Tooltip>
+                                </Tooltip>
                                 <AntParagraph
                                     editable={{
                                         onChange: (handleBio),
                                         maxLength: 60,
-                                        onStart: () => setEditBio(true)
+                                        onStart: () => props.setEditBio(true)
                                     }}
                                 >
                                     {props.acc.bio}
@@ -136,7 +132,7 @@ function ProfileDetails(props) {
                             <>
                                 <Tooltip title="ข้อมูลแนะนำตัวเองเพิ่มเติม">
                                     Bio
-                                                            </Tooltip>
+                                </Tooltip>
                                 <AntParagraph
                                     copyable
                                 >

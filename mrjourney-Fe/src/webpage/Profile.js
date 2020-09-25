@@ -27,7 +27,8 @@ function Profile(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [acc, setShowAcc] = useState([{}])
-
+    const [isEditProfile, setEditProfile] = useState(false)
+    const [isEditBio, setEditBio] = useState(true);
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -47,7 +48,7 @@ function Profile(props) {
             .then(res => {
                 setShowAcc(res.data)
             })
-    }, [])
+    }, [isEditProfile, isEditBio])
 
     return (
         <div className="flex-wrapper">
@@ -58,7 +59,10 @@ function Profile(props) {
                         return (
                             <Row justify="center">
                                 <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                                    <ProfileDetails acc={acc} lineID={lineID}></ProfileDetails>
+                                    <ProfileDetails acc={acc} lineID={lineID}
+                                        isEditProfile={isEditProfile} setEditProfile={setEditProfile}
+                                        isEditBio={isEditBio} setEditBio={setEditBio}
+                                    ></ProfileDetails>
                                 </Col>
                             </Row>
                         )

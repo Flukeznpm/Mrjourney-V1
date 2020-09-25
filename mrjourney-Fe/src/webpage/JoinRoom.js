@@ -23,6 +23,7 @@ function JoinRoom(props) {
     const [pictureURL, setPictureURL] = useState("")
     const [roomDetail, setShowRoomDetail] = useState([{}])
     const [members, setMember] = useState([{}])
+    const [isEditRoom, setEditRoom] = useState(false);
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -46,7 +47,7 @@ function JoinRoom(props) {
             .then(res => {
                 setMember(res.data)
             })
-    }, [])
+    }, [isEditRoom])
 
     return (
         <div className="flex-wrapper">
@@ -68,7 +69,9 @@ function JoinRoom(props) {
                                         </div>
                                         <div className="col-12">
                                             <div className="row">
-                                                <RoomDetails roomDetail={roomDetail} members={members.length}></RoomDetails>
+                                                <RoomDetails roomDetail={roomDetail} members={members.length}
+                                                    isEditRoom={isEditRoom} setEditRoom={setEditRoom}
+                                                ></RoomDetails>
                                                 <ShowMembers />
                                             </div>
                                         </div>
