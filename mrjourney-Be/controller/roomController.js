@@ -15,6 +15,7 @@ const gcs = require('@google-cloud/storage');
 // DELETE /room/deleteRoom  (ลบ room)
 // POST /room/uploadRoomCoverImage (ส่งรูป RoomCover มาเก็บใน Cloud storage)
 // POST /room/uploadRoomQrCodeImage (ส่งรูป RoomQrCode มาเก็บใน Cloud storage)
+// POST /room/joindRoom (เก็บข้อมูล user ที่เข้ามา join room นั้นๆ)
 
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
@@ -216,7 +217,7 @@ router.post('/joindRoom', async function (req, res, next) {
         await joinedRoom(datas)
             .then(() => {
                 res.status(201).json({
-                    message: "Joined Room Success",
+                    message: "User Joined Room Success",
                 })
             })
     }
