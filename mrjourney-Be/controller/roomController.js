@@ -502,7 +502,7 @@ async function deleteRoom(datas) {
 };
 
 async function joinedRoom(datas) {
-    let saveMembersJoinedRoom = db.collection('Room').doc(roomID).collection('Members').doc(datas.lineID);
+    let saveMembersJoinedRoom = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
     await saveMembersJoinedRoom.set({
         fName: datas.fName,
         lineID: datas.lineID,
