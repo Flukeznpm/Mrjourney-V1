@@ -202,6 +202,26 @@ router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
     res.status(200).json(imageURL);
 });
 
+router.post('/joindRoom', async function (req, res, next) {
+    let datas = req.body;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
+        datas.fName == undefined || datas.fName == null || datas.fName == '' ||
+        datas.pictureURL == undefined || datas.pictureURL == null || datas.pictureURL == '' ||
+        datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
+        console.log('Alert: The Data was empty or undefined"')
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        await joinedRoom(datas)
+            .then(() => {
+                res.status(201).json({
+                    message: "Joined Room Success",
+                })
+            })
+    }
+});
+
 //---------------- Function ----------------//
 async function getAllRoom() {
     let RoomList = [];
@@ -479,6 +499,15 @@ async function deleteRoom(datas) {
         }).catch(function (error) {
             console.error("Error deleted document room: ", error);
         });
+};
+
+async function joinedRoom(datas) {
+    let saveMembersJoinedRoom = db.collection('Room').doc(roomID).collection('Members').doc(datas.lineID);
+    await saveMembersJoinedRoom.set({
+        fName: datas.fName,
+        lineID: datas.lineID,
+        pictureURL: datas, pictureURL
+    });
 };
 
 async function setRoomHistory(datas) {
