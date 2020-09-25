@@ -188,12 +188,11 @@ const hookReducer = (state, action) => {
     // "TripStep":
     case "CONFIRM_TRIP_STEP1":
       let AllTripDate = []
-      var startDate = new Date(state.Trip.date);
-      var eventDate = new Date();
       for (let index = 0; index < state.Trip.numberAddDate; index++) {
-        eventDate.setDate(startDate.getDate() + index);
+        var startDate = new Date(state.Trip.date);
+        startDate.setDate(startDate.getDate() + index);
         let ShowBox = {
-          eventDate: eventDate,
+          eventDate: startDate,
           event: []
         }
         AllTripDate.push(ShowBox)
