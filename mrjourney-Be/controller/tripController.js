@@ -49,7 +49,9 @@ router.get('/', async function (req, res, next) {
 router.get('/tripperday', async function (req, res, next) {
     const lineGroupID = req.query.lineGroupID;
     const lineID = req.query.lineID;
-    const dateOfTrip = req.query.dateOfTrip;
+    const dateOfTrip = req.query.dateOfTrip + '';
+    dateOfTrip.substring(0, 10)
+    console.log('Date: ', dateOfTrip)
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
         lineID == undefined || lineID == null || lineID == '' ||
@@ -314,13 +316,16 @@ async function createTripList(datas) {
                 let count = (datas.totalDate.length) - 1;
                 for (let j = 0; j <= count; j++) {
                     if (j <= count) {
-                        let date = await datas.totalDate[j].eventDate;
+                        let date = datas.totalDate[j].eventDate + '';
+                        // console.log('date: ', date)
+                        let dateSub = date.substring(0, 10);
+                        // console.log('dateSub: ', dateSub)
                         let event = await datas.totalDate[j].event;
                         // let eventName = await datas.totalDate[j].event[i].eventName;
                         // let startEvent = await datas.totalDate[j].event[i].startEvent;
                         // let endEvent = await datas.totalDate[j].event[i].endEvent;
                         // let eventType = await datas.totalDate[j].event[i].eventType;
-                        await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(date).set({
+                        await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(dateSub).set({
                             event: event
                         })
                     } else {
@@ -387,13 +392,16 @@ async function createTripList(datas) {
                 let count = (datas.totalDate.length) - 1;
                 for (let j = 0; j <= count; j++) {
                     if (j <= count) {
-                        let date = await datas.totalDate[j].eventDate;
-                        let event = await datas.totalDate[j].event;
+                        let date = datas.totalDate[j].eventDate + '';
+                        // console.log('date: ', date)
+                        let dateSub = date.substring(0, 10);
+                        // console.log('dateSub: ', dateSub)
+                        let event = datas.totalDate[j].event;
                         // let eventName = await datas.totalDate[j].event[i].eventName;
                         // let startEvent = await datas.totalDate[j].event[i].startEvent;
                         // let endEvent = await datas.totalDate[j].event[i].endEvent;
                         // let eventType = await datas.totalDate[j].event[i].eventType;
-                        await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(date).set({
+                        await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(dateSub).set({
                             event: event
                         })
                     } else {

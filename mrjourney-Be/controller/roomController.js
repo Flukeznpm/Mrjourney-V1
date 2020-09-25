@@ -218,7 +218,7 @@ router.post('/joindRoom', async function (req, res, next) {
         await checkUserRef.get().then(async data => {
             if (data.exists) {
                 let checkUserJoinedRoomAlready = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
-                await checkUserJoinedRoomAlready.get().then(doc => {
+                await checkUserJoinedRoomAlready.get().then(async doc => {
                     if (doc.exists) {
                         console.log('User have already join room');
                         res.status(200).json('User have already join room');
