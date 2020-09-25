@@ -60,7 +60,12 @@ function MyOwnerRoom(props) {
             .then(res => {
                 setShowOwnerRoom(res.data)
             })
-    }, [])
+    }, [isVisible])
+    
+    const onVisibleModal = (roomID) => {
+        setDeleteRoomID(roomID)
+        setVisible(true)
+    }
 
     return (
         <div className="flex-wrapper">
@@ -137,18 +142,15 @@ function MyOwnerRoom(props) {
                                                             </div>
                                                             <button type="button"
                                                                 class="col-5 mx-2 btn btn-outline-danger round"
-                                                                // onClick={() => onDeleteRoom(ownerRoom.roomID)}
-                                                                onClick={() => setVisible(true)}
+                                                                onClick={() => onVisibleModal(ownerRoom.roomID)}
                                                             >
                                                                 ลบห้อง
                                                             </button>
                                                             <DeleteModal
                                                                 isVisible={isVisible}
                                                                 setVisible={setVisible}
-                                                                roomID={ownerRoom.roomID} 
+                                                                roomID={deleteRoomID} 
                                                                 lineID={lineID} 
-                                                                deleteRoomID={deleteRoomID}
-                                                                setDeleteRoomID={setDeleteRoomID}
                                                                 />
                                                             <Link to={`/JoinRoom?roomID=${ownerRoom.roomID}`}>
                                                                 <button type="button"

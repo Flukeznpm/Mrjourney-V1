@@ -59,8 +59,7 @@ const OutlineButton = styled(AntButton)`
 function DeleteModal(props) {
 
     const onDeleteRoom = async (roomID, lineID) => {
-        await props.setDeleteRoomID(roomID)
-        await axios.delete(`http://localhost:5000/room/deleteRoom?roomID=${props.deleteRoomID}&lineID=${lineID}`)
+        await axios.delete(`http://localhost:5000/room/deleteRoom?roomID=${roomID}&lineID=${lineID}`)
             .then(res => {
                 console.log(res)
             })
@@ -69,6 +68,8 @@ function DeleteModal(props) {
 
     const onCancel = () => {
         props.setVisible(false)
+        console.log(props.roomID)
+        console.log(props.lineID)
     };
 
     return (
