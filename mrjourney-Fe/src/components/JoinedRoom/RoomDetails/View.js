@@ -127,13 +127,18 @@ function RoomDetails(props) {
                     {props.isEditRoom === false ?
                         <div className="ShowRoom-Details">
                             <div className="text-right">
-                                {props.roomDetail.roomStatus === true ?
+                                {props.roomDetail.roomStatus === true && props.isCloseRoom === false ?
                                     <Tooltip title="เลื่อนเพื่อปิดห้อง">
-                                        <SwitchComponentClose defaultChecked onChange={() => CloseRoom(props.roomDetail.roomID)} />
+                                        <SwitchComponentClose defaultChecked
+                                            onChange={() => CloseRoom(props.roomDetail.roomID)}
+                                            onClick={() => props.setCloseRoom(true)}
+                                        />
                                     </Tooltip>
                                     :
                                     <Tooltip title="เลื่อนเพื่อเปิดห้อง">
-                                        <SwitchComponentOpen onChange={() => OpenRoom(props.roomDetail.roomID)} />
+                                        <SwitchComponentOpen
+                                            onChange={() => OpenRoom(props.roomDetail.roomID)}
+                                            onClick={() => props.setCloseRoom(false)} />
                                     </Tooltip>
                                 }
                             </div>
