@@ -55,6 +55,11 @@ const InputNumberComponent = styled(InputNumber)`
     }
 `;
 
+const AntFormItem = styled(AntForm.Item)`
+    margin-bottom: 0px;
+    padding: 10px;
+`
+
 function CreateTripStep1(props) {
     const { thaiprovince, handleTripForm, plusDate, minusDate, Trip, confirmTripStep, toDate } = useContext(HookContext)
 
@@ -89,8 +94,7 @@ function CreateTripStep1(props) {
 
     return (
         <div>
-
-            <div className="container py-2 mt-3">
+            <div className="pb-2">
                 <Stepper typeStep="trip" step={1} />
             </div>
             <div className="content-page py-2">
@@ -131,9 +135,9 @@ function CreateTripStep1(props) {
                                     </div>
                                 </div>
                                 <div className="container col-md-6 fixed-bottom">
-                                    <AntForm.Item>
+                                    <AntFormItem>
                                         <PrimaryButton type="primary" size={"large"} block htmlType="ถัดไป">ถัดไป</PrimaryButton>
-                                    </AntForm.Item>
+                                    </AntFormItem>
                                 </div>
                             </AntForm>
                         </div>

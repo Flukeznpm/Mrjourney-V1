@@ -48,9 +48,9 @@ function CreateTripStep3() {
 
     return (
         <div className="top-page">
-             <div className="container py-2 mt-3">
-                    <Stepper typeStep="trip" step={3} />
-                </div>
+            <div className="pb-2">
+                <Stepper typeStep="trip" step={3} />
+            </div>
 
             <div className="content-page py-2">
                 <div className="col-12">

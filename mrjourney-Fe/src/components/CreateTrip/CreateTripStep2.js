@@ -24,7 +24,7 @@ const DateCardNotActive = styled(Card)`
   border-radius: 8px;
   background: ${props => (props.theme.color.primary)};
   color: white;
-  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
   margin: 10px 0px 10px 0px;
   padding: 5px 0px 5px 0px;
   font-size: 24px;
@@ -122,9 +122,12 @@ display: flex;
     min-height: 100vh;
     flex-direction: column;
     justify-content: space-between;
-`
+`;
 
-
+const AntFormItem = styled(AntForm.Item)`
+    margin-bottom: 0px;
+    padding: 10px;
+`;
 
 function CreateTripStep2(props) {
     const { nextTripStep, prevTripStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
@@ -169,11 +172,11 @@ function CreateTripStep2(props) {
 
     return (
         <Wrapper>
-            <div className="top-page">
-                <div className="container py-2 mt-3">
+            <div className="top-page mb-4 pb-4">
+                <div className="pb-2">
                     <Stepper typeStep="trip" step={2} />
                 </div>
-                <Row justify="center">
+                <Row justify="center ">
                     <div className="container">
                         <Col span={24} className="py-3">
                             <ShowStartToEnd />
@@ -195,17 +198,17 @@ function CreateTripStep2(props) {
                                                         <CaretUpOutlined />
                                                     </Row>
                                                 </DateCardNotActive>
-                                                {PerDay.event.map((eventDetail, eventKey) => {
+                                                {PerDay.event.map((eventDetail, key) => {
                                                     return (
                                                         <Row>
                                                             <Col span={19}>
                                                                 <div className="container">
-                                                                    {eventKey / 2 !== 0 ?
-                                                                        <EventCard>
+                                                                    {key% 2 !== 0 ?
+                                                                        <EventCard className="my-1">
                                                                             <ShowEventBox eventDetail={eventDetail} />
                                                                         </EventCard>
                                                                         :
-                                                                        <EventCardNoBg>
+                                                                        <EventCardNoBg className="my-1">
                                                                             <ShowEventBox eventDetail={eventDetail} />
                                                                         </EventCardNoBg>
                                                                     }
@@ -227,6 +230,7 @@ function CreateTripStep2(props) {
                                                     <PlusOutlined />
                                                 </AddEventButton>
                                                 <CreateTripModal
+                                                    centered
                                                     show={addModalShow}
                                                     onConfirm={() => setEvent(keyModal)}
                                                     onHide={() => eventModalClose(keyModal)}
@@ -241,9 +245,9 @@ function CreateTripStep2(props) {
                     </div>
                 </Row>
             </div>
-            <div className="container">
-                <AntForm>
-                    <AntForm.Item>
+            <Row justify="center" className="bg-white fixed-bottom">
+                <AntForm className="container">
+                    <AntFormItem>
                         <Row>
                             <Col span={8}>
                                 <PrevButton
@@ -262,9 +266,9 @@ function CreateTripStep2(props) {
                                 >ยืนยัน</PrimaryButton>
                             </Col>
                         </Row>
-                    </AntForm.Item>
+                    </AntFormItem>
                 </AntForm>
-            </div>
+            </Row>
         </Wrapper>
     )
 }
