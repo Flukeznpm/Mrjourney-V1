@@ -7,6 +7,7 @@ import {
     Tooltip,
     Button as AntButton,
 } from 'antd';
+import momentjs from 'moment';
 
 const TypeButton = styled(AntButton)`
     font-size: 18px;
@@ -31,7 +32,6 @@ const TypeCol = styled(Col)`
 `
 
 function ShowEventBox(props) {
-
     return (
         <Col span={24}>
             <Row>
@@ -60,7 +60,7 @@ function ShowEventBox(props) {
                         {props.eventDetail.eventName}
                     </Row>
                     <Row>
-                        {props.eventDetail.startEvent}- {props.eventDetail.endEvent}
+                        {momentjs(props.eventDetail.startEvent).format('HH:mm')}- {momentjs(props.eventDetail.endEvent).format('h:mm')}
                     </Row>
                 </Col>
             </Row>

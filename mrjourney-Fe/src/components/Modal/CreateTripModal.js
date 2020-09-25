@@ -1,128 +1,184 @@
 import React, { useContext, useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import '../../static/css/App.css'
-import "../../static/css/Event-Trip.css";
+import styled from "styled-components";
+import { Modal } from 'react-bootstrap';
 import { HookContext } from '../../store/HookProvider'
-import { useForm } from "react-hook-form";
-import RequiredForm from "../Required/RequiredForm"
+import {
+    Form as AntForm,
+    Input as AntInput,
+    Button as AntButton,
+    Select as AntSelect,
+    TimePicker,
+} from 'antd';
+// import { ReactComponent as EatingIcon } from '../../static/icons/eating.svg';
+
+const ModalHeader = styled(Modal.Header)`
+    border-bottom: none;
+    padding-bottom: 0px;
+`;
+
+const ModalFooter = styled(Modal.Footer)`
+    border-top: none;
+    display: block;
+`;
+const AntFormItemFooter = styled(AntForm.Item)`
+    margin-bottom: 0px;
+`;
+
+const PrimaryButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const InputComponent = styled(AntInput)`
+    border-radius: 4px;
+    height: 40px;
+    font-size: 16px;
+    align-items: center;
+    &:hover , &:active {
+        border-color: ${props => (props.theme.color.primary)};
+    }
+`;
+
+const TimePickerComponent = styled(TimePicker)`
+    height: 40px;
+    border-radius: 4px;
+    &:hover , &:active, &:focus {
+        border-color: rgb(230, 111, 15);
+    }
+`
+
+const TypeButtonSelected = styled(AntButton)`
+    font-size: 18px;
+    border: 1px solid #F37945;
+    background: #F37945;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    &:hover , &:active, &:focus {
+        border: 1px solid #F37945;
+        background: #F37945;
+    }
+`;
+
+const TypeButton = styled(AntButton)`
+    font-size: 18px;
+    border: 1px solid #F37945;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    &:hover , &:active, &:focus {
+        border: 1px solid #F37945;
+        background: #F37945;
+    }
+`;
+
 
 function CreateTripModal(props) {
     const { handleEventForm, Event, setEvent, keyModal, selectEventType } = useContext(HookContext)
-    const { register, handleSubmit, watch, errors } = useForm();
-    const [ValidEventName, setValidEventName] = useState(false)
-    const [ValidStartEvent, setValidStartEvent] = useState(false)
-    const [ValidEndEvent, setValidEndEvent] = useState(false)
-    const [ValidEventType, setValidEventType] = useState(false)
+    const format = 'HH:mm'
 
-    const onSubmit = () => {
-        if (Event.eventName && Event.startEvent && Event.endEvent && Event.eventType) {
-            setEvent(keyModal)
-        } else {
-            if (!Event.eventName) {
-                setValidEventName(true)
-            }
-            if (Event.eventName) {
-                setValidEventName(false)
-            }
-            if (!Event.startEvent) {
-                setValidStartEvent(true)
-            }
-            if (Event.startEvent) {
-                setValidStartEvent(false)
-            }
-            if (!Event.endEvent) {
-                setValidEndEvent(true)
-            }
-            if (Event.endEvent) {
-                setValidEndEvent(false)
-            }
-            if (!Event.eventType) {
-                setValidEventType(true)
-            }
-            if (Event.eventType) {
-                setValidEventType(false)
-            }
-            return false
-        }
+    const onFinish = values => {
+        handleEventForm(values.eventName, 'eventName')
+        handleEventForm(values.startEvent, 'startEvent')
+        handleEventForm(values.endEvent, 'endEvent')
+        setEvent(keyModal)
     };
 
     return (
-        <div>
-            <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        รายละเอียดกิจกรรม
+        <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+            <ModalHeader closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    รายละเอียดกิจกรรม
                     </Modal.Title>
-                </Modal.Header>
-                {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+            </ModalHeader>
+            <AntForm onFinish={onFinish}>
                 <Modal.Body>
                     <div className="container">
-                        <div className="InputForm">
-                            <label for="exampleInputEmail1">ชื่อสถานที่</label>
-                            <input type='text' class="form-control" placeholder='ใส่ชื่อสถานที่หรือกิจกรรมของคุณ'
-                                name="eventName"
-                                value={Event.eventName}
-                                onChange={(e) => handleEventForm(e.target.value, e.target.name)}
-                            />
+                        <AntForm.Item name="eventName" label="ชื่อกิจกรรม" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                            <InputComponent placeholder="ใส่ชื่อสถานที่หรือกิจกรรมของคุณ" />
+                        </AntForm.Item>
+                        <div className="col-12 p-0">
+                            <div className="row">
+                                <div className="col-6">
+                                    <AntForm.Item name="startEvent" label="เวลาเริ่ม" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                        <TimePickerComponent style={{ width: "100%" }}
+                                            format={format}
+                                        />
+                                    </AntForm.Item>
+                                </div>
+                                <div className="col-6">
+                                    <AntForm.Item name="endEvent" label="เวลาจบ" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                        <TimePickerComponent style={{ width: "100%" }}
+                                            format={format}
+                                        />
+                                    </AntForm.Item>
+                                </div>
+                            </div>
                         </div>
-                        {ValidEventName === true ? <RequiredForm /> : ""}
-                        {/* {console.log('event', errors.eventName)} */}
-                        <label for="exampleInputEmail1" className="pt-2">เวลาเริ่ม</label>
-                        <input type='time' class="form-control"
-                            name="startEvent"
-                            value={Event.startEvent}
-                            onChange={(e) => handleEventForm(e.target.value, e.target.name)}
-                        />
-                        {ValidStartEvent === true ? <RequiredForm /> : ""}
-                        {/* {console.log('start', errors.startEvent)} */}
-                        <label for="exampleInputEmail1" className="pt-2">เวลาจบ</label>
-                        <input type='time' class="form-control"
-                            name="endEvent"
-                            value={Event.endEvent}
-                            onChange={(e) => handleEventForm(e.target.value, e.target.name)}
-                        />
-                        {ValidEndEvent === true ? <RequiredForm /> : ""}
                         <label for="exampleInputEmail1" className="pt-2">ประเภท</label>
                         <div className="container">
                             <div className="row text-center">
-
                                 <div className="col-4 ">
-
-                                    <button type="button" class="event-type-btn-inmodal btn p-0 ml-1"
-                                        onClick={() => selectEventType('eating')}>
-                                        <i
-                                            class="fas fa-utensils fa-2x">
-                                        </i>
-                                    </button>
+                                    {Event.eventType === 'eating' ?
+                                        <TypeButtonSelected
+                                            shape="circle"
+                                            icon={<img src="/img/icons/eating.svg" />}
+                                        />
+                                        :
+                                        <TypeButton
+                                            shape="circle"
+                                            icon={<img src="/img/icons/eating.svg" />}
+                                            onClick={() => selectEventType('eating')}
+                                        />
+                                    }
                                 </div>
                                 <div className="col-4 ">
-                                    <button type="button" class="event-type-btn-inmodal btn p-0 ml-1"
-                                        onClick={() => selectEventType('travel')}>
-                                        <i
-                                            class="fas fa-car-side fa-2x ">
-                                        </i>
-                                    </button>
+                                    {Event.eventType === 'travel' ?
+                                        <TypeButtonSelected
+                                            shape="circle"
+                                            icon={<img src="/img/icons/travelling.svg" />}
+                                        />
+                                        :
+                                        <TypeButton
+                                            shape="circle"
+                                            icon={<img src="/img/icons/travelling.svg" />}
+                                            onClick={() => selectEventType('travel')}
+                                        />
+                                    }
                                 </div>
                                 <div className="col-4">
-                                    <button type="button" class="event-type-btn-inmodal btn p-0 ml-1"
-                                        onClick={() => selectEventType('sleep')}>
-                                        <i
-                                            class="fas fa-bed fa-2x ">
-                                        </i>
-                                    </button>
+                                    {Event.eventType === 'sleeping' ?
+                                        <TypeButtonSelected
+                                            shape="circle"
+                                            icon={<img src="/img/icons/sleeping.svg" />}
+                                        />
+                                        :
+                                        <TypeButton
+                                            shape="circle"
+                                            icon={<img src="/img/icons/sleeping.svg" />}
+                                            onClick={() => selectEventType('sleeping')}
+                                        />
+                                    }
                                 </div>
                             </div>
-                            {ValidEventType === true ? <RequiredForm /> : ""}
                         </div>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button style={{ color: "white", backgroundColor: "orange", borderColor: "orange" }}
-                        onClick={() => onSubmit()}>เสร็จสิ้น</Button>
-                </Modal.Footer>
-                {/* </form> */}
-            </Modal>
-        </div>
+                <ModalFooter>
+                    <AntFormItemFooter>
+                        <PrimaryButton type="primary" size={"large"} block htmlType="submit">ยืนยัน</PrimaryButton>
+                    </AntFormItemFooter>
+                </ModalFooter>
+            </AntForm>
+        </Modal>
     )
 }
 export default CreateTripModal;
