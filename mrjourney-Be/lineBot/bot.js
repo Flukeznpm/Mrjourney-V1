@@ -165,8 +165,46 @@ function replyCreate(reply_token, msg) {
         messages: [
             {
                 type: 'text',
-                text: "Line Liff here"
+                text: msg
             },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "อยากดูแบบไหนครับ?"
+                            }
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "ดูแผนทั้งหมด",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-jV83lv9w"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
+                            }
+                        ]
+                    }
+                }
+            }
         ]
     })
 
@@ -894,9 +932,9 @@ function replyHelpCreateTrip(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                    type: "image",
-                    originalContentUrl: "https://example.com/original.jpg",
-                    previewImageUrl: "https://example.com/preview.jpg"
+                type: "image",
+                originalContentUrl: "https://example.com/original.jpg",
+                previewImageUrl: "https://example.com/preview.jpg"
             }
         ]
     })
