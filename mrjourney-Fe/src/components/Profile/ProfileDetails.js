@@ -46,7 +46,7 @@ function ProfileDetails(props) {
             lineID: props.lineID,
             bio: value
         }
-        axios.put('http://localhost:5000/accountProfile/editBio', dataUpdateBio)
+        axios.put('https://mrjourney-senior.herokuapp.com/accountProfile/editBio', dataUpdateBio)
             .then(async (res) => {
                 console.log(res)
             })

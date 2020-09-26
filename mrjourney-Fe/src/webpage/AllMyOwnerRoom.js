@@ -56,7 +56,7 @@ function MyOwnerRoom(props) {
             setPictureURL(user.pictureURL)
             setLineID(user.lineID)
         }
-        axios.get(`http://localhost:5000/accountProfile/ownerRoom?lineID=${user.lineID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile/ownerRoom?lineID=${user.lineID}`)
             .then(res => {
                 setShowOwnerRoom(res.data)
             })

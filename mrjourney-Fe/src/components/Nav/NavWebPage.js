@@ -50,9 +50,8 @@ function NavWebPage(props) {
         let data = {
             code: code
         }
-
         if (code != null) {
-            axios.post('http://localhost:5000/getToken', data).then((res) => {
+            axios.post('https://mrjourney-senior.herokuapp.com/getToken', data).then((res) => {
                 if (res.status === 202) {
                     cookie.save('jwt', res.data);
                     var decoded = jwt.verify(res.data, 'secreatKey');
@@ -65,7 +64,7 @@ function NavWebPage(props) {
                 } else {
                     cookie.save('jwt', res.data);
                     var decoded = jwt.verify(res.data, 'secreatKey');
-                    // console.log('decode', decoded);
+                    console.log('decode:', decoded);
                     setLogin(true)
 
                 }
@@ -91,7 +90,7 @@ function NavWebPage(props) {
                 pictureURL: user.pictureURL
             }
             // console.log('dataSyncLine: ', dataSyncLine)
-            axios.post('http://localhost:5000/update/syncLine', dataSyncLine)
+            axios.post('https://mrjourney-senior.herokuapp.com/update/syncLine', dataSyncLine)
                 .then((res) => {
                     console.log(res)
                 });
@@ -105,7 +104,7 @@ function NavWebPage(props) {
             text: 'Login ก่อนสิ!',
             showCancelButton: false,
             confirmButtonColor: '#F37945',
-            confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>'
+            confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=https://mr-journey.com/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>'
         })
     }
 
@@ -115,7 +114,7 @@ function NavWebPage(props) {
             text: 'Login ก่อนสิ!',
             showCancelButton: false,
             confirmButtonColor: '#F37945',
-            confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>'
+            confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=https://mr-journey.com/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>'
         })
     }
 
@@ -173,7 +172,7 @@ function NavWebPage(props) {
                                     </button>
 
                                     <div className="dropdown-menu dropdown-menu-right dropdown-info">
-                                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ"
+                                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=https://mr-journey.com/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ"
                                             className="dropdown-item a-dropdown">Sign in</a>
                                     </div>
                                 </li>

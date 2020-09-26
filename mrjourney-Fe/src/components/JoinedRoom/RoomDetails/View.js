@@ -103,7 +103,7 @@ function RoomDetails(props) {
         let closeRoom = {
             roomStatus: false
         }
-        await axios.put(`http://localhost:5000/room/closeRoom?roomID=${roomID}&lineID=${lineID}`, closeRoom)
+        await axios.put(`https://mrjourney-senior.herokuapp.com/room/closeRoom?roomID=${roomID}&lineID=${lineID}`, closeRoom)
             .then(res => {
                 console.log(res)
             })
@@ -113,7 +113,7 @@ function RoomDetails(props) {
         let openRoom = {
             roomStatus: true
         }
-        await axios.put(`http://localhost:5000/room/openRoom?roomID=${roomID}&lineID=${lineID}`, openRoom)
+        await axios.put(`https://mrjourney-senior.herokuapp.com/room/openRoom?roomID=${roomID}&lineID=${lineID}`, openRoom)
             .then(res => {
                 console.log(res)
             })

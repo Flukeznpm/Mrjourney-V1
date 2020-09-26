@@ -121,7 +121,7 @@ function EditJoinRoom(props) {
                 nameImage: generateNameImage
             }
             console.log(dataBase64.nameImage)
-            await axios.post('http://localhost:5000/room/uploadRoomCoverImage', dataBase64)
+            await axios.post('https://mrjourney-senior.herokuapp.com/room/uploadRoomCoverImage', dataBase64)
                 .then(res => {
                     console.log('URL: ', res)
                     setRoomCoverImg(res.data)
@@ -141,7 +141,7 @@ function EditJoinRoom(props) {
                 nameImage: generateQrCodeName
             }
             console.log(dataBase64.nameImage)
-            await axios.post('http://localhost:5000/room/uploadRoomQrCodeImage', dataBase64)
+            await axios.post('https://mrjourney-senior.herokuapp.com/room/uploadRoomQrCodeImage', dataBase64)
                 .then(res => {
                     console.log('URL: ', res)
                     setRoomQrCodeImg(res.data)
@@ -170,7 +170,7 @@ function EditJoinRoom(props) {
             roomCover: roomCoverImg,
             qrCode: roomQrCodeImg
         }
-        await axios.put('http://localhost:5000/room/editRoom', dataUpdateRoom)
+        await axios.put('https://mrjourney-senior.herokuapp.com/room/editRoom', dataUpdateRoom)
             .then(async (res) => {
                 console.log(res)
             })

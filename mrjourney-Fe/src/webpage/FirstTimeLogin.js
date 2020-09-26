@@ -104,7 +104,7 @@ function FirstTimeLogin(props) {
             bio: bio
         }
 
-        await axios.post('http://localhost:5000/accountProfile/createAccountDetail', dataProfile)
+        await axios.post('https://mrjourney-senior.herokuapp.com/accountProfile/createAccountDetail', dataProfile)
             .then(async (res) => {
                 console.log(res)
             })

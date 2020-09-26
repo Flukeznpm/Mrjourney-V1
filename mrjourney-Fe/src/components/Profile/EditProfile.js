@@ -82,7 +82,7 @@ function EditProfile(props) {
         let params = new URLSearchParams(search);
         let getUserID = params.get('userID');
 
-        axios.get(`http://localhost:5000/accountProfile?userID=${getUserID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile?userID=${getUserID}`)
             .then(res => {
                 setShowAcc(res.data)
             })
@@ -104,7 +104,7 @@ function EditProfile(props) {
             gender: value.gender,
             birthday: value.birthday,
         }
-        await axios.put('http://localhost:5000/accountProfile/editAccountDetail', dataUpdateProfile)
+        await axios.put('https://mrjourney-senior.herokuapp.com/accountProfile/editAccountDetail', dataUpdateProfile)
             .then(async (res) => {
                 console.log(res)
             })

@@ -39,7 +39,7 @@ function ShowMembers(props) {
         let params = new URLSearchParams(search);
         let getRoomID = params.get('roomID');
 
-        axios.get(`http://localhost:5000/room/members?roomID=${getRoomID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/room/members?roomID=${getRoomID}`)
             .then(res => {
                 setMember(res.data)
             })

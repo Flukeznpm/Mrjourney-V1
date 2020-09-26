@@ -139,24 +139,24 @@ function CreateTripStep2(props) {
     const [pictureURL, setPictureURL] = useState("")
     const [tripStatus, setTripStatus] = useState(true)
 
-    useEffect(() => {
-        let loadJWT = cookie.load('jwt');
-        if (loadJWT === undefined) {
-            // props.history.push('/Home');
-        } else {
-            var user = jwt.verify(loadJWT, 'secreatKey');
-            setLineID(user.lineID)
-            setDisplayName(user.displayName)
-            setPictureURL(user.pictureURL)
-        }
-    }, [])
+    // useEffect(() => {
+    //     let loadJWT = cookie.load('jwt');
+    //     if (loadJWT === undefined) {
+    //         // props.history.push('/Home');
+    //     } else {
+    //         var user = jwt.verify(loadJWT, 'secreatKey');
+    //         setLineID(user.lineID)
+    //         setDisplayName(user.displayName)
+    //         setPictureURL(user.pictureURL)
+    //     }
+    // }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         let dataTrip = {
-            lineID: lineID,
-            displayName: displayName,
-            pictureURL: pictureURL,
+            // lineID: lineID,
+            // displayName: displayName,
+            // pictureURL: pictureURL,
             lineGroupID: lineGroupID,
             tripName: Trip.tripName,
             province: Trip.province,
@@ -165,7 +165,7 @@ function CreateTripStep2(props) {
             tripStatus: tripStatus,
             totalDate: Trip.totalDate
         }
-        await axios.post('http://localhost:5000/trip/createTrip', dataTrip)
+        await axios.post('https://mrjourney-senior.herokuapp.com/trip/createTrip', dataTrip)
             .then(res => {
                 console.log(res)
             });

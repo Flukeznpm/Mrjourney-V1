@@ -44,7 +44,7 @@ function Profile(props) {
         let params = new URLSearchParams(search);
         let getUserID = params.get('userID');
 
-        axios.get(`http://localhost:5000/accountProfile?userID=${getUserID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile?userID=${getUserID}`)
             .then(res => {
                 setShowAcc(res.data)
             })

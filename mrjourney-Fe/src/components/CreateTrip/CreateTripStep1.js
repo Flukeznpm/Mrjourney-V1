@@ -61,24 +61,24 @@ const AntFormItem = styled(AntForm.Item)`
 `
 
 function CreateTripStep1(props) {
-    const { thaiprovince, handleTripForm, plusDate, minusDate, Trip, confirmTripStep, toDate } = useContext(HookContext)
+    const { thaiprovince, handleTripForm, Trip, confirmTripStep, toDate } = useContext(HookContext)
 
-    const [Linename, setLineName] = useState('')
-    const [Linepicture, setLinePicture] = useState('')
+    // const [Linename, setLineName] = useState('')
+    // const [Linepicture, setLinePicture] = useState('')
 
     const { Option } = AntSelect;
     const dateFormat = 'DD/MM/YYYY';
     const [form] = AntForm.useForm();
 
     useEffect(() => {
-        let loadJWT = cookie.load('jwt');
-        if (loadJWT === undefined) {
-            // props.history.push('/Home');
-        } else {
-            var user = jwt.verify(loadJWT, 'secreatKey');
-            setLineName(user.displayName)
-            setLinePicture(user.pictureURL)
-        }
+        // let loadJWT = cookie.load('jwt');
+        // if (loadJWT === undefined) {
+        //     // props.history.push('/Home');
+        // } else {
+        //     var user = jwt.verify(loadJWT, 'secreatKey');
+        //     setLineName(user.displayName)
+        //     setLinePicture(user.pictureURL)
+        // }
         form.setFieldsValue({
             numberAddDate: Trip.numberAddDate
         })

@@ -14,37 +14,37 @@ import Stepper from '../components/Stepper';
 
 function CreateTripStep3() {
 
-    const [lineID, setLineID] = useState("")
-    const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
-    const [displayName, setDisplayName] = useState("")
-    const [pictureURL, setPictureURL] = useState("")
-    const [dateOfTrip, setDateOfTrip] = useState("2020-09-29")
+    // const [lineID, setLineID] = useState("")
+    // const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
+    // const [displayName, setDisplayName] = useState("")
+    // const [pictureURL, setPictureURL] = useState("")
+    // const [dateOfTrip, setDateOfTrip] = useState("2020-09-29")
 
-    useEffect(() => {
-        let loadJWT = cookie.load('jwt');
-        if (loadJWT === undefined) {
-            // this.props.history.push('/Home');
-        } else {
-            var user = jwt.verify(loadJWT, 'secreatKey');
-            setLineID(user.lineID)
-            setDisplayName(user.displayName)
-            setPictureURL(user.pictureURL)
-        }
-    }, [])
+    // useEffect(() => {
+    //     let loadJWT = cookie.load('jwt');
+    //     if (loadJWT === undefined) {
+    //         // this.props.history.push('/Home');
+    //     } else {
+    //         var user = jwt.verify(loadJWT, 'secreatKey');
+    //         setLineID(user.lineID)
+    //         setDisplayName(user.displayName)
+    //         setPictureURL(user.pictureURL)
+    //     }
+    // }, [])
 
-    const getTripList = async () => {
-        await axios.get(`http://localhost:5000/trip?lineGroupID=${lineGroupID}&lineID=${lineID}`)
-            .then(res => {
-                console.log('getTripList: ', res.data)
-            });
-    }
+    // const getTripList = async () => {
+    //     await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${lineGroupID}&lineID=${lineID}`)
+    //         .then(res => {
+    //             console.log('getTripList: ', res.data)
+    //         });
+    // }
 
-    const getTripPerDay = async () => {
-        await axios.get(`http://localhost:5000/trip/tripperday?lineGroupID=${lineGroupID}&lineID=${lineID}&dateOfTrip=${dateOfTrip}`)
-            .then(res => {
-                console.log('getTripPerDay: ', res.data)
-            });
-    }
+    // const getTripPerDay = async () => {
+    //     await axios.get(`https://mrjourney-senior.herokuapp.com/trip/tripperday?lineGroupID=${lineGroupID}&lineID=${lineID}&dateOfTrip=${dateOfTrip}`)
+    //         .then(res => {
+    //             console.log('getTripPerDay: ', res.data)
+    //         });
+    // }
 
     return (
         <div className="top-page">
@@ -72,10 +72,12 @@ function CreateTripStep3() {
                                                 <div className="col-6 my-2">
                                                     {/* <Link to="/CheckTrip" style={{ textDecoration: "none" }}> */}
                                                     <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                        onClick={getTripList} >ดูแผนการเดินทางทั้งหมด</button>
+                                                        // onClick={getTripList} >ดูแผนการเดินทางทั้งหมด</button>
+                                                        >ดูแผนการเดินทางทั้งหมด</button>
                                                     <br />
                                                     <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                        onClick={getTripPerDay} >ดูแผนการเดินทางรายวัน</button>
+                                                        // onClick={getTripPerDay} >ดูแผนการเดินทางรายวัน</button>
+                                                        >ดูแผนการเดินทางรายวัน</button>
                                                     {/* </Link> */}
                                                 </div>
                                                 <div className="col-3"></div>

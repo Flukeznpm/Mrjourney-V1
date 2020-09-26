@@ -99,7 +99,7 @@ function CreateRoomStep1(props) {
                 nameImage: generateNameImage
             }
             console.log(dataBase64.nameImage)
-            await axios.post('http://localhost:5000/room/uploadRoomCoverImage', dataBase64)
+            await axios.post('https://mrjourney-senior.herokuapp.com/room/uploadRoomCoverImage', dataBase64)
                 .then(res => {
                     console.log('URL: ', res)
                     setRoomCoverImg(res.data)
@@ -119,7 +119,7 @@ function CreateRoomStep1(props) {
                 nameImage: generateQrCodeName
             }
             console.log(dataBase64.nameImage)
-            await axios.post('http://localhost:5000/room/uploadRoomQrCodeImage', dataBase64)
+            await axios.post('https://mrjourney-senior.herokuapp.com/room/uploadRoomQrCodeImage', dataBase64)
                 .then(res => {
                     console.log('URL: ', res)
                     setRoomQrCodeImg(res.data)

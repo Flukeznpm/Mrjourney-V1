@@ -94,7 +94,7 @@ function CreateRoomStep3(props) {
             endDateStatus: endDateStatus,
             createDate: new Date()
         }
-        await axios.post('http://localhost:5000/room/createRoom', dataRoom)
+        await axios.post('https://mrjourney-senior.herokuapp.com/room/createRoom', dataRoom)
             .then(res => {
                 Swal.fire({
                     icon: 'success',

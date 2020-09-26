@@ -10,7 +10,7 @@ router.post("/", async function (req, resp) {
     var data = querystring.stringify({
         grant_type: "authorization_code",
         code: req.body.code,
-        redirect_uri: "http://localhost:3000/Home",
+        redirect_uri: "https://mr-journey.com/Home",
         client_id: "1653975470",
         client_secret: "8e0c61280e1b6b2ab2117d68f4a99793"
     })

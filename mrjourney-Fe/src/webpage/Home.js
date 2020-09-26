@@ -30,7 +30,7 @@ function Home(props) {
         if (!user) {
             setShowAcc([{}])
         } else {
-            axios.get(`http://localhost:5000/accountProfile?userID=${user.lineID}`)
+            axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile?userID=${user.lineID}`)
                 .then(res => {
                     setShowAcc(res.data)
                 })
