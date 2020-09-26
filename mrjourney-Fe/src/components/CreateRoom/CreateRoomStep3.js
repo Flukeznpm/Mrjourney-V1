@@ -58,8 +58,9 @@ function CreateRoomStep3(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [roomID, setRoomID] = useState("")
-    const [roomStatus, setStatus] = useState(true)
-    
+    const [roomStatus, setRoomStatus] = useState(true)
+    const [endDateStatus, setEndDateStatus] = useState(false)
+
     const { Step } = Steps;
     const { TextArea } = AntInput;
     useEffect(() => {
@@ -80,7 +81,6 @@ function CreateRoomStep3(props) {
             lineID: lineID,
             displayName: displayName,
             pictureURL: pictureURL,
-            roomID: roomID,
             roomName: Room.roomName,
             roomCover: Room.roomCover,
             qrCode: Room.qrCode,
@@ -92,6 +92,7 @@ function CreateRoomStep3(props) {
             genderCondition: Room.genderCondition,
             ageCondition: Room.ageCondition,
             roomStatus: roomStatus,
+            endDateStatus: endDateStatus,
             createDate: new Date()
         }
         await axios.post('http://localhost:5000/room/createRoom', dataRoom)
@@ -109,13 +110,13 @@ function CreateRoomStep3(props) {
     }
     return (
         <div>
-           <div className="container py-2 mt-3">
+            <div className="container py-2 mt-3">
                 <Stepper typeStep="room" step={3} />
             </div>
             <div className="create-room-form py-2">
                 <div className="col-12">
                     <div className="row">
-                    <div className="col-md-3"></div>
+                        <div className="col-md-3"></div>
                         <div className="col-md-6">
                             <div>
                                 <ImgCover class="d-block w-100" src={Room.roomCover} alt="First slide" />
