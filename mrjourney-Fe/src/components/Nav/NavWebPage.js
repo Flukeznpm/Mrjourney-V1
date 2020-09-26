@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import styled from "styled-components";
 import Logo from '../../static/img/MrJ-Logo.png';
 import DropDownArrow from '../../static/img/dropdown.svg';
 import IconProfile from '../../static/img/Guest-Logo.svg';
@@ -9,7 +10,24 @@ import '../../static/css/Nav.css'
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
-import { HookContext } from '../../store/HookProvider'
+import { HookContext } from '../../store/HookProvider';
+import {
+    Button as AntButton,
+    Tooltip
+} from 'antd';
+
+const OutlineButton = styled(AntButton)`
+    border-radius: 8px;
+    font-size: 16px;
+    border: 1px solid ${props => (props.theme.color.primary)};
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        border: 1px solid ${props => (props.theme.color.primaryPress)};
+        color: ${props => (props.theme.color.primary)};
+        background: #F7F7F7;
+    }
+`;
+
 
 function NavWebPage(props) {
     const { resetStep } = useContext(HookContext)
@@ -102,8 +120,8 @@ function NavWebPage(props) {
     }
 
     return (
-        <div className="navbar-webpage">
-            <nav className="navbar nav-color navbar-expand-lg navbar-dark" style={{ color: "white" }}>
+        <>
+            <nav className="navbar navbar-expand-lg navbar-dark" style={{ color: "white" }}>
                 <a href="/Home">
                     <img src={Logo} className="WebLogo" height="45" alt="MrJourney" />
                 </a>
@@ -121,11 +139,6 @@ function NavWebPage(props) {
                                             Home
                                     </button>
                                     </a>
-                                </li>
-                                <li className="nav-item pt-1 mr-1">
-                                    <button type="button" className="btn nav-text-btn ml-2 mr-2" style={{ height: "40px" }}>
-                                        About Us
-                                    </button>
                                 </li>
                                 <li className="nav-item mr-1 mt-1 pt-1">
                                     <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}
@@ -167,11 +180,6 @@ function NavWebPage(props) {
                                             Home
                                     </button>
                                     </a>
-                                </li>
-                                <li className="nav-item pt-1 mr-1">
-                                    <button type="button" className="btn nav-text-btn ml-2 mr-2" style={{ height: "40px" }}>
-                                        About Us
-                                    </button>
                                 </li>
                                 <li className="nav-item mr-1 mt-1 pt-1">
                                     <Link to="/CreateTrip">
@@ -224,7 +232,7 @@ function NavWebPage(props) {
                         </div>
                 }
             </nav>
-        </div >
+        </>
     )
 }
 export default withRouter(NavWebPage);
