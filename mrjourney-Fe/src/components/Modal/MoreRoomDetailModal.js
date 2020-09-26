@@ -58,7 +58,7 @@ function MoreRoomDetailModal(props) {
                 title: 'คุณยังไม่ได้ Login!',
                 text: 'กรุณาทำการ Login ก่อนทำรายการ',
                 showCancelButton: true,
-                confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>',
+                confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=https://mr-journey.com/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>',
                 confirmButtonColor: '#F37945',
                 cancelButtonText: 'กลับสู่หน้าหลัก',
             })
