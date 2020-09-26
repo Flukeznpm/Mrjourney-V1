@@ -49,7 +49,6 @@ router.get('/members', async function (req, res, next) {
 router.post('/createRoom', async function (req, res, next) {
     let datas = req.body;
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
-        datas.displayName == undefined || datas.displayName == null || datas.displayName == '' ||
         datas.roomName == undefined || datas.roomName == null || datas.roomName == '' ||
         datas.province == undefined || datas.province == null || datas.province == '' ||
         datas.startDate == undefined || datas.startDate == null || datas.startDate == '' ||
@@ -57,7 +56,8 @@ router.post('/createRoom', async function (req, res, next) {
         datas.maxMember == undefined || datas.maxMember == null || datas.maxMember == '' ||
         datas.genderCondition == undefined || datas.genderCondition == null || datas.genderCondition == '' ||
         datas.ageCondition == undefined || datas.ageCondition == null || datas.ageCondition == '' ||
-        datas.roomStatus == undefined || datas.roomStatus == null || datas.roomStatus == '' ||
+        datas.roomStatus == undefined || datas.roomStatus == null || datas.roomStatus == false ||
+        datas.endDateStatus == undefined || datas.endDateStatus == null || datas.endDateStatus == true ||
         datas.createDate == undefined || datas.createDate == null || datas.createDate == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400).json({
@@ -207,7 +207,6 @@ router.post('/joinRoom', async function (req, res, next) {
     let datas = req.body;
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.fName == undefined || datas.fName == null || datas.fName == '' ||
-        datas.pictureURL == undefined || datas.pictureURL == null || datas.pictureURL == '' ||
         datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
@@ -403,7 +402,7 @@ async function createRoom(datas) {
     let genRoomID = await generateRoomID();
     let CheckUserRef = await db.collection('AccountProfile').doc(datas.lineID);
     let joinedMember = 1;
-    CheckUserRef.get().then(async data => {
+    await CheckUserRef.get().then(async data => {
         if (data.exists) {
             let saveRoomIDinAccountRef = CheckUserRef.collection('Room').doc(genRoomID);
             await saveRoomIDinAccountRef.set({
@@ -426,6 +425,7 @@ async function createRoom(datas) {
                 genderCondition: datas.genderCondition,
                 ageCondition: datas.ageCondition,
                 roomStatus: datas.roomStatus,
+                endDateStatus: datas.endDateStatus,
                 createDate: datas.createDate,
                 joinedMember: joinedMember
             })
@@ -453,7 +453,8 @@ async function updateRoom(datas) {
         maxMember: datas.maxMember,
         genderCondition: datas.genderCondition,
         ageCondition: datas.ageCondition,
-        roomStatus: datas.roomStatus
+        roomStatus: datas.roomStatus,
+        endDateStatus: datas.endDateStatus
     }).then(function () {
         console.log("Room successfully update!");
     }).catch(function (error) {
