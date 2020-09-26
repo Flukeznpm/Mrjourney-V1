@@ -1,9 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import "../../static/css/Show-Room.css";
-import "../../static/css/Nav.css";
-import "../../static/css/App.css";
-import Logo from '../../static/img/logojourney.png';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import momentjs from 'moment'
@@ -16,6 +12,7 @@ import {
     Select as AntSelect,
     Progress, Typography
 } from 'antd';
+import { WomanOutlined, ManOutlined } from '@ant-design/icons';
 
 const { Paragraph } = Typography;
 const AntParagraph = styled(Paragraph)`
@@ -234,7 +231,7 @@ function RoomBox(props) {
                         <div class="card-text row">
                             <div className="col-9">
                                 <Progress
-                                    percent={(100/props.room.maxMember)*props.room.joinedMember}
+                                    percent={(100 / props.room.maxMember) * props.room.joinedMember}
                                     showInfo={false} />
                             </div>
                             <div className="col-3" style={{ fontSize: "12px" }}>
@@ -257,21 +254,21 @@ function RoomBox(props) {
                     </div>
                     <div className="card-text py-2">
                         {props.room.genderCondition === 'ชาย' ?
-                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                            <span className="pl-2 pr-2" style={{ fontSize: "0.95rem" }}>
+                                <ManOutlined style={{ color: "dodgerblue" }} />
                             </span>
                             :
                             ""}
                         {props.room.genderCondition === 'หญิง' ?
-                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                            <span className="pl-2 pr-2" style={{ fontSize: "0.95rem"  }}>
+                                <WomanOutlined style={{ color: "hotpink" }} />
                             </span>
                             :
                             ""}
                         {props.room.genderCondition === 'ไม่จำกัดเพศ' ?
-                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                            <span className="pl-2 pr-2" style={{ fontSize: "0.95rem"  }}>
+                                <WomanOutlined style={{ color: "hotpink" }} />
+                                <ManOutlined style={{ color: "dodgerblue" }} />
                             </span>
                             :
                             ""}
@@ -318,6 +315,7 @@ function RoomBox(props) {
                                         shape="circle"
                                         onClick={() => {
                                             props.setRoomModal(props.room)
+                                            props.setAccountJoinRoom(props.acc)
                                             props.showRoomModalShow()
                                         }}
                                         icon={<SearchOutlined />}

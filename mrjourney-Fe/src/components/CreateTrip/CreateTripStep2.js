@@ -40,7 +40,7 @@ const DateCardNotActive = styled(Card)`
 
 const EventCard = styled(Card)`
   border-radius: 10px;
-  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.025), 0px 3px 4px rgba(0, 0, 0, 0.06);
   height: 100%;
   .ant-card-body {
       display: flex;
@@ -69,6 +69,7 @@ const DeleteEventCard = styled(Card)`
   text-align: center;
   font-size: 18px;
   color: white;
+  cursor: pointer;
   .ant-card-body {
       display: flex;
       align-items: center;
@@ -174,13 +175,13 @@ function CreateTripStep2(props) {
     return (
         <Wrapper>
             <div className="top-page mb-4 pb-4">
-                <div className="pb-2">
-                    <Stepper typeStep="trip" step={2} />
-                </div>
+                <Stepper typeStep="trip" step={2} />
                 <Row justify="center ">
                     <div className="container">
-                        <Col span={24} className="py-3">
-                            <ShowStartToEnd />
+                        <Col span={24} className="pb-3">
+                            <div className="pt-4 pb-2" >
+                                <ShowStartToEnd />
+                            </div>
                             {Trip.totalDate.map((PerDay, key) => {
                                 return (
                                     <>
@@ -201,27 +202,20 @@ function CreateTripStep2(props) {
                                                 </DateCardNotActive>
                                                 {PerDay.event.map((eventDetail, key) => {
                                                     return (
-                                                        <Row>
+                                                        <Row className="my-1">
                                                             <Col span={19}>
                                                                 <div className="container">
-                                                                    {key % 2 !== 0 ?
-                                                                        <EventCard className="my-1">
-                                                                            <ShowEventBox eventDetail={eventDetail} />
-                                                                        </EventCard>
-                                                                        :
-                                                                        <EventCardNoBg className="my-1">
-                                                                            <ShowEventBox eventDetail={eventDetail} />
-                                                                        </EventCardNoBg>
-                                                                    }
+                                                                    <EventCard>
+                                                                        <ShowEventBox eventDetail={eventDetail} />
+                                                                    </EventCard>
                                                                 </div>
                                                             </Col>
                                                             <Col span={5} >
-                                                                <DeleteEventCard>
-                                                                    <DeleteButton onClick={() => deleteEvent(eventDetail, key)} />
+                                                                <DeleteEventCard onClick={() => deleteEvent(eventDetail, key)}>
+                                                                    <DeleteButton />
                                                                 </DeleteEventCard>
                                                             </Col>
                                                         </Row>
-
                                                     )
                                                 })}
                                                 <AddEventButton block

@@ -49,6 +49,7 @@ function ShowRoomBox(props) {
     const [room, setShowRoom] = useState([{}])
     const [sortType, setSortType] = useState('recent');
     const [roomModal, setRoomModal] = useState({})
+    const [accountJoinRoom, setAccountJoinRoom] = useState({})
     const [filterRoomID, setFilterRoomID] = useState(null)
     const [filterRoomProvince, setFilterRoomProvince] = useState(null)
     const { Option } = AntSelect;
@@ -149,6 +150,7 @@ function ShowRoomBox(props) {
                             <RoomBox room={room}
                                 setRoomModal={setRoomModal}
                                 showRoomModalShow={showRoomModalShow}
+                                setAccountJoinRoom={setAccountJoinRoom}
                                 acc={props.acc}
                             />
                         )
@@ -157,6 +159,7 @@ function ShowRoomBox(props) {
                     show={addModalShow}
                     onHide={() => showRoomModalClose()} //use for closeButton
                     room={roomModal}
+                    acc={accountJoinRoom}
                 ></MoreRoomDetailModal>
             </div>
         </div>

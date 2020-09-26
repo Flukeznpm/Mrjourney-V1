@@ -4,7 +4,6 @@ import styled from "styled-components";
 import '../static/css/App.css';
 import ShowMembers from '../components/JoinedRoom/ShowMembers';
 import RoomDetails from '../components/JoinedRoom/RoomDetails/View';
-import BgSlide1 from '../static/img/pr-01.png';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';

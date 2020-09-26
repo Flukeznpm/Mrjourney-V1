@@ -11,16 +11,25 @@ import momentjs from 'moment';
 
 const TypeButton = styled(AntButton)`
     font-size: 18px;
-    border: 1px solid #F37945;
-    background: #F37945;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    &:hover , &:active, &:focus {
-        border: 1px solid #F37945;
-        background: #F37945;
-    }
+`;
+
+const TypeButtonEat = styled(TypeButton)`
+    border: 1px solid #C25738;
+    background: #C25738;
+`;
+
+const TypeButtonTravel = styled(TypeButton)`
+    border: 1px solid #F37945;
+    background: #F37945;
+`;
+
+const TypeButtonSleep = styled(TypeButton)`
+    border: 1px solid #D37C49;
+    background: #D37C49;
 `;
 
 const TypeCol = styled(Col)`
@@ -37,19 +46,19 @@ function ShowEventBox(props) {
             <Row>
                 <TypeCol span={5}>
                     {props.eventDetail.eventType === 'eating' ?
-                        <TypeButton
+                        <TypeButtonEat
                             shape="circle"
                             icon={<img src="/img/icons/eat.png" />}
                         />
                         : null}
                     {props.eventDetail.eventType === 'travel' ?
-                        <TypeButton
+                        <TypeButtonTravel
                             shape="circle"
                             icon={<img src="/img/icons/travel.png" />}
                         />
                         : null}
-                    {props.eventDetail.eventType === 'sleep' ?
-                        <TypeButton
+                    {props.eventDetail.eventType === 'sleeping' ?
+                        <TypeButtonSleep
                             shape="circle"
                             icon={<img src="/img/icons/sleep.png" />}
                         />
