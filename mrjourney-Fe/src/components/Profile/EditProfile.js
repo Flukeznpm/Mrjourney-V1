@@ -17,7 +17,7 @@ import {
 const InputComponent = styled(AntInput)`
     border-radius: 4px;
     align-items: center;
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border-color: ${props => (props.theme.color.primary)};
     }
 `;
@@ -26,7 +26,7 @@ const PrimaryButton = styled(AntButton)`
     border-radius: 4px;
     background: ${props => (props.theme.color.primary)};
     border: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         background: ${props => (props.theme.color.primaryPress)};
         border: ${props => (props.theme.color.primaryPress)};
     }
@@ -36,7 +36,7 @@ const OutlineButton = styled(AntButton)`
     border-radius: 4px;
     border: 1px solid ${props => (props.theme.color.primary)};
     color: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border: 1px solid ${props => (props.theme.color.primaryPress)};
         color: ${props => (props.theme.color.primary)};
         background: #F7F7F7;
@@ -45,7 +45,7 @@ const OutlineButton = styled(AntButton)`
 
 const EditProfileButton = styled(AntButton)`
     color: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         color: ${props => (props.theme.color.primary)};
     }
 `

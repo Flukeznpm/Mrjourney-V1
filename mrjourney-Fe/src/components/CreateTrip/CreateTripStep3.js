@@ -1,16 +1,58 @@
 import React, { useContext, useEffect, useState } from 'react';
+import styled from "styled-components";
 import '../../static/css/App.css';
 import { Link } from 'react-router-dom';
 import Logo from '../../static/img/success.png';
-import LogoStep1 from '../../static/img/LogoStep1.png'
-import LogoStep2 from '../../static/img/LogoStep2.png'
-import LogoStep3 from '../../static/img/LogoStep3.png'
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
 import Stepper from '../components/Stepper';
+import {
+    Button as AntButton,
+    Card, Col, Row,
+    Tooltip,
+    Input as AntInput,
+    Select as AntSelect
+} from 'antd';
+
+
+const PrimaryButton = styled(AntButton)`
+    height: 50px;
+    border-radius: 4px;
+    font-size: 18px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const SecondaryButton = styled(AntButton)`
+    height: 50px;
+    border-radius: 4px;
+    font-size: 18px;
+    background: #D37C49;
+    border: #D37C49;
+    &:hover , &:active, &:focus {
+        background: #D37C49;
+        border: #D37C49;
+    }
+`;
+
+const ThirdButton = styled(AntButton)`
+    height: 50px;
+    border-radius: 4px;
+    font-size: 18px;
+    background: #C25738;
+    border: #C25738;
+    &:hover , &:active, &:focus {
+        background: #C25738;
+        border: #C25738;
+    }
+`;
 
 function CreateTripStep3() {
 
@@ -64,19 +106,47 @@ function CreateTripStep3() {
                                     <h2>ขอให้คุณสนุกกับการเดินทาง</h2>
                                 </div>
 
-                                <div className="buttom-page py-3 mt-4">
-                                    <div className="container py-3 text-center">
-                                        <div className="col-12">
+                                <div className="button-page py-3 mt-4">
+                                    <Row className="py-2">
+                                        <Col span={24}>
+                                            <PrimaryButton
+                                                type="primary"
+                                                size={"large"}
+                                                block htmlType="submit"
+                                            >ดูแผนการเดินทางทั้งหมด</PrimaryButton>
+                                        </Col>
+                                    </Row>
+
+                                    <Row className="py-2">
+                                        <Col span={24}>
+                                            <SecondaryButton
+                                                type="primary"
+                                                size={"large"}
+                                                block htmlType="submit"
+                                            >ดูแผนการเดินทางรายวัน</SecondaryButton>
+                                        </Col>
+                                    </Row>
+
+                                    <Row className="py-2">
+                                        <Col span={24}>
+                                            <ThirdButton
+                                                type="primary"
+                                                size={"large"}
+                                                block htmlType="submit"
+                                            >กลับสู่ห้องแชท</ThirdButton>
+                                        </Col>
+                                    </Row>
+                                    {/* <div className="col-12">
                                             <div className="row">
                                                 <div className="col-3"></div>
                                                 <div className="col-6 my-2">
-                                                    {/* <Link to="/CheckTrip" style={{ textDecoration: "none" }}> */}
+                                                    <Link to="/CheckTrip" style={{ textDecoration: "none" }}>
                                                     <button type="button" class="btn btn-warning btn-lg btn-block text-white"
                                                         onClick={getTripList} >ดูแผนการเดินทางทั้งหมด</button>
                                                     <br />
                                                     <button type="button" class="btn btn-warning btn-lg btn-block text-white"
                                                         onClick={getTripPerDay} >ดูแผนการเดินทางรายวัน</button>
-                                                    {/* </Link> */}
+                                                    </Link>
                                                 </div>
                                                 <div className="col-3"></div>
                                             </div>
@@ -91,10 +161,10 @@ function CreateTripStep3() {
                                                 </div>
                                                 <div className="col-3"></div>
                                             </div>
-                                        </div>
+                                        </div> */}
 
-                                    </div>
                                 </div>
+
                             </div>
                         </div>
                         <div className="col-2"></div>

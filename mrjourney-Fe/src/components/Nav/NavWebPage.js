@@ -23,7 +23,7 @@ const OutlineButton = styled(AntButton)`
     border: 1px solid ${props => (props.theme.color.primary)};
     background: #f9f9f9;
     color: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border: 1px solid ${props => (props.theme.color.primaryPress)};
         color: #f9f9f9;
         background: ${props => (props.theme.color.primaryPress)};

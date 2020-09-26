@@ -11,11 +11,11 @@ function CreateTrip() {
     const { tripStep } = useContext(HookContext)
 
     const handleTripComponent = () => {
-        if (tripStep === 1) {
+        if (tripStep === 3) {
             return <CreateTripStep1></CreateTripStep1>
         } if (tripStep === 2) {
             return <CreateTripStep2></CreateTripStep2>
-        } if (tripStep === 3) {
+        } if (tripStep === 1) {
             return <CreateTripStep3></CreateTripStep3>
         }
     }

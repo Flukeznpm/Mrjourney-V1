@@ -16,7 +16,7 @@ const { Search } = AntInput;
 const SearchComponent = styled(Search)`
     height: 40px;
     border-radius: 4px;
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
             border-color: rgb(230, 111, 15);
     }
     .ant-input {
@@ -94,7 +94,7 @@ function ShowRoomBox(props) {
                 <Col lg={6} md={8} sm={18} xs={18} className="py-2">
                     <Row justify="center">
                         <SearchComponent
-                            placeholder="input search text"
+                            placeholder="ใส่รหัสประจำห้องเพื่อค้นหา"
                             onSearch={value => setFilterRoomID(value)}
                         />
                     </Row>

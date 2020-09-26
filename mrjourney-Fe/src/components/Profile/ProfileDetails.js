@@ -30,7 +30,7 @@ const AntParagraph = styled(Paragraph)`
 
 const EditProfileButton = styled(AntButton)`
     color: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         color: ${props => (props.theme.color.primary)};
     }
 `
