@@ -37,7 +37,7 @@ router.post("/", async function (req, resp) {
             if (dataLine.lineID != null || dataLine.lineID != undefined ||
                 dataLine.displayName != null || dataLine.displayName != undefined ||
                 dataLine.pictureURL != null || dataLine.pictureURL != undefined) {
-                console.log('check: ', dataLine.lineID)
+                // console.log('check: ', dataLine.lineID)
                 let CheckUserRegister = await db.collection('AccountProfile').doc(dataLine.lineID);
                 CheckUserRegister.get().then(async datas => {
                     if (datas.exists) {
