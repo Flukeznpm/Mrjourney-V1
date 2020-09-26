@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-// const app = express();
+
 router.post('/webhook', (req, res) => {
     let reply_token = req.body.events[0].replyToken
     // let msg = req.body.events[0]
@@ -77,6 +77,8 @@ router.post('/webhook', (req, res) => {
     res.sendStatus(200)
 })
 
+//-------------------------------function-------------------------------//
+
 const reply = req => {
     let headers = {
         'Content-Type': 'application/json',
@@ -150,9 +152,6 @@ function replyProfessor(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
-
-
-//each function
 
 function replyCreate(reply_token, msg) {
     let headers = {
@@ -489,7 +488,6 @@ function replyWeather(reply_token, msg) {
     });
 }
 
-
 function replyWeatherMaps(reply_token, msg) {
     let headers = {
         'Content-Type': 'application/json',
@@ -552,8 +550,6 @@ function replyWeatherMaps(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
-
-
 
 function replyContact(reply_token, msg) {
     let headers = {
@@ -1011,6 +1007,5 @@ function replyHelpBill(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
-
 
 module.exports = router;
