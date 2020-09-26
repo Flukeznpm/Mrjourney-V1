@@ -56,6 +56,7 @@ const ImgCover = styled.img`
 `;
 
 function RoomBox(props) {
+
     const onCheckJoinRoom = (acc, room) => {
         const calculateDate = (dob) => {
             var today = new Date();
@@ -80,8 +81,18 @@ function RoomBox(props) {
                 cancelButtonText: 'กลับสู่หน้าหลัก',
             })
         } else {
+            let dataJoin = {
+                lineID: acc.lineID,
+                pictureURL: acc.pictureURL,
+                fName: acc.fName,
+                roomID: room.roomID
+            }
             if (room.genderCondition === "ชาย" && acc.gender === "ชาย" || room.genderCondition === "ไม่จำกัดเพศ") {
                 if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
+                    axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                        .then(async (res) => {
+                            console.log(res)
+                        })
                     Swal.fire({
                         icon: 'success',
                         title: 'เข้าร่วมสำเร็จ!',
@@ -94,6 +105,10 @@ function RoomBox(props) {
                 } else {
                     if (room.ageCondition === "ต่ำกว่า 18 ปี") {
                         if (calculateDate(acc.birthday) < 18) {
+                            axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                .then(async (res) => {
+                                    console.log(res)
+                                })
                             Swal.fire({
                                 icon: 'success',
                                 title: 'เข้าร่วมสำเร็จ!',
@@ -115,6 +130,10 @@ function RoomBox(props) {
                         }
                     } else if (room.ageCondition === "18-25 ปี") {
                         if (calculateDate(acc.birthday) >= 18 && calculateDate(acc.birthday) <= 25) {
+                            axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                .then(async (res) => {
+                                    console.log(res)
+                                })
                             Swal.fire({
                                 icon: 'success',
                                 title: 'เข้าร่วมสำเร็จ!',
@@ -136,6 +155,10 @@ function RoomBox(props) {
                         }
                     } else if (room.ageCondition === "25 ปีขึ้นไป") {
                         if (calculateDate(acc.birthday) > 25) {
+                            axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                .then(async (res) => {
+                                    console.log(res)
+                                })
                             Swal.fire({
                                 icon: 'success',
                                 title: 'เข้าร่วมสำเร็จ!',
