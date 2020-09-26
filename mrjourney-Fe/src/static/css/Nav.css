@@ -92,13 +92,6 @@
     color: #F37944 !important;
 }
 
-.search-btn:hover {
-    border: 2px solid #F37944;
-    background-color: #F37944;
-    font-weight: 500;
-    color: #f7f7f7 !important;
-}
-
 .WebLogo {
     width: 140px;
     height: 60px;
@@ -111,7 +104,7 @@
 }
 
 .a-dropdown:hover {
-    border-radius: 8px;
+    border-radius: 4px;
     background-color: #eee9e3;
     color: #231F20;
 }
