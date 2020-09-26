@@ -9,6 +9,7 @@ import {
     Button as AntButton,
     Tooltip,
     Input as AntInput,
+    Col, Row,
     Select as AntSelect,
     Progress, Typography
 } from 'antd';
@@ -62,6 +63,20 @@ const ImgCover = styled.img`
     object-fit: cover;
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
+`;
+
+const ColRoomId = styled(Col)`
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+`;
+
+const ColRoomStatus = styled(Col)`
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 `;
 
 function RoomBox(props) {
@@ -215,11 +230,23 @@ function RoomBox(props) {
     }
     return (
         <div className="col-md-4 col-sm-12 d-flex justify-content-center py-3">
-            <div class="card" style={{ width: "18rem" }}>
+            <div class="card" style={{ width: "20rem" }}>
                 <ImgCover src={props.room.roomCover} alt="Card image cap" />
                 <div class="card-body">
-                    <div class="card-text text-right p-0">
-                        <AntParagraph copyable>{props.room.roomID}</AntParagraph>
+                    <div class="card-text">
+                        <Row>
+                            <ColRoomStatus span={12}>
+                                <div>{props.room.roomStatus === true ?
+                                    <div style={{ color: "#e66f0f" }}>เปิด</div>
+                                    :
+                                    <div style={{ color: "#FF4647" }}>ปิด</div>
+                                }
+                                </div>
+                            </ColRoomStatus>
+                            <ColRoomId span={12}>
+                                <AntParagraph copyable>{props.room.roomID}</AntParagraph>
+                            </ColRoomId>
+                        </Row>
                     </div>
                     <h4 class="card-title">
                         {props.room.roomName}
@@ -235,7 +262,7 @@ function RoomBox(props) {
                                     showInfo={false}
                                 />
                             </div>
-                            <div className="col-3" style={{ fontSize: "12px" }}>
+                            <div className="col-3" style={{ fontSize: "12px", textAlign: "center" }}>
                                 {props.room.joinedMember}/{props.room.maxMember}
                             </div>
                         </div>
