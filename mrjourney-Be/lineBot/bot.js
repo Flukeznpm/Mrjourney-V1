@@ -929,8 +929,8 @@ function replyHelpCreateTrip(reply_token, msg) {
         messages: [
             {
                 type: "image",
-                originalContentUrl: "https://example.com/original.jpg",
-                previewImageUrl: "https://example.com/preview.jpg"
+                originalContentUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135456471menu-09.png?alt=media&token=8b978458-96c8-432c-a734-5e378bc5dc31",
+                previewImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135456471menu-09.png?alt=media&token=8b978458-96c8-432c-a734-5e378bc5dc31"
             }
         ]
     })
@@ -946,20 +946,9 @@ function replyHelpPlan(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                "type": "bubble",
-                "body": {
-                    "type": "box",
-                    "layout": "horizontal",
-                    "contents": [
-                        {
-                            "type": "image",
-                            "url": "https://www.linefriends.com/content/banner/201804/3b5364c97c2d4a26988f85acdc78514e.jpg",
-                            "size": "full",
-                            "aspectRatio": "16:9",
-                            "aspectMode": "cover"
-                        }
-                    ]
-                }
+                type: "image",
+                originalContentUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135531375menu-10.png?alt=media&token=a57f9a3a-402d-4b89-bd9c-b068b17eb1c6",
+                previewImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135531375menu-10.png?alt=media&token=a57f9a3a-402d-4b89-bd9c-b068b17eb1c6"
             }
         ]
     })
@@ -982,20 +971,9 @@ function replyHelpBill(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "bubble",
-                body: {
-                    type: "box",
-                    layout: "horizontal",
-                    contents: [
-                        {
-                            type: "image",
-                            url: "https://www.linefriends.com/content/banner/201804/3b5364c97c2d4a26988f85acdc78514e.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        }
-                    ]
-                }
+                type: "image",
+                originalContentUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135590386menu-11.png?alt=media&token=cb138a53-2c36-4aae-a2a4-d054d4d67e21",
+                previewImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135590386menu-11.png?alt=media&token=cb138a53-2c36-4aae-a2a4-d054d4d67e21"
             }
         ]
     })
