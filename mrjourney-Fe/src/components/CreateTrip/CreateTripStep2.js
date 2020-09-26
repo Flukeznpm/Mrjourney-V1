@@ -134,7 +134,7 @@ const AntFormItem = styled(AntForm.Item)`
 
 function CreateTripStep2(props) {
     const { nextTripStep, prevTripStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
-    const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
+    const [lineGroupID, setLineGroupID] = useState('')
     const [tripStatus, setTripStatus] = useState(true)
     const [LineID, setLineID] = useState('')
     const [LineName, setLineName] = useState('')
@@ -147,6 +147,8 @@ function CreateTripStep2(props) {
                 setLineID(profile.userId);
                 setLineName(profile.displayName);
                 setLinePicture(profile.pictureUrl);
+                const context = await liff.getContext();
+                setLineGroupID(context.groupId)
             } else {
                 props.history.push('/Home');
             }
@@ -182,7 +184,7 @@ function CreateTripStep2(props) {
                     <div className="container">
                         <Col span={24} className="pb-3">
                             <div className="pt-4 pb-2" >
-                                <ShowStartToEnd />{LineName}{lineGroupID}
+                                <ShowStartToEnd />
                             </div>
                             {Trip.totalDate.map((PerDay, key) => {
                                 return (

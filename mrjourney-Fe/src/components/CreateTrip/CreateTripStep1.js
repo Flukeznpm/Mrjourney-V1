@@ -65,6 +65,7 @@ function CreateTripStep1(props) {
     const [LineID, setLineID] = useState('')
     const [LineName, setLineName] = useState('')
     const [LinePicture, setLinePicture] = useState('')
+    const [LineGroup, setLineGroup] = useState('')
 
     const { Option } = AntSelect;
     const dateFormat = 'DD/MM/YYYY';
@@ -77,6 +78,8 @@ function CreateTripStep1(props) {
                 setLineID(profile.userId);
                 setLineName(profile.displayName);
                 setLinePicture(profile.pictureUrl);
+                const context = await liff.getContext();
+                setLineGroup(context.groupId)
             } else {
                 props.history.push('/Home');
             }
