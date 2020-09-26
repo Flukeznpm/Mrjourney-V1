@@ -204,8 +204,6 @@ router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
 });
 
 router.post('/joinRoom', async function (req, res, next) {
-    console.log('req: ', req.body)
-
     let datas = req.body;
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.fName == undefined || datas.fName == null || datas.fName == '' ||
@@ -404,6 +402,7 @@ async function uploadRoomQrCodeImageToCloudStorage(image, name) {
 async function createRoom(datas) {
     let genRoomID = await generateRoomID();
     let CheckUserRef = await db.collection('AccountProfile').doc(datas.lineID);
+    let joinedMember = 1;
     CheckUserRef.get().then(async data => {
         if (data.exists) {
             let saveRoomIDinAccountRef = CheckUserRef.collection('Room').doc(genRoomID);
@@ -427,7 +426,8 @@ async function createRoom(datas) {
                 genderCondition: datas.genderCondition,
                 ageCondition: datas.ageCondition,
                 roomStatus: datas.roomStatus,
-                createDate: datas.createDate
+                createDate: datas.createDate,
+                joinedMember: joinedMember
             })
             let saveOwnerMembers = saveRoomID.collection('Members').doc('A');
             await saveOwnerMembers.set({
@@ -528,6 +528,20 @@ async function joinedRoom(datas) {
         lineID: datas.lineID,
         pictureURL: datas.pictureURL
     });
+
+    let Members = [];
+    let checkAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
+    await checkAllMembersRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+            Members.push(doc.data());
+        });
+    })
+
+    let addMembers = (Members.length) + 1;
+    let saveRoomID = db.collection('Room').doc(datas.roomID)
+    await saveRoomID.update({
+        joinedMember: addMembers
+    })
 };
 
 async function setRoomHistory(datas) {
