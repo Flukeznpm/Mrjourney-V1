@@ -225,6 +225,7 @@ router.post('/joindRoom', async function (req, res, next) {
                     } else {
                         await joinedRoom(datas)
                             .then(() => {
+                                console.log('User Joined Room Success');
                                 res.status(201).json({
                                     message: "User Joined Room Success",
                                 })
@@ -233,7 +234,7 @@ router.post('/joindRoom', async function (req, res, next) {
                 });
             } else {
                 console.log('User do not register on system');
-                res.status(200).json('User do not have register in system, User can not join room');
+                res.status(202).json('User do not have register in system, User can not join room');
             }
         });
     }
