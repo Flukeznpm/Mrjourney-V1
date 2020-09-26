@@ -203,7 +203,9 @@ router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
     res.status(200).json(imageURL);
 });
 
-router.post('/joindRoom', async function (req, res, next) {
+router.post('/joinRoom', async function (req, res, next) {
+    console.log('req: ', req.body)
+
     let datas = req.body;
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.fName == undefined || datas.fName == null || datas.fName == '' ||
@@ -524,7 +526,7 @@ async function joinedRoom(datas) {
     await saveMembersJoinedRoom.set({
         fName: datas.fName,
         lineID: datas.lineID,
-        pictureURL: datas, pictureURL
+        pictureURL: datas.pictureURL
     });
 };
 
