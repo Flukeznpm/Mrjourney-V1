@@ -232,7 +232,8 @@ function RoomBox(props) {
                             <div className="col-9">
                                 <Progress
                                     percent={(100 / props.room.maxMember) * props.room.joinedMember}
-                                    showInfo={false} />
+                                    showInfo={false}
+                                />
                             </div>
                             <div className="col-3" style={{ fontSize: "12px" }}>
                                 {props.room.joinedMember}/{props.room.maxMember}
@@ -260,13 +261,13 @@ function RoomBox(props) {
                             :
                             ""}
                         {props.room.genderCondition === 'หญิง' ?
-                            <span className="pl-2 pr-2" style={{ fontSize: "0.95rem"  }}>
+                            <span className="pl-2 pr-2" style={{ fontSize: "0.95rem" }}>
                                 <WomanOutlined style={{ color: "hotpink" }} />
                             </span>
                             :
                             ""}
                         {props.room.genderCondition === 'ไม่จำกัดเพศ' ?
-                            <span className="pl-2 pr-2" style={{ fontSize: "0.95rem"  }}>
+                            <span className="pl-2 pr-2" style={{ fontSize: "0.95rem" }}>
                                 <WomanOutlined style={{ color: "hotpink" }} />
                                 <ManOutlined style={{ color: "dodgerblue" }} />
                             </span>

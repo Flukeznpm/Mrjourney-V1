@@ -18,7 +18,7 @@ router.post('/webhook', (req, res) => {
         replyPlan(reply_token, msg)
     }
     else if (msg === "ดูแผนทั้งหมด") {
-        replyPlanPerDay(reply_token, msg)
+        replyPlanAll(reply_token,msg)
     }
     else if (msg === "ดูแผนวันนี้") {
         replyPlanPerDay(reply_token, msg)
@@ -178,7 +178,7 @@ function replyCreate(reply_token, msg) {
                                 type: "text",
                                 align: "center",
                                 weight: "bold",
-                                text: "อยากดูแบบไหนครับ?"
+                                text: "พร้อมที่จะสร้างทริปแล้วใช่ไหม?"
                             }
                         ],
                         type: "box"
@@ -190,7 +190,7 @@ function replyCreate(reply_token, msg) {
                         contents: [
                             {
                                 action: {
-                                    label: "ดูแผนทั้งหมด",
+                                    label: "สร้างทริป",
                                     type: "uri",
                                     uri: "https://liff.line.me/1653975470-jV83lv9w"
                                 },
@@ -307,7 +307,30 @@ function replyPlanPerDay(reply_token, msg) {
             },
         ]
     })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
 
+function replyPlanAll(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: "lineliff here"
+            },
+        ]
+    })
     request.post({
         url: 'https://api.line.me/v2/bot/message/reply',
         headers: headers,
@@ -579,7 +602,7 @@ function replyContact(reply_token, msg) {
                         {
                             type: "text",
                             label: "อีเมลล์",
-                            text: "mrjourney@"
+                            text: "mrjourney.6012@gmail.com"
                         },
                         {
                             type: "postback",
@@ -929,8 +952,8 @@ function replyHelpCreateTrip(reply_token, msg) {
         messages: [
             {
                 type: "image",
-                originalContentUrl: "https://example.com/original.jpg",
-                previewImageUrl: "https://example.com/preview.jpg"
+                originalContentUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135456471menu-09.png?alt=media&token=8b978458-96c8-432c-a734-5e378bc5dc31",
+                previewImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135456471menu-09.png?alt=media&token=8b978458-96c8-432c-a734-5e378bc5dc31"
             }
         ]
     })
@@ -946,20 +969,9 @@ function replyHelpPlan(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                "type": "bubble",
-                "body": {
-                    "type": "box",
-                    "layout": "horizontal",
-                    "contents": [
-                        {
-                            "type": "image",
-                            "url": "https://www.linefriends.com/content/banner/201804/3b5364c97c2d4a26988f85acdc78514e.jpg",
-                            "size": "full",
-                            "aspectRatio": "16:9",
-                            "aspectMode": "cover"
-                        }
-                    ]
-                }
+                type: "image",
+                originalContentUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135531375menu-10.png?alt=media&token=a57f9a3a-402d-4b89-bd9c-b068b17eb1c6",
+                previewImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135531375menu-10.png?alt=media&token=a57f9a3a-402d-4b89-bd9c-b068b17eb1c6"
             }
         ]
     })
@@ -982,20 +994,9 @@ function replyHelpBill(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "bubble",
-                body: {
-                    type: "box",
-                    layout: "horizontal",
-                    contents: [
-                        {
-                            type: "image",
-                            url: "https://www.linefriends.com/content/banner/201804/3b5364c97c2d4a26988f85acdc78514e.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        }
-                    ]
-                }
+                type: "image",
+                originalContentUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135590386menu-11.png?alt=media&token=cb138a53-2c36-4aae-a2a4-d054d4d67e21",
+                previewImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601135590386menu-11.png?alt=media&token=cb138a53-2c36-4aae-a2a4-d054d4d67e21"
             }
         ]
     })
