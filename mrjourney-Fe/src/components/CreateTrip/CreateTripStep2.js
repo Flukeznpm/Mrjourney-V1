@@ -16,7 +16,8 @@ import {
     Tooltip,
     Button as AntButton,
 } from 'antd';
-import { CaretUpOutlined, CaretDownOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { CaretUpOutlined, CaretDownOutlined, PlusOutlined } from '@ant-design/icons';
+import { ReactComponent as DeleteButton } from '../../static/icons/delete.svg';
 import ShowStartToEnd from './components/ShowStartToEnd';
 import ShowEventBox from './components/ShowEventBox';
 
@@ -203,7 +204,7 @@ function CreateTripStep2(props) {
                                                         <Row>
                                                             <Col span={19}>
                                                                 <div className="container">
-                                                                    {key% 2 !== 0 ?
+                                                                    {key % 2 !== 0 ?
                                                                         <EventCard className="my-1">
                                                                             <ShowEventBox eventDetail={eventDetail} />
                                                                         </EventCard>
@@ -216,7 +217,7 @@ function CreateTripStep2(props) {
                                                             </Col>
                                                             <Col span={5} >
                                                                 <DeleteEventCard>
-                                                                    <DeleteOutlined onClick={() => deleteEvent(eventDetail, key)} />
+                                                                    <DeleteButton onClick={() => deleteEvent(eventDetail, key)} />
                                                                 </DeleteEventCard>
                                                             </Col>
                                                         </Row>
