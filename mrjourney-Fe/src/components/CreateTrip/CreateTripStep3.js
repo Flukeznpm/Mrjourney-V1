@@ -23,7 +23,7 @@ function CreateTripStep3() {
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
         if (loadJWT === undefined) {
-            this.props.history.push('/Home');
+            // this.props.history.push('/Home');
         } else {
             var user = jwt.verify(loadJWT, 'secreatKey');
             setLineID(user.lineID)

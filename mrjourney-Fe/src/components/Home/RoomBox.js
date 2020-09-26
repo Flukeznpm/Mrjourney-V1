@@ -289,7 +289,7 @@ function RoomBox(props) {
                     <div class="col-12 p-0">
                         <div class="row">
                             <div class="col-9">
-                                {props.room.roomStatus === true
+                                {props.room.roomStatus === true && props.room.joinedMember < props.room.maxMember
                                     ?
                                     <>
                                         {props.room.ownerRoomID === props.acc.lineID ?

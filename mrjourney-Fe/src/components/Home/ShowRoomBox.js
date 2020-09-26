@@ -1,19 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from "styled-components";
-import "../../static/css/Show-Room.css";
-import "../../static/css/Nav.css";
-import "../../static/css/App.css";
-import Logo from '../../static/img/logojourney.png';
-import Swal from 'sweetalert2';
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
-import cookie from 'react-cookies'
-import momentjs from 'moment'
 import { HookContext } from '../../store/HookProvider'
 import MoreRoomDetailModal from '../Modal/MoreRoomDetailModal';
-import { Progress, Typography } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
 import {
     Button as AntButton,
     Card, Col, Row,

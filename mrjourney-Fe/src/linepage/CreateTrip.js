@@ -23,9 +23,6 @@ function CreateTrip() {
     return (
         <div className="flex-wrapper">
             <div className="top-page">
-                {/* <div className="Navbar-Component">
-                    <NavWebPage></NavWebPage>
-                </div> */}
                 <div className="Content-Component">
                     {handleTripComponent()}
                 </div>

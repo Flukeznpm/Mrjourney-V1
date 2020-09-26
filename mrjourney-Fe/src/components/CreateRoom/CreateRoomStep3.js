@@ -3,8 +3,6 @@ import { withRouter } from 'react-router-dom';
 import styled from "styled-components";
 import '../../static/css/App.css';
 import '../../static/css/CreateRoom.css';
-import BgSlide1 from '../../static/img/pr-01.png';
-import TestQrCode from '../../static/img/Mrjourney-QrCode.png';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
@@ -20,6 +18,7 @@ import {
     InputNumber
 } from 'antd';
 import Stepper from '../components/Stepper';
+import { WomanOutlined, ManOutlined } from '@ant-design/icons';
 
 const PrimaryButton = styled(AntButton)`
     border-radius: 4px;
@@ -126,7 +125,6 @@ function CreateRoomStep3(props) {
                                     <div className="ShowRoom-TripName py-1">
                                         ชื่อทริป : {Room.roomName}
                                     </div>
-                                    {/* หน้าปก : {this.props.RoomForm.roomCover} <br /> */}
                                     <div className="ShowRoom-TripProvince py-1">
                                         จังหวัด : {Room.province}
                                     </div>
@@ -153,20 +151,20 @@ function CreateRoomStep3(props) {
                                                <div>
                                             {Room.genderCondition === 'ชาย' ?
                                                 <span className="Show-genderCondition pl-2 pr-2">
-                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                                    <ManOutlined style={{ color: "dodgerblue" }} />
                                                 </span>
                                                 :
                                                 ""}
                                             {Room.genderCondition === 'หญิง' ?
                                                 <span className="Show-genderCondition pl-2 pr-2">
-                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                                    <WomanOutlined style={{ color: "hotpink" }} />
                                                 </span>
                                                 :
                                                 ""}
                                             {Room.genderCondition === 'ไม่จำกัดเพศ' ?
                                                 <span className="Show-genderCondition pl-2 pr-2">
-                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                                    <WomanOutlined style={{ color: "hotpink" }} />
+                                                    <ManOutlined style={{ color: "dodgerblue" }} />
                                                 </span>
                                                 :
                                                 ""}

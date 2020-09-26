@@ -15,16 +15,22 @@ import {
     Button as AntButton,
     Tooltip
 } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
 const OutlineButton = styled(AntButton)`
     border-radius: 8px;
     font-size: 16px;
     border: 1px solid ${props => (props.theme.color.primary)};
+    background: #f9f9f9;
     color: ${props => (props.theme.color.primary)};
     &:hover , &:active {
         border: 1px solid ${props => (props.theme.color.primaryPress)};
-        color: ${props => (props.theme.color.primary)};
-        background: #F7F7F7;
+        color: #f9f9f9;
+        background: ${props => (props.theme.color.primaryPress)};
+    }
+    .anticon {
+        vertical-align: 0em;
+        padding-bottom: 2px;
     }
 `;
 
@@ -136,24 +142,26 @@ function NavWebPage(props) {
                                 <li className="nav-item pt-1 mr-1">
                                     <a href="/Home">
                                         <button type="button" className="btn nav-text-btn ml-2 mr-2" style={{ height: "40px" }}>
-                                            Home
+                                            หน้าหลัก
                                     </button>
                                     </a>
                                 </li>
-                                <li className="nav-item mr-1 mt-1 pt-1">
+                                {/* <li className="nav-item mr-1 mt-1 pt-1">
                                     <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}
                                         onClick={AlertTrip}>
                                         Create Trip
                                             <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
                                     </button>
-                                </li>
+                                </li> */}
 
-                                <li className="nav-item mt-1 pt-1">
-                                    <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}
-                                        onClick={AlertRoom}>
-                                        Create Room
-                                            <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
-                                    </button>
+                                <li className="nav-item d-flex align-items-center">
+                                    <Link to="/CreateJoinRoom" >
+                                        <OutlineButton
+                                            block htmlType="button"
+                                            onClick={AlertTrip}
+                                            size={"large"}
+                                        >สร้างห้อง</OutlineButton>
+                                    </Link>
                                 </li>
                                 <li className="nav-item dropdown ml-3 px-2 ">
                                     <button className="btn nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
@@ -177,23 +185,26 @@ function NavWebPage(props) {
                                 <li className="nav-item pt-1 mr-1">
                                     <a href="/Home">
                                         <button type="button" className="btn nav-text-btn ml-2 mr-2" style={{ height: "40px" }}>
-                                            Home
+                                            หน้าหลัก
                                     </button>
                                     </a>
                                 </li>
-                                <li className="nav-item mr-1 mt-1 pt-1">
+                                {/* <li className="nav-item mr-1 mt-1 pt-1">
                                     <Link to="/CreateTrip">
                                         <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Trip
                                                  <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
                                         </button>
                                     </Link>
-                                </li>
+                                </li> */}
 
-                                <li className="nav-item mt-1 pt-1">
+                                <li className="nav-item d-flex align-items-center">
                                     <Link to="/CreateJoinRoom" >
-                                        <button type="button" onClick={() => resetStep(1)} className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Room
-                                                 <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
-                                        </button>
+                                        <OutlineButton
+                                            block htmlType="button"
+                                            onClick={() => resetStep(1)}
+                                            size={"large"}
+                                            icon={<PlusOutlined />}
+                                        >สร้างห้อง</OutlineButton>
                                     </Link>
                                 </li>
                                 <li className="nav-item dropdown ml-3 px-2 ">
