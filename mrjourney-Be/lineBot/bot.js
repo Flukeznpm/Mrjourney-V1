@@ -70,29 +70,8 @@ router.post('/webhook', (req, res) => {
     // else if (ev) {
     //     replyWeatherMaps(reply_token, msg)
     // }
-    else {
-        replyBased(reply_token, msg)
-    }
-    // } else if (msg.type === "message" && msg.message.type === "location") {
-    //     const reply = req => {
-    //         return request.post({
-    //           uri: `${LINE_MESSAGING_API}/reply`,
-    //           headers: LINE_HEADER,
-    //           body: JSON.stringify({
-    //             replyToken: req.body.events[0].replyToken,
-    //             messages: [
-    //               {
-    //                 type: "text",
-    //                 text: JSON.stringify(req.body)
-    //               }
-    //             ]
-    //           })
-    //         });
-    //       };
-    //     replyWeatherMaps(reply_token, msg)
-    // }
     // else {
-    //     reply(req);
+    //     replyBased(reply_token, msg)
     // }
 
     // reply(req)
@@ -723,7 +702,7 @@ function replyRecommend(reply_token, msg) {
                     items: [
                         {
                             type: "action",
-                            imageUrl: "https://example.com/sushi.png",
+                            imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601125619647eat.png?alt=media&token=61ebdb96-4649-406f-b7e1-e39e8730d909",
                             action: {
                                 type: "message",
                                 label: "ที่กิน",
@@ -732,7 +711,7 @@ function replyRecommend(reply_token, msg) {
                         },
                         {
                             type: "action",
-                            imageUrl: "https://example.com/tempura.png",
+                            imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601125559896place.png?alt=media&token=e2d872e8-6b87-443c-a88d-7bd8bf796009",
                             action: {
                                 type: "message",
                                 label: "ที่เที่ยว",
@@ -741,7 +720,7 @@ function replyRecommend(reply_token, msg) {
                         },
                         {
                             type: "action",
-                            imageUrl: "https://example.com/tempura.png",
+                            imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601125494822sleep.png?alt=media&token=a33b0a23-a1bf-4768-b39e-2f13f0841cac",
                             action: {
                                 type: "message",
                                 label: "ที่พัก",
