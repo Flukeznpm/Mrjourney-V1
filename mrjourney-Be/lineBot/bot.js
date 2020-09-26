@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 const request = require('request');
 // const app = express();
-
 router.post('/webhook', (req, res) => {
     let reply_token = req.body.events[0].replyToken
     // let msg = req.body.events[0]
@@ -344,7 +343,6 @@ function replyCreateBill(reply_token, msg) {
                     items: [
                         {
                             type: "action",
-                            imageUrl: "https://example.com/sushi.png",
                             action: {
                                 type: "message",
                                 label: "สร้างบิล",
@@ -353,7 +351,6 @@ function replyCreateBill(reply_token, msg) {
                         },
                         {
                             type: "action",
-                            imageUrl: "https://example.com/tempura.png",
                             action: {
                                 type: "message",
                                 label: "ดูบิล",
@@ -417,116 +414,6 @@ function replySeeBill(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
-
-// function replyHelp(reply_token, msg) {
-//     let headers = {
-//         'Content-Type': 'application/json',
-//         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
-//     }
-
-//     let body = JSON.stringify({
-//         replyToken: reply_token,
-//         messages: [
-//             {
-//                 type: "text",
-//                 text: "อยากให้ผมสอนอะไรครับ ?",
-//                 quickReply: {
-//                   items: [
-//                     {
-//                       type: "action",
-//                       imageUrl: "https://example.com/sushi.png",
-//                       action: {
-//                         type: "message",
-//                         label: "สร้างทริป",
-//                         text: "สร้างทริป"
-//                       }
-//                     },
-//                     {
-//                       type: "action",
-//                       imageUrl: "https://example.com/tempura.png",
-//                       action: {
-//                         type: "message",
-//                         label: "ดูแผน",
-//                         text: "ดูแผน"
-//                       }
-//                     },
-//                     {
-//                       type: "action",
-//                       action: {
-//                         type: "บิลเก็บเงิน",
-//                         label: "บิลเก็บเงิน"
-//                       }
-//                     }
-//                   ]
-//                 }
-//               }
-//         ]
-//     })
-
-//     request.post({
-//         url: 'https://api.line.me/v2/bot/message/reply',
-//         headers: headers,
-//         body: body
-//     }, (err, res, body) => {
-//         console.log('status = ' + res.statusCode);
-//     });
-// }
-
-// function replyRecommend(reply_token, msg) {
-//     let headers = {
-//         'Content-Type': 'application/json',
-//         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
-//     }
-
-//     let body = JSON.stringify({
-//         replyToken: reply_token,
-//         messages: [
-//             {
-//                 type: "text",
-//                 text: "อยากให้ผมแนะนำอะไรดีค้าบ?",
-//                 quickReply: {
-//                   items: [
-//                     {
-//                       type: "action",
-//                       imageUrl: "https://example.com/sushi.png",
-//                       action: {
-//                         type: "message",
-//                         label: "ที่กิน",
-//                         text: "ที่กิน"
-//                       }
-//                     },
-//                     {
-//                       type: "action",
-//                       imageUrl: "https://example.com/tempura.png",
-//                       action: {
-//                         type: "message",
-//                         label: "ที่เที่ยว",
-//                         text: "ที่เที่ยว"
-//                       }
-//                     },
-//                     {
-//                         type: "action",
-//                         imageUrl: "https://example.com/tempura.png",
-//                         action: {
-//                           type: "message",
-//                           label: "ที่พัก",
-//                           text: "ที่พัก"
-//                         }
-//                     }
-//                   ]
-//                 }
-//               }
-//         ]
-//     })
-
-//     request.post({
-//         url: 'https://api.line.me/v2/bot/message/reply',
-//         headers: headers,
-//         body: body
-//     }, (err, res, body) => {
-//         console.log('status = ' + res.statusCode);
-//     });
-// }
 
 function replyWeather(reply_token, msg) {
     let headers = {
@@ -1007,17 +894,9 @@ function replyHelpCreateTrip(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                "type": "bubble",
-                "body": {
-                    "type": "box",
-                    "layout": "horizontal",
-                    "contents": [
-                        {
-                            "type": "image",
-                            "url": "https://www.linefriends.com/content/banner/201804/3b5364c97c2d4a26988f85acdc78514e.jpg",
-                        }
-                    ]
-                }
+                    type: "image",
+                    originalContentUrl: "https://example.com/original.jpg",
+                    previewImageUrl: "https://example.com/preview.jpg"
             }
         ]
     })
