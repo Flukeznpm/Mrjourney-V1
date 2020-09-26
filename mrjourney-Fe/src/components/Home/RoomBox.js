@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import styled from "styled-components";
 import "../../static/css/Show-Room.css";
 import "../../static/css/Nav.css";
@@ -36,6 +36,18 @@ const PrimaryButton = styled(AntButton)`
     &:hover , &:active, &:focus {
         background: ${props => (props.theme.color.primaryPress)};
         border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const OutlineButton = styled(AntButton)`
+    border-radius: 8px;
+    font-size: 16px;
+    border: 1px solid ${props => (props.theme.color.primary)};
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active {
+        border: 1px solid ${props => (props.theme.color.primaryPress)};
+        color: ${props => (props.theme.color.primary)};
+        background: #F7F7F7;
     }
 `;
 
@@ -204,7 +216,6 @@ function RoomBox(props) {
             }
         }
     }
-
     return (
         <div className="col-md-4 col-sm-12 d-flex justify-content-center py-3">
             <div class="card" style={{ width: "18rem" }}>
@@ -221,9 +232,13 @@ function RoomBox(props) {
                     </div>
                     <div className="col-12 p-0">
                         <div class="card-text row">
-                            <div className="col-9"><Progress percent={30} showInfo={false} /></div>
-                            <div className="col-3" style={{ fontSize: "12px", paddingTop: "4px" }}>
-                                0/{props.room.maxMember}
+                            <div className="col-9">
+                                <Progress
+                                    percent={(100/props.room.maxMember)*props.room.joinedMember}
+                                    showInfo={false} />
+                            </div>
+                            <div className="col-3" style={{ fontSize: "12px" }}>
+                                {props.room.joinedMember}/{props.room.maxMember}
                             </div>
                         </div>
                     </div>
@@ -279,7 +294,20 @@ function RoomBox(props) {
                             <div class="col-9">
                                 {props.room.roomStatus === true
                                     ?
-                                    <PrimaryButton type="primary" onClick={() => onCheckJoinRoom(props.acc, props.room)} block>เข้าร่วม</PrimaryButton>
+                                    <>
+                                        {props.room.ownerRoomID === props.acc.lineID ?
+                                            <Link to={`/JoinRoom?roomID=${props.room.roomID}`}>
+                                                <OutlineButton
+                                                    block
+                                                >เข้าสู่ห้อง</OutlineButton>
+                                            </Link>
+                                            :
+                                            <PrimaryButton
+                                                type="primary" block
+                                                onClick={() => onCheckJoinRoom(props.acc, props.room)}
+                                            >เข้าร่วม</PrimaryButton>
+                                        }
+                                    </>
                                     :
                                     <PrimaryButton type="primary" block disabled>เข้าร่วม</PrimaryButton>
                                 }

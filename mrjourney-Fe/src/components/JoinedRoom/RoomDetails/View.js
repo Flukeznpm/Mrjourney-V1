@@ -208,7 +208,7 @@ function RoomDetails(props) {
                                         type="button" class="maxMember-btn btn ml-2 text-center"
                                         style={{ width: "40px", height: "40px" }}
                                     >
-                                        {props.members}/
+                                        {props.roomDetail.joinedMember}/
                                     {props.roomDetail.maxMember}
                                     </button>
                                 </div>

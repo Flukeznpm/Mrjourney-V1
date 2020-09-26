@@ -22,7 +22,6 @@ function JoinRoom(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [roomDetail, setShowRoomDetail] = useState([{}])
-    const [members, setMember] = useState([{}])
     const [isEditRoom, setEditRoom] = useState(false);
     const [isCloseRoom, setCloseRoom] = useState(false);
 
@@ -43,10 +42,6 @@ function JoinRoom(props) {
         axios.get(`http://localhost:5000/room/roomDetail?roomID=${getRoomID}`)
             .then(res => {
                 setShowRoomDetail(res.data)
-            })
-        axios.get(`http://localhost:5000/room/members?roomID=${getRoomID}`)
-            .then(res => {
-                setMember(res.data)
             })
     }, [isEditRoom, isCloseRoom])
 
@@ -70,7 +65,7 @@ function JoinRoom(props) {
                                         </div>
                                         <div className="col-12">
                                             <div className="row">
-                                                <RoomDetails roomDetail={roomDetail} members={members.length}
+                                                <RoomDetails roomDetail={roomDetail}
                                                     isEditRoom={isEditRoom} setEditRoom={setEditRoom}
                                                     isCloseRoom={isCloseRoom} setCloseRoom={setCloseRoom}
                                                 ></RoomDetails>

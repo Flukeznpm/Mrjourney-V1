@@ -61,7 +61,7 @@ function MyOwnerRoom(props) {
                 setShowOwnerRoom(res.data)
             })
     }, [isVisible])
-    
+
     const onVisibleModal = (roomID) => {
         setDeleteRoomID(roomID)
         setVisible(true)
@@ -95,9 +95,13 @@ function MyOwnerRoom(props) {
                                                             </div>
                                                             <div className="col-12 p-0">
                                                                 <div class="card-text row">
-                                                                    <div className="col-9"><Progress percent={30} showInfo={false} /></div>
+                                                                    <div className="col-9">
+                                                                        <Progress
+                                                                            percent={(100 / ownerRoom.maxMember) * ownerRoom.joinedMember}
+                                                                            showInfo={false} />
+                                                                    </div>
                                                                     <div className="col-3" style={{ fontSize: "12px", paddingTop: "4px" }}>
-                                                                        0/{ownerRoom.maxMember}
+                                                                        {ownerRoom.joinedMember}/{ownerRoom.maxMember}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -149,9 +153,9 @@ function MyOwnerRoom(props) {
                                                             <DeleteModal
                                                                 isVisible={isVisible}
                                                                 setVisible={setVisible}
-                                                                roomID={deleteRoomID} 
-                                                                lineID={lineID} 
-                                                                />
+                                                                roomID={deleteRoomID}
+                                                                lineID={lineID}
+                                                            />
                                                             <Link to={`/JoinRoom?roomID=${ownerRoom.roomID}`}>
                                                                 <button type="button"
                                                                     className="btn mx-2 col-5 btn-join-color round text-white"
