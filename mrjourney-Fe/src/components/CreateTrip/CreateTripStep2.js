@@ -8,6 +8,7 @@ import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
 import Stepper from '../components/Stepper';
+import liff from '@line/liff';
 import {
     Card,
     Form as AntForm,
@@ -133,30 +134,31 @@ const AntFormItem = styled(AntForm.Item)`
 
 function CreateTripStep2(props) {
     const { nextTripStep, prevTripStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
-    const [lineID, setLineID] = useState("")
     const [lineGroupID, setLineGroupID] = useState("Line_Group_001")
-    const [displayName, setDisplayName] = useState("")
-    const [pictureURL, setPictureURL] = useState("")
     const [tripStatus, setTripStatus] = useState(true)
+    const [LineID, setLineID] = useState('')
+    const [LineName, setLineName] = useState('')
+    const [LinePicture, setLinePicture] = useState('')
 
-    // useEffect(() => {
-    //     let loadJWT = cookie.load('jwt');
-    //     if (loadJWT === undefined) {
-    //         // props.history.push('/Home');
-    //     } else {
-    //         var user = jwt.verify(loadJWT, 'secreatKey');
-    //         setLineID(user.lineID)
-    //         setDisplayName(user.displayName)
-    //         setPictureURL(user.pictureURL)
-    //     }
-    // }, [])
+    useEffect(() => {
+        liff.init({ liffId: '1653975470-jV83lv9w' }).then(async () => {
+            if (liff.isLoggedIn()) {
+                let profile = await liff.getProfile();
+                setLineID(profile.userId);
+                setLineName(profile.displayName);
+                setLinePicture(profile.pictureUrl);
+            } else {
+                props.history.push('/Home');
+            }
+        });
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         let dataTrip = {
-            // lineID: lineID,
-            // displayName: displayName,
-            // pictureURL: pictureURL,
+            lineID: LineID,
+            displayName: LineName,
+            pictureURL: LinePicture,
             lineGroupID: lineGroupID,
             tripName: Trip.tripName,
             province: Trip.province,
@@ -180,7 +182,7 @@ function CreateTripStep2(props) {
                     <div className="container">
                         <Col span={24} className="pb-3">
                             <div className="pt-4 pb-2" >
-                                <ShowStartToEnd />
+                                <ShowStartToEnd />{LineName}{lineGroupID}
                             </div>
                             {Trip.totalDate.map((PerDay, key) => {
                                 return (

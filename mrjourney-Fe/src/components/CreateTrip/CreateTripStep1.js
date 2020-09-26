@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from "styled-components";
 import '../../static/css/App.css';
-import jwt from 'jsonwebtoken';
-import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../../store/HookProvider'
 import Stepper from '../components/Stepper';
+import liff from '@line/liff';
 import {
     Form as AntForm,
     Input as AntInput,
@@ -63,22 +62,25 @@ const AntFormItem = styled(AntForm.Item)`
 function CreateTripStep1(props) {
     const { thaiprovince, handleTripForm, Trip, confirmTripStep, toDate } = useContext(HookContext)
 
-    // const [Linename, setLineName] = useState('')
-    // const [Linepicture, setLinePicture] = useState('')
+    const [LineID, setLineID] = useState('')
+    const [LineName, setLineName] = useState('')
+    const [LinePicture, setLinePicture] = useState('')
 
     const { Option } = AntSelect;
     const dateFormat = 'DD/MM/YYYY';
     const [form] = AntForm.useForm();
 
     useEffect(() => {
-        // let loadJWT = cookie.load('jwt');
-        // if (loadJWT === undefined) {
-        //     // props.history.push('/Home');
-        // } else {
-        //     var user = jwt.verify(loadJWT, 'secreatKey');
-        //     setLineName(user.displayName)
-        //     setLinePicture(user.pictureURL)
-        // }
+        liff.init({ liffId: '1653975470-jV83lv9w' }).then(async () => {
+            if (liff.isLoggedIn()) {
+                let profile = await liff.getProfile();
+                setLineID(profile.userId);
+                setLineName(profile.displayName);
+                setLinePicture(profile.pictureUrl);
+            } else {
+                props.history.push('/Home');
+            }
+        });
         form.setFieldsValue({
             numberAddDate: Trip.numberAddDate
         })
