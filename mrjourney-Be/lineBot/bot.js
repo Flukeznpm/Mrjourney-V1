@@ -18,7 +18,7 @@ router.post('/webhook', (req, res) => {
         replyPlan(reply_token, msg)
     }
     else if (msg === "ดูแผนทั้งหมด") {
-        replyPlanPerDay(reply_token, msg)
+        replyPlanAll(reply_token,msg)
     }
     else if (msg === "ดูแผนวันนี้") {
         replyPlanPerDay(reply_token, msg)
@@ -178,7 +178,7 @@ function replyCreate(reply_token, msg) {
                                 type: "text",
                                 align: "center",
                                 weight: "bold",
-                                text: "อยากดูแบบไหนครับ?"
+                                text: "พร้อมที่จะสร้างทริปแล้วใช่ไหม?"
                             }
                         ],
                         type: "box"
@@ -190,7 +190,7 @@ function replyCreate(reply_token, msg) {
                         contents: [
                             {
                                 action: {
-                                    label: "ดูแผนทั้งหมด",
+                                    label: "สร้างทริป",
                                     type: "uri",
                                     uri: "https://liff.line.me/1653975470-jV83lv9w"
                                 },
@@ -307,7 +307,30 @@ function replyPlanPerDay(reply_token, msg) {
             },
         ]
     })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
 
+function replyPlanAll(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: "lineliff here"
+            },
+        ]
+    })
     request.post({
         url: 'https://api.line.me/v2/bot/message/reply',
         headers: headers,
@@ -579,7 +602,7 @@ function replyContact(reply_token, msg) {
                         {
                             type: "text",
                             label: "อีเมลล์",
-                            text: "mrjourney@"
+                            text: "mrjourney.6012@gmail.com"
                         },
                         {
                             type: "postback",
