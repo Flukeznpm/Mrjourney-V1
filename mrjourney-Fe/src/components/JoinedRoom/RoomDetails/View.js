@@ -118,8 +118,6 @@ function RoomDetails(props) {
                 console.log(res)
             })
     }
-
-
     return (
         <div className="col-lg-9 col-sm-12 my-3">
             <AntCard style={{ padding: 0 }}>

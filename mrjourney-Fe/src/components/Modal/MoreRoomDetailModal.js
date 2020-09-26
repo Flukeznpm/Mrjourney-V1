@@ -3,16 +3,16 @@ import styled from "styled-components";
 import { Modal, Button } from 'react-bootstrap';
 import '../../static/css/App.css'
 import "../../static/css/Event-Trip.css";
-import BgSlide1 from '../../static/img/pr-01.png';
 import momentjs from 'moment'
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import Logo from '../../static/img/logojourney.png';
 import {
     Button as AntButton,
     Tooltip,
-    Card
+    Card,
+    Progress, Typography
 } from 'antd';
+import { WomanOutlined, ManOutlined } from '@ant-design/icons';
 
 const AntCard = styled(Card)`
   border-radius: 8px;
@@ -197,67 +197,65 @@ function MoreRoomDetailModal(props) {
                     <div className="container">
                         <ImgCover class="d-block w-100" src={props.room.roomCover} alt="First slide" />
                         <AntCard style={{ padding: 0 }}>
-                            <div className="pt-3" style={{ fontSize: "20px", fontWeight: 'bold' }}>
+                            <div style={{ fontSize: "20px", fontWeight: 'bold' }}>
                                 {props.room.roomName} &nbsp;
-                                <button
-                                    type="button" class="maxMember-btn btn p-0 ml-1 "
-                                    style={{ fontSize: "12px" }} >
-                                    0/{props.room.maxMember}
-                                </button>
+                                <div style={{ fontSize: "16px", fontWeight: 'normal' }}>
+                                    จังหวัด : {props.room.province}
+                                </div>
+                                <div className="col-12 p-0">
+                                    <div class="row">
+                                        <div className="col-10 d-flex">
+                                            <Progress
+                                                percent={(100 / props.room.maxMember) * props.room.joinedMember}
+                                                showInfo={false}
+                                            />
+                                        </div>
+                                        <div className="col-2" style={{ fontSize: "12px" }}>
+                                            {props.room.joinedMember}/{props.room.maxMember}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="details py-1">
-                                <span className="row">
-                                    <span className="col-8">
-                                        <span className="py-1" style={{ fontSize: "14px" }}>
-                                            จังหวัด : {props.room.province}
+                            <div className="row">
+                                <div className="col-12">
+                                    วันที่จัดทริป : &nbsp;
+                                    <button
+                                        type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                                        {momentjs(props.room.startDate).format('ll')}
+                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                    </button>
+                                        &nbsp;-&nbsp;
+                                    <button
+                                        type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                                        {momentjs(props.room.endDate).format('ll')}
+                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                    </button>
+                                </div>
+                                <div className="col-12">
+                                    เงื่อนไข : &nbsp;
+                                    {props.room.genderCondition === 'ชาย' ?
+                                        <span className="pl-2 pr-2" style={{ fontSize: "0.95rem" }}>
+                                            <ManOutlined style={{ color: "dodgerblue" }} />
                                         </span>
-                                        <br /><span className="py-1" style={{ fontSize: "14px" }}>
-                                            วันที่ : &nbsp;
-                                                            <button
-                                                type="button" class="show-details-btn btn p-1 " style={{ fontSize: "10px" }}>
-                                                {momentjs(props.room.startDate).format('ll')}
-
-                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                            </button>
-                                                            &nbsp; - &nbsp;
-                                                            <button
-                                                type="button" class="show-details-btn btn p-1" style={{ fontSize: "10px" }}>
-                                                {momentjs(props.room.endDate).format('ll')}
-
-                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                            </button>
+                                        :
+                                        ""}
+                                    {props.room.genderCondition === 'หญิง' ?
+                                        <span className="pl-2 pr-2" style={{ fontSize: "0.95rem" }}>
+                                            <WomanOutlined style={{ color: "hotpink" }} />
                                         </span>
+                                        :
+                                        ""}
+                                    {props.room.genderCondition === 'ไม่จำกัดเพศ' ?
+                                        <span className="pl-2 pr-2" style={{ fontSize: "0.95rem" }}>
+                                            <WomanOutlined style={{ color: "hotpink" }} />
+                                            <ManOutlined style={{ color: "dodgerblue" }} />
+                                        </span>
+                                        :
+                                        ""}
+                                    <span className="mt-0 ml-2" style={{ fontSize: "12px" }}>
+                                        อายุ &nbsp;{props.room.ageCondition}
                                     </span>
-                                    <span className="col-4">
-                                        {props.room.genderCondition === 'ชาย' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                            </span>
-                                            :
-                                            ""}
-                                        {props.room.genderCondition === 'หญิง' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                            </span>
-                                            :
-                                            ""}
-                                        {props.room.genderCondition === 'ไม่จำกัดเพศ' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                            </span>
-                                            :
-                                            ""}
-                                        <br /><span className="mt-0 ml-2" style={{ fontSize: "10px" }}>
-                                            อายุ
-                                            &nbsp;
-                                        <button
-                                                type="button" class="show-details-btn btn p-1 " style={{ fontSize: "8px" }}>
-                                                {props.room.ageCondition}
-                                            </button>
-                                        </span>
-                                    </span>
-                                </span>
+                                </div>
                             </div>
                             <div className="Creator mt-2">
                                 <span className="pl-1 pr-1"><img src={props.room.ownerPicRoom} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
