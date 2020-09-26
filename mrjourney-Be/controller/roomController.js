@@ -537,7 +537,7 @@ async function joinedRoom(datas) {
         });
     })
 
-    let addMembers = (Members.length) + 1;
+    let addMembers = (Members.length);
     let saveRoomID = db.collection('Room').doc(datas.roomID)
     await saveRoomID.update({
         joinedMember: addMembers
