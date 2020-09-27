@@ -355,7 +355,6 @@ function replyBill(reply_token, msg) {
                     items: [
                         {
                             type: "action",
-                            imageUrl: "https://example.com/sushi.png",
                             action: {
                                 type: "message",
                                 label: "สร้างบิล",
@@ -364,7 +363,6 @@ function replyBill(reply_token, msg) {
                         },
                         {
                             type: "action",
-                            imageUrl: "https://example.com/tempura.png",
                             action: {
                                 type: "message",
                                 label: "ดูบิล",
@@ -901,7 +899,7 @@ function replyHelp(reply_token, msg) {
                     items: [
                         {
                             type: "action",
-                            imageUrl: "https://example.com/sushi.png",
+                            imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601199781153Create.png?alt=media&token=388d4d44-fae8-497a-bf61-fc77c2ce46b3",
                             action: {
                                 type: "message",
                                 label: "สร้างทริป",
@@ -910,7 +908,7 @@ function replyHelp(reply_token, msg) {
                         },
                         {
                             type: "action",
-                            imageUrl: "https://example.com/tempura.png",
+                            imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601199871983Check.png?alt=media&token=3f98d61f-eb10-4e7e-b88f-622e6e6768e0",
                             action: {
                                 type: "message",
                                 label: "ดูแผน",
@@ -919,7 +917,7 @@ function replyHelp(reply_token, msg) {
                         },
                         {
                             type: "action",
-                            imageUrl: "https://example.com/tempura.png",
+                            imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1601199904275Bill.png?alt=media&token=f9ef39dc-8344-4614-bcf4-6edf82926598",
                             action: {
                                 type: "message",
                                 label: "บิลเก็บเงิน",
@@ -956,6 +954,13 @@ function replyHelpCreateTrip(reply_token, msg) {
             }
         ]
     })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
 }
 
 function replyHelpPlan(reply_token, msg) {

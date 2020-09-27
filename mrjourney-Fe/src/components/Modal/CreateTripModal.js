@@ -9,7 +9,9 @@ import {
     Select as AntSelect,
     TimePicker,
 } from 'antd';
-// import { ReactComponent as EatingIcon } from '../../static/icons/eating.svg';
+import { ReactComponent as EatingIcon } from '../../static/icons/eating.svg';
+import { ReactComponent as TravellingIcon } from '../../static/icons/travelling.svg';
+import { ReactComponent as SleepingIcon } from '../../static/icons/sleeping.svg';
 
 const ModalHeader = styled(Modal.Header)`
     border-bottom: none;
@@ -60,7 +62,6 @@ const TypeButtonSelected = styled(AntButton)`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
     &:hover , &:active, &:focus {
         border: 1px solid #F37945;
         background: #F37945;
@@ -73,11 +74,16 @@ const TypeButton = styled(AntButton)`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
     &:hover , &:active, &:focus {
         border: 1px solid #F37945;
         background: #F37945;
     }
+`;
+
+const ColButtonComponent = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 
@@ -126,48 +132,66 @@ function CreateTripModal(props) {
                         <label for="exampleInputEmail1" className="pt-2">ประเภท</label>
                         <div className="container">
                             <div className="row text-center">
-                                <div className="col-4 ">
+                                <ColButtonComponent className="col-4 ">
                                     {Event.eventType === 'eating' ?
                                         <TypeButtonSelected
                                             shape="circle"
-                                            icon={<img src="/img/icons/eating.svg" />}
-                                        />
+                                            size={"large"}
+                                        // icon={<img src="/img/icons/eating.svg" />}
+                                        >
+                                            <EatingIcon style={{ margin: "5px", fill: "#F37945" }} />
+                                        </TypeButtonSelected>
                                         :
                                         <TypeButton
                                             shape="circle"
-                                            icon={<img src="/img/icons/eating.svg" />}
+                                            size={"large"}
+                                            // icon={<img src="/img/icons/eating.svg" />}
                                             onClick={() => selectEventType('eating')}
-                                        />
+                                        >
+                                            <EatingIcon style={{ margin: "5px" }} />
+                                        </TypeButton>
                                     }
-                                </div>
-                                <div className="col-4 ">
+                                </ColButtonComponent>
+                                <ColButtonComponent className="col-4 ">
                                     {Event.eventType === 'travel' ?
                                         <TypeButtonSelected
                                             shape="circle"
-                                            icon={<img src="/img/icons/travelling.svg" />}
-                                        />
+                                            size={"large"}
+                                        // icon={<img src="/img/icons/travelling.svg" />}
+                                        >
+                                            <TravellingIcon style={{ margin: "5px" }} />
+                                        </TypeButtonSelected>
                                         :
                                         <TypeButton
                                             shape="circle"
-                                            icon={<img src="/img/icons/travelling.svg" />}
+                                            size={"large"}
+                                            // icon={<img src="/img/icons/travelling.svg" />}
                                             onClick={() => selectEventType('travel')}
-                                        />
+                                        >
+                                            <TravellingIcon style={{ margin: "5px" }} />
+                                        </TypeButton>
                                     }
-                                </div>
-                                <div className="col-4">
+                                </ColButtonComponent>
+                                <ColButtonComponent className="col-4 ">
                                     {Event.eventType === 'sleeping' ?
                                         <TypeButtonSelected
                                             shape="circle"
-                                            icon={<img src="/img/icons/sleeping.svg" />}
-                                        />
+                                            size={"large"}
+                                            // icon={<img src="/img/icons/sleeping.svg" />}
+                                        >
+                                            <SleepingIcon style={{ margin: "5px" }} />
+                                        </TypeButtonSelected>
                                         :
                                         <TypeButton
                                             shape="circle"
-                                            icon={<img src="/img/icons/sleeping.svg" />}
+                                            size={"large"}
+                                            // icon={<img src="/img/icons/sleeping.svg" />}
                                             onClick={() => selectEventType('sleeping')}
-                                        />
+                                        >
+                                            <SleepingIcon style={{ margin: "5px" }} />
+                                        </TypeButton>
                                     }
-                                </div>
+                                </ColButtonComponent>
                             </div>
                         </div>
                     </div>
