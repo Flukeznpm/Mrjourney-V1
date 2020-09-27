@@ -22,6 +22,11 @@ const ShowDateTrip = styled(Card)`
   }
 `;
 
+const BetweenStartEnd = styled.span`
+    display: flex;
+    align-items: center;
+`;
+
 function ShowStartToEnd(props) {
     const { Trip } = useContext(HookContext)
     return (
@@ -31,7 +36,7 @@ function ShowStartToEnd(props) {
                     <Row justify="center">
                         <span className="p-1"> {momentjs(Trip.date).format('ll')}
                         </span>
-                    &nbsp; - &nbsp;
+                    &nbsp; <BetweenStartEnd>-</BetweenStartEnd> &nbsp;
                     <span className="p-1">{momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day').format('ll')}
                         </span>
                     </Row>
