@@ -92,7 +92,7 @@ function MyJoinedRoom(props) {
             setPictureURL(user.pictureURL)
             setLineID(user.lineID)
         }
-        axios.get(`http://localhost:5000/accountProfile/joinedRoom?lineID=${user.lineID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile/joinedRoom?lineID=${user.lineID}`)
             .then(res => {
                 console.log('res', res);
                 setShowOwnerRoom(res.data)

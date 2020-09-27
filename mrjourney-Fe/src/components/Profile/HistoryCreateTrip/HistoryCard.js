@@ -52,7 +52,7 @@ function HistoryCard(props) {
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let getUserID = params.get('userID');
-        axios.get(`http://localhost:5000/accountProfile/ownerRoom?lineID=${getUserID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile/ownerRoom?lineID=${getUserID}`)
             .then(res => {
                 setHistoryRoom(res.data)
             })
