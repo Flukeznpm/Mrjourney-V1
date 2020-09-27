@@ -197,7 +197,9 @@ function MyJoinedRoom(props) {
                                                     <div className="col-12 p-0">
                                                         <div className="row">
                                                             <div className="col-7 pr-0">
-                                                                <PrimaryButton type="primary" block>เข้าสู่ห้อง</PrimaryButton>
+                                                                <Link to={`/JoinRoom?roomID=${joinedRoom.roomID}`}>
+                                                                    <PrimaryButton type="primary" block>เข้าสู่ห้อง</PrimaryButton>
+                                                                </Link>
                                                             </div>
                                                             <div className="col-5">
                                                                 <LeaveButton block>
