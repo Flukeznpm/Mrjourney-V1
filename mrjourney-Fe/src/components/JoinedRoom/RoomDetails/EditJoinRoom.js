@@ -75,6 +75,7 @@ function EditJoinRoom(props) {
     const [gender, selectGender] = useState(["ชาย", "หญิง", "ไม่จำกัดเพศ"]);
     const [age, selectAge] = useState(["ต่ำกว่า 18 ปี", "18-25 ปี", "25 ปีขึ้นไป", "ไม่จำกัดช่วงอายุ"])
     const [roomStatus, setStatus] = useState(true);
+    const [endDateStatus, setEndDateStatus] = useState(false);
     const [fileRoomCover, setFileRoomCover] = useState('รูปหน้าปกห้อง');
     const [fileQrCode, setFileQrCode] = useState('คิวอาร์โค้ดกลุ่มไลน์');
     const [roomCoverImg, setRoomCoverImg] = useState(null);
@@ -166,9 +167,10 @@ function EditJoinRoom(props) {
             genderCondition: value.genderCondition,
             ageCondition: value.ageCondition,
             tripDetails: value.tripDetails,
-            roomStatus: roomStatus,
+            // roomStatus: roomStatus,
             roomCover: roomCoverImg,
-            qrCode: roomQrCodeImg
+            qrCode: roomQrCodeImg,
+            endDateStatus: endDateStatus
         }
         await axios.put('http://localhost:5000/room/editRoom', dataUpdateRoom)
             .then(async (res) => {
