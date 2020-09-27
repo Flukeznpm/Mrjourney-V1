@@ -24,7 +24,7 @@ body {
         height: 40px;
         font-size: 16px;
         align-items: center;
-        &:hover , &:active {
+        &:hover , &:active, &:focus {
             border-color: rgb(230, 111, 15);
         }
     }
@@ -33,7 +33,7 @@ body {
         border-radius: 4px;
         font-size: 14px;
         align-items: center;
-        &:hover , &:active {
+        &:hover , &:active, &:focus {
             border-color: rgb(230, 111, 15);
         }
     }
@@ -41,7 +41,7 @@ body {
     textarea.ant-input {
         font-size: 16px;
         border-radius: 4px;
-        &:hover , &:active {
+        &:hover , &:active, &:focus {
             border-color: rgb(230, 111, 15);
         }
     }

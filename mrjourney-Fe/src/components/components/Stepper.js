@@ -1,6 +1,9 @@
 import React from "react"
 import { Steps } from 'antd';
 import styled from "styled-components";
+import {
+    Col, Row,
+} from 'antd';
 import { LoadingOutlined, SmileOutlined, ControlTwoTone, CheckCircleTwoTone, PlusCircleTwoTone } from '@ant-design/icons';
 
 const AntSteps = styled(Steps)`
@@ -25,6 +28,25 @@ const HeaderStep = styled.div`
     width: 100%;
     height: 100px;
 `;
+
+const ColStepText = styled(Col)`
+    display: flex;
+    align-items: center;
+    height: 100%;
+`;
+
+const ColStepImg = styled(Col)`
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    height: 100%;
+`;
+
+const HeaderStepText = styled.div`
+    font-size: 20px;
+    font-weight: bold;
+    color: #f9f9f9;
+`
 
 function Stepper(props) {
     const { Step } = Steps;
@@ -57,33 +79,39 @@ function Stepper(props) {
                 :
                 <>
                     {props.step === 1 ?
-                        // <TripSteps current={0}>
-                        //     <Step title="สร้างทริป" icon={<LoadingOutlined />} />
-                        //     <Step title="ระบุรายละเอียด" icon={<ControlTwoTone twoToneColor="#cccccc" />} />
-                        //     <Step title="ตรวจสอบข้อมูล" icon={<CheckCircleTwoTone twoToneColor="#cccccc" />} />
-                        // </TripSteps>
                         <HeaderStep>
-
-                        </HeaderStep>
+                        <Row className="container h-100">
+                            <ColStepText span={16}>
+                                <HeaderStepText>สร้างแผนการท่องเที่ยว</HeaderStepText>
+                            </ColStepText>
+                            <ColStepImg span={8}>
+                                <img src={'/img/menu-03.png'} width={150} />
+                            </ColStepImg>
+                        </Row>
+                    </HeaderStep>
                         : null}
                     {props.step === 2 ?
-                        // <TripSteps current={1}>
-                        //     <Step title="สร้างทริป" icon={<PlusCircleTwoTone twoToneColor="#e66f0f" />} />
-                        //     <Step title="ระบุรายละเอียด" icon={<LoadingOutlined />} />
-                        //     <Step title="ตรวจสอบข้อมูล" icon={<CheckCircleTwoTone twoToneColor="#cccccc" />} />
-                        // </TripSteps>
                         <HeaderStep>
-
-                        </HeaderStep>
+                        <Row className="container h-100">
+                            <ColStepText span={16}>
+                                <HeaderStepText>ระบุรายละเอียดแต่ละวัน</HeaderStepText>
+                            </ColStepText>
+                            <ColStepImg span={8}>
+                                <img src={'/img/menu-02.png'} width={150} />
+                            </ColStepImg>
+                        </Row>
+                    </HeaderStep>
                         : null}
                     {props.step === 3 ?
-                        // <TripSteps current={2}>
-                        //     <Step title="สร้างทริป" icon={<PlusCircleTwoTone twoToneColor="#e66f0f" />} />
-                        //     <Step title="ระบุรายละเอียด" icon={<ControlTwoTone twoToneColor="#e66f0f" />} />
-                        //     <Step title="ตรวจสอบข้อมูล" icon={<CheckCircleTwoTone twoToneColor="#e66f0f" />} />
-                        // </TripSteps>
                         <HeaderStep>
-
+                            <Row className="container h-100">
+                                <ColStepText span={17}>
+                                    <HeaderStepText>เสร็จสิ้นการสร้างแผน</HeaderStepText>
+                                </ColStepText>
+                                <ColStepImg span={7}>
+                                    <img src={'/img/menu-03.png'} width={150} />
+                                </ColStepImg>
+                            </Row>
                         </HeaderStep>
                         : null}
                 </>

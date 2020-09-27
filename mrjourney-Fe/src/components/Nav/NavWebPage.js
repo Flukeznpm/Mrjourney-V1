@@ -23,7 +23,7 @@ const OutlineButton = styled(AntButton)`
     border: 1px solid ${props => (props.theme.color.primary)};
     background: #f9f9f9;
     color: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border: 1px solid ${props => (props.theme.color.primaryPress)};
         color: #f9f9f9;
         background: ${props => (props.theme.color.primaryPress)};
@@ -145,14 +145,6 @@ function NavWebPage(props) {
                                     </button>
                                     </a>
                                 </li>
-                                {/* <li className="nav-item mr-1 mt-1 pt-1">
-                                    <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}
-                                        onClick={AlertTrip}>
-                                        Create Trip
-                                            <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
-                                    </button>
-                                </li> */}
-
                                 <li className="nav-item d-flex align-items-center">
                                     <Link to="/CreateJoinRoom" >
                                         <OutlineButton
@@ -188,14 +180,6 @@ function NavWebPage(props) {
                                     </button>
                                     </a>
                                 </li>
-                                {/* <li className="nav-item mr-1 mt-1 pt-1">
-                                    <Link to="/CreateTrip">
-                                        <button type="button" className="btn create-btn round ml-2 mr-2 text-white" style={{ height: "40px" }}>Create Trip
-                                                 <i className="fas fa-plus fa-sm ml-1" style={{ color: "dark" }}></i>
-                                        </button>
-                                    </Link>
-                                </li> */}
-
                                 <li className="nav-item d-flex align-items-center">
                                     <Link to="/CreateJoinRoom" >
                                         <OutlineButton
@@ -226,14 +210,14 @@ function NavWebPage(props) {
                                             </div>
                                         </div>
                                         <a href="/AllMyOwnerRoom" className="my-2 dropdown-item a-dropdown">
-                                            <i class="fas fa-house-user pr-1 fa-lg" /> Owner Room
+                                            <i class="fas fa-house-user pr-1 fa-lg" /> ห้องที่เป็นเจ้าของ
                                             </a>
                                         <a href="/AllMyJoinedRoom" className="my-2 dropdown-item a-dropdown">
-                                            <i class="fas fa-door-open pr-1 fa-lg" /> Join Room
+                                            <i class="fas fa-door-open pr-1 fa-lg" /> ห้องที่เข้าร่วม
                                             </a>
                                         <div className="my-2 dropdown-item signout-btn a-dropdown" style={{ color: "#C25738" }}>
                                             <a onClick={onLogout}>
-                                                <i class="fas fa-sign-out-alt pr-1 fa-lg" /> Sign Out
+                                                <i class="fas fa-sign-out-alt pr-1 fa-lg" /> ออกจากระบบ
                                                 </a>
                                         </div>
                                     </div>

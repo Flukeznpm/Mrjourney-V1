@@ -15,8 +15,10 @@ import {
     Tooltip,
     Typography,
     Button as AntButton,
-    Switch
+    Switch,
+    Progress,
 } from 'antd';
+import { WomanOutlined, ManOutlined } from '@ant-design/icons';
 
 const AntCard = styled(Card)`
   border-radius: 8px;
@@ -41,7 +43,7 @@ const OutlineButton = styled(AntButton)`
     font-size: 16px;
     border: 1px solid ${props => (props.theme.color.primary)};
     color: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border: 1px solid ${props => (props.theme.color.primaryPress)};
         color: ${props => (props.theme.color.primary)};
         background: #F7F7F7;
@@ -140,7 +142,7 @@ function RoomDetails(props) {
                                     </Tooltip>
                                 }
                             </div>
-                            <div className="ShowRoom-TripName py-1" style={{ fontSize: "30px" }}>
+                            <div className="ShowRoom-TripName py-1" style={{ fontSize: "28px", fontWeight: "bold"  }}>
                                 ชื่อทริป : {props.roomDetail.roomName}
                             </div>
                             <div style={{ fontSize: "18px" }}>
@@ -152,42 +154,39 @@ function RoomDetails(props) {
                                     </button>
                                 </div>
                                 <div className="ShowRoom-Date py-1 ">
-                                    วันเริ่ม - จบทริป
-                                                <div className="py-2">
-                                        <span className="Show-Date pl-3 pr-3 ">
-                                            <button
-                                                type="button" class="show-details-btn btn p-1 ">
-                                                {momentjs(props.roomDetail.startDate).format('DD/MM/YYYY')}
-                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                            </button>
-                                            <span className="pl-2 p-2">-</span>
-                                            <button
-                                                type="button" class="show-details-btn btn p-1">
-                                                {momentjs(props.roomDetail.endDate).format('DD/MM/YYYY')}
-                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                            </button>
-                                        </span>
-                                    </div>
+                                    <span className="pr-2 my-2">วันเริ่ม - จบทริป </span>
+                                    <span className="Show-Date py-2 ">
+                                        <button
+                                            type="button" class="date-room-btn btn p-1 my-2 " style={{ fontSize: "14px" }}>
+                                            {momentjs(props.roomDetail.startDate).format('ll')}                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                        </button>
+                                            &nbsp;&nbsp;
+                                        <button
+                                            type="button" class="date-room-btn btn p-1 my-2" style={{ fontSize: "14px" }}>
+                                            {momentjs(props.roomDetail.endDate).format('ll')}                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                        </button>
+                                    </span>
                                 </div>
                                 <div className="ShowRoom-Condition py-1">
                                     เงื่อนไข
-                         <div className="py-2">
-                                        เพศ {props.roomDetail.genderCondition === 'ชาย' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                    <div className="py-2">
+                                        เพศ
+                                        {props.roomDetail.genderCondition === 'ชาย' ?
+                                            <span className="pl-2 pr-2" style={{ fontSize: "1.00rem", margin: "auto" }}>
+                                                <ManOutlined style={{ color: "dodgerblue" }} />
                                             </span>
                                             :
                                             ""}
                                         {props.roomDetail.genderCondition === 'หญิง' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
+                                            <span className="pl-2 pr-2" style={{ fontSize: "1.00rem", margin: "auto" }}>
+                                                <WomanOutlined style={{ color: "hotpink" }} />
                                             </span>
                                             :
                                             ""}
                                         {props.roomDetail.genderCondition === 'ไม่จำกัดเพศ' ?
-                                            <span className="Show-genderCondition pl-2 pr-2" style={{ fontSize: "0.75rem" }}>
-                                                <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
+                                            <span className="pl-2 pr-2" style={{ fontSize: "1.00rem", margin: "auto" }}>
+                                                <WomanOutlined style={{ color: "hotpink" }} />
+                                                <ManOutlined style={{ color: "dodgerblue" }} />
                                             </span>
                                             :
                                             ""}
@@ -202,13 +201,18 @@ function RoomDetails(props) {
                                 </div>
                                 <div className="ShowRoom-MaxMember py-1">
                                     <label for="exampleInputEmail1">จำนวนคนที่เปิดรับ</label>
-                                    <button
-                                        type="button" class="maxMember-btn btn ml-2 text-center"
-                                        style={{ width: "40px", height: "40px" }}
-                                    >
-                                        {props.roomDetail.joinedMember}/
-                                    {props.roomDetail.maxMember}
-                                    </button>
+                                    <div className="col-12 p-0">
+                                        <div class="card-text row">
+                                            <div className="col-9">
+                                                <Progress
+                                                    percent={(100 / props.roomDetail.maxMember) * props.roomDetail.joinedMember}
+                                                    showInfo={false} />
+                                            </div>
+                                            <div className="col-3" style={{ fontSize: "14px", textAlign: "center", margin: "auto" }}>
+                                                {props.roomDetail.joinedMember}/{props.roomDetail.maxMember}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="pt-4">
                                     <label for="exampleInputEmail1">รายละเอียด</label>

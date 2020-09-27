@@ -32,7 +32,7 @@ const PrimaryButton = styled(AntButton)`
     font-size: 16px;
     background: ${props => (props.theme.color.primary)};
     border: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         background: ${props => (props.theme.color.primaryPress)};
         border: ${props => (props.theme.color.primaryPress)};
     }

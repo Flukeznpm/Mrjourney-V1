@@ -18,6 +18,7 @@ import momentjs from 'moment';
 const PrimaryButton = styled(AntButton)`
     border-radius: 4px;
     font-size: 16px;
+    height: 50px;
     background: ${props => (props.theme.color.primary)};
     border: ${props => (props.theme.color.primary)};
     &:hover , &:active, &:focus {

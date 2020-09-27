@@ -83,20 +83,22 @@ const DeleteEventCard = styled(Card)`
 
 const PrimaryButton = styled(AntButton)`
     border-radius: 4px;
+    height: 50px;
     font-size: 16px;
     background: ${props => (props.theme.color.primary)};
     border: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         background: ${props => (props.theme.color.primaryPress)};
         border: ${props => (props.theme.color.primaryPress)};
     }
 `;
 
 const PrevButton = styled(AntButton)`
+    height: 50px;
     border-radius: 4px;
     font-size: 16px;
     color: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         color: ${props => (props.theme.color.primaryPress)};
         background: #F7F7F7;
     }

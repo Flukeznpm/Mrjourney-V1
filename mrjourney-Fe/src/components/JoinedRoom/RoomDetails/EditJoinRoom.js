@@ -33,7 +33,7 @@ const OutlineButton = styled(AntButton)`
     font-size: 16px;
     border: 1px solid ${props => (props.theme.color.primary)};
     color: ${props => (props.theme.color.primary)};
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border: 1px solid ${props => (props.theme.color.primaryPress)};
         color: ${props => (props.theme.color.primary)};
         background: #F7F7F7;
@@ -45,7 +45,7 @@ const InputComponent = styled(AntInput)`
     height: 40px;
     font-size: 16px;
     align-items: center;
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border-color: ${props => (props.theme.color.primary)};
     }
 `;
@@ -53,7 +53,7 @@ const InputComponent = styled(AntInput)`
 const DatePickerComponent = styled(DatePicker)`
     height: 40px;
     border-radius: 4px;
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border-color: rgb(230, 111, 15);
     }
 `;
@@ -62,7 +62,7 @@ const InputNumberComponent = styled(InputNumber)`
     height: 40px;
     font-size: 16px;
     align-content: center;
-    &:hover , &:active {
+    &:hover , &:active, &:focus {
         border-color: ${props => (props.theme.color.primary)};
     }
 `;
