@@ -113,7 +113,7 @@ function CreateTripStep3() {
                                                 type="primary"
                                                 size={"large"}
                                                 block htmlType="submit"
-                                            >ดูแผนการเดินทางทั้งหมด</PrimaryButton>
+                                            >ดูแผนทั้งหมด</PrimaryButton>
                                         </Col>
                                     </Row>
 
@@ -123,7 +123,7 @@ function CreateTripStep3() {
                                                 type="primary"
                                                 size={"large"}
                                                 block htmlType="submit"
-                                            >ดูแผนการเดินทางรายวัน</SecondaryButton>
+                                            >ดูแผนรายวัน</SecondaryButton>
                                         </Col>
                                     </Row>
 
