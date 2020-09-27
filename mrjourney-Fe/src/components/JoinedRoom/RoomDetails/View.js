@@ -126,23 +126,27 @@ function RoomDetails(props) {
                 <div className="container py-3">
                     {props.isEditRoom === false ?
                         <div className="ShowRoom-Details">
-                            <div className="text-right">
-                                {props.roomDetail.roomStatus === true && props.isCloseRoom === false ?
-                                    <Tooltip title="เลื่อนเพื่อปิดห้อง">
-                                        <SwitchComponentClose defaultChecked
-                                            onChange={() => CloseRoom(props.roomDetail.roomID)}
-                                            onClick={() => props.setCloseRoom(true)}
-                                        />
-                                    </Tooltip>
-                                    :
-                                    <Tooltip title="เลื่อนเพื่อเปิดห้อง">
-                                        <SwitchComponentOpen
-                                            onChange={() => OpenRoom(props.roomDetail.roomID)}
-                                            onClick={() => props.setCloseRoom(false)} />
-                                    </Tooltip>
-                                }
-                            </div>
-                            <div className="ShowRoom-TripName py-1" style={{ fontSize: "28px", fontWeight: "bold"  }}>
+                            {lineID === props.roomDetail.ownerRoomID ?
+                                <div className="text-right">
+                                    {props.roomDetail.roomStatus === true && props.isCloseRoom === false ?
+                                        <Tooltip title="เลื่อนเพื่อปิดห้อง">
+                                            <SwitchComponentClose defaultChecked
+                                                onChange={() => CloseRoom(props.roomDetail.roomID)}
+                                                onClick={() => props.setCloseRoom(true)}
+                                            />
+                                        </Tooltip>
+                                        :
+                                        <Tooltip title="เลื่อนเพื่อเปิดห้อง">
+                                            <SwitchComponentOpen
+                                                onChange={() => OpenRoom(props.roomDetail.roomID)}
+                                                onClick={() => props.setCloseRoom(false)} />
+                                        </Tooltip>
+                                    }
+                                </div>
+                                :
+                                null
+                            }
+                            <div className="ShowRoom-TripName py-1" style={{ fontSize: "28px", fontWeight: "bold" }}>
                                 ชื่อทริป : {props.roomDetail.roomName}
                             </div>
                             <div style={{ fontSize: "18px" }}>
