@@ -219,7 +219,7 @@ async function getAllTripByGroupID(lineGroupID) {
     return dataTripAllDay;
 };
 
-async function getTripPerDayByDate(lineGroupID, dateOfTrip, res) {
+async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
     const dataTripPerDay = [];
     const tripIDList = [];
     const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').where('tripStatus', '==', true);
