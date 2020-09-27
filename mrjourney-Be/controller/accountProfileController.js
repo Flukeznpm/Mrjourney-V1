@@ -12,7 +12,7 @@ const db = firebase.firestore();
 // GET : /accountProfile/trip (ดูทริปที่เคยสร้าง)
 // GET : /accountProfile/roomJoin (ดูทริปที่เคยJoin)
 // GET : /accountProfile/ownerRoom (แสดง room ที่ user เป็นเจ้าของทั้งหมด)
-// GET : /accountProfile/joinRoom (แสดงรายชื่อ Room ที่ User ไปเข้าร่วมทั้วหมด)
+// GET : /accountProfile/joinedRoom (แสดงรายชื่อ Room ที่ User ไปเข้าร่วมทั้วหมด)
 
 router.get('/', async function (req, res, next) {
     let datas = req.query;
@@ -132,6 +132,19 @@ router.get('/ownerRoom', async function (req, res, next) {
     } else {
         const ownerRoomList = await getOwnerRoomByID(datas);
         res.status(200).json(ownerRoomList);
+    }
+});
+
+router.get('/joinedRoom', async function (req, res, next) {
+    const datas = req.query;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        const joinedRoomList = await getJoinedRoomByID(datas);
+        console.log('Alert: Get Joined room success');
+        res.status(200).json(joinedRoomList);
     }
 });
 
@@ -316,6 +329,46 @@ async function getOwnerRoomByID(datas) {
         });
     })
     return ownerRoomList;
+};
+
+async function getJoinedRoomByID(datas) {
+    const ownerJoinedRoomArray = [];
+    const ownerJoinedRoomList = [];
+    const roomList = [];
+
+    const roomIDList = db.collection('Room');
+    await roomIDList.get().then(doc => {
+        doc.forEach(async data => {
+            roomList.push(data.id);
+        })
+    });
+
+    const countRoomList = (roomList.length) - 1;
+
+    for (i = 0; i <= countRoomList; i++) {
+        const roomID = roomList[i];
+        const roomIDtoString = roomID.toString();
+        const queryJoinedRoom = db.collection('Room').doc(roomIDtoString).collection('Members').doc(datas.lineID);
+        await queryJoinedRoom.get().then(async res => {
+            if (res.exists) {
+                ownerJoinedRoomArray.push(roomIDtoString);
+            }
+        })
+    }
+
+    const countRoomArray = (ownerJoinedRoomArray.length) - 1;
+    for (i = 0; i <= countRoomArray; i++) {
+        const roomIDs = ownerJoinedRoomArray[i];
+        const roomIDFinal = roomIDs.toString();
+        const queryJoinedRoom = db.collection('Room').doc(roomIDFinal);
+        await queryJoinedRoom.get().then(async res => {
+            if (res.exists) {
+                ownerJoinedRoomList.push(res.data());
+            }
+        })
+    }
+
+    return ownerJoinedRoomList;
 };
 
 async function getTripHistoryById(datas) {
