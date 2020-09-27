@@ -47,8 +47,8 @@ function ShowMembers(props) {
 
     return (
         <div className="col-lg-3 col-sm-12 my-3">
-            <AntCard style={{ padding: 0 }}>
-                Members
+            <AntCard style={{ padding: 0, fontSize: "18px", fontWeight: "bold" }}>
+                สมาชิก
                     <div className="showmembers-list">
                     <div class="showmember" >
                         {members.map((members, key) => {

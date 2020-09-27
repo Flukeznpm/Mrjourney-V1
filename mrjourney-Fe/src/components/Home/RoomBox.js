@@ -248,9 +248,9 @@ function RoomBox(props) {
                             </ColRoomId>
                         </Row>
                     </div>
-                    <h4 class="card-title">
+                    <h5 class="card-title" style={{ fontWeight: "bold" }}>
                         {props.room.roomName}
-                    </h4>
+                    </h5>
                     <div class="card-text">
                         จ. {props.room.province}
                     </div>

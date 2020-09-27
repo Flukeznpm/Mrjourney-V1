@@ -112,9 +112,9 @@ function MyOwnerRoom(props) {
                                                                 </ColRoomId>
                                                             </Row>
                                                         </div>
-                                                        <h4 class="card-title">
+                                                        <h5 class="card-title" style={{ fontWeight: "bold" }}>
                                                             {ownerRoom.roomName}
-                                                        </h4>
+                                                        </h5>
                                                         <div class="card-text">
                                                             จ. {ownerRoom.province}
                                                         </div>
