@@ -51,18 +51,6 @@ const EventCard = styled(Card)`
   }
 `;
 
-const EventCardNoBg = styled(Card)`
-  border-radius: 10px;
-  height: 100%;
-  border: none;
-  .ant-card-body {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      padding: 12px;
-  }
-`;
-
 const DeleteEventCard = styled(Card)`
   border-radius: 10px;
   box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);

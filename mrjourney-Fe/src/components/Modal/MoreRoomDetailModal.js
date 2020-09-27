@@ -80,9 +80,9 @@ function MoreRoomDetailModal(props) {
                         title: 'เข้าร่วมสำเร็จ!',
                         text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                         showCancelButton: true,
-                        confirmButtonText: 'เข้าสู่ห้อง',
+                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
                         confirmButtonColor: '#31CC71',
-                        cancelButtonText: 'กลับสู่หน้าหลัก',
+                        cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
                     })
                 } else {
                     if (room.ageCondition === "ต่ำกว่า 18 ปี") {
@@ -96,9 +96,9 @@ function MoreRoomDetailModal(props) {
                                 title: 'เข้าร่วมสำเร็จ!',
                                 text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                                 showCancelButton: true,
-                                confirmButtonText: 'เข้าสู่ห้อง',
+                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
                                 confirmButtonColor: '#31CC71',
-                                cancelButtonText: 'กลับสู่หน้าหลัก',
+                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
                             })
                         } else {
                             Swal.fire({
@@ -121,9 +121,9 @@ function MoreRoomDetailModal(props) {
                                 title: 'เข้าร่วมสำเร็จ!',
                                 text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                                 showCancelButton: true,
-                                confirmButtonText: 'เข้าสู่ห้อง',
+                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
                                 confirmButtonColor: '#31CC71',
-                                cancelButtonText: 'กลับสู่หน้าหลัก',
+                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
                             })
                         } else {
                             Swal.fire({
@@ -146,9 +146,9 @@ function MoreRoomDetailModal(props) {
                                 title: 'เข้าร่วมสำเร็จ!',
                                 text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                                 showCancelButton: true,
-                                confirmButtonText: 'เข้าสู่ห้อง',
+                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
                                 confirmButtonColor: '#31CC71',
-                                cancelButtonText: 'กลับสู่หน้าหลัก',
+                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
                             })
                         } else {
                             Swal.fire({
@@ -169,9 +169,9 @@ function MoreRoomDetailModal(props) {
                         title: 'เข้าร่วมสำเร็จ!',
                         text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                         showCancelButton: true,
-                        confirmButtonText: 'เข้าสู่ห้อง',
+                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
                         confirmButtonColor: '#31CC71',
-                        cancelButtonText: 'กลับสู่หน้าหลัก',
+                        cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
                     })
                 }
             } else {

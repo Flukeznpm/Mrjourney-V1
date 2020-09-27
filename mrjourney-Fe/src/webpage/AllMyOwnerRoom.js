@@ -37,6 +37,29 @@ const AntParagraph = styled(Paragraph)`
     }
 `;
 
+const PrimaryButton = styled(AntButton)`
+    border-radius: 8px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const LeaveButton = styled(AntButton)`
+    border-radius: 8px;
+    font-size: 16px;
+    color: #FF4647;
+    border: 2px solid #FF4647;
+    &:hover , &:active, &:focus {
+        color:  #c5223d;
+        border: 2px solid #c5223d;
+    }
+`;
+
+
 const ColRoomId = styled(Col)`
     display: flex;
     align-items: center;
@@ -169,25 +192,26 @@ function MyOwnerRoom(props) {
                                                             <span className="pl-1 pr-2"><img src={ownerRoom.ownerPicRoom} class="image_outer_container" height="35px" width="35px" alt="owner-img" /></span>
                                                             <span className="pl-1" style={{ fontSize: "13px" }}>ผู้สร้าง : {ownerRoom.ownerRoomName}</span>
                                                         </div>
-                                                        <button type="button"
-                                                            class="col-5 mx-2 btn btn-outline-danger round"
-                                                            onClick={() => onVisibleModal(ownerRoom.roomID)}
-                                                        >
-                                                            ลบห้อง
-                                                            </button>
-                                                        <DeleteModal
-                                                            isVisible={isVisible}
-                                                            setVisible={setVisible}
-                                                            roomID={deleteRoomID}
-                                                            lineID={lineID}
-                                                        />
-                                                        <Link to={`/JoinRoom?roomID=${ownerRoom.roomID}`}>
-                                                            <button type="button"
-                                                                className="btn mx-2 col-5 btn-join-color round text-white"
-                                                            >
-                                                                ข้อมูลห้อง
-                                                                </button>
-                                                        </Link>
+                                                        <div className="col-12 p-0">
+                                                            <div className="row">
+                                                                <div className="col-7 pr-0">
+                                                                    <Link to={`/JoinRoom?roomID=${ownerRoom.roomID}`}>
+                                                                        <PrimaryButton type="primary" block>เข้าสู่ห้อง</PrimaryButton>
+                                                                    </Link>
+                                                                </div>
+                                                                <div className="col-5">
+                                                                    <LeaveButton onClick={() => onVisibleModal(ownerRoom.roomID)} block>
+                                                                        <span className="h-100 d-flex align-items-center justify-content-center">ลบห้อง</span>
+                                                                    </LeaveButton>
+                                                                </div>
+                                                                <DeleteModal
+                                                                    isVisible={isVisible}
+                                                                    setVisible={setVisible}
+                                                                    roomID={deleteRoomID}
+                                                                    lineID={lineID}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

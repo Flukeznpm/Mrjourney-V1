@@ -14,6 +14,7 @@ import {
     Button as AntButton,
 } from 'antd';
 import ProfileDetails from '../components/Profile/ProfileDetails';
+import HistoryCreateTrip from '../components/Profile/HistoryCreateTrip/View';
 
 const AntCard = styled(Card)`
   border-radius: 8px;
@@ -54,6 +55,7 @@ function Profile(props) {
         <div className="flex-wrapper">
             <div className="top-page">
                 <NavWebPage />
+
                 <div className="Profile-page py-4">
                     {acc.map((acc) => {
                         return (
@@ -67,30 +69,44 @@ function Profile(props) {
                             </Row>
                         )
                     })}
+
                     <Row justify="center">
                         <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                            <AntCard>
-                                <p>Card content</p>
-                                <p>Card content</p>
-                                <p>Card content</p>
-                            </AntCard>
+                            <HistoryCreateTrip />
                         </Col>
                     </Row>
+
+                    {acc.map((acc) => {
+                        return (
+                            <>
+                                {lineID === acc.lineID ?
+                                    <Row justify="center">
+                                        <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                            <AntCard>
+                                                <Row>
+                                                    <h4 style={{ fontWeight: "bold" }}>แผนการท่องเที่ยวที่เคยสร้าง</h4>
+                                                </Row>
+                                                <Row justify="center">
+                                                    <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5>
+                                                </Row>
+                                            </AntCard>
+                                        </Col>
+                                    </Row>
+                                    :
+                                    null
+                                }
+                            </>
+                        )
+                    })}
                     <Row justify="center">
                         <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
                             <AntCard>
-                                <p>Card content</p>
-                                <p>Card content</p>
-                                <p>Card content</p>
-                            </AntCard>
-                        </Col>
-                    </Row>
-                    <Row justify="center">
-                        <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                            <AntCard>
-                                <p>Card content</p>
-                                <p>Card content</p>
-                                <p>Card content</p>
+                                <Row>
+                                    <h4 style={{ fontWeight: "bold" }}>คะแนน</h4>
+                                </Row>
+                                <Row justify="center">
+                                    <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5>
+                                </Row>
                             </AntCard>
                         </Col>
                     </Row>

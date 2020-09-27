@@ -84,7 +84,7 @@ router.put('/editRoom', async function (req, res, next) {
         datas.ageCondition == undefined || datas.ageCondition == null || datas.ageCondition == '' ||
         //datas.qrCode == undefined || datas.qrCode == null || datas.qrCode == '' ||
         //datas.roomCover == undefined || datas.roomCover == null || datas.roomCover == '' ||
-        datas.roomStatus == undefined || datas.roomStatus == null || datas.roomStatus == '') {
+        datas.endDateStatus == undefined || datas.endDateStatus == null) {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
             message: "The Data was empty or undefined"
@@ -453,7 +453,7 @@ async function updateRoom(datas) {
         maxMember: datas.maxMember,
         genderCondition: datas.genderCondition,
         ageCondition: datas.ageCondition,
-        roomStatus: datas.roomStatus,
+        // roomStatus: datas.roomStatus,
         endDateStatus: datas.endDateStatus
     }).then(function () {
         console.log("Room successfully update!");

@@ -65,11 +65,13 @@ function ProfileDetails(props) {
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
             age_now--;
         }
-        console.log(age_now);
         return age_now;
     }
     return (
         <AntCard style={{ padding: 0 }}>
+            <Row>
+                <h4 style={{fontWeight:"bold"}}>โปรไฟล์</h4>
+            </Row>
             <Row style={{ height: 150 }}>
                 <Col span={12} className="text-center pt-3">
                     <img src={props.acc.pictureURL}
