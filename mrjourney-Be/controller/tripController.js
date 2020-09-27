@@ -202,6 +202,11 @@ async function getAllTripByGroupID(lineGroupID) {
 
     let tripID = tripIDList.map(t => t.tripID).toString();
 
+    let getAllTrip = db.collection('TripList').doc(tripID);
+    await getAllTrip.get().then(doc => {
+        dataTripAllDay.push(doc.data());
+    });
+
     let showAllTrip = db.collection('TripPerDay').doc(tripID).collection('Date');
     await showAllTrip.get().then(async snapshot => {
         snapshot.forEach(async doc => {
@@ -233,6 +238,11 @@ async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
     let tripID = tripIDList.map(t => t.tripID).toString();
     // console.log('TripID: ', tripID);
     // console.log('Date: ', dateOfTrip)
+
+    let getAllTrip = db.collection('TripList').doc(tripID);
+    await getAllTrip.get().then(doc => {
+        dataTripPerDay.push(doc.data());
+    });
 
     const showTripPerDay = db.collection('TripPerDay');
     const queryTPD = showTripPerDay.doc(tripID).collection('Date').doc(dateOfTrip);
