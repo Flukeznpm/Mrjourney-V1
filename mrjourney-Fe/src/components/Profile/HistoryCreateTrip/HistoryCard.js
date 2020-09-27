@@ -64,7 +64,7 @@ function HistoryCard(props) {
                 return (
                     <>
                         {
-                            history.endDateStatus === false ?
+                            history.endDateStatus === true ?
                                 <Col lg={12} md={12} sm={24} xs={24} className="container py-2 d-flex justify-content-center">
                                     <div class="card" style={{ width: "95%"}}>
                                         <ImgCover class="card-img-top" src={history.roomCover} alt="Card image cap" />
