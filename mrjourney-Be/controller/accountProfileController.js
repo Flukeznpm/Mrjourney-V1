@@ -338,18 +338,17 @@ async function getJoinedRoomByID(datas) {
     const roomList = [];
 
     const roomIDList = db.collection('Room');
-    await roomIDList.get().then(doc => {
-        doc.forEach(async data => {
+    await roomIDList.get().then(async doc => {
+        await doc.forEach(async data => {
             await roomList.push(data.id);
         })
     });
 
     const countRoomList = (roomList.length) - 1;
-
     for (i = 0; i <= countRoomList; i++) {
-        const roomID = roomList[i];
-        const roomIDtoString = roomID.toString();
-        const queryJoinedRoom = db.collection('Room').doc(roomIDtoString).collection('Members').doc(datas.lineID);
+        const roomID = await roomList[i];
+        const roomIDtoString = await roomID.toString();
+        const queryJoinedRoom = await db.collection('Room').doc(roomIDtoString).collection('Members').doc(datas.lineID);
         await queryJoinedRoom.get().then(async res => {
             if (res.exists) {
                 await ownerJoinedRoomArray.push(roomIDtoString);
@@ -362,7 +361,7 @@ async function getJoinedRoomByID(datas) {
         const roomIDs = await ownerJoinedRoomArray[i];
         const roomIDFinal = await roomIDs.toString();
         // console.log('roomIDFinal: ', roomIDFinal)
-        const queryJoinedRoom = db.collection('Room').doc(roomIDFinal);
+        const queryJoinedRoom = await db.collection('Room').doc(roomIDFinal);
         await queryJoinedRoom.get().then(async res => {
             if (res.exists) {
                 await ownerJoinedRoomList.push(res.data());
