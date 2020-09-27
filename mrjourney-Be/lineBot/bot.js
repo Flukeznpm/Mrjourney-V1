@@ -355,7 +355,6 @@ function replyBill(reply_token, msg) {
                     items: [
                         {
                             type: "action",
-                            imageUrl: "https://example.com/sushi.png",
                             action: {
                                 type: "message",
                                 label: "สร้างบิล",
@@ -364,7 +363,6 @@ function replyBill(reply_token, msg) {
                         },
                         {
                             type: "action",
-                            imageUrl: "https://example.com/tempura.png",
                             action: {
                                 type: "message",
                                 label: "ดูบิล",
@@ -956,6 +954,13 @@ function replyHelpCreateTrip(reply_token, msg) {
             }
         ]
     })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
 }
 
 function replyHelpPlan(reply_token, msg) {
