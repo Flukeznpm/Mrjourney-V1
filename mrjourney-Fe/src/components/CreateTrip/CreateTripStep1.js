@@ -129,7 +129,7 @@ function CreateTripStep1(props) {
                                             <AntForm.Item name="date" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                                 <DatePickerComponent style={{ width: "100%" }}
                                                     disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
-                                                    format={dateFormat}
+                                                    format={dateFormat} placeholder="เลือกวันที่เริ่มเดินทาง"
                                                 />
                                             </AntForm.Item>
                                         </div>

@@ -18,7 +18,7 @@ router.post('/webhook', (req, res) => {
         replyPlan(reply_token, msg)
     }
     else if (msg === "ดูแผนทั้งหมด") {
-        replyPlanAll(reply_token,msg)
+        replyPlanAll(reply_token, msg)
     }
     else if (msg === "ดูแผนวันนี้") {
         replyPlanPerDay(reply_token, msg)
@@ -78,7 +78,6 @@ router.post('/webhook', (req, res) => {
 })
 
 //-------------------------------function-------------------------------//
-
 const reply = req => {
     let headers = {
         'Content-Type': 'application/json',
@@ -255,7 +254,7 @@ function replyPlan(reply_token, msg) {
                                 action: {
                                     label: "ดูแผนทั้งหมด",
                                     type: "uri",
-                                    uri: "https://linecorp.com"
+                                    uri: "https://liff.line.me/1653975470-4Webv3M"
                                 },
                                 type: "button",
                                 color: "#C25738",
