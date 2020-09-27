@@ -146,14 +146,8 @@ function CreateTripStep3() {
                                                         >ดูแผนการเดินทางทั้งหมด</button>
                                                     <br />
                                                     <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-<<<<<<< HEAD
-                                                        // onClick={getTripPerDay} >ดูแผนการเดินทางรายวัน</button>
-                                                        >ดูแผนการเดินทางรายวัน</button>
-                                                    {/* </Link> */}
-=======
                                                         onClick={getTripPerDay} >ดูแผนการเดินทางรายวัน</button>
                                                     </Link>
->>>>>>> develop
                                                 </div>
                                                 <div className="col-3"></div>
                                             </div>
