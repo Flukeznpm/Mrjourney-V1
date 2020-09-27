@@ -116,14 +116,14 @@ function CreateTripModal(props) {
                                 <div className="col-6">
                                     <AntForm.Item name="startEvent" label="เวลาเริ่ม" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                         <TimePickerComponent style={{ width: "100%" }}
-                                            format={format}
+                                            format={format} placeholder="เวลาเริ่มกิจกรรม"
                                         />
                                     </AntForm.Item>
                                 </div>
                                 <div className="col-6">
                                     <AntForm.Item name="endEvent" label="เวลาจบ" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                         <TimePickerComponent style={{ width: "100%" }}
-                                            format={format}
+                                            format={format} placeholder="เวลาจบกิจกรรม"
                                         />
                                     </AntForm.Item>
                                 </div>
