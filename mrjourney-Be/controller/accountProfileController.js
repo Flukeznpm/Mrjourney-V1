@@ -176,32 +176,6 @@ async function getAccountByID(datas) {
     // return dataAcc;
 };
 
-async function generateUserID() {
-    function ran() {
-        let myRoomId = Math.floor(Math.random() * 1000000) + 1;
-        return myRoomId;
-    }
-
-    let result;
-    let checkDocumentisEmpty = true;
-
-    do {
-        let id = await ran();
-        let CheckUserIDRef = db.collection('AccountProfile');
-        let userID = 'User_' + id;
-        let query = await CheckUserIDRef.where('userID', '==', userID).get()
-            .then(doc => {
-                // ถ้าไม่มีข้อมูลอยู่
-                if (doc.empty) {
-                    checkDocumentisEmpty = false;
-                    result = 'User_' + id;
-                    console.log('You can use User ID : ' + result);
-                }
-            })
-    } while (checkDocumentisEmpty == true)
-    return result;
-};
-
 async function createAccountDetail(datas) {
     // let genUserID = await generateUserID();
     await db.collection('AccountProfile').doc(datas.lineID).set({
