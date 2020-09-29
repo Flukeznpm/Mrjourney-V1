@@ -27,13 +27,25 @@ function Home(props) {
             setPictureURL(user.pictureURL)
             setLineID(user.lineID)
         }
+
         if (!user) {
             setShowAcc([{}])
         } else {
             axios.get(`http://localhost:5000/accountProfile?userID=${user.lineID}`)
                 .then(res => {
                     setShowAcc(res.data)
-                })
+                });
+                
+            let dataSyncLine = {
+                lineID: user.lineID,
+                displayName: user.displayName,
+                pictureURL: user.pictureURL
+            }
+            console.log('dataSyncLine: ', dataSyncLine);
+            axios.post('http://localhost:5000/update/syncLine', dataSyncLine)
+                .then((res) => {
+                    // console.log(res)
+                });
         }
     }, [])
 

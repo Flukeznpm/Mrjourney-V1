@@ -63,10 +63,9 @@ function ShowRoomBox(props) {
                     });
                     setShowRoom(sorted);
                 };
-                console.log(res.data);
+                // console.log(res.data);
                 sortArray(sortType);
             });
-
     }, [sortType])
 
     const onFilterRoomID = (roomID) => {

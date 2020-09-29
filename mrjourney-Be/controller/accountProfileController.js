@@ -144,7 +144,6 @@ router.get('/joinedRoom', async function (req, res, next) {
     } else {
         const joinedRoomList = await getJoinedRoomByID(datas);
         console.log('Alert: Get Joined room success');
-        console.log('joinedRoomList: ', joinedRoomList)
         res.status(200).json(joinedRoomList);
     }
 });
@@ -317,25 +316,28 @@ async function getJoinedRoomByID(datas) {
             await roomList.push(data.id);
         })
     });
+    // console.log('roomList: ', roomList)
 
     const countRoomList = (roomList.length) - 1;
     for (i = 0; i <= countRoomList; i++) {
-        const roomID = await roomList[i];
-        const roomIDtoString = await roomID.toString();
-        const queryJoinedRoom = await db.collection('Room').doc(roomIDtoString).collection('Members').doc(datas.lineID);
-        await queryJoinedRoom.get().then(async res => {
+        const roomID = roomList[i];
+        const roomIDtoString = roomID.toString();
+        const queryAllRoomHaveUserJoinedRef = db.collection('Room').doc(roomIDtoString);
+        const queryAllRoomHaveUserJoinedRef2 = queryAllRoomHaveUserJoinedRef.collection('Members').doc(datas.lineID);
+        await queryAllRoomHaveUserJoinedRef2.get().then(async res => {
             if (res.exists) {
+                // console.log('roomIDtoString: ', roomIDtoString);
                 await ownerJoinedRoomArray.push(roomIDtoString);
             }
         })
     }
+    // console.log('ownerJoinedRoomArray: ', ownerJoinedRoomArray)
 
     const countRoomArray = (ownerJoinedRoomArray.length) - 1;
     for (i = 0; i <= countRoomArray; i++) {
-        const roomIDs = await ownerJoinedRoomArray[i];
-        const roomIDFinal = await roomIDs.toString();
-        // console.log('roomIDFinal: ', roomIDFinal)
-        const queryJoinedRoom = await db.collection('Room').doc(roomIDFinal);
+        const roomIDs = ownerJoinedRoomArray[i];
+        const roomIDFinal = roomIDs.toString();
+        const queryJoinedRoom = db.collection('Room').doc(roomIDFinal);
         await queryJoinedRoom.get().then(async res => {
             if (res.exists) {
                 await ownerJoinedRoomList.push(res.data());
