@@ -473,7 +473,7 @@ async function updateTrip(datas) {
                                     let CheckTripListRef = db.collection('TripList').doc(datas.tripID);
                                     await CheckTripListRef.get().then(async data => {
                                         if (data.exists) {
-                                            CheckTripListRef.update({
+                                            await CheckTripListRef.update({
                                                 tripName: datas.tripName,
                                                 province: datas.province,
                                                 startDate: datas.startDate,
@@ -549,8 +549,8 @@ async function deleteTrip(datas) {
             console.log('No matching documents.');
             return;
         } else {
-            data.forEach(f => {
-                getMemberID.push(f.data());
+            data.forEach(async f => {
+                await getMemberID.push(f.data());
             });
 
             let MemberIDArray = await getMemberID.map(r => r.lineID);
