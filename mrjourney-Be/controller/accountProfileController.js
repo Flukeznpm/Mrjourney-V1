@@ -9,7 +9,7 @@ const db = firebase.firestore();
 // PUT : /accountProfile/editAccountDetail (Edit profile)
 // PUT : /accountProfile/editBio (Edit bio)
 // DELETE : /accountProfile/deleteAccount  (Delete Account)
-// GET : /accountProfile/trip (ดูทริปที่เคยสร้าง)
+// GET : /accountProfile/tripHistory (ดูทริปที่เคยสร้าง)
 // GET : /accountProfile/roomJoin (ดูทริปที่เคยJoin)
 // GET : /accountProfile/ownerRoom (แสดง room ที่ user เป็นเจ้าของทั้งหมด)
 // GET : /accountProfile/joinedRoom (แสดงรายชื่อ Room ที่ User ไปเข้าร่วมทั้วหมด)
@@ -145,6 +145,19 @@ router.get('/joinedRoom', async function (req, res, next) {
         const joinedRoomList = await getJoinedRoomByID(datas);
         console.log('Alert: Get Joined room success');
         res.status(200).json(joinedRoomList);
+    }
+});
+
+router.get('/TripHistory', async function (req, res, next) {
+    const datas = req.query;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        const tripHist = await getTripHistoryById(datas);
+        console.log('Alert: Get Joined room success');
+        res.status(200).json(tripHist);
     }
 });
 
@@ -350,7 +363,19 @@ async function getJoinedRoomByID(datas) {
 };
 
 async function getTripHistoryById(datas) {
+    const tripHistory = [];
+    const tripRef = db.collection('TripList').where('ownerTrip', '==', datas.lineID).where('tripStatus', '==', false);
+    await tripRef.get().then(async doc => {
+        if (doc.empty) {
+            console.log('data is empty')
+            return;
+        }
+        doc.forEach(async data => {
+            await tripHistory.push(data.data());
+        })
+    });
 
+    return tripHistory;
 };
 
 async function getRoomHistoryById(datas) {
