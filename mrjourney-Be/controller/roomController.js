@@ -16,6 +16,7 @@ const gcs = require('@google-cloud/storage');
 // POST /room/uploadRoomCoverImage (ส่งรูป RoomCover มาเก็บใน Cloud storage)
 // POST /room/uploadRoomQrCodeImage (ส่งรูป RoomQrCode มาเก็บใน Cloud storage)
 // POST /room/joindRoom (เก็บข้อมูล user ที่เข้ามา join room นั้นๆ)
+// POST /room/deleteMember (ลบชื่อ Member id นั้นๆที่กดออกจากห้องออก และ จำนวนคนในห้องลดลง)
 
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
@@ -236,6 +237,48 @@ router.post('/joinRoom', async function (req, res, next) {
                 res.status(202).json('User do not have register in system, User can not join room');
             }
         });
+    }
+});
+
+router.post('/deleteMember', async function (req, res, next) {
+    let datas = req.body;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
+        datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
+        console.log('Alert: The Data was empty or undefined"')
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        // let checkUserRef = db.collection('AccountProfile').doc(datas.lineID);
+        // await checkUserRef.get().then(async data => {
+        //     if (data.exists) {
+        //         let checkUserJoinedRoomAlready = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
+        //         await checkUserJoinedRoomAlready.get().then(async doc => {
+        //             if (doc.exists) {
+        //                 console.log('User have already join room');
+        //                 res.status(200).json('User have already join room');
+        //             } else {
+        //                 await joinedRoom(datas)
+        //                     .then(() => {
+        //                         console.log('User Joined Room Success');
+        //                         res.status(201).json({
+        //                             message: "User Joined Room Success",
+        //                         })
+        //                     });
+        //             }
+        //         });
+        //     } else {
+        //         console.log('User do not register on system');
+        //         res.status(202).json('User do not have register in system, User can not join room');
+        //     }
+        // });
+        await deleteMember(datas)
+            .then(() => {
+                console.log('User out room Success');
+                res.status(201).json({
+                    message: "User out room Success",
+                })
+            });
     }
 });
 
@@ -529,6 +572,25 @@ async function joinedRoom(datas) {
         lineID: datas.lineID,
         pictureURL: datas.pictureURL
     });
+
+    let Members = [];
+    let checkAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
+    await checkAllMembersRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+            Members.push(doc.data());
+        });
+    })
+
+    let addMembers = (Members.length);
+    let saveRoomID = db.collection('Room').doc(datas.roomID)
+    await saveRoomID.update({
+        joinedMember: addMembers
+    })
+};
+
+async function deleteMember(datas) {
+    let deleteMembersJoinedRoom = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
+    await deleteMembersJoinedRoom.delete();
 
     let Members = [];
     let checkAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
