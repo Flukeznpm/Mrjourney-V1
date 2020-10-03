@@ -19,24 +19,31 @@ function CheckTrip(props) {
                 setLinePicture(profile.pictureUrl);
                 const context = await liff.getContext();
                 setLineGroup(context.groupId)
+                await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}&lineID=${LineID}`)
+                    .then(res => {
+                        setTripList(res.data)
+                    });
             } else {
                 props.history.push('/Home');
             }
-            await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}&lineID=${LineID}`)
-                .then(res => {
-                    setTripList(res.data)
-                });
         });
+
     }, [])
 
 
     return (
         <div className="text-center">
-            CheckTrip
+            CheckTrip {LineID} {LineGroup}
             {tripList.map((tripList) => {
                 return (
                     <div>
-                        {tripList.Date}
+                        linegroup : {LineGroup}
+                        {tripList.tripName}
+                        <p>
+                            {tripList.province}
+                            {/* {tripList.events.event} */}
+                            {/* {tripList.events.event.eventName} */}
+                        </p>
                     </div>
                 )
             })}
