@@ -94,7 +94,7 @@ function MyJoinedRoom(props) {
         }
         axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile/joinedRoom?lineID=${user.lineID}`)
             .then(res => {
-                console.log('res', res);
+                // console.log('res', res);
                 setShowOwnerRoom(res.data)
             })
     }, [])

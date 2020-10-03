@@ -84,18 +84,16 @@ function NavWebPage(props) {
             setLinePicture(user.pictureURL)
             setLineID(user.lineID)
 
-            let dataSyncLine = {
-                lineID: user.lineID,
-                displayName: user.displayName,
-                pictureURL: user.pictureURL
-            }
-            // console.log('dataSyncLine: ', dataSyncLine)
-            axios.post('https://mrjourney-senior.herokuapp.com/update/syncLine', dataSyncLine)
-                .then((res) => {
-                    console.log(res)
-                });
+            // let dataSyncLine = {
+            //     lineID: user.lineID,
+            //     displayName: user.displayName,
+            //     pictureURL: user.pictureURL
+            // }
+            // axios.post('http://localhost:5000/update/syncLine', dataSyncLine)
+            //     .then((res) => {
+            //         console.log(res)
+            //     });
         }
-
     }, [login])
 
     const AlertRoom = () => {

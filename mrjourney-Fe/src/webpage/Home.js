@@ -27,13 +27,25 @@ function Home(props) {
             setPictureURL(user.pictureURL)
             setLineID(user.lineID)
         }
+
         if (!user) {
             setShowAcc([{}])
         } else {
             axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile?userID=${user.lineID}`)
                 .then(res => {
                     setShowAcc(res.data)
-                })
+                });
+                
+            let dataSyncLine = {
+                lineID: user.lineID,
+                displayName: user.displayName,
+                pictureURL: user.pictureURL
+            }
+            console.log('dataSyncLine: ', dataSyncLine);
+            axios.post('https://mrjourney-senior.herokuapp.com/update/syncLine', dataSyncLine)
+                .then((res) => {
+                    // console.log(res)
+                });
         }
     }, [])
 

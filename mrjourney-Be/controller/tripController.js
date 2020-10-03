@@ -15,8 +15,9 @@ router.get('/', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
     let lineID = req.query.lineID;
 
-    if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
-        lineID == undefined || lineID == null || lineID == '') {
+    if (lineGroupID == undefined || lineGroupID == null || lineGroupID == ''
+        // || lineID == undefined || lineID == null || lineID == ''
+    ) {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
             message: "The Data was empty or undefined"
@@ -25,27 +26,27 @@ router.get('/', async function (req, res, next) {
         let checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         checkGroupRef.get().then(async data => {
             if (data.exists) {
-                let checkUserRef = await checkGroupRef.collection('Members').doc(lineID);
-                await checkUserRef.get().then(async data => {
-                    if (data.exists) {
-                        const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').where('tripStatus', '==', true);
-                        await checkTripIDRef.get().then(async snapshot => {
-                            if (snapshot.empty) {
-                                console.log('Alert: You do not have to create trip')
-                                const message = "You do not have to create trip"
-                                res.status(400).json(message);
-                            } else {
-                                let result = await getAllTripByGroupID(lineGroupID);
-                                console.log('Alert: get Trip list success')
-                                console.log(result)
-                                res.status(200).json(result);
-                            }
-                        });
-                    } else {
-                        console.log('Alert: You cannot check this Trip')
-                        let message = "You cannot check this Trip"
+                // let checkUserRef = await checkGroupRef.collection('Members').doc(lineID);
+                // await checkUserRef.get().then(async data => {
+                // if (data.exists) {
+                const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').where('tripStatus', '==', true);
+                await checkTripIDRef.get().then(async snapshot => {
+                    if (snapshot.empty) {
+                        console.log('Alert: You do not have to create trip')
+                        const message = "You do not have to create trip"
                         res.status(400).json(message);
+                    } else {
+                        let result = await getAllTripByGroupID(lineGroupID);
+                        console.log('Alert: get Trip list success')
+                        // console.log(result)
+                        res.status(200).json(result);
                     }
+                    //     });
+                    // } else {
+                    //     console.log('Alert: You cannot check this Trip')
+                    //     let message = "You cannot check this Trip"
+                    //     res.status(400).json(message);
+                    // }
                 })
             } else {
                 console.log('Alert: No Trip in the group , Please create trip.')
@@ -63,9 +64,9 @@ router.get('/tripperday', async function (req, res, next) {
     dateOfTrip.substring(0, 10)
     console.log('Date: ', dateOfTrip)
 
-    if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
-        lineID == undefined || lineID == null || lineID == '' ||
-        dateOfTrip == undefined || dateOfTrip == null || dateOfTrip == '') {
+    if (lineGroupID == undefined || lineGroupID == null || lineGroupID == ''
+        //  || lineID == undefined || lineID == null || lineID == '' 
+        || dateOfTrip == undefined || dateOfTrip == null || dateOfTrip == '') {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
             message: "The Data was empty or undefined"
@@ -74,31 +75,31 @@ router.get('/tripperday', async function (req, res, next) {
         const checkGroupRef = await db.collection('LineGroup').doc(lineGroupID);
         await checkGroupRef.get().then(async data => {
             if (data.exists) {
-                const checkUserRef = await checkGroupRef.collection('Members').doc(lineID);
-                await checkUserRef.get().then(async data => {
-                    if (data.exists) {
-                        const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').where('tripStatus', '==', true);
-                        await checkTripIDRef.get().then(async snapshot => {
-                            if (snapshot.empty) {
-                                console.log('Alert: You do not have to create trip')
-                                const message = "You do not have to create trip"
-                                res.status(400).json(message);
-                            } else {
-                                const result = await getTripPerDayByDate(lineGroupID, dateOfTrip);
-                                // if(result.events == undefined){
-                                //     console.log('Alert: No date in the event')
-                                //     res.status(400);
-                                // }
-                                console.log('Alert: get Trip per day success')
-                                console.log(result)
-                                res.status(200).json(result);
-                            }
-                        });
-                    } else {
-                        console.log('Alert: You cannot check this Trip per day')
-                        const message = "You cannot check this Trip per day"
+                // const checkUserRef = await checkGroupRef.collection('Members').doc(lineID);
+                // await checkUserRef.get().then(async data => {
+                // if (data.exists) {
+                const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').where('tripStatus', '==', true);
+                await checkTripIDRef.get().then(async snapshot => {
+                    if (snapshot.empty) {
+                        console.log('Alert: You do not have to create trip')
+                        const message = "You do not have to create trip"
                         res.status(400).json(message);
+                    } else {
+                        const result = await getTripPerDayByDate(lineGroupID, dateOfTrip);
+                        // if(result.events == undefined){
+                        //     console.log('Alert: No date in the event')
+                        //     res.status(400);
+                        // }
+                        console.log('Alert: get Trip per day success')
+                        // console.log(result)
+                        res.status(200).json(result);
                     }
+                    // });
+                    // } else {
+                    //     console.log('Alert: You cannot check this Trip per day')
+                    //     const message = "You cannot check this Trip per day"
+                    //     res.status(400).json(message);
+                    // }
                 })
             } else {
                 console.log('Alert: No Trip in the group , Please create trip.')
@@ -308,10 +309,10 @@ async function createTripList(datas) {
             await saveGroupIDinGroupRef.set({
                 lineGroupID: datas.lineGroupID,
             })
-            let saveMemberinGroup = saveGroupIDinGroupRef.collection('Members').doc(datas.lineID);
-            await saveMemberinGroup.set({
-                lineID: datas.lineID
-            })
+            // let saveMemberinGroup = saveGroupIDinGroupRef.collection('Members').doc(datas.lineID);
+            // await saveMemberinGroup.set({
+            //     lineID: datas.lineID
+            // })
             let saveTripIDinGroup = saveGroupIDinGroupRef.collection('Trip').doc(genTripID);
             await saveTripIDinGroup.set({
                 tripID: genTripID,
@@ -385,10 +386,10 @@ async function createTripList(datas) {
             await saveGroupIDinGroupRef.set({
                 lineGroupID: datas.lineGroupID,
             })
-            let saveMemberinGroup = saveGroupIDinGroupRef.collection('Members').doc(datas.lineID);
-            await saveMemberinGroup.set({
-                lineID: datas.lineID
-            })
+            // let saveMemberinGroup = saveGroupIDinGroupRef.collection('Members').doc(datas.lineID);
+            // await saveMemberinGroup.set({
+            //     lineID: datas.lineID
+            // })
             let saveTripIDinGroup = saveGroupIDinGroupRef.collection('Trip').doc(genTripID);
             await saveTripIDinGroup.set({
                 tripID: genTripID,
@@ -473,7 +474,7 @@ async function updateTrip(datas) {
                                     let CheckTripListRef = db.collection('TripList').doc(datas.tripID);
                                     await CheckTripListRef.get().then(async data => {
                                         if (data.exists) {
-                                            CheckTripListRef.update({
+                                            await CheckTripListRef.update({
                                                 tripName: datas.tripName,
                                                 province: datas.province,
                                                 startDate: datas.startDate,
@@ -542,34 +543,34 @@ async function deleteTrip(datas) {
     await db.collection('TripList').doc(datas.tripID).delete();
     await db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').doc(datas.tripID).delete();
 
-    let getMemberID = [];
-    const GetMemberFromLineGroupRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Members');
-    await GetMemberFromLineGroupRef.get().then(async data => {
-        if (data.empty) {
-            console.log('No matching documents.');
-            return;
-        } else {
-            data.forEach(f => {
-                getMemberID.push(f.data());
-            });
+    // let getMemberID = [];
+    // const GetMemberFromLineGroupRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Members');
+    // await GetMemberFromLineGroupRef.get().then(async data => {
+    //     if (data.empty) {
+    //         console.log('No matching documents.');
+    //         return;
+    //     } else {
+    //         data.forEach(async f => {
+    //             await getMemberID.push(f.data());
+    //         });
 
-            let MemberIDArray = await getMemberID.map(r => r.lineID);
-            // console.log('MemberIDArray: ', MemberIDArray)
-            let MemberIDCount = (MemberIDArray.length);
-            // console.log('MemberIDCount: ', MemberIDCount)
+    //         let MemberIDArray = await getMemberID.map(r => r.lineID);
+    //         // console.log('MemberIDArray: ', MemberIDArray)
+    //         let MemberIDCount = (MemberIDArray.length);
+    //         // console.log('MemberIDCount: ', MemberIDCount)
 
-            for (i = MemberIDCount; i <= MemberIDCount; i--) {
-                if (i > 0) {
-                    let MembersID = (MemberIDArray[i - 1]);
-                    let MembersIDString = MembersID.toString();
-                    // console.log('MembersID loop: ', MembersID);
-                    await db.collection('LineGroup').doc(datas.lineGroupID).collection('Members').doc(MembersIDString).delete();
-                } else {
-                    return;
-                }
-            }
-        }
-    });
+    //         for (i = MemberIDCount; i <= MemberIDCount; i--) {
+    //             if (i > 0) {
+    //                 let MembersID = (MemberIDArray[i - 1]);
+    //                 let MembersIDString = MembersID.toString();
+    //                 // console.log('MembersID loop: ', MembersID);
+    //                 await db.collection('LineGroup').doc(datas.lineGroupID).collection('Members').doc(MembersIDString).delete();
+    //             } else {
+    //                 return;
+    //             }
+    //         }
+    //     }
+    // });
 
     await db.collection('LineGroup').doc(datas.lineGroupID).delete();
     await db.collection('LineChatAccount').doc(datas.lineID).collection('Group').doc(datas.lineGroupID).delete();

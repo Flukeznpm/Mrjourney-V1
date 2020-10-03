@@ -9,7 +9,7 @@ const db = firebase.firestore();
 // PUT : /accountProfile/editAccountDetail (Edit profile)
 // PUT : /accountProfile/editBio (Edit bio)
 // DELETE : /accountProfile/deleteAccount  (Delete Account)
-// GET : /accountProfile/trip (ดูทริปที่เคยสร้าง)
+// GET : /accountProfile/tripHistory (ดูทริปที่เคยสร้าง)
 // GET : /accountProfile/roomJoin (ดูทริปที่เคยJoin)
 // GET : /accountProfile/ownerRoom (แสดง room ที่ user เป็นเจ้าของทั้งหมด)
 // GET : /accountProfile/joinedRoom (แสดงรายชื่อ Room ที่ User ไปเข้าร่วมทั้วหมด)
@@ -144,8 +144,20 @@ router.get('/joinedRoom', async function (req, res, next) {
     } else {
         const joinedRoomList = await getJoinedRoomByID(datas);
         console.log('Alert: Get Joined room success');
-        console.log('joinedRoomList: ', joinedRoomList)
         res.status(200).json(joinedRoomList);
+    }
+});
+
+router.get('/TripHistory', async function (req, res, next) {
+    const datas = req.query;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        const tripHist = await getTripHistoryById(datas);
+        console.log('Alert: Get Joined room success');
+        res.status(200).json(tripHist);
     }
 });
 
@@ -174,32 +186,6 @@ async function getAccountByID(datas) {
     //         });
     // }
     // return dataAcc;
-};
-
-async function generateUserID() {
-    function ran() {
-        let myRoomId = Math.floor(Math.random() * 1000000) + 1;
-        return myRoomId;
-    }
-
-    let result;
-    let checkDocumentisEmpty = true;
-
-    do {
-        let id = await ran();
-        let CheckUserIDRef = db.collection('AccountProfile');
-        let userID = 'User_' + id;
-        let query = await CheckUserIDRef.where('userID', '==', userID).get()
-            .then(doc => {
-                // ถ้าไม่มีข้อมูลอยู่
-                if (doc.empty) {
-                    checkDocumentisEmpty = false;
-                    result = 'User_' + id;
-                    console.log('You can use User ID : ' + result);
-                }
-            })
-    } while (checkDocumentisEmpty == true)
-    return result;
 };
 
 async function createAccountDetail(datas) {
@@ -343,25 +329,28 @@ async function getJoinedRoomByID(datas) {
             await roomList.push(data.id);
         })
     });
+    // console.log('roomList: ', roomList)
 
     const countRoomList = (roomList.length) - 1;
     for (i = 0; i <= countRoomList; i++) {
-        const roomID = await roomList[i];
-        const roomIDtoString = await roomID.toString();
-        const queryJoinedRoom = await db.collection('Room').doc(roomIDtoString).collection('Members').doc(datas.lineID);
-        await queryJoinedRoom.get().then(async res => {
+        const roomID = roomList[i];
+        const roomIDtoString = roomID.toString();
+        const queryAllRoomHaveUserJoinedRef = db.collection('Room').doc(roomIDtoString);
+        const queryAllRoomHaveUserJoinedRef2 = queryAllRoomHaveUserJoinedRef.collection('Members').doc(datas.lineID);
+        await queryAllRoomHaveUserJoinedRef2.get().then(async res => {
             if (res.exists) {
+                // console.log('roomIDtoString: ', roomIDtoString);
                 await ownerJoinedRoomArray.push(roomIDtoString);
             }
         })
     }
+    // console.log('ownerJoinedRoomArray: ', ownerJoinedRoomArray)
 
     const countRoomArray = (ownerJoinedRoomArray.length) - 1;
     for (i = 0; i <= countRoomArray; i++) {
-        const roomIDs = await ownerJoinedRoomArray[i];
-        const roomIDFinal = await roomIDs.toString();
-        // console.log('roomIDFinal: ', roomIDFinal)
-        const queryJoinedRoom = await db.collection('Room').doc(roomIDFinal);
+        const roomIDs = ownerJoinedRoomArray[i];
+        const roomIDFinal = roomIDs.toString();
+        const queryJoinedRoom = db.collection('Room').doc(roomIDFinal);
         await queryJoinedRoom.get().then(async res => {
             if (res.exists) {
                 await ownerJoinedRoomList.push(res.data());
@@ -374,7 +363,19 @@ async function getJoinedRoomByID(datas) {
 };
 
 async function getTripHistoryById(datas) {
+    const tripHistory = [];
+    const tripRef = db.collection('TripList').where('ownerTrip', '==', datas.lineID).where('tripStatus', '==', false);
+    await tripRef.get().then(async doc => {
+        if (doc.empty) {
+            console.log('data is empty')
+            return;
+        }
+        doc.forEach(async data => {
+            await tripHistory.push(data.data());
+        })
+    });
 
+    return tripHistory;
 };
 
 async function getRoomHistoryById(datas) {
