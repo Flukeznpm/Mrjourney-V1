@@ -166,13 +166,15 @@ router.put('/editTrip', async function (req, res, next) {
 
 router.delete('/deleteTrip', async function (req, res, next) {
     let datas = req.body;
-    if (datas.tripID == undefined || datas.tripID == null || datas.tripID == '') {
+    if (datas.tripID == undefined || datas.tripID == null || datas.tripID == '' ||
+        datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
+        datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '') {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
             message: "The Data was empty or undefined"
         })
     } else {
-        let checkPermission = db.collection('TripList').where('tripID', '==', datas.tripID).where('ownerTrip', '==', datas.ownerTrip);
+        let checkPermission = db.collection('TripList').where('tripID', '==', datas.tripID).where('ownerTrip', '==', datas.lineID);
         await checkPermission.get().then(async data => {
             if (data.empty) {
                 console.log("You do not have permission to delete trip")
@@ -542,39 +544,36 @@ async function updateTrip(datas) {
 async function deleteTrip(datas) {
     await db.collection('TripList').doc(datas.tripID).delete();
     await db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').doc(datas.tripID).delete();
-
-    // let getMemberID = [];
-    // const GetMemberFromLineGroupRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Members');
-    // await GetMemberFromLineGroupRef.get().then(async data => {
-    //     if (data.empty) {
-    //         console.log('No matching documents.');
-    //         return;
-    //     } else {
-    //         data.forEach(async f => {
-    //             await getMemberID.push(f.data());
-    //         });
-
-    //         let MemberIDArray = await getMemberID.map(r => r.lineID);
-    //         // console.log('MemberIDArray: ', MemberIDArray)
-    //         let MemberIDCount = (MemberIDArray.length);
-    //         // console.log('MemberIDCount: ', MemberIDCount)
-
-    //         for (i = MemberIDCount; i <= MemberIDCount; i--) {
-    //             if (i > 0) {
-    //                 let MembersID = (MemberIDArray[i - 1]);
-    //                 let MembersIDString = MembersID.toString();
-    //                 // console.log('MembersID loop: ', MembersID);
-    //                 await db.collection('LineGroup').doc(datas.lineGroupID).collection('Members').doc(MembersIDString).delete();
-    //             } else {
-    //                 return;
-    //             }
-    //         }
-    //     }
-    // });
-
     await db.collection('LineGroup').doc(datas.lineGroupID).delete();
     await db.collection('LineChatAccount').doc(datas.lineID).collection('Group').doc(datas.lineGroupID).delete();
-    await db.collection('TripPerDay').doc(datas.lineGroupID).delete()
+    let getDate = [];
+    const GetDateInTripPerDay = db.collection('TripPerDay').doc(datas.tripID).collection('Date');
+    await GetDateInTripPerDay.get().then(async data => {
+        if (data.empty) {
+            console.log('No matching documents.');
+            return;
+        } else {
+            data.forEach(async f => {
+                await getDate.push(f.id);
+            });
+            // console.log('getDate: ', getDate)
+
+            let DateCount = (getDate.length);
+            // console.log('DateCount: ', DateCount)
+
+            for (i = DateCount; i <= DateCount; i--) {
+                if (i > 0) {
+                    let DateID = (getDate[i - 1]);
+                    let DateIDString = DateID.toString();
+                    // console.log('DateIDString loop: ', DateIDString);
+                    await db.collection('TripPerDay').doc(datas.tripID).collection('Date').doc(DateIDString).delete();
+                } else {
+                    return;
+                }
+            }
+        }
+    });
+    await db.collection('TripPerDay').doc(datas.tripID).delete()
         .then(function () {
             console.log("Trip successfully deleted!");
         }).catch(function (error) {
