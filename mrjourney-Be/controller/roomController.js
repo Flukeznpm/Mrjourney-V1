@@ -190,18 +190,14 @@ router.put('/openRoom', async function (req, res, next) {
 router.post('/uploadRoomCoverImage', async function (req, res, next) {
     let image = req.body.image;
     let name = req.body.nameImage;
-    // console.log('request image: ', image);
     let imageURL = await uploadRoomCoverImageToCloudStorage(image + '', name);
-    // console.log('Response Image URL to Frontend: ', imageURL);
     res.status(200).json(imageURL);
 });
 
 router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
     let image = req.body.image;
     let name = req.body.nameImage;
-    // console.log('request image: ', image);
     let imageURL = await uploadRoomQrCodeImageToCloudStorage(image + '', name);
-    // console.log('Response Image URL to Frontend:', imageURL);
     res.status(200).json(imageURL);
 });
 

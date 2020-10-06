@@ -40,7 +40,6 @@ router.post('/checkUserRegister', async function (req, res, next) {
 //---------------- Function ----------------//
 async function updateProfile(datas) {
     // >>> Sync: AccountProfile Db , Room Db <<< //
-
     // Update profile on AccountProfile of User //
     const updateAccRef = db.collection('AccountProfile').doc(datas.lineID);
     await updateAccRef.get().then(async data => {
