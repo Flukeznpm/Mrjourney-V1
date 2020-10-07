@@ -456,12 +456,11 @@ async function createTripList(datas) {
 
 async function updateTrip(datas) {
     let CheckLineChatAccountRef = await db.collection('LineChatAccount').doc(datas.lineID);
-    CheckLineChatAccountRef.get().then(async data => {
+    await CheckLineChatAccountRef.get().then(async data => {
         if (data.exists) {
             await CheckLineChatAccountRef.update({
                 lineID: datas.lineID,
                 displayName: datas.displayName,
-                email: datas.email,
                 pictureURL: datas.pictureURL
             })
             let CheckLineGroupinLineChatAccount = CheckLineChatAccountRef.collection('Group').doc(datas.lineGroupID);
