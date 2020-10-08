@@ -16,6 +16,8 @@ const gcs = require('@google-cloud/storage');
 // POST /room/uploadRoomCoverImage (ส่งรูป RoomCover มาเก็บใน Cloud storage)
 // POST /room/uploadRoomQrCodeImage (ส่งรูป RoomQrCode มาเก็บใน Cloud storage)
 // POST /room/joindRoom (เก็บข้อมูล user ที่เข้ามา join room นั้นๆ)
+// POST /room/deleteMember (ลบชื่อ Member id นั้นๆที่กดออกจากห้องออก และ จำนวนคนในห้องลดลง)
+// POST /room/removeMember (ลบชื่อ Member id นั้นๆที่ถูห owner room เตะออกจากห้อง และ จำนวนคนในห้องลดลง)
 
 router.get('/', async function (req, res, next) {
     let RoomList = await getAllRoom();
@@ -188,18 +190,14 @@ router.put('/openRoom', async function (req, res, next) {
 router.post('/uploadRoomCoverImage', async function (req, res, next) {
     let image = req.body.image;
     let name = req.body.nameImage;
-    // console.log('request image: ', image);
     let imageURL = await uploadRoomCoverImageToCloudStorage(image + '', name);
-    // console.log('Response Image URL to Frontend: ', imageURL);
     res.status(200).json(imageURL);
 });
 
 router.post('/uploadRoomQrCodeImage', async function (req, res, next) {
     let image = req.body.image;
     let name = req.body.nameImage;
-    // console.log('request image: ', image);
     let imageURL = await uploadRoomQrCodeImageToCloudStorage(image + '', name);
-    // console.log('Response Image URL to Frontend:', imageURL);
     res.status(200).json(imageURL);
 });
 
@@ -236,6 +234,51 @@ router.post('/joinRoom', async function (req, res, next) {
                 res.status(202).json('User do not have register in system, User can not join room');
             }
         });
+    }
+});
+
+router.post('/deleteMember', async function (req, res, next) {
+    let datas = req.body;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
+        datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
+        console.log('Alert: The Data was empty or undefined"')
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        await deleteMember(datas)
+            .then(() => {
+                console.log('User out room Success');
+                res.status(201).json({
+                    message: "User out room Success",
+                })
+            });
+    }
+});
+
+router.post('/removeMember', async function (req, res, next) {
+    let datas = req.body;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
+        datas.roomID == undefined || datas.roomID == null || datas.roomID == '' ||
+        datas.userID == undefined || datas.userID == null || datas.userID == '') {
+        console.log('Alert: The Data was empty or undefined"')
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        let checkPermission = await db.collection('Room').where('roomID', '==', datas.roomID).where('ownerRoomID', '==', datas.lineID);
+        await checkPermission.get().then(async data => {
+            if (data.empty) {
+                console.log('User do not have permission to remove user of this room');
+                res.status(400).json('User do not have permission to remove user of this room');
+            } else {
+                await removeMember(datas);
+                console.log('User out room Success');
+                res.status(201).json({
+                    message: "User out room Success",
+                })
+            }
+        })
     }
 });
 
@@ -529,6 +572,44 @@ async function joinedRoom(datas) {
         lineID: datas.lineID,
         pictureURL: datas.pictureURL
     });
+
+    let Members = [];
+    let checkAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
+    await checkAllMembersRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+            Members.push(doc.data());
+        });
+    })
+
+    let addMembers = (Members.length);
+    let saveRoomID = db.collection('Room').doc(datas.roomID)
+    await saveRoomID.update({
+        joinedMember: addMembers
+    })
+};
+
+async function deleteMember(datas) {
+    let deleteMembersJoinedRoom = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
+    await deleteMembersJoinedRoom.delete();
+
+    let Members = [];
+    let checkAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
+    await checkAllMembersRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+            Members.push(doc.data());
+        });
+    })
+
+    let addMembers = (Members.length);
+    let saveRoomID = db.collection('Room').doc(datas.roomID)
+    await saveRoomID.update({
+        joinedMember: addMembers
+    })
+};
+
+async function removeMember(datas) {
+    let deleteMembersJoinedRoom = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.userID);
+    await deleteMembersJoinedRoom.delete();
 
     let Members = [];
     let checkAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
