@@ -6,7 +6,8 @@ let db = firebase.firestore()
 //---------------- Controller ----------------//
 // POST /update/syncLine (อัพเดทข้อมูลชื่อและรูปภาพของ user ตามไลน์)
 // POST /update/checkUserRegister (API สำหรับเช็คว่าUserมีอยู่ในระบบหรือเปล่า และใช้ในกรณีที่Userหนีการลงทะเบียน)
-// - อัพเดทเมื่อ user ออกจากกลุ่ม line ไป
+// POST /update/enableTrip (เช็คอัตโนมัติว่า trip ถึงวันที่จบหรือยัง)
+// POST /update/enableRoom (เช็คอัตโนมัติว่า room ถึงวันที่จบหรือยัง)
 
 router.post('/syncLine', async function (req, res, next) {
     let datas = req.body;
@@ -35,7 +36,29 @@ router.post('/checkUserRegister', async function (req, res, next) {
             }
         })
     }
-})
+});
+
+// router.post('/enableRoom', async function (req, res, next) {
+//     let datas = req.body;
+//     if (datas.endDateStatus == undefined || datas.endDateStatus == null ||
+//         datas.date == undefined || datas.date == null) {
+//         console.log('Alert: The Data was empty or undefined"')
+//         return;
+//     } else {
+
+//     }
+// });
+
+// router.post('/enableTrip', async function (req, res, next) {
+//     let datas = req.body;
+//     if (datas.tripStatus == undefined || datas.tripStatus == null ||
+//         datas.date == undefined || datas.date == null) {
+//         console.log('Alert: The Data was empty or undefined"')
+//         return;
+//     } else {
+
+//     }
+// });
 
 //---------------- Function ----------------//
 async function updateProfile(datas) {
