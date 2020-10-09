@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 import { HookContext } from '../../../store/HookProvider';
+import LeaveRoomModal from '../../components/LeaveRoomModal';
 import EditJoinRoom from './EditJoinRoom';
 import axios from 'axios';
 import {
@@ -70,6 +71,7 @@ function RoomDetails(props) {
     const [displayName, setDisplayName] = useState("");
     const [pictureURL, setPictureURL] = useState("");
     const [roomStatus, setStatus] = useState(true);
+    const [isVisible, setVisible] = useState(false)
     // const [isEditRoom, setEditRoom] = useState(false);
 
     useEffect(() => {
@@ -83,22 +85,14 @@ function RoomDetails(props) {
             setPictureURL(user.pictureURL)
         }
 
-    }, [])
+    }, [isVisible])
 
     const onEditRoom = () => {
         props.setEditRoom(true)
     }
 
-    const AlertCloseRoom = () => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'คุณแน่ใจหรือไม่ที่จะต้องการปิดห้อง?',
-            text: 'เมื่อทำการปิดห้อง จะทำให้ไม่สามารถรับสมาชิกเพิ่มได้',
-            showCancelButton: true,
-            confirmButtonText: 'ปิดห้อง',
-            confirmButtonColor: '#F37945',
-            cancelButtonText: 'กลับสู่ห้อง',
-        })
+    const onVisibleModal = () => {
+        setVisible(true)
     }
 
     const CloseRoom = async (roomID) => {
@@ -250,8 +244,14 @@ function RoomDetails(props) {
                                         type="primary"
                                         size={"large"}
                                         block htmlType="submit"
-                                        onClick={() => alert('out')}
+                                        onClick={() => onVisibleModal()}
                                     >ออกจากห้อง</PrimaryButton>
+                                    <LeaveRoomModal
+                                        isVisible={isVisible}
+                                        setVisible={setVisible}
+                                        roomID={props.roomDetail.roomID}
+                                        lineID={lineID}
+                                    />
                                 </div>
                             }
 

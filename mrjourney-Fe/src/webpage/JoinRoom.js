@@ -68,7 +68,7 @@ function JoinRoom(props) {
                                                     isEditRoom={isEditRoom} setEditRoom={setEditRoom}
                                                     isCloseRoom={isCloseRoom} setCloseRoom={setCloseRoom}
                                                 ></RoomDetails>
-                                                <ShowMembers />
+                                                <ShowMembers roomDetail={roomDetail} />
                                             </div>
                                         </div>
                                     </div>

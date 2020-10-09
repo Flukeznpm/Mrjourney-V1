@@ -122,9 +122,9 @@ function RoomBox(props) {
                         title: 'เข้าร่วมสำเร็จ!',
                         text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                         showCancelButton: true,
-                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
+                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
                         confirmButtonColor: '#31CC71',
-                        cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
+                        cancelButtonText: 'กลับสู่หน้าหลัก',
                     })
                 } else {
                     if (room.ageCondition === "ต่ำกว่า 18 ปี") {
@@ -138,9 +138,9 @@ function RoomBox(props) {
                                 title: 'เข้าร่วมสำเร็จ!',
                                 text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                                 showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
+                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
                                 confirmButtonColor: '#31CC71',
-                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
+                                cancelButtonText: 'กลับสู่หน้าหลัก',
                             })
                         } else {
                             Swal.fire({
@@ -163,9 +163,9 @@ function RoomBox(props) {
                                 title: 'เข้าร่วมสำเร็จ!',
                                 text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                                 showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
+                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
                                 confirmButtonColor: '#31CC71',
-                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
+                                cancelButtonText: 'กลับสู่หน้าหลัก',
                             })
                         } else {
                             Swal.fire({
@@ -188,9 +188,9 @@ function RoomBox(props) {
                                 title: 'เข้าร่วมสำเร็จ!',
                                 text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                                 showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
+                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
                                 confirmButtonColor: '#31CC71',
-                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
+                                cancelButtonText: 'กลับสู่หน้าหลัก',
                             })
                         } else {
                             Swal.fire({
@@ -211,9 +211,9 @@ function RoomBox(props) {
                         title: 'เข้าร่วมสำเร็จ!',
                         text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
                         showCancelButton: true,
-                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
+                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
                         confirmButtonColor: '#31CC71',
-                        cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
+                        cancelButtonText: 'กลับสู่หน้าหลัก',
                     })
                 }
             } else {
