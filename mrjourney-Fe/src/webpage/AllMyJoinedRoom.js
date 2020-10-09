@@ -17,6 +17,7 @@ import {
 } from 'antd';
 import DeleteModal from '../components/components/DeleteModal';
 import { WomanOutlined, ManOutlined } from '@ant-design/icons';
+import LeaveRoomModal from '../components/components/LeaveRoomModal';
 
 const ImgCover = styled.img`
     height: 155px;
@@ -80,7 +81,8 @@ function MyJoinedRoom(props) {
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [joinedRoom, setShowOwnerRoom] = useState([{}])
-    const [deleteRoomID, setDeleteRoomID] = useState("")
+    const [isVisible, setVisible] = useState(false)
+    const [leaveRoomID, setLeaveRoomID] = useState("")
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -97,7 +99,12 @@ function MyJoinedRoom(props) {
                 // console.log('res', res);
                 setShowOwnerRoom(res.data)
             })
-    }, [])
+    }, [isVisible])
+
+    const onVisibleModal = (roomID) => {
+        setLeaveRoomID(roomID)
+        setVisible(true)
+    }
 
     return (
         <div className="flex-wrapper">
@@ -202,10 +209,16 @@ function MyJoinedRoom(props) {
                                                                 </Link>
                                                             </div>
                                                             <div className="col-5">
-                                                                <LeaveButton block>
+                                                                <LeaveButton onClick={() => onVisibleModal(joinedRoom.roomID)} block>
                                                                     <span className="h-100 d-flex align-items-center justify-content-center">ออกห้อง</span>
                                                                 </LeaveButton>
                                                             </div>
+                                                            <LeaveRoomModal
+                                                                isVisible={isVisible}
+                                                                setVisible={setVisible}
+                                                                roomID={leaveRoomID}
+                                                                lineID={lineID}
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>
