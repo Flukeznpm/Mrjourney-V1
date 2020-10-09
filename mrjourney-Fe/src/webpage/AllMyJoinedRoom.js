@@ -230,7 +230,7 @@ function MyJoinedRoom(props) {
                             :
                             <h2 className="col-12 font-weight-bold text-center color-default py-4">
                                 ขณะนี้ยังไม่มีห้องที่ท่านกำลังเข้าร่วม
-                                </h2>
+                            </h2>
                         }
                     </div>
                 </div>
