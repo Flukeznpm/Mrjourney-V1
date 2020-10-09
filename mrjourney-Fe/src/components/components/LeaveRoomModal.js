@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
+import { withRouter } from 'react-router-dom';
 import {
     Modal as AntModal,
     Row, Col,
@@ -70,6 +71,7 @@ function LeaveRoomModal(props) {
                 console.log(res)
             })
         props.setVisible(false)
+        props.history.push('/Home');
     }
 
     const onCancel = () => {
@@ -111,4 +113,4 @@ function LeaveRoomModal(props) {
 }
 
 
-export default LeaveRoomModal;
+export default withRouter(LeaveRoomModal);
