@@ -16,7 +16,7 @@ const gcs = require('@google-cloud/storage');
 // POST /room/uploadRoomCoverImage (ส่งรูป RoomCover มาเก็บใน Cloud storage)
 // POST /room/uploadRoomQrCodeImage (ส่งรูป RoomQrCode มาเก็บใน Cloud storage)
 // POST /room/joindRoom (เก็บข้อมูล user ที่เข้ามา join room นั้นๆ)
-// POST /room/deleteMember (ลบชื่อ Member id นั้นๆที่กดออกจากห้องออก และ จำนวนคนในห้องลดลง)
+// POST /room/leaveRoom (ลบชื่อ Member id นั้นๆที่กดออกจากห้องออก และ จำนวนคนในห้องลดลง)
 // POST /room/removeMember (ลบชื่อ Member id นั้นๆที่ถูห owner room เตะออกจากห้อง และ จำนวนคนในห้องลดลง)
 
 router.get('/', async function (req, res, next) {
@@ -237,7 +237,7 @@ router.post('/joinRoom', async function (req, res, next) {
     }
 });
 
-router.post('/deleteMember', async function (req, res, next) {
+router.post('/leaveRoom', async function (req, res, next) {
     let datas = req.body;
     if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.roomID == undefined || datas.roomID == null || datas.roomID == '') {
@@ -246,7 +246,7 @@ router.post('/deleteMember', async function (req, res, next) {
             message: "The Data was empty or undefined"
         })
     } else {
-        await deleteMember(datas)
+        await leaveRoom(datas)
             .then(() => {
                 console.log('User out room Success');
                 res.status(201).json({
@@ -588,7 +588,7 @@ async function joinedRoom(datas) {
     })
 };
 
-async function deleteMember(datas) {
+async function leaveRoom(datas) {
     let deleteMembersJoinedRoom = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
     await deleteMembersJoinedRoom.delete();
 

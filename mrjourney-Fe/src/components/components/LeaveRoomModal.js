@@ -66,7 +66,7 @@ function LeaveRoomModal(props) {
             roomID: roomID
         }
         console.log(leaveRoom)
-        await axios.post(`http://localhost:5000/room/deleteMember`, leaveRoom)
+        await axios.post(`http://localhost:5000/room/leaveRoom`, leaveRoom)
             .then(res => {
                 console.log(res)
             })
