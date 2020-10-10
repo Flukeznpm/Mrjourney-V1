@@ -47,30 +47,30 @@ const ColRoomStatus = styled(Col)`
 
 function HistoryCard(props) {
 
-    const [hisTrip, setHistoryTrip] = useState([{}])
+    const [hisRoom, setHistoryRoom] = useState([{}])
     useEffect(() => {
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let getUserID = params.get('userID');
-        axios.get(`http://localhost:5000/accountProfile/tripHistory?lineID=${getUserID}`)
+        axios.get(`http://localhost:5000/accountProfile/ownerRoom?lineID=${getUserID}`)
             .then(res => {
-                setHistoryTrip(res.data)
+                setHistoryRoom(res.data)
             })
     }, [])
 
     return (
-        <Row gutter={18, 18}>
-            {hisTrip.map((history) => {
+        <Row gutter={18,18}>
+            {hisRoom.map((history) => {
                 return (
                     <>
                         {
-                            history.tripStatus === false ?
+                            history.endDateStatus === true ?
                                 <Col lg={12} md={12} sm={24} xs={24} className="container py-2 d-flex justify-content-center">
-                                    <div class="card" style={{ width: "95%" }}>
-                                        <ImgCover class="card-img-top" src='/img/pr-01.png' alt="Card image cap" />
+                                    <div class="card" style={{ width: "95%"}}>
+                                        <ImgCover class="card-img-top" src={history.roomCover} alt="Card image cap" />
                                         <div class="card-body">
                                             <h5 class="card-title" style={{ fontWeight: "bold" }}>
-                                                {history.tripName}
+                                                {history.roomName}
                                             </h5>
                                             <div class="card-text">
                                                 จ. {history.province}
