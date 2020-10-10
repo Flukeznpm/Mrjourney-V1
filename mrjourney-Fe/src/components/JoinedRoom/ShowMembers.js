@@ -6,6 +6,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 // import { ReactComponent as DeleteButton } from '../../static/icons/delete.svg';
+import { Link } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
 import {
     Card,
@@ -55,7 +56,7 @@ function ShowMembers(props) {
             })
     }, [isVisible])
 
-    
+
     const onVisibleModal = () => {
         setVisible(true)
     }
@@ -76,7 +77,9 @@ function ShowMembers(props) {
                                             </Col>
                                             <Col span={16}>
                                                 <Row justify="space-between">
-                                                    {members.fName}
+                                                    <Link to={`/Profile?userID=${members.lineID}`} style={{ color: "#2b2b2b" }}>
+                                                        {members.fName}
+                                                    </Link>
                                                     {key === 0 ?
                                                         <i class="fas fa-crown text-warning" />
                                                         :
@@ -103,7 +106,9 @@ function ShowMembers(props) {
                                             </Col>
                                             <Col span={16}>
                                                 <Row justify="space-between">
-                                                    {members.fName}
+                                                    <Link to={`/Profile?userID=${members.lineID}`} style={{ color: "#2b2b2b" }}>
+                                                        {members.fName}
+                                                    </Link>
                                                     {key === 0 ? <i class="fas fa-crown text-warning" /> : null}
                                                 </Row>
                                             </Col>

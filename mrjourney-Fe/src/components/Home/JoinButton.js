@@ -50,14 +50,12 @@ const OutlineButton = styled(AntButton)`
 `;
 
 function JoinButton(props) {
-
     const onCheckAvaliableJoin = (ownerID, lineID) => {
         if (ownerID === lineID) {
             return true;
         } else {
             return false;
         }
-
     }
 
     const onCheckJoinRoom = (acc, room) => {
