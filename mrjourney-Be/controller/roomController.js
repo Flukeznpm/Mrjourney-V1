@@ -282,6 +282,18 @@ router.post('/removeMember', async function (req, res, next) {
     }
 });
 
+router.get('/joinRoomAlready', async function (req, res, next) {
+    let datas = req.body;
+    let statusJoinedRoom = false;
+    console.log(status)
+    let checkUserJoinedRoomAlready = await db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
+    await checkUserJoinedRoomAlready.get().then(async data => {
+        statusJoinedRoom = true;
+        return statusJoinedRoom;
+    })
+    return statusJoinedRoom;
+});
+
 //---------------- Function ----------------//
 async function getAllRoom() {
     let RoomList = [];
@@ -624,14 +636,6 @@ async function removeMember(datas) {
     await saveRoomID.update({
         joinedMember: addMembers
     })
-};
-
-async function setRoomHistory(datas) {
-
-};
-
-async function queryRoom(datas) {
-
 };
 
 module.exports = router;
