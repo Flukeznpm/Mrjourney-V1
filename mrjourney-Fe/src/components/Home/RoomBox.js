@@ -82,14 +82,6 @@ const ColRoomStatus = styled(Col)`
 
 function RoomBox(props) {
 
-    const [members, setMember] = useState([{}])
-    useEffect(() => {
-        axios.get(`http://localhost:5000/room/members?roomID=${props.room.roomID}`)
-            .then(res => {
-                setMember(res.data)
-            })
-    }, [])
-
     return (
         <div className="col-md-4 col-sm-12 d-flex justify-content-center py-3">
             <div class="card" style={{ width: "20rem" }}>
@@ -174,7 +166,6 @@ function RoomBox(props) {
                                 {props.room.ownerRoomName}
                             </Link>
                         </span>
-
                     </div>
                     <div class="col-12 p-0">
                         <div class="row">

@@ -63,7 +63,6 @@ function ShowRoomBox(props) {
                     });
                     setShowRoom(sorted);
                 };
-                // console.log(res.data);
                 sortArray(sortType);
             });
     }, [sortType])
@@ -87,7 +86,6 @@ function ShowRoomBox(props) {
 
     return (
         <div className="container py-3">
-
             <Row justify="center" gutter={18}>
                 <Col lg={6} md={8} sm={18} xs={18} className="py-2">
                     <Row justify="center">
@@ -134,12 +132,17 @@ function ShowRoomBox(props) {
                     .filter(room => room.province === onFilterRoomProvince(room.province))
                     .map((room, key) => {
                         return (
-                            <RoomBox room={room}
-                                setRoomModal={setRoomModal}
-                                showRoomModalShow={showRoomModalShow}
-                                setAccountJoinRoom={setAccountJoinRoom}
-                                acc={props.acc}
-                            />
+                            <>
+                                {room.roomID !== undefined ?
+                                    <RoomBox room={room}
+                                        setRoomModal={setRoomModal}
+                                        showRoomModalShow={showRoomModalShow}
+                                        setAccountJoinRoom={setAccountJoinRoom}
+                                        acc={props.acc}
+                                    />
+                                    :
+                                    null}
+                            </>
                         )
                     })}
                 <MoreRoomDetailModal

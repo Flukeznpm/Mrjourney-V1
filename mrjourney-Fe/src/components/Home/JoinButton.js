@@ -50,6 +50,13 @@ const OutlineButton = styled(AntButton)`
 `;
 
 function JoinButton(props) {
+    const [checkMembers, setCheckMember] = useState([{}])
+    useEffect(() => {
+        axios.get(`http://localhost:5000/room/joinRoomAlready?roomID=${props.room.roomID}&lineID=${props.acc.lineID}`)
+            .then(res => {
+                setCheckMember(res.data)
+            })
+    }, [])
     const onCheckAvaliableJoin = (ownerID, lineID) => {
         if (ownerID === lineID) {
             return true;
@@ -207,6 +214,7 @@ function JoinButton(props) {
     }
     return (
         <>
+            {console.log('roomid', props.room.roomID)}
             { onCheckAvaliableJoin(props.room.ownerRoomID, props.acc.lineID) === true ?
                 <Link to={`/JoinRoom?roomID=${props.room.roomID}`}>
                     <OutlineButton
