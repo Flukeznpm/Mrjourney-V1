@@ -283,16 +283,17 @@ router.post('/removeMember', async function (req, res, next) {
 });
 
 router.get('/joinRoomAlready', async function (req, res, next) {
-    let datas = req.body;
+    let datas = req.query;
     let statusJoinedRoom = false;
-    let checkUserJoinedRoomAlready = await db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
+    let checkUserJoinedRoomAlready = db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
     await checkUserJoinedRoomAlready.get().then(async data => {
         if (data.exists) {
             statusJoinedRoom = true;
-            return statusJoinedRoom;
+            res.status(200).json(statusJoinedRoom);
+        } else {
+            res.status(200).json(statusJoinedRoom);
         }
     })
-    return statusJoinedRoom;
 });
 
 //---------------- Function ----------------//
