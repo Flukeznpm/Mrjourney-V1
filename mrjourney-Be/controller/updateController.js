@@ -49,16 +49,48 @@ router.post('/checkUserRegister', async function (req, res, next) {
 //     }
 // });
 
-// router.post('/enableTrip', async function (req, res, next) {
-//     let datas = req.body;
-//     if (datas.tripStatus == undefined || datas.tripStatus == null ||
-//         datas.date == undefined || datas.date == null) {
-//         console.log('Alert: The Data was empty or undefined"')
-//         return;
-//     } else {
+router.post('/enableTrip', async function (req, res, next) {
+    let datas = req.body;
+    if (
+        datas.today == undefined || datas.today == null ||
+        datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '') {
+        console.log('Alert: The Data was empty or undefined"')
+        return;
+    } else {
+        const allDate = [];
+        const tripIDList = [];
+        const checkTripIDRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').where('tripStatus', '==', true);
+        await checkTripIDRef.get().then(snapshot => {
+            snapshot.forEach(doc => {
+                tripIDList.push(doc.data());
+            })
+        });
 
-//     }
-// });
+        let tripID = tripIDList.map(t => t.tripID).toString();
+        console.log('trip id: ', tripID)
+
+        let showTripPerDay = db.collection('TripPerDay').doc(tripID).collection('Date');
+        await showTripPerDay.get().then(data => {
+            data.forEach(doc => {
+                allDate.push(doc.id);
+            });
+        })
+
+        //--CHECK DATE IS MAP TO ALL DATE--//
+        let allDateCount = (allDate.length) - 1;
+        for (i = 0; i <= allDateCount; i++) {
+            let dateID = allDateCount[i];
+            console.log('dateID loop: ', dateID);
+            if (today == dateID) {
+                return;
+            }
+        }
+        await enableTrip(datas, tripID);
+        return res.status(200).json({
+            message: "You trip is end"
+        })
+    }
+});
 
 //---------------- Function ----------------//
 async function updateProfile(datas) {
@@ -118,5 +150,16 @@ async function updateProfile(datas) {
     //     }
     // });
 };
+
+async function enableTrip(datas, tripID) {
+    let closeTrip = db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').doc(tripID);
+    await closeTrip.update({
+        tripStatus: false
+    })
+    let closeTrip2 = db.collection('TripList').doc(tripID);
+    await closeTrip2.update({
+        tripStatus: false
+    })
+}
 
 module.exports = router;
