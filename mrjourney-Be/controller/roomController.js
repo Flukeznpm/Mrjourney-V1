@@ -285,11 +285,12 @@ router.post('/removeMember', async function (req, res, next) {
 router.get('/joinRoomAlready', async function (req, res, next) {
     let datas = req.body;
     let statusJoinedRoom = false;
-    console.log(status)
     let checkUserJoinedRoomAlready = await db.collection('Room').doc(datas.roomID).collection('Members').doc(datas.lineID);
     await checkUserJoinedRoomAlready.get().then(async data => {
-        statusJoinedRoom = true;
-        return statusJoinedRoom;
+        if (data.exists) {
+            statusJoinedRoom = true;
+            return statusJoinedRoom;
+        }
     })
     return statusJoinedRoom;
 });
