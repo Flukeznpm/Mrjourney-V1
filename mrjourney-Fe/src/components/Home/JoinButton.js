@@ -58,7 +58,7 @@ function JoinButton(props) {
             })
     }, [])
     const onCheckAvaliableJoin = (ownerID, lineID) => {
-        if (ownerID === lineID) {
+        if (ownerID === lineID || checkMembers === true) {
             return true;
         } else {
             return false;
