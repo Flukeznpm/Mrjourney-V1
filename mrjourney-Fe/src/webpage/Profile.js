@@ -78,14 +78,6 @@ function Profile(props) {
                                     <Row justify="center">
                                         <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
                                             <HistoryCreateTrip acc={acc} />
-                                            {/* <AntCard>
-                                                <Row>
-                                                    <h4 style={{ fontWeight: "bold" }}>แผนการท่องเที่ยวที่เคยสร้าง</h4>
-                                                </Row>
-                                                <Row justify="center">
-                                                    <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5>
-                                                </Row>
-                                            </AntCard> */}
                                         </Col>
                                     </Row>
                                     :
