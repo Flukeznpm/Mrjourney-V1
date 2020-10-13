@@ -86,7 +86,7 @@ router.post('/enableTrip', async function (req, res, next) {
             }
         }
         await enableTrip(datas, tripID);
-        return res.status(200).json({
+        return res.status(201).json({
             message: "You trip is end"
         })
     }
