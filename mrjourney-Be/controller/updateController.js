@@ -38,16 +38,15 @@ router.post('/checkUserRegister', async function (req, res, next) {
     }
 });
 
-// router.post('/enableRoom', async function (req, res, next) {
-//     let datas = req.body;
-//     if (datas.endDateStatus == undefined || datas.endDateStatus == null ||
-//         datas.date == undefined || datas.date == null) {
-//         console.log('Alert: The Data was empty or undefined"')
-//         return;
-//     } else {
+router.post('/enableRoom', async function (req, res, next) {
+    let datas = req.body;
+    if (datas.today == undefined || datas.today == null) {
+        console.log('Alert: The Data was empty or undefined"')
+        return;
+    } else {
 
-//     }
-// });
+    }
+});
 
 router.post('/enableTrip', async function (req, res, next) {
     let datas = req.body;
