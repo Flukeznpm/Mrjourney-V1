@@ -15,6 +15,7 @@ import CurrentJoinRoom from './webpage/CurrentJoinRoom';
 import CheckTrip from './linepage/CheckTrip';
 import LoginPage from './webpage/LoginPage';
 import FirstTimeLogin from './webpage/FirstTimeLogin';
+import 'antd-mobile/dist/antd-mobile.css'; 
 import 'antd/dist/antd.css';
 import Profile from './webpage/Profile';
 import NotMatchPage from './NotMatchPage';
