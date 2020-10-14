@@ -92,7 +92,8 @@ function CreateTripModal(props) {
     const { handleEventForm, Event, setEvent, keyModal, selectEventType } = useContext(HookContext)
     const format = 'HH:mm'
     const nowTimeStamp = Date.now();
-    const [timeStartEvent, setTimeStartEvent] = useState(new Date(nowTimeStamp));
+    const now = new Date(nowTimeStamp)
+    const [timeStartEvent, setTimeStartEvent] = useState(now);
 
     const onFinish = values => {
         handleEventForm(values.eventName, 'eventName')
@@ -135,7 +136,9 @@ function CreateTripModal(props) {
                                             value={timeStartEvent}
                                             onChange={onStartEvent}
                                         >
+                                            <List.Item arrow="horizontal">วันเริ่ม</List.Item>
                                         </DatePicker>
+                                        
 
                                         {/* <input type='time' class="form-control"
                                             name="startEvent"
