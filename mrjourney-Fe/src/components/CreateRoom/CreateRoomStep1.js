@@ -15,7 +15,6 @@ import {
 } from 'antd';
 import momentjs from 'moment';
 import Stepper from '../components/Stepper';
-import { UploadOutlined } from '@ant-design/icons';
 
 const PrimaryButton = styled(AntButton)`
     border-radius: 4px;

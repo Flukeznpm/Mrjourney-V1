@@ -18,6 +18,7 @@ import FirstTimeLogin from './webpage/FirstTimeLogin';
 import 'antd/dist/antd.css';
 import Profile from './webpage/Profile';
 import NotMatchPage from './NotMatchPage';
+import RoomHistoryJoin from './components/JoinedRoom/RoomHistoryJoin.js/View';
 
 function App() {
   return (
@@ -37,6 +38,9 @@ function App() {
         </Route>
         <Route path="/JoinRoom">
           <JoinRoom />
+        </Route>
+        <Route path="/RoomHistoryJoin">
+          <RoomHistoryJoin />
         </Route>
         <Route path="/Profile">
           <Profile />

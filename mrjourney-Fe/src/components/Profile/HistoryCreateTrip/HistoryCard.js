@@ -47,30 +47,30 @@ const ColRoomStatus = styled(Col)`
 
 function HistoryCard(props) {
 
-    const [hisRoom, setHistoryRoom] = useState([{}])
+    const [hisTrip, setHistoryTrip] = useState([{}])
     useEffect(() => {
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let getUserID = params.get('userID');
-        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile/ownerRoom?lineID=${getUserID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile/tripHistory?lineID=${getUserID}`)
             .then(res => {
-                setHistoryRoom(res.data)
+                setHistoryTrip(res.data)
             })
     }, [])
 
     return (
-        <Row gutter={18,18}>
-            {hisRoom.map((history) => {
+        <Row gutter={18, 18}>
+            {hisTrip.map((history) => {
                 return (
                     <>
                         {
-                            history.endDateStatus === true ?
+                            history.tripStatus === false ?
                                 <Col lg={12} md={12} sm={24} xs={24} className="container py-2 d-flex justify-content-center">
-                                    <div class="card" style={{ width: "95%"}}>
-                                        <ImgCover class="card-img-top" src={history.roomCover} alt="Card image cap" />
+                                    <div class="card" style={{ width: "95%" }}>
+                                        <ImgCover class="card-img-top" src='/img/pr-01.png' alt="Card image cap" />
                                         <div class="card-body">
                                             <h5 class="card-title" style={{ fontWeight: "bold" }}>
-                                                {history.roomName}
+                                                {history.tripName}
                                             </h5>
                                             <div class="card-text">
                                                 จ. {history.province}

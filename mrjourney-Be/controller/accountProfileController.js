@@ -378,8 +378,4 @@ async function getTripHistoryById(datas) {
     return tripHistory;
 };
 
-async function getRoomHistoryById(datas) {
-
-};
-
 module.exports = router;

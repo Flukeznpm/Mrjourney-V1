@@ -5,11 +5,15 @@ import "../../static/css/App.css";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+// import { ReactComponent as DeleteButton } from '../../static/icons/delete.svg';
+import { Link } from 'react-router-dom';
+import { DeleteOutlined } from '@ant-design/icons';
 import {
     Card,
     Row,
     Col
 } from 'antd';
+import RemoveMemberModal from '../components/RemoveMemberModal';
 
 const AntCard = styled(Card)`
   border-radius: 8px;
@@ -19,11 +23,18 @@ const AntCard = styled(Card)`
   height: 100%;
 `;
 
+const RemoveMemberBtn = styled.div`
+    color:red;
+    cursor: pointer;
+    vertical-align: 0em;
+`;
+
 function ShowMembers(props) {
     const [lineID, setLineID] = useState("")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [members, setMember] = useState([{}])
+    const [isVisible, setVisible] = useState(false)
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -43,7 +54,12 @@ function ShowMembers(props) {
             .then(res => {
                 setMember(res.data)
             })
-    }, [])
+    }, [isVisible])
+
+
+    const onVisibleModal = () => {
+        setVisible(true)
+    }
 
     return (
         <div className="col-lg-3 col-sm-12 my-3">
@@ -53,17 +69,52 @@ function ShowMembers(props) {
                     <div class="showmember" >
                         {members.map((members, key) => {
                             return (
-                                <Row className="d-flex h-100 align-items-center py-3">
-                                    <Col span={8}>
-                                        <img src={members.pictureURL} class="image_outer_container" />
-                                    </Col>
-                                    <Col span={16}>
-                                        <Row justify="space-between">
-                                            {members.fName}
-                                            {key === 0 ? <i class="fas fa-crown text-warning" /> : null}
+                                <>
+                                    {lineID === props.roomDetail.ownerRoomID ?
+                                        <Row className="d-flex h-100 align-items-center py-3">
+                                            <Col span={8}>
+                                                <img src={members.pictureURL} class="image_outer_container" />
+                                            </Col>
+                                            <Col span={16}>
+                                                <Row justify="space-between">
+                                                    <Link to={`/Profile?userID=${members.lineID}`} style={{ color: "#2b2b2b" }}>
+                                                        {members.fName}
+                                                    </Link>
+                                                    {key === 0 ?
+                                                        <i class="fas fa-crown text-warning" />
+                                                        :
+                                                        <RemoveMemberBtn>
+                                                            <DeleteOutlined
+                                                                onClick={() => onVisibleModal()}
+                                                            />
+                                                            <RemoveMemberModal
+                                                                isVisible={isVisible}
+                                                                setVisible={setVisible}
+                                                                userID={members.lineID}
+                                                                roomID={props.roomDetail.roomID}
+                                                                lineID={lineID}
+                                                            />
+                                                        </RemoveMemberBtn>
+                                                    }
+                                                </Row>
+                                            </Col>
                                         </Row>
-                                    </Col>
-                                </Row>
+                                        :
+                                        <Row className="d-flex h-100 align-items-center py-3">
+                                            <Col span={8}>
+                                                <img src={members.pictureURL} class="image_outer_container" />
+                                            </Col>
+                                            <Col span={16}>
+                                                <Row justify="space-between">
+                                                    <Link to={`/Profile?userID=${members.lineID}`} style={{ color: "#2b2b2b" }}>
+                                                        {members.fName}
+                                                    </Link>
+                                                    {key === 0 ? <i class="fas fa-crown text-warning" /> : null}
+                                                </Row>
+                                            </Col>
+                                        </Row>
+                                    }
+                                </>
                             )
                         })}
                     </div>

@@ -6,8 +6,6 @@ import Swal from 'sweetalert2';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
 import { HookContext } from '../../../store/HookProvider';
-import LeaveRoomModal from '../../components/LeaveRoomModal';
-import EditJoinRoom from './EditJoinRoom';
 import axios from 'axios';
 import {
     Card,
@@ -70,9 +68,6 @@ function RoomDetails(props) {
     const [lineID, setLineID] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [pictureURL, setPictureURL] = useState("");
-    const [roomStatus, setStatus] = useState(true);
-    const [isVisible, setVisible] = useState(false)
-    // const [isEditRoom, setEditRoom] = useState(false);
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -85,61 +80,13 @@ function RoomDetails(props) {
             setPictureURL(user.pictureURL)
         }
 
-    }, [isVisible])
+    }, [])
 
-    const onEditRoom = () => {
-        props.setEditRoom(true)
-    }
-
-    const onVisibleModal = () => {
-        setVisible(true)
-    }
-
-    const CloseRoom = async (roomID) => {
-        let closeRoom = {
-            roomStatus: false
-        }
-        await axios.put(`https://mrjourney-senior.herokuapp.com/room/closeRoom?roomID=${roomID}&lineID=${lineID}`, closeRoom)
-            .then(res => {
-                console.log(res)
-            })
-    }
-
-    const OpenRoom = async (roomID) => {
-        let openRoom = {
-            roomStatus: true
-        }
-        await axios.put(`https://mrjourney-senior.herokuapp.com/room/openRoom?roomID=${roomID}&lineID=${lineID}`, openRoom)
-            .then(res => {
-                console.log(res)
-            })
-    }
     return (
-        <div className="col-lg-9 col-sm-12 my-3">
+        <div className="col-lg-12 col-sm-12 my-3">
             <AntCard style={{ padding: 0 }}>
                 <div className="container py-3">
-                    {props.isEditRoom === false ?
                         <div className="ShowRoom-Details">
-                            {lineID === props.roomDetail.ownerRoomID ?
-                                <div className="text-right">
-                                    {props.roomDetail.roomStatus === true && props.isCloseRoom === false ?
-                                        <Tooltip title="เลื่อนเพื่อปิดห้อง">
-                                            <SwitchComponentClose defaultChecked
-                                                onChange={() => CloseRoom(props.roomDetail.roomID)}
-                                                onClick={() => props.setCloseRoom(true)}
-                                            />
-                                        </Tooltip>
-                                        :
-                                        <Tooltip title="เลื่อนเพื่อเปิดห้อง">
-                                            <SwitchComponentOpen
-                                                onChange={() => OpenRoom(props.roomDetail.roomID)}
-                                                onClick={() => props.setCloseRoom(false)} />
-                                        </Tooltip>
-                                    }
-                                </div>
-                                :
-                                null
-                            }
                             <div className="ShowRoom-TripName py-1" style={{ fontSize: "28px", fontWeight: "bold" }}>
                                 ชื่อทริป : {props.roomDetail.roomName}
                             </div>
@@ -224,41 +171,7 @@ function RoomDetails(props) {
                                     </div>
                                 </div>
                             </div>
-                            {lineID === props.roomDetail.ownerRoomID ?
-                                <div className="container text-center py-3">
-                                    <div className="col-12">
-                                        <div className="row">
-                                            <div className="col-12 d-flex align-items-center">
-                                                <OutlineButton
-                                                    size={"large"}
-                                                    block htmlType="button"
-                                                    onClick={() => onEditRoom()}
-                                                >แก้ไขห้อง</OutlineButton>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                :
-                                <div className="container text-center py-3">
-                                    <PrimaryButton
-                                        type="primary"
-                                        size={"large"}
-                                        block htmlType="submit"
-                                        onClick={() => onVisibleModal()}
-                                    >ออกจากห้อง</PrimaryButton>
-                                    <LeaveRoomModal
-                                        isVisible={isVisible}
-                                        setVisible={setVisible}
-                                        roomID={props.roomDetail.roomID}
-                                        lineID={lineID}
-                                    />
-                                </div>
-                            }
-
                         </div>
-                        :
-                        <EditJoinRoom roomDetail={props.roomDetail} setEditRoom={props.setEditRoom}></EditJoinRoom>
-                    }
                 </div>
             </AntCard>
         </div >

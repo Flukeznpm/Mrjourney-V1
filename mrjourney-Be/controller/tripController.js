@@ -580,8 +580,5 @@ async function deleteTrip(datas) {
         });
 };
 
-async function setTripHistory(datas) {
-
-};
 
 module.exports = router;

@@ -44,11 +44,7 @@ function View(props) {
             <Row>
                 <h4 style={{ fontWeight: "bold" }}>ห้องที่คุณเคยสร้าง</h4>
             </Row>
-            {acc.map((acc) => {
-                return (
-                    <HistoryCard acc={props.acc} />
-                )
-            })}
+            <HistoryCard acc={props.acc} />
         </AntCard>
     )
 }

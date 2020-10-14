@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import NavWebPage from '../components/Nav/NavWebPage';
+import NavWebPage from '../../Nav/NavWebPage';
 import styled from "styled-components";
-import '../static/css/App.css';
-import ShowMembers from '../components/JoinedRoom/ShowMembers';
-import RoomDetails from '../components/JoinedRoom/RoomDetails/View';
-import FooterWebPage from '../components/Footer/FooterWebPage';
+import RoomDetails from './RoomDetails';
+import FooterWebPage from '../../Footer/FooterWebPage'
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
@@ -16,13 +14,11 @@ const ImgCover = styled.img`
     object-fit: cover;
 `
 
-function JoinRoom(props) {
+function RoomHistoryJoin(props) {
     const [lineID, setLineID] = useState("")
     const [displayName, setDisplayName] = useState("")
     const [pictureURL, setPictureURL] = useState("")
     const [roomDetail, setShowRoomDetail] = useState([{}])
-    const [isEditRoom, setEditRoom] = useState(false);
-    const [isCloseRoom, setCloseRoom] = useState(false);
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -42,7 +38,7 @@ function JoinRoom(props) {
             .then(res => {
                 setShowRoomDetail(res.data)
             })
-    }, [isEditRoom, isCloseRoom])
+    }, [])
 
     return (
         <div className="flex-wrapper">
@@ -57,6 +53,7 @@ function JoinRoom(props) {
                             <>
                                 <div className="Details-JoinedRoom">
                                     <div className="container">
+                                        <h4 className="pt-4 pb-1">ห้องที่เคยสร้างหมายเลข : {roomDetail.roomID}</h4>
                                         <div className="col-12 pt-2">
                                             <div className="row">
                                                 <ImgCover class="d-block w-100" src={roomDetail.roomCover} alt="First slide" />
@@ -65,10 +62,7 @@ function JoinRoom(props) {
                                         <div className="col-12">
                                             <div className="row">
                                                 <RoomDetails roomDetail={roomDetail}
-                                                    isEditRoom={isEditRoom} setEditRoom={setEditRoom}
-                                                    isCloseRoom={isCloseRoom} setCloseRoom={setCloseRoom}
                                                 ></RoomDetails>
-                                                <ShowMembers roomDetail={roomDetail} />
                                             </div>
                                         </div>
                                     </div>
@@ -85,6 +79,6 @@ function JoinRoom(props) {
     )
 }
 
-export default JoinRoom;
+export default RoomHistoryJoin;
 
 

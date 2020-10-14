@@ -70,7 +70,8 @@ function ShowEventBox(props) {
                     </Row>
                     <Row>
                         {/* {momentjs(props.eventDetail.startEvent).format('HH:mm')}- {momentjs(props.eventDetail.endEvent).format('HH:mm')} */}
-                        {momentjs(props.eventDetail.startEvent).format('HH:mm a')}- {momentjs(props.eventDetail.endEvent).format('HH:mm a')}
+                        {/* {momentjs(props.eventDetail.startEvent).format('HH:mm a')}- {momentjs(props.eventDetail.endEvent).format('HH:mm a')} */}
+                        {props.eventDetail.startEvent} น. - {props.eventDetail.endEvent} น.
                     </Row>
                 </Col>
             </Row>

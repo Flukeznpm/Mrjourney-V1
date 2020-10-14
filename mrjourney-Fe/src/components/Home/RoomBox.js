@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -14,6 +14,7 @@ import {
     Progress, Typography
 } from 'antd';
 import { WomanOutlined, ManOutlined } from '@ant-design/icons';
+import JoinButton from './JoinButton';
 
 const { Paragraph } = Typography;
 const AntParagraph = styled(Paragraph)`
@@ -81,153 +82,6 @@ const ColRoomStatus = styled(Col)`
 
 function RoomBox(props) {
 
-    const onCheckJoinRoom = (acc, room) => {
-        const calculateDate = (dob) => {
-            var today = new Date();
-            var birthDate = new Date(dob);  // create a date object directly from `dob1` argument
-            var age_now = today.getFullYear() - birthDate.getFullYear();
-            var m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age_now--;
-            }
-            console.log(age_now);
-            return age_now;
-        }
-
-        if (!acc.fName) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'คุณยังไม่ได้ Login!',
-                text: 'กรุณาทำการ Login ก่อนทำรายการ',
-                showCancelButton: true,
-                confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>',
-                confirmButtonColor: '#F37945',
-                cancelButtonText: 'กลับสู่หน้าหลัก',
-            })
-        } else {
-            let dataJoin = {
-                lineID: acc.lineID,
-                pictureURL: acc.pictureURL,
-                fName: acc.fName,
-                roomID: room.roomID
-            }
-            if (room.genderCondition === "ชาย" && acc.gender === "ชาย" || room.genderCondition === "ไม่จำกัดเพศ") {
-                if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
-                    axios.post('https://mrjourney-senior.herokuapp.com/room/joinRoom', dataJoin)
-                        .then(async (res) => {
-                            console.log(res)
-                        })
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'เข้าร่วมสำเร็จ!',
-                        text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                        showCancelButton: true,
-                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
-                        confirmButtonColor: '#31CC71',
-                        cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
-                    })
-                } else {
-                    if (room.ageCondition === "ต่ำกว่า 18 ปี") {
-                        if (calculateDate(acc.birthday) < 18) {
-                            axios.post('https://mrjourney-senior.herokuapp.com/room/joinRoom', dataJoin)
-                                .then(async (res) => {
-                                    console.log(res)
-                                })
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'เข้าร่วมสำเร็จ!',
-                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                                showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
-                                confirmButtonColor: '#31CC71',
-                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
-                            })
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'ขออภัย!',
-                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-                                showCancelButton: false,
-                                confirmButtonColor: '#D33',
-                                confirmButtonText: 'กลับสู่หน้าหลัก'
-                            })
-                        }
-                    } else if (room.ageCondition === "18-25 ปี") {
-                        if (calculateDate(acc.birthday) >= 18 && calculateDate(acc.birthday) <= 25) {
-                            axios.post('https://mrjourney-senior.herokuapp.com/room/joinRoom', dataJoin)
-                                .then(async (res) => {
-                                    console.log(res)
-                                })
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'เข้าร่วมสำเร็จ!',
-                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                                showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
-                                confirmButtonColor: '#31CC71',
-                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
-                            })
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'ขออภัย!',
-                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-                                showCancelButton: false,
-                                confirmButtonColor: '#D33',
-                                confirmButtonText: 'กลับสู่หน้าหลัก'
-                            })
-                        }
-                    } else if (room.ageCondition === "25 ปีขึ้นไป") {
-                        if (calculateDate(acc.birthday) > 25) {
-                            axios.post('https://mrjourney-senior.herokuapp.com/room/joinRoom', dataJoin)
-                                .then(async (res) => {
-                                    console.log(res)
-                                })
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'เข้าร่วมสำเร็จ!',
-                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                                showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
-                                confirmButtonColor: '#31CC71',
-                                cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
-                            })
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'ขออภัย!',
-                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-                                showCancelButton: false,
-                                confirmButtonColor: '#D33',
-                                confirmButtonText: 'กลับสู่หน้าหลัก'
-                            })
-                        }
-                    }
-                }
-            } else if (room.genderCondition === "หญิง" && acc.gender === "หญิง" || room.genderCondition === "ไม่จำกัดเพศ") {
-                if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'เข้าร่วมสำเร็จ!',
-                        text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                        showCancelButton: true,
-                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}">เข้าสู่ห้อง</a>`,
-                        confirmButtonColor: '#31CC71',
-                        cancelButtonText: '<a href="/Home">กลับสู่หน้าหลัก</a>',
-                    })
-                }
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ขออภัย!',
-                    text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-                    showCancelButton: false,
-                    confirmButtonColor: '#D33',
-                    confirmButtonText: 'กลับสู่หน้าหลัก'
-                })
-            }
-        }
-    }
     return (
         <div className="col-md-4 col-sm-12 d-flex justify-content-center py-3">
             <div class="card" style={{ width: "20rem" }}>
@@ -312,30 +166,11 @@ function RoomBox(props) {
                                 {props.room.ownerRoomName}
                             </Link>
                         </span>
-
                     </div>
                     <div class="col-12 p-0">
                         <div class="row">
                             <div class="col-9">
-                                {props.room.roomStatus === true && props.room.joinedMember < props.room.maxMember
-                                    ?
-                                    <>
-                                        {props.room.ownerRoomID === props.acc.lineID ?
-                                            <Link to={`/JoinRoom?roomID=${props.room.roomID}`}>
-                                                <OutlineButton
-                                                    block
-                                                >เข้าสู่ห้อง</OutlineButton>
-                                            </Link>
-                                            :
-                                            <PrimaryButton
-                                                type="primary" block
-                                                onClick={() => onCheckJoinRoom(props.acc, props.room)}
-                                            >เข้าร่วม</PrimaryButton>
-                                        }
-                                    </>
-                                    :
-                                    <PrimaryButton type="primary" block disabled>เข้าร่วม</PrimaryButton>
-                                }
+                                <JoinButton room={props.room} acc={props.acc} />
                             </div>
                             <div class="col-3 text-center">
                                 <Tooltip title="ดูข้อมูลเพิ่มเติม">

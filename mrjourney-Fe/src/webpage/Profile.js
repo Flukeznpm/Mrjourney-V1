@@ -14,6 +14,7 @@ import {
     Button as AntButton,
 } from 'antd';
 import ProfileDetails from '../components/Profile/ProfileDetails';
+import HistoryCreateRoom from '../components/Profile/HistoryCreateRoom/View';
 import HistoryCreateTrip from '../components/Profile/HistoryCreateTrip/View';
 
 const AntCard = styled(Card)`
@@ -55,62 +56,50 @@ function Profile(props) {
         <div className="flex-wrapper">
             <div className="top-page">
                 <NavWebPage />
+                {acc.map((acc) => {
+                    return (
+                        <>
+                            <div className="Profile-page py-4">
+                                <Row justify="center">
+                                    <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                        <ProfileDetails acc={acc} lineID={lineID}
+                                            isEditProfile={isEditProfile} setEditProfile={setEditProfile}
+                                            isEditBio={isEditBio} setEditBio={setEditBio}
+                                        ></ProfileDetails>
+                                    </Col>
+                                </Row>
+                                <Row justify="center">
+                                    <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                        <HistoryCreateRoom />
+                                    </Col>
+                                </Row>
 
-                <div className="Profile-page py-4">
-                    {acc.map((acc) => {
-                        return (
-                            <Row justify="center">
-                                <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                                    <ProfileDetails acc={acc} lineID={lineID}
-                                        isEditProfile={isEditProfile} setEditProfile={setEditProfile}
-                                        isEditBio={isEditBio} setEditBio={setEditBio}
-                                    ></ProfileDetails>
-                                </Col>
-                            </Row>
-                        )
-                    })}
-
-                    <Row justify="center">
-                        <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                            <HistoryCreateTrip />
-                        </Col>
-                    </Row>
-
-                    {acc.map((acc) => {
-                        return (
-                            <>
                                 {lineID === acc.lineID ?
                                     <Row justify="center">
                                         <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                                            <AntCard>
-                                                <Row>
-                                                    <h4 style={{ fontWeight: "bold" }}>แผนการท่องเที่ยวที่เคยสร้าง</h4>
-                                                </Row>
-                                                <Row justify="center">
-                                                    <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5>
-                                                </Row>
-                                            </AntCard>
+                                            <HistoryCreateTrip acc={acc} />
                                         </Col>
                                     </Row>
                                     :
                                     null
                                 }
-                            </>
-                        )
-                    })}
-                    <Row justify="center">
-                        <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                            <AntCard>
-                                <Row>
-                                    <h4 style={{ fontWeight: "bold" }}>คะแนน</h4>
-                                </Row>
+
                                 <Row justify="center">
-                                    <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5>
+                                    <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                        <AntCard>
+                                            <Row>
+                                                <h4 style={{ fontWeight: "bold" }}>คะแนน</h4>
+                                            </Row>
+                                            <Row justify="center">
+                                                <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5>
+                                            </Row>
+                                        </AntCard>
+                                    </Col>
                                 </Row>
-                            </AntCard>
-                        </Col>
-                    </Row>
-                </div>
+                            </div>
+                        </>
+                    )
+                })}
             </div>
             <div className="footer-page">
                 <FooterWebPage></FooterWebPage>

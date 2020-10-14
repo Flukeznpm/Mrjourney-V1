@@ -21,7 +21,7 @@ class LoginPage extends React.Component {
                                         <div className="row">
                                             <div className="col-3"></div>
                                             <button type="button" className="btn btn-lg roundLogin col-6">
-                                                <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ">
+                                                <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=https://mr-journey.com/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ">
                                                     เข้าสู่ระบบ
                                                 </a>
                                             </button>
