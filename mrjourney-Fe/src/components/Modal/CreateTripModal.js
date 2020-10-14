@@ -90,13 +90,21 @@ const ColButtonComponent = styled.div`
 function CreateTripModal(props) {
     const { handleEventForm, Event, setEvent, keyModal, selectEventType } = useContext(HookContext)
     const format = 'HH:mm'
+    const [timeStartEvent, setTimeStartEvent] = useState("");
 
     const onFinish = values => {
         handleEventForm(values.eventName, 'eventName')
-        handleEventForm(values.startEvent, 'startEvent')
-        handleEventForm(values.endEvent, 'endEvent')
+        handleEventForm(Event.startEvent, 'startEvent')
+        handleEventForm(Event.endEvent, 'endEvent')
+        // handleEventForm(values.startEvent, 'endEvent')
+        // handleEventForm(values.endEvent, 'endEvent')
         setEvent(keyModal)
     };
+
+    const onStartEvent = async (e) => {
+        console.log('time', e)
+        await setTimeStartEvent(e)
+    }
 
     return (
         <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
@@ -115,15 +123,25 @@ function CreateTripModal(props) {
                             <div className="row">
                                 <div className="col-6">
                                     <AntForm.Item name="startEvent" label="เวลาเริ่ม" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                        <TimePickerComponent style={{ width: "100%" }}
+                                        {/* <TimePickerComponent style={{ width: "100%" }}
                                             format={format} placeholder="เวลาเริ่มกิจกรรม"
+                                        /> */}
+                                        <input type='time' class="form-control"
+                                            name="startEvent"
+                                            value={Event.startEvent}
+                                            onChange={(e) => handleEventForm(e.target.value, e.target.name)}
                                         />
                                     </AntForm.Item>
                                 </div>
                                 <div className="col-6">
                                     <AntForm.Item name="endEvent" label="เวลาจบ" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                        <TimePickerComponent style={{ width: "100%" }}
+                                        {/* <TimePickerComponent style={{ width: "100%" }}
                                             format={format} placeholder="เวลาจบกิจกรรม"
+                                        /> */}
+                                        <input type='time' class="form-control"
+                                            name="endEvent"
+                                            value={Event.endEvent}
+                                            onChange={(e) => handleEventForm(e.target.value, e.target.name)}
                                         />
                                     </AntForm.Item>
                                 </div>
@@ -177,7 +195,7 @@ function CreateTripModal(props) {
                                         <TypeButtonSelected
                                             shape="circle"
                                             size={"large"}
-                                            // icon={<img src="/img/icons/sleeping.svg" />}
+                                        // icon={<img src="/img/icons/sleeping.svg" />}
                                         >
                                             <SleepingIcon style={{ margin: "5px" }} />
                                         </TypeButtonSelected>
