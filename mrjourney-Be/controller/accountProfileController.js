@@ -323,7 +323,7 @@ async function getJoinedRoomByID(datas) {
     const ownerJoinedRoomList = [];
     const roomList = [];
 
-    const roomIDList = db.collection('Room');
+    const roomIDList = db.collection('Room').where('endDateStatus', '==', false);
     await roomIDList.get().then(async doc => {
         await doc.forEach(async data => {
             await roomList.push(data.id);
