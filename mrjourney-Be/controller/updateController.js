@@ -49,7 +49,9 @@ router.post('/enableRoom', async function (req, res, next) {
         await clostRoomRef.update({
             endDateStatus: true
         });
-        return res.status(200);
+        return res.status(201).json({
+            message: "You room is end"
+        })
     }
 });
 
