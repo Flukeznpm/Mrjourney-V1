@@ -299,17 +299,28 @@ router.get('/joinRoomAlready', async function (req, res, next) {
 //---------------- Function ----------------//
 async function getAllRoom() {
     let RoomList = [];
-    let showAllRoomRef = db.collection("Room").orderBy("createDate", "desc");
-    // let showAllRoomRef = db.collection("Room");
-    await showAllRoomRef.get().then(snapshot => {
-        snapshot.forEach(doc => {
-            RoomList.push(doc.data());
+    let RoomList_FINAL = [];
+
+    let showAllRoomRef = db.collection("Room").orderBy('createDate', "desc");
+    await showAllRoomRef.get().then(async snapshot => {
+        snapshot.forEach(async doc => {
+            await RoomList.push(doc.data());
         });
     })
         .catch(err => {
             console.log('Error getting Room', err);
         });
-    return RoomList;
+
+    let countRoomList_DESC = (RoomList.length) - 1;
+
+    for (let i = 0; i <= countRoomList_DESC; i++) {
+        let get_EndDateStatus_false = RoomList.map(end => end.endDateStatus);
+        if (get_EndDateStatus_false[i] == false) {
+            RoomList_FINAL.push(RoomList[i])
+        }
+    }
+
+    return RoomList_FINAL;
 };
 
 async function getRoomDetail(datas) {
