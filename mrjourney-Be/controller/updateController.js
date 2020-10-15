@@ -40,11 +40,16 @@ router.post('/checkUserRegister', async function (req, res, next) {
 
 router.post('/enableRoom', async function (req, res, next) {
     let datas = req.body;
-    if (datas.today == undefined || datas.today == null) {
+    if (datas.tripID == undefined || datas.tripID == null || datas.tripID == '') {
         console.log('Alert: The Data was empty or undefined"')
         return;
     } else {
-
+        let tripID = datas.tripID;
+        let clostRoomRef = db.collection('Room').doc(tripID);
+        await clostRoomRef.update({
+            endDateStatus: true
+        });
+        return res.status(200);
     }
 });
 
