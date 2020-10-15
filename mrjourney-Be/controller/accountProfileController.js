@@ -303,7 +303,7 @@ async function deleteAccount(datas) {
 async function getOwnerRoomByID(datas) {
     const ownerRoomList = [];
     const showDataOwnerRoomSnapshot = db.collection('Room');
-    const query = showDataOwnerRoomSnapshot.where('ownerRoomID', '==', datas.lineID);
+    const query = showDataOwnerRoomSnapshot.where('ownerRoomID', '==', datas.lineID).where('endDateStatus', '==', false);
     await query.get().then(async res => {
 
         if (query.empty) {
