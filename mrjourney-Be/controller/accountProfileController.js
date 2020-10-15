@@ -161,6 +161,19 @@ router.get('/TripHistory', async function (req, res, next) {
     }
 });
 
+router.get('/RoomHistory', async function (req, res, next) {
+    const datas = req.query;
+    if (datas.lineID == undefined || datas.lineID == null || datas.lineID == '') {
+        res.status(400).json({
+            message: "The Data was empty or undefined"
+        })
+    } else {
+        const roomHist = await getRoomHistoryById(datas);
+        console.log('Alert: Get Joined room success');
+        res.status(200).json(roomHist);
+    }
+});
+
 //---------------- Function ----------------//
 async function getAccountByID(datas) {
     let dataAcc = [];
@@ -376,6 +389,22 @@ async function getTripHistoryById(datas) {
     });
 
     return tripHistory;
+};
+
+async function getRoomHistoryById(datas) {
+    const roomHistory = [];
+    const roomRef = db.collection('Room').where('ownerRoomID', '==', datas.lineID).where('endDateStatus', '==', true);
+    await roomRef.get().then(async doc => {
+        if (doc.empty) {
+            console.log('data is empty')
+            return;
+        }
+        doc.forEach(async data => {
+            await roomHistory.push(data.data());
+        })
+    });
+
+    return roomHistory;
 };
 
 module.exports = router;
