@@ -43,7 +43,7 @@ function ShowRoomBox(props) {
     const [filterRoomProvince, setFilterRoomProvince] = useState(null)
     const { Option } = AntSelect;
     useEffect(() => {
-        axios.get('http://localhost:5000/room')
+        axios.get('https://mrjourney-senior.herokuapp.com/room')
             .then(async res => {
                 const sortArray = type => {
                     const types = {
