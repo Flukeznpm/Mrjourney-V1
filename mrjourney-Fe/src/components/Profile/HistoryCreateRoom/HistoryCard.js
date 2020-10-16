@@ -59,7 +59,7 @@ function HistoryCard(props) {
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let getUserID = params.get('userID');
-        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile/ownerRoom?lineID=${getUserID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile/RoomHistory?lineID=${getUserID}`)
             .then(res => {
                 setHistoryRoom(res.data)
             })
@@ -71,35 +71,30 @@ function HistoryCard(props) {
                 return (
                     <HisRoomCard>
                         <Link to={`/RoomHistoryJoin?roomID=${history.roomID}`}>
-                            {
-                                history.endDateStatus === true ?
-                                    <Col lg={12} md={12} sm={24} xs={24} className="container py-2 d-flex justify-content-center">
-                                        <div class="card" style={{ width: "95%" }}>
-                                            <ImgCover class="card-img-top" src={history.roomCover} alt="Card image cap" />
-                                            <div class="card-body">
-                                                <h5 class="card-title" style={{ fontWeight: "bold" }}>
-                                                    {history.roomName}
-                                                </h5>
-                                                <div class="card-text">
-                                                    จ. {history.province}
-                                                </div>
-                                                <div class="card-text py-2">
-                                                    <button
-                                                        type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
-                                                        {momentjs(history.startDate).format('ll')}                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                                    </button>
+                            <Col lg={12} md={12} sm={24} xs={24} className="container py-2 d-flex justify-content-center">
+                                <div class="card" style={{ width: "95%" }}>
+                                    <ImgCover class="card-img-top" src={history.roomCover} alt="Card image cap" />
+                                    <div class="card-body">
+                                        <h5 class="card-title" style={{ fontWeight: "bold" }}>
+                                            {history.roomName}
+                                        </h5>
+                                        <div class="card-text">
+                                            จ. {history.province}
+                                        </div>
+                                        <div class="card-text py-2">
+                                            <button
+                                                type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                                                {momentjs(history.startDate).format('ll')}                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                            </button>
                                                                 &nbsp;-&nbsp;
                                                                 <button
-                                                        type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
-                                                        {momentjs(history.endDate).format('ll')}                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                                type="button" class="date-room-btn btn p-1 " style={{ fontSize: "12px" }}>
+                                                {momentjs(history.endDate).format('ll')}                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
+                                            </button>
                                         </div>
-                                    </Col>
-                                    :
-                                    null
-                            }
+                                    </div>
+                                </div>
+                            </Col>
                         </Link>
                     </HisRoomCard>
                 )

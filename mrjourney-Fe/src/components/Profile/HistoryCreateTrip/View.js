@@ -42,7 +42,7 @@ function View(props) {
     return (
         <AntCard style={{ padding: 0 }}>
             <Row>
-                <h4 style={{ fontWeight: "bold" }}>ห้องที่คุณเคยสร้าง</h4>
+                <h4 style={{ fontWeight: "bold" }}>ทริปที่คุณเคยสร้าง</h4>
             </Row>
             {acc.map((acc) => {
                 return (
