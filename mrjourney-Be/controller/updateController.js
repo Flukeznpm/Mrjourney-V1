@@ -79,7 +79,7 @@ router.post('/enableTrip', async function (req, res, next) {
                 })
 
                 let tripID = tripIDList.map(t => t.tripID).toString();
-                console.log('trip id: ', tripID)
+                // console.log('trip id: ', tripID)
 
                 let showTripPerDay = db.collection('TripPerDay').doc(tripID).collection('Date');
                 await showTripPerDay.get().then(data => {
@@ -90,10 +90,10 @@ router.post('/enableTrip', async function (req, res, next) {
 
                 //--CHECK DATE IS MAP TO ALL DATE--//
                 let allDateCount = (allDate.length) - 1;
-                console.log('allDateCount: ', allDateCount)
+                // console.log('allDateCount: ', allDateCount)
                 for (i = 0; i <= allDateCount; i++) {
                     let dateID = allDate[i];
-                    console.log('dateID loop: ', dateID);
+                    // console.log('dateID loop: ', dateID);
                     if (datas.today == dateID) {
                         return res.status(200).json({
                             message: "Enjoy your trip !!"
