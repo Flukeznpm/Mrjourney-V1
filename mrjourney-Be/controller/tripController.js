@@ -194,6 +194,8 @@ router.delete('/deleteTrip', async function (req, res, next) {
 //---------------- Function ----------------//
 async function getAllTripByGroupID(lineGroupID) {
     let dataTripAllDay = [];
+    let dataTripList = [];
+    let dataDateAll = [];
     let tripIDList = [];
     let checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').where('tripStatus', '==', true);
     await checkTripIDRef.get().then(async snapshot => {
@@ -209,20 +211,47 @@ async function getAllTripByGroupID(lineGroupID) {
             let tripID = tripIDList.map(t => t.tripID).toString();
 
             let getAllTrip = db.collection('TripList').doc(tripID);
-            await getAllTrip.get().then(doc => {
-                dataTripAllDay.push(doc.data());
-            });
+            await getAllTrip.get().then(async doc1 => {
+                await dataTripList.push(doc1.data());
+                let ownerTrip = dataTripList.map(ow => ow.ownerTrip).toString();
+                let tripId = dataTripList.map(tid => tid.tripID).toString();
+                let tripName = dataTripList.map(tn => tn.tripName).toString();
+                let province = dataTripList.map(p => p.province).toString();
+                let startDate = dataTripList.map(sd => sd.startDate).toString();
+                let endDate = dataTripList.map(ed => ed.endDate).toString();
+                let tripStatus = dataTripList.map(ts => ts.tripStatus).toString();
 
-            let showAllTrip = db.collection('TripPerDay').doc(tripID).collection('Date');
-            await showAllTrip.get().then(async snapshot => {
-                snapshot.forEach(async doc => {
-                    // let dataAll = {
-                    //     eventDate: doc.id,
-                    //     events: [doc.data()]
-                    // }
-                    await dataTripAllDay.push(doc.data());
-                })
+                let showAllTrip = db.collection('TripPerDay').doc(tripID).collection('Date');
+                await showAllTrip.get().then(async snapshot => {
+                    await snapshot.forEach(async doc => {
+                        dataDateAll.push(doc.data());
+                    })
+                });
+                let dataAll = {
+                    ownerTrip: ownerTrip,
+                    tripID: tripId,
+                    tripName: tripName,
+                    province: province,
+                    startDate: startDate,
+                    endDate: endDate,
+                    tripStatus: tripStatus,
+                    totalDate: dataDateAll
+                }
+                dataTripAllDay.push(dataAll);
+
             })
+
+                // let showAllTrip = db.collection('TripPerDay').doc(tripID).collection('Date');
+                // await showAllTrip.get().then(async snapshot => {
+                //     snapshot.forEach(async doc => {
+                //         let dataAll = {
+                //             eventDate: doc.id,
+                //             events: [doc.data()]
+                //         }
+                //         await dataTripAllDay.push(doc.data());
+                //     })
+                // })
+
                 .catch(err => {
                     console.log('Error getting All Trip detail', err);
                 });
@@ -374,7 +403,7 @@ async function createTripList(datas) {
                         // let eventType = await datas.totalDate[j].event[i].eventType;
                         await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(dateSub).set({
                             eventDate: dateSub,
-                            event: event
+                            events: event
                         })
                     } else {
                         console.log('Error create trip')
@@ -452,7 +481,7 @@ async function createTripList(datas) {
                         // let eventType = await datas.totalDate[j].event[i].eventType;
                         await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(dateSub).set({
                             eventDate: dateSub,
-                            event: event
+                            events: event
                         })
                     } else {
                         console.log('Error create trip loop')
