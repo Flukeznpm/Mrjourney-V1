@@ -19,7 +19,7 @@ function CheckTrip(props) {
                 setLinePicture(profile.pictureUrl);
                 const context = await liff.getContext();
                 setLineGroup(context.groupId)
-                await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}&lineID=${LineID}`)
+                await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
                     .then(res => {
                         setTripList(res.data)
                     });
@@ -34,20 +34,13 @@ function CheckTrip(props) {
     return (
         <div className="text-center">
             CheckTrip {LineID} {LineGroup}
-            {tripList.map((tripList) => {
+            {tripList.map((trip) => {
                 return (
-                    <div>
-                        linegroup : {LineGroup}
-                        {tripList.tripName}
-                        <p>
-                            {tripList.province}
-                            {/* {tripList.events.event} */}
-                            {/* {tripList.events.event.eventName} */}
-                        </p>
-                    </div>
+                    <>
+                        {trip.tripName}
+                    </>
                 )
             })}
-
         </div>
     )
 }
