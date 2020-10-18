@@ -218,7 +218,7 @@ async function getAllTripByGroupID(lineGroupID) {
                 snapshot.forEach(async doc => {
                     let dataAll = {
                         eventDate: doc.id,
-                        events: doc.data()
+                        events: [doc.data()]
                     }
                     await dataTripAllDay.push(dataAll);
                 })
