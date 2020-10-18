@@ -216,11 +216,11 @@ async function getAllTripByGroupID(lineGroupID) {
             let showAllTrip = db.collection('TripPerDay').doc(tripID).collection('Date');
             await showAllTrip.get().then(async snapshot => {
                 snapshot.forEach(async doc => {
-                    let dataAll = {
-                        eventDate: doc.id,
-                        events: [doc.data()]
-                    }
-                    await dataTripAllDay.push(dataAll);
+                    // let dataAll = {
+                    //     eventDate: doc.id,
+                    //     events: [doc.data()]
+                    // }
+                    await dataTripAllDay.push(doc.data());
                 })
             })
                 .catch(err => {
@@ -236,7 +236,7 @@ async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
     const tripIDList = [];
     const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').where('tripStatus', '==', true);
 
-    await checkTripIDRef.get().then(snapshot => {
+    await checkTripIDRef.get().then(async snapshot => {
         if (snapshot.empty) {
             return res.status(202).json({
                 message: "You do not have a trip"
@@ -249,23 +249,23 @@ async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
             let tripID = tripIDList.map(t => t.tripID).toString();
 
             let getAllTrip = db.collection('TripList').doc(tripID);
-            getAllTrip.get().then(doc => {
+            await getAllTrip.get().then(doc => {
                 dataTripPerDay.push(doc.data());
             });
 
             const showTripPerDay = db.collection('TripPerDay');
             const queryTPD = showTripPerDay.doc(tripID).collection('Date').doc(dateOfTrip);
 
-            queryTPD.get().then(async res => {
+            await queryTPD.get().then(async res => {
                 if (queryTPD.empty) {
                     console.log('No matching documents.');
                     return;
                 } else {
-                    let dataDate = {
-                        Date: res.id,
-                        events: res.data()
-                    }
-                    await dataTripPerDay.push((dataDate));
+                    // let dataDate = {
+                    //     Date: res.id,
+                    //     events: res.data()
+                    // }
+                    await dataTripPerDay.push((res.data()));
                 }
             })
         }
@@ -373,6 +373,7 @@ async function createTripList(datas) {
                         // let endEvent = await datas.totalDate[j].event[i].endEvent;
                         // let eventType = await datas.totalDate[j].event[i].eventType;
                         await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(dateSub).set({
+                            eventDate: dateSub,
                             event: event
                         })
                     } else {
@@ -450,6 +451,7 @@ async function createTripList(datas) {
                         // let endEvent = await datas.totalDate[j].event[i].endEvent;
                         // let eventType = await datas.totalDate[j].event[i].eventType;
                         await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(dateSub).set({
+                            eventDate: dateSub,
                             event: event
                         })
                     } else {
