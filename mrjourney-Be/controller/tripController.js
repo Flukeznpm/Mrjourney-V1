@@ -208,10 +208,10 @@ async function getAllTripByGroupID(lineGroupID) {
 
             let tripID = tripIDList.map(t => t.tripID).toString();
 
-            // let getAllTrip = db.collection('TripList').doc(tripID);
-            // await getAllTrip.get().then(doc => {
-            //     dataTripAllDay.push(doc.data());
-            // });
+            let getAllTrip = db.collection('TripList').doc(tripID);
+            await getAllTrip.get().then(doc => {
+                dataTripAllDay.push(doc.data());
+            });
 
             let showAllTrip = db.collection('TripPerDay').doc(tripID).collection('Date');
             await showAllTrip.get().then(async snapshot => {
@@ -220,7 +220,7 @@ async function getAllTripByGroupID(lineGroupID) {
                         eventDate: doc.id,
                         events: doc.data()
                     }
-                    await dataTripAllDay.push(doc.data());
+                    await dataTripAllDay.push(dataAll);
                 })
             })
                 .catch(err => {
