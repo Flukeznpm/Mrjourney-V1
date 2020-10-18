@@ -88,7 +88,7 @@ router.get('/tripperday', async function (req, res, next) {
                                 return res.status(200).json(result);
                             } else {
                                 console.log('Alert: You do not have plan for today');
-                                return res.status(400).json({ message: "You do not have plan for today" });
+                                return res.status(201).json({ message: "You do not have plan for today" });
                             }
                         });
                     }
