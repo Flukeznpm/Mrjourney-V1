@@ -13,7 +13,7 @@ let db = firebase.firestore();
 
 router.get('/', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
-    let tripIDList = [];
+    // let tripIDList = [];
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '') {
         console.log('Alert: The Data was empty or undefined"')
@@ -30,25 +30,25 @@ router.get('/', async function (req, res, next) {
                         console.log('Alert: You do not have a trip')
                         return res.status(400).json({ message: 'You do not have a trip' });
                     } else {
-                        await snapshot.forEach(async doc => {
-                            if (doc.exists) {
-                                await tripIDList.push(doc.data());
-                            }
-                        })
-                        let tripID = tripIDList.map(t => t.tripID).toString();
-                        let showAllDate = db.collection('TripPerDay').doc(tripID).collection('Date');
-                        await showAllDate.get().then(async data => {
-                            await data.forEach(async doc1 => {
-                                if (doc1.exists) {
-                                    let result = await getAllTripByGroupID(lineGroupID);
-                                    console.log('Alert: get trip list success')
-                                    return res.status(200).json(result);
-                                } else {
-                                    console.log('Alert: You do not have some plan');
-                                    return res.status(201).json({ message: "You do not have some plan" });
-                                }
-                            });
-                        });
+                        // await snapshot.forEach(async doc => {
+                        //     if (doc.exists) {
+                        //         await tripIDList.push(doc.data());
+                        //     }
+                        // })
+                        // let tripID = tripIDList.map(t => t.tripID).toString();
+                        // let showAllDate = db.collection('TripPerDay').doc(tripID).collection('Date');
+                        // await showAllDate.get().then(async data => {
+                        // await data.forEach(async doc1 => {
+                        // if (doc1.exists) {
+                        let result = await getAllTripByGroupID(lineGroupID);
+                        console.log('Alert: get trip list success')
+                        return res.status(200).json(result);
+                        // } else {
+                        //     console.log('Alert: You do not have some plan');
+                        //     return res.status(201).json({ message: "You do not have some plan" });
+                        // }
+                        // });
+                        // });
                     }
                 }).catch(err => {
                     console.log('Error: ', err);
