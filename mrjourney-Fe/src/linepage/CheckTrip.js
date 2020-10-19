@@ -9,6 +9,7 @@ function CheckTrip(props) {
     const [LinePicture, setLinePicture] = useState('')
     const [LineGroup, setLineGroup] = useState('')
     const [tripList, setTripList] = useState([{}])
+    const [loading, isLoading] = useState(true)
 
     useEffect(() => {
         liff.init({ liffId: '1653975470-4Webv3MY' }).then(async () => {
@@ -19,9 +20,11 @@ function CheckTrip(props) {
                 setLinePicture(profile.pictureUrl);
                 const context = await liff.getContext();
                 setLineGroup(context.groupId)
+                isLoading(true)
                 await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
                     .then(res => {
                         setTripList(res.data)
+                        isLoading(false)
                     });
             } else {
                 props.history.push('/Home');
@@ -29,19 +32,35 @@ function CheckTrip(props) {
         });
 
     }, [])
-
-
-    return (
-        <div className="text-center">
-            CheckTrip {LineID} {LineGroup}
-            {tripList.map((trip) => {
-                return (
-                    <>
-                        {trip.tripName}
-                    </>
-                )
-            })}
-        </div>
-    )
+    if (loading) {
+        return <div>loading</div>
+    } else {
+        return (
+            <div className="text-center">
+                CheckTrip {LineID} {LineGroup}
+                {tripList.map((trip) => {
+                    return (
+                        <>
+                            {trip.tripName}
+                            {trip.totalDate.map((totalDate) => {
+                                return (
+                                    <>
+                                        {totalDate.eventDate}
+                                        {totalDate.event.map((events) => {
+                                            return (
+                                                <>
+                                                    {events.eventName}
+                                                </>
+                                            )
+                                        })}
+                                    </>
+                                )
+                            })}
+                        </>
+                    )
+                })}
+            </div>
+        )
+    }
 }
 export default withRouter(CheckTrip);
