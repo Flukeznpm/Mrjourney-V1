@@ -57,6 +57,7 @@ function JoinButton(props) {
                 setCheckMember(res.data)
             })
     }, [])
+
     const onCheckAvaliableJoin = (ownerID, lineID) => {
         if (ownerID === lineID || checkMembers === true) {
             return true;
@@ -65,156 +66,178 @@ function JoinButton(props) {
         }
     }
 
-    const onCheckJoinRoom = (acc, room) => {
-        const calculateDate = (dob) => {
-            var today = new Date();
-            var birthDate = new Date(dob);  // create a date object directly from `dob1` argument
-            var age_now = today.getFullYear() - birthDate.getFullYear();
-            var m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age_now--;
-            }
-            console.log(age_now);
-            return age_now;
-        }
-
-        if (!acc.fName) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'คุณยังไม่ได้ Login!',
-                text: 'กรุณาทำการ Login ก่อนทำรายการ',
-                showCancelButton: true,
-                confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>',
-                confirmButtonColor: '#F37945',
-                cancelButtonText: 'กลับสู่หน้าหลัก',
-            })
-        } else {
-            let dataJoin = {
-                lineID: acc.lineID,
-                pictureURL: acc.pictureURL,
-                fName: acc.fName,
+    const onCheckJoinRoom = async (acc, room) => {
+        let currentDate = new Date()
+        let endDateStr = momentjs(room.endDate).format('ll')
+        var endDate = new Date(Date.parse(endDateStr.replace(/-/g, " ")))
+        let checkEndDate = endDate < currentDate;
+        console.log('end', room.endDateStatus);
+        if (checkEndDate === true) {
+            let closeEndRoom = {
                 roomID: room.roomID
             }
-            if (room.genderCondition === "ชาย" && acc.gender === "ชาย" || room.genderCondition === "ไม่จำกัดเพศ") {
-                if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
-                    axios.post('http://localhost:5000/room/joinRoom', dataJoin)
-                        .then(async (res) => {
-                            console.log(res)
+            await axios.post(`http://localhost:5000/update/enableRoom`, closeEndRoom)
+                .then(res => {
+                    console.log(res)
+                })
+            Swal.fire({
+                icon: 'warning',
+                title: 'ขออภัย!',
+                text: 'ห้องนี้ที่สิ้นสุดวันท่องเที่ยวแล้ว',
+                showCancelButton: false,
+                confirmButtonColor: '#D33',
+                confirmButtonText: 'กลับสู่หน้าหลัก'
+            })
+        } else {
+            const calculateDate = (dob) => {
+                var today = new Date();
+                var birthDate = new Date(dob);  // create a date object directly from `dob1` argument
+                var age_now = today.getFullYear() - birthDate.getFullYear();
+                var m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age_now--;
+                }
+                console.log(age_now);
+                return age_now;
+            }
+
+            if (!acc.fName) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'คุณยังไม่ได้ Login!',
+                    text: 'กรุณาทำการ Login ก่อนทำรายการ',
+                    showCancelButton: true,
+                    confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>',
+                    confirmButtonColor: '#F37945',
+                    cancelButtonText: 'กลับสู่หน้าหลัก',
+                })
+            } else {
+                let dataJoin = {
+                    lineID: acc.lineID,
+                    pictureURL: acc.pictureURL,
+                    fName: acc.fName,
+                    roomID: room.roomID
+                }
+                if (room.genderCondition === "ชาย" && acc.gender === "ชาย" || room.genderCondition === "ไม่จำกัดเพศ") {
+                    if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
+                        axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                            .then(async (res) => {
+                                console.log(res)
+                            })
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'เข้าร่วมสำเร็จ!',
+                            text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                            showCancelButton: true,
+                            confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
+                            confirmButtonColor: '#31CC71',
+                            cancelButtonText: 'กลับสู่หน้าหลัก',
                         })
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'เข้าร่วมสำเร็จ!',
-                        text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                        showCancelButton: true,
-                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
-                        confirmButtonColor: '#31CC71',
-                        cancelButtonText: 'กลับสู่หน้าหลัก',
-                    })
-                } else {
-                    if (room.ageCondition === "ต่ำกว่า 18 ปี") {
-                        if (calculateDate(acc.birthday) < 18) {
-                            axios.post('http://localhost:5000/room/joinRoom', dataJoin)
-                                .then(async (res) => {
-                                    console.log(res)
+                    } else {
+                        if (room.ageCondition === "ต่ำกว่า 18 ปี") {
+                            if (calculateDate(acc.birthday) < 18) {
+                                axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                    .then(async (res) => {
+                                        console.log(res)
+                                    })
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'เข้าร่วมสำเร็จ!',
+                                    text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                                    showCancelButton: true,
+                                    confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
+                                    confirmButtonColor: '#31CC71',
+                                    cancelButtonText: 'กลับสู่หน้าหลัก',
                                 })
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'เข้าร่วมสำเร็จ!',
-                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                                showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
-                                confirmButtonColor: '#31CC71',
-                                cancelButtonText: 'กลับสู่หน้าหลัก',
-                            })
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'ขออภัย!',
-                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-                                showCancelButton: false,
-                                confirmButtonColor: '#D33',
-                                confirmButtonText: 'กลับสู่หน้าหลัก'
-                            })
-                        }
-                    } else if (room.ageCondition === "18-25 ปี") {
-                        if (calculateDate(acc.birthday) >= 18 && calculateDate(acc.birthday) <= 25) {
-                            axios.post('http://localhost:5000/room/joinRoom', dataJoin)
-                                .then(async (res) => {
-                                    console.log(res)
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'ขออภัย!',
+                                    text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#D33',
+                                    confirmButtonText: 'กลับสู่หน้าหลัก'
                                 })
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'เข้าร่วมสำเร็จ!',
-                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                                showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
-                                confirmButtonColor: '#31CC71',
-                                cancelButtonText: 'กลับสู่หน้าหลัก',
-                            })
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'ขออภัย!',
-                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-                                showCancelButton: false,
-                                confirmButtonColor: '#D33',
-                                confirmButtonText: 'กลับสู่หน้าหลัก'
-                            })
-                        }
-                    } else if (room.ageCondition === "25 ปีขึ้นไป") {
-                        if (calculateDate(acc.birthday) > 25) {
-                            axios.post('http://localhost:5000/room/joinRoom', dataJoin)
-                                .then(async (res) => {
-                                    console.log(res)
+                            }
+                        } else if (room.ageCondition === "18-25 ปี") {
+                            if (calculateDate(acc.birthday) >= 18 && calculateDate(acc.birthday) <= 25) {
+                                axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                    .then(async (res) => {
+                                        console.log(res)
+                                    })
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'เข้าร่วมสำเร็จ!',
+                                    text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                                    showCancelButton: true,
+                                    confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
+                                    confirmButtonColor: '#31CC71',
+                                    cancelButtonText: 'กลับสู่หน้าหลัก',
                                 })
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'เข้าร่วมสำเร็จ!',
-                                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                                showCancelButton: true,
-                                confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
-                                confirmButtonColor: '#31CC71',
-                                cancelButtonText: 'กลับสู่หน้าหลัก',
-                            })
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'ขออภัย!',
-                                text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-                                showCancelButton: false,
-                                confirmButtonColor: '#D33',
-                                confirmButtonText: 'กลับสู่หน้าหลัก'
-                            })
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'ขออภัย!',
+                                    text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#D33',
+                                    confirmButtonText: 'กลับสู่หน้าหลัก'
+                                })
+                            }
+                        } else if (room.ageCondition === "25 ปีขึ้นไป") {
+                            if (calculateDate(acc.birthday) > 25) {
+                                axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                    .then(async (res) => {
+                                        console.log(res)
+                                    })
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'เข้าร่วมสำเร็จ!',
+                                    text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                                    showCancelButton: true,
+                                    confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
+                                    confirmButtonColor: '#31CC71',
+                                    cancelButtonText: 'กลับสู่หน้าหลัก',
+                                })
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'ขออภัย!',
+                                    text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#D33',
+                                    confirmButtonText: 'กลับสู่หน้าหลัก'
+                                })
+                            }
                         }
                     }
-                }
-            } else if (room.genderCondition === "หญิง" && acc.gender === "หญิง" || room.genderCondition === "ไม่จำกัดเพศ") {
-                if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
+                } else if (room.genderCondition === "หญิง" && acc.gender === "หญิง" || room.genderCondition === "ไม่จำกัดเพศ") {
+                    if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'เข้าร่วมสำเร็จ!',
+                            text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
+                            showCancelButton: true,
+                            confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
+                            confirmButtonColor: '#31CC71',
+                            cancelButtonText: 'กลับสู่หน้าหลัก',
+                        })
+                    }
+                } else {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'เข้าร่วมสำเร็จ!',
-                        text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                        showCancelButton: true,
-                        confirmButtonText: `<a href="/JoinRoom?roomID=${room.roomID}" id="alert-confirm-button">เข้าสู่ห้อง</a>`,
-                        confirmButtonColor: '#31CC71',
-                        cancelButtonText: 'กลับสู่หน้าหลัก',
+                        icon: 'error',
+                        title: 'ขออภัย!',
+                        text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
+                        showCancelButton: false,
+                        confirmButtonColor: '#D33',
+                        confirmButtonText: 'กลับสู่หน้าหลัก'
                     })
                 }
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ขออภัย!',
-                    text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-                    showCancelButton: false,
-                    confirmButtonColor: '#D33',
-                    confirmButtonText: 'กลับสู่หน้าหลัก'
-                })
             }
         }
     }
     return (
         <>
-            {console.log('roomid', props.room.roomID)}
             { onCheckAvaliableJoin(props.room.ownerRoomID, props.acc.lineID) === true ?
                 <Link to={`/JoinRoom?roomID=${props.room.roomID}`}>
                     <OutlineButton
