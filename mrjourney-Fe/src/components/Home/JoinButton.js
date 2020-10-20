@@ -66,12 +66,35 @@ function JoinButton(props) {
         }
     }
 
+    const onCheckEndDate = async (acc,room) => {
+        let currentDate = new Date()
+        let endDateStr = momentjs(room.endDate).format('ll')
+        var endDate = new Date(Date.parse(endDateStr.replace(/-/g, " ")))
+        let checkEndDate = endDate < currentDate;
+        if (checkEndDate === true) {
+            let closeEndRoom = {
+                roomID: room.roomID
+            }
+            await axios.post(`http://localhost:5000/update/enableRoom`, closeEndRoom)
+                .then(res => {
+                    console.log(res)
+                })
+            Swal.fire({
+                icon: 'warning',
+                title: 'ขออภัย!',
+                text: 'ห้องนี้ที่สิ้นสุดวันท่องเที่ยวแล้ว',
+                showCancelButton: false,
+                confirmButtonColor: '#D33',
+                confirmButtonText: 'ยืนยัน'
+            })
+        }
+    }
+
     const onCheckJoinRoom = async (acc, room) => {
         let currentDate = new Date()
         let endDateStr = momentjs(room.endDate).format('ll')
         var endDate = new Date(Date.parse(endDateStr.replace(/-/g, " ")))
         let checkEndDate = endDate < currentDate;
-        console.log('end', room.endDateStatus);
         if (checkEndDate === true) {
             let closeEndRoom = {
                 roomID: room.roomID
@@ -242,6 +265,7 @@ function JoinButton(props) {
                 <Link to={`/JoinRoom?roomID=${props.room.roomID}`}>
                     <OutlineButton
                         block
+                        onClick={() => onCheckEndDate(props.acc, props.room)}
                     >เข้าสู่ห้อง</OutlineButton>
                 </Link>
                 :
