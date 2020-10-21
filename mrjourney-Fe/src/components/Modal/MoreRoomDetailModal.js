@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import { Modal, Button } from 'react-bootstrap';
 import '../../static/css/App.css'
@@ -6,6 +6,7 @@ import "../../static/css/Event-Trip.css";
 import momentjs from 'moment'
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import {
     Button as AntButton,
     Tooltip,
@@ -38,7 +39,34 @@ const PrimaryButton = styled(AntButton)`
     }
 `;
 
+const OutlineButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    border: 1px solid ${props => (props.theme.color.primary)};
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        border: 1px solid ${props => (props.theme.color.primaryPress)};
+        color: ${props => (props.theme.color.primary)};
+        background: #F7F7F7;
+    }
+`;
+
 function MoreRoomDetailModal(props) {
+    const [checkMembers, setCheckMember] = useState([{}])
+    useEffect(() => {
+        axios.get(`http://localhost:5000/room/joinRoomAlready?roomID=${props.room.roomID}&lineID=${props.acc.lineID}`)
+            .then(res => {
+                setCheckMember(res.data)
+            })
+    }, [])
+    const onCheckAvaliableJoin = (ownerID, lineID) => {
+        if (ownerID === lineID || checkMembers === true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const onCheckJoinRoom = (acc, room) => {
         const calculateDate = (dob) => {
             var today = new Date();
@@ -273,10 +301,24 @@ function MoreRoomDetailModal(props) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer style={{ border: "none" }}>
-                    <PrimaryButton className="mr-3"
-                        type="primary" htmlType="button"
-                        onClick={() => onCheckJoinRoom(props.acc, props.room)}
-                    >เข้าร่วม</PrimaryButton>
+                    {onCheckAvaliableJoin(props.room.ownerRoomID, props.acc.lineID) === true ?
+                        <Link to={`/JoinRoom?roomID=${props.room.roomID}`}>
+                            <OutlineButton className="mr-3"
+                            >เข้าสู่ห้อง</OutlineButton>
+                        </Link>
+                        :
+                        <>
+                            {props.room.roomStatus === true && props.room.joinedMember < props.room.maxMember
+                                ?
+                                <PrimaryButton className="mr-3"
+                                    type="primary"
+                                    onClick={() => onCheckJoinRoom(props.acc, props.room)}
+                                >เข้าร่วม</PrimaryButton>
+                                :
+                                <PrimaryButton type="primary" className="mr-3" disabled>เข้าร่วม</PrimaryButton>
+                            }
+                        </>
+                    }
                 </Modal.Footer>
             </Modal>
         </div>
