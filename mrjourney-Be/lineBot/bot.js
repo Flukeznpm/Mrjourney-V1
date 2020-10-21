@@ -2,8 +2,9 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
+const { checkTripAvaliable } = require('../controller/botController');
 
-router.post('/webhook', (req, res) => {
+router.post('/webhook', async (req, res) => {
     let reply_token = req.body.events[0].replyToken
     // let msg = req.body.events[0]
     let msg = req.body.events[0].message.text
@@ -12,7 +13,13 @@ router.post('/webhook', (req, res) => {
         replyProfessor(reply_token, msg)
     }
     else if (msg === "#สร้างทริป") {
-        replyCreate(reply_token, msg)
+        let groundId = req.body.events[0].source.groupId
+        let haveTrip = await checkTripAvaliable("Cbdab6c9dbd52c75350407118ed11983a");
+        if (haveTrip) {
+            replyNotCreate(reply_token, msg)
+        } else {
+            replyCreate(reply_token, msg)
+        }
     }
     else if (msg === "#ดูแผน") {
         replyPlan(reply_token, msg)
@@ -138,6 +145,82 @@ function replyProfessor(reply_token, msg) {
             {
                 type: 'text',
                 text: '♥'
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyNotCreate(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: msg
+            },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "ขณะนี้มีทริปที่กำลังเที่ยวอยู่แล้ว?"
+                            }
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "ดูแผนทั้งหมด",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-4Webv3M"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
+                            },
+                            {
+                                margin: "xs",
+                                color: "#C25738",
+                                height: "sm",
+                                style: "primary",
+                                action: {
+                                    data: "text",
+                                    label: "ดูแผนวันนี้",
+                                    type: "postback",
+                                    text: "ดูแผนวันนี้"
+                                },
+                                type: "button"
+                            }
+                        ]
+                    }
+                }
             }
         ]
     })
@@ -279,6 +362,7 @@ function replyPlan(reply_token, msg) {
                 }
             }
         ]
+
     })
 
     request.post({
