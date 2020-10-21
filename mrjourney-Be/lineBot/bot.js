@@ -89,7 +89,6 @@ const reply = req => {
             {
                 type: "text",
                 text: JSON.stringify(req.body)
-                // text: "hello"
             }
         ]
     })
