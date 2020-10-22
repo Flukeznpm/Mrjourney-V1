@@ -88,22 +88,21 @@ router.post('/enableTrip', async function (req, res, next) {
                     });
                 })
 
-                //--CHECK DATE IS MAP TO ALL DATE--//
-                let allDateCount = (allDate.length) - 1;
-                // console.log('allDateCount: ', allDateCount)
-                for (i = 0; i <= allDateCount; i++) {
-                    let dateID = allDate[i];
-                    // console.log('dateID loop: ', dateID);
-                    if (datas.today == dateID) {
-                        return res.status(200).json({
-                            message: "Enjoy your trip !!"
-                        });
-                    }
-                }
-                await enableTrip(datas, tripID);
-                return res.status(201).json({
-                    message: "You trip is end"
-                })
+                // let allDateCount = (allDate.length) - 1;
+                // // console.log('allDateCount: ', allDateCount)
+                // for (i = 0; i <= allDateCount; i++) {
+                //     let dateID = allDate[i];
+                //     // console.log('dateID loop: ', dateID);
+                //     if (datas.today == dateID) {
+                //         return res.status(200).json({
+                //             message: "Enjoy your trip !!"
+                //         });
+                //     }
+                // }
+                // await enableTrip(datas, tripID);
+                // return res.status(201).json({
+                //     message: "You trip is end"
+                // })
 
             }
         });
