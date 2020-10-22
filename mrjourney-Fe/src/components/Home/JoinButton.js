@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import momentjs from 'moment'
 import { SearchOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import {
     Button as AntButton,
     Tooltip,
@@ -50,7 +50,10 @@ const OutlineButton = styled(AntButton)`
 `;
 
 function JoinButton(props) {
+
     const [checkMembers, setCheckMember] = useState([{}])
+    const [path, setPath] = useState("")
+
     useEffect(() => {
         axios.get(`http://localhost:5000/room/joinRoomAlready?roomID=${props.room.roomID}&lineID=${props.acc.lineID}`)
             .then(res => {
@@ -66,7 +69,7 @@ function JoinButton(props) {
         }
     }
 
-    const onCheckEndDate = async (acc,room) => {
+    const onCheckPathJoin = async (room) => {
         let currentDate = new Date()
         let endDateStr = momentjs(room.endDate).format('ll')
         var endDate = new Date(Date.parse(endDateStr.replace(/-/g, " ")))
@@ -85,8 +88,10 @@ function JoinButton(props) {
                 text: 'ห้องนี้ที่สิ้นสุดวันท่องเที่ยวแล้ว',
                 showCancelButton: false,
                 confirmButtonColor: '#D33',
-                confirmButtonText: 'ยืนยัน'
+                confirmButtonText: 'กลับสู่หน้าหลัก'
             })
+        } else {
+            setPath(`/JoinRoom?roomID=${room.roomID}`)
         }
     }
 
@@ -259,29 +264,34 @@ function JoinButton(props) {
             }
         }
     }
-    return (
-        <>
-            { onCheckAvaliableJoin(props.room.ownerRoomID, props.acc.lineID) === true ?
-                <Link to={`/JoinRoom?roomID=${props.room.roomID}`}>
+    if (path !== "") {
+        return <Redirect to={path} />
+    } else {
+        return (
+            <>
+                { onCheckAvaliableJoin(props.room.ownerRoomID, props.acc.lineID) === true ?
+                    // <Link to={`/JoinRoom?roomID=${props.room.roomID}`}>
                     <OutlineButton
                         block
-                        onClick={() => onCheckEndDate(props.acc, props.room)}
+                        // onClick={() => onCheckEndDate(props.acc, props.room)}
+                        onClick={() => onCheckPathJoin(props.room)}
                     >เข้าสู่ห้อง</OutlineButton>
-                </Link>
-                :
-                <>
-                    {props.room.roomStatus === true && props.room.joinedMember < props.room.maxMember
-                        ?
-                        <PrimaryButton
-                            type="primary" block
-                            onClick={() => onCheckJoinRoom(props.acc, props.room)}
-                        >เข้าร่วม</PrimaryButton>
-                        :
-                        <PrimaryButton type="primary" block disabled>เข้าร่วม</PrimaryButton>
-                    }
-                </>
-            }
-        </>
-    )
+                    // </Link>
+                    :
+                    <>
+                        {props.room.roomStatus === true && props.room.joinedMember < props.room.maxMember
+                            ?
+                            <PrimaryButton
+                                type="primary" block
+                                onClick={() => onCheckJoinRoom(props.acc, props.room)}
+                            >เข้าร่วม</PrimaryButton>
+                            :
+                            <PrimaryButton type="primary" block disabled>เข้าร่วม</PrimaryButton>
+                        }
+                    </>
+                }
+            </>
+        )
+    }
 }
 export default JoinButton;
