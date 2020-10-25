@@ -110,7 +110,7 @@ const AddEventButton = styled(AntButton)`
 `;
 
 const Wrapper = styled.div`
-display: flex;
+    display: flex;
     min-height: 100vh;
     flex-direction: column;
     justify-content: space-between;
