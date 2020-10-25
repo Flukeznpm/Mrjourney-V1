@@ -7,9 +7,6 @@ import { EditOutlined } from '@ant-design/icons';
 import {
     Card,
     Row,
-    Col,
-    Tooltip,
-    Typography,
     Button as AntButton,
 } from 'antd';
 import HistoryCard from './HistoryCard';
@@ -44,7 +41,7 @@ function View(props) {
             <Row>
                 <h4 style={{ fontWeight: "bold" }}>ห้องที่คุณเคยสร้าง</h4>
             </Row>
-            <HistoryCard acc={props.acc} />
+            <HistoryCard acc={props.acc} loading={props.loading} />
         </AntCard>
     )
 }

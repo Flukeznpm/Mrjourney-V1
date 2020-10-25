@@ -9,6 +9,7 @@ import {
     Tooltip,
     Typography,
     Button as AntButton,
+    Skeleton
 } from 'antd';
 import EditProfile from './EditProfile';
 
@@ -67,85 +68,109 @@ function ProfileDetails(props) {
         }
         return age_now;
     }
-    return (
-        <AntCard style={{ padding: 0 }}>
-            <Row>
-                <h4 style={{fontWeight:"bold"}}>โปรไฟล์</h4>
-            </Row>
-            <Row style={{ height: 150 }}>
-                <Col span={12} className="text-center pt-3">
-                    <img src={props.acc.pictureURL}
-                        class="image_outer_container"
-                        height="125px" width="125px"
-                        alt="mrjourney-img" />
-                    <div className="line-name" style={{ fontSize: "24px" }}>
-                        คุณ <LineNameText>{props.acc.displayName}</LineNameText>
-                    </div>
-                </Col>
-                <Col span={12}>
-                    <div className="personal-profile-details" >
-                        {props.lineID === props.acc.lineID ?
-                            <>
-                                {props.isEditProfile === false ?
-                                    <EditProfileButton type="link" icon={<EditOutlined />}
-                                        style={{ marginLeft: "auto", marginRight: "0px" }}
-                                        onClick={onEditProfile}
-                                    />
-                                    :
-                                    null
-                                }
-                            </>
-                            :
-                            null
-                        }
-                        {props.isEditProfile === false ?
-                            <div style={{ fontSize: "16px" }}>
-                                <div className="detail">ชื่อ {props.acc.fName}</div>
-                                <div className="detail">นามสกุล {props.acc.lName}</div>
-                                <div className="detail">เพศ {props.acc.gender}</div>
-                                <div className="detail">อายุ {calculateDate(props.acc.birthday)} ปี</div>
-                            </div>
-                            :
-                            <EditProfile setEditProfile={props.setEditProfile} acc={props.acc}></EditProfile>
-                        }
-                    </div>
-                </Col>
-            </Row>
-            <div className="Bio-page pt-4 mt-1 container">
-                <Row>
-                    <Col span={24}>
-                        {props.lineID === props.acc.lineID ?
-                            <>
-                                <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
-                                    Bio
-                                </Tooltip>
-                                <AntParagraph
-                                    editable={{
-                                        onChange: (handleBio),
-                                        maxLength: 60,
-                                        onStart: () => props.setEditBio(true)
-                                    }}
-                                >
-                                    {props.acc.bio}
-                                </AntParagraph>
 
-                            </>
-                            :
-                            <>
-                                <Tooltip title="ข้อมูลแนะนำตัวเองเพิ่มเติม">
-                                    Bio
-                                </Tooltip>
-                                <AntParagraph
-                                    copyable
-                                >
-                                    {props.acc.bio}
-                                </AntParagraph>
-                            </>
-                        }
+    if (props.loading) {
+        return (
+            <AntCard style={{ padding: 0 }}>
+                <Row>
+                    <Skeleton.Button />
+                </Row>
+                <Row style={{ height: 150 }}>
+                    <Col span={12} className="text-center pt-3">
+                        <Skeleton.Image style={{ width: "275px", height: "155px" }} />
+                    </Col>
+                    <Col span={12}>
+                        <Skeleton />
                     </Col>
                 </Row>
-            </div>
-        </AntCard>
-    )
+                <div className="Bio-page pt-4 mt-1">
+                    <Row>
+                        <Skeleton.Input style={{ width: "500px" }} />
+                    </Row>
+                </div>
+            </AntCard>
+        )
+    } else {
+        return (
+            <AntCard style={{ padding: 0 }}>
+                <Row>
+                    <h4 style={{ fontWeight: "bold" }}>โปรไฟล์</h4>
+                </Row>
+                <Row style={{ height: 150 }}>
+                    <Col span={12} className="text-center pt-3">
+                        <img src={props.acc.pictureURL}
+                            class="image_outer_container"
+                            height="125px" width="125px"
+                            alt="mrjourney-img" />
+                        <div className="line-name" style={{ fontSize: "24px" }}>
+                            คุณ <LineNameText>{props.acc.displayName}</LineNameText>
+                        </div>
+                    </Col>
+                    <Col span={12}>
+                        <div className="personal-profile-details" >
+                            {props.lineID === props.acc.lineID ?
+                                <>
+                                    {props.isEditProfile === false ?
+                                        <EditProfileButton type="link" icon={<EditOutlined />}
+                                            style={{ marginLeft: "auto", marginRight: "0px" }}
+                                            onClick={onEditProfile}
+                                        />
+                                        :
+                                        null
+                                    }
+                                </>
+                                :
+                                null
+                            }
+                            {props.isEditProfile === false ?
+                                <div style={{ fontSize: "16px" }}>
+                                    <div className="detail">ชื่อ {props.acc.fName}</div>
+                                    <div className="detail">นามสกุล {props.acc.lName}</div>
+                                    <div className="detail">เพศ {props.acc.gender}</div>
+                                    <div className="detail">อายุ {calculateDate(props.acc.birthday)} ปี</div>
+                                </div>
+                                :
+                                <EditProfile setEditProfile={props.setEditProfile} acc={props.acc}></EditProfile>
+                            }
+                        </div>
+                    </Col>
+                </Row>
+                <div className="Bio-page pt-4 mt-1 container">
+                    <Row>
+                        <Col span={24}>
+                            {props.lineID === props.acc.lineID ?
+                                <>
+                                    <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
+                                        Bio
+                                </Tooltip>
+                                    <AntParagraph
+                                        editable={{
+                                            onChange: (handleBio),
+                                            maxLength: 60,
+                                            onStart: () => props.setEditBio(true)
+                                        }}
+                                    >
+                                        {props.acc.bio}
+                                    </AntParagraph>
+
+                                </>
+                                :
+                                <>
+                                    <Tooltip title="ข้อมูลแนะนำตัวเองเพิ่มเติม">
+                                        Bio
+                                </Tooltip>
+                                    <AntParagraph
+                                        copyable
+                                    >
+                                        {props.acc.bio}
+                                    </AntParagraph>
+                                </>
+                            }
+                        </Col>
+                    </Row>
+                </div>
+            </AntCard>
+        )
+    }
 }
 export default ProfileDetails;
