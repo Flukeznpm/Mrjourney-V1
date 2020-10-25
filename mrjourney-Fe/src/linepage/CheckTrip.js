@@ -34,13 +34,13 @@ function CheckTrip(props) {
             }
         });
 
-    }, [loading])
+    }, [LineGroup])
     if (loading) {
         return <div>loading {LineGroup}</div>
     } else {
         return (
             <div className="text-center">
-                CheckTrip {LineID} {LineGroup}
+                CheckTrip
                 {tripList.map((trip) => {
                     return (
                         <>
