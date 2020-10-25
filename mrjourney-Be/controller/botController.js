@@ -16,4 +16,16 @@ async function checkTripAvaliable(data) {
     return status;
 };
 
+async function getLocation(data) {
+
+};
+
+async function getWeather(data) {
+
+};
+
+async function saveScore(data) {
+
+};
+
 module.exports = { checkTripAvaliable };

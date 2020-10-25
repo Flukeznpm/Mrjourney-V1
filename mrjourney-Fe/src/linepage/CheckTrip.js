@@ -46,7 +46,7 @@ function CheckTrip(props) {
                                 return (
                                     <>
                                         {totalDate.eventDate}
-                                        {totalDate.event.map((events) => {
+                                        {totalDate.events.map((events) => {
                                             return (
                                                 <>
                                                     {events.eventName}
