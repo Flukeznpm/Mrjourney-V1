@@ -14,26 +14,29 @@ function CheckTrip(props) {
     useEffect(() => {
         liff.init({ liffId: '1653975470-4Webv3MY' }).then(async () => {
             if (liff.isLoggedIn()) {
-                let profile = await liff.getProfile();
-                setLineID(profile.userId);
-                setLineName(profile.displayName);
-                setLinePicture(profile.pictureUrl);
-                const context = await liff.getContext();
-                setLineGroup(context.groupId)
-                isLoading(true)
-                await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
-                    .then(res => {
-                        setTripList(res.data)
-                        isLoading(false)
-                    });
+                if (!LineGroup || LineGroup === '') {
+                    let profile = await liff.getProfile();
+                    setLineID(profile.userId);
+                    setLineName(profile.displayName);
+                    setLinePicture(profile.pictureUrl);
+                    const context = await liff.getContext();
+                    setLineGroup(context.groupId)
+                    isLoading(true)
+                } else {
+                    await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
+                        .then(res => {
+                            setTripList(res.data)
+                            isLoading(false)
+                        });
+                }
             } else {
                 props.history.push('/Home');
             }
         });
 
-    }, [])
+    }, [loading])
     if (loading) {
-        return <div>loading</div>
+        return <div>loading {LineGroup}</div>
     } else {
         return (
             <div className="text-center">
