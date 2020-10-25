@@ -203,7 +203,7 @@ function replyNotCreate(reply_token, msg) {
                                 action: {
                                     label: "ดูแผนทั้งหมด",
                                     type: "uri",
-                                    uri: "https://liff.line.me/1653975470-4Webv3M"
+                                    uri: "https://liff.line.me/1653975470-4Webv3MY"
                                 },
                                 type: "button",
                                 color: "#C25738",
