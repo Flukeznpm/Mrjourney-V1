@@ -638,7 +638,7 @@ async function saveScoreTrip(datas) {
     let new_worthiness = old_worthiness + worthiness;
     let new_fun = old_fun + fun;
 
-    await saveScoreRef.set({
+    await saveScoreRef.update({
         preparedness: new_preparedness,
         worthiness: new_worthiness,
         fun: new_fun
