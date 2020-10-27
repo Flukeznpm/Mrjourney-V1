@@ -194,7 +194,8 @@ router.delete('/deleteTrip', async function (req, res, next) {
 router.post('/score', async function (req, res, next) {
     let datas = req.body;
 
-    //-- ต้องแบ่ง case ของคะแนนไหม หรือให้ fe จัดการมาให้เลยว่าคะแนนเป็นเท่าไหร่ โดนต้องเป็น Integer
+    //1--> ต้องตรวจสอบว่าหรือsetไว้ว่า ให้มี collection 'Score' ไว้อยู่แล้วเริ่มต้นที่ 0 ไม่งั้นมันจะ get ไม่ได้ ถ้าไม่มีข้อมูลอยู่
+    //2--> ต้องแบ่ง case ของคะแนนไหม หรือให้ fe จัดการมาให้เลยว่าคะแนนเป็นเท่าไหร่ โดนต้องเป็น Integer
 
     await saveScoreTrip(datas).then(() => {
         return res.status(201).json({
@@ -637,7 +638,7 @@ async function saveScoreTrip(datas) {
     let new_worthiness = old_worthiness + worthiness;
     let new_fun = old_fun + fun;
 
-    await saveScoreRef.update({
+    await saveScoreRef.set({
         preparedness: new_preparedness,
         worthiness: new_worthiness,
         fun: new_fun
