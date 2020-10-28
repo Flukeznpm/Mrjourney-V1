@@ -165,7 +165,7 @@ router.put('/editTrip', async function (req, res, next) {
 });
 
 router.delete('/deleteTrip', async function (req, res, next) {
-    let datas = req.body;
+    let datas = req.query;
     if (datas.tripID == undefined || datas.tripID == null || datas.tripID == '' ||
         datas.lineID == undefined || datas.lineID == null || datas.lineID == '' ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '') {
