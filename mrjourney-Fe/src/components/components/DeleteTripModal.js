@@ -108,6 +108,9 @@ function DeleteTripModal(props) {
             centered
             width={400}
         >
+            lineID: {props.lineID}
+            <br />lineGroupID: {props.lineGroupID}
+            <br />tripID: {props.tripID}
             <Col span={24}>
                 <Row justify="center" gutter={8}>
                     <ColButton span={10}>

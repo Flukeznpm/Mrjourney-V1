@@ -54,7 +54,7 @@ const OutlineButton = styled(AntButton)`
 function MoreRoomDetailModal(props) {
     const [checkMembers, setCheckMember] = useState([{}])
     useEffect(() => {
-        axios.get(`http://localhost:5000/room/joinRoomAlready?roomID=${props.room.roomID}&lineID=${props.acc.lineID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/room/joinRoomAlready?roomID=${props.room.roomID}&lineID=${props.acc.lineID}`)
             .then(res => {
                 setCheckMember(res.data)
             })

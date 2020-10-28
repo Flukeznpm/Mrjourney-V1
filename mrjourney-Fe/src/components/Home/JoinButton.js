@@ -135,7 +135,7 @@ function JoinButton(props) {
                     title: 'คุณยังไม่ได้ Login!',
                     text: 'กรุณาทำการ Login ก่อนทำรายการ',
                     showCancelButton: true,
-                    confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=http://localhost:3000/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>',
+                    confirmButtonText: '<a href ="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653975470&redirect_uri=https://mr-journey.com/Home&scope=profile%20openid%20email&state=KZKEMsjQOZM3uvnZ" id="alert-confirm-button">Login</a>',
                     confirmButtonColor: '#F37945',
                     cancelButtonText: 'กลับสู่หน้าหลัก',
                 })
@@ -148,7 +148,7 @@ function JoinButton(props) {
                 }
                 if (room.genderCondition === "ชาย" && acc.gender === "ชาย" || room.genderCondition === "ไม่จำกัดเพศ") {
                     if (room.ageCondition === "ไม่จำกัดช่วงอายุ") {
-                        axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                        axios.post('https://mrjourney-senior.herokuapp.com/room/joinRoom', dataJoin)
                             .then(async (res) => {
                                 console.log(res)
                             })
@@ -164,7 +164,7 @@ function JoinButton(props) {
                     } else {
                         if (room.ageCondition === "ต่ำกว่า 18 ปี") {
                             if (calculateDate(acc.birthday) < 18) {
-                                axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                axios.post('https://mrjourney-senior.herokuapp.com/room/joinRoom', dataJoin)
                                     .then(async (res) => {
                                         console.log(res)
                                     })
@@ -189,7 +189,7 @@ function JoinButton(props) {
                             }
                         } else if (room.ageCondition === "18-25 ปี") {
                             if (calculateDate(acc.birthday) >= 18 && calculateDate(acc.birthday) <= 25) {
-                                axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                axios.post('https://mrjourney-senior.herokuapp.com/room/joinRoom', dataJoin)
                                     .then(async (res) => {
                                         console.log(res)
                                     })
@@ -214,7 +214,7 @@ function JoinButton(props) {
                             }
                         } else if (room.ageCondition === "25 ปีขึ้นไป") {
                             if (calculateDate(acc.birthday) > 25) {
-                                axios.post('http://localhost:5000/room/joinRoom', dataJoin)
+                                axios.post('https://mrjourney-senior.herokuapp.com/room/joinRoom', dataJoin)
                                     .then(async (res) => {
                                         console.log(res)
                                     })
