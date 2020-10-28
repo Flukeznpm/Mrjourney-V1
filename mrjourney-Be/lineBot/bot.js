@@ -79,6 +79,9 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#location") {
         reply(req)
     }
+    else if (msg === "#ปิดทริป") {
+        replyRating(req)
+    }
     // else if (ev) {
     //     replyWeatherMaps(reply_token, msg)
     // }
@@ -1156,6 +1159,69 @@ function replyHelpBill(reply_token, msg) {
             }
         ]
     })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRating(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: msg
+            },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "ให้คะแนนเจ้าของทริปกันสักหน่อย!"
+                            }
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "สร้างทริป",
+                                    type: "uri",
+                                    uri: "https://mr-journey.com/"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    })
+
     request.post({
         url: 'https://api.line.me/v2/bot/message/reply',
         headers: headers,
