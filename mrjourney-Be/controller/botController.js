@@ -24,8 +24,4 @@ async function getWeather(data) {
 
 };
 
-async function saveScore(data) {
-
-};
-
 module.exports = { checkTripAvaliable };

@@ -31,6 +31,7 @@ function Profile(props) {
     const [acc, setShowAcc] = useState([{}])
     const [isEditProfile, setEditProfile] = useState(false)
     const [isEditBio, setEditBio] = useState(true);
+    const [loading, isLoading] = useState(true)
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -49,6 +50,7 @@ function Profile(props) {
         axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile?userID=${getUserID}`)
             .then(res => {
                 setShowAcc(res.data)
+                isLoading(false)
             })
     }, [isEditProfile, isEditBio])
 
@@ -65,19 +67,20 @@ function Profile(props) {
                                         <ProfileDetails acc={acc} lineID={lineID}
                                             isEditProfile={isEditProfile} setEditProfile={setEditProfile}
                                             isEditBio={isEditBio} setEditBio={setEditBio}
+                                            loading={loading}
                                         ></ProfileDetails>
                                     </Col>
                                 </Row>
                                 <Row justify="center">
                                     <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                                        <HistoryCreateRoom />
+                                        <HistoryCreateRoom loading={loading} />
                                     </Col>
                                 </Row>
 
                                 {lineID === acc.lineID ?
                                     <Row justify="center">
                                         <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
-                                            <HistoryCreateTrip acc={acc} />
+                                            <HistoryCreateTrip acc={acc} loading={loading} />
                                         </Col>
                                     </Row>
                                     :

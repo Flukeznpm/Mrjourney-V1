@@ -46,7 +46,7 @@ function View(props) {
             </Row>
             {acc.map((acc) => {
                 return (
-                    <HistoryCard acc={props.acc} />
+                    <HistoryCard acc={props.acc} loading={props.loading} />
                 )
             })}
         </AntCard>

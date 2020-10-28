@@ -42,6 +42,8 @@ function ShowRoomBox(props) {
     const [filterRoomID, setFilterRoomID] = useState(null)
     const [filterRoomProvince, setFilterRoomProvince] = useState(null)
     const { Option } = AntSelect;
+    const [loading, isLoading] = useState(true)
+
     useEffect(() => {
         axios.get('https://mrjourney-senior.herokuapp.com/room')
             .then(async res => {
@@ -64,6 +66,7 @@ function ShowRoomBox(props) {
                     setShowRoom(sorted);
                 };
                 sortArray(sortType);
+                isLoading(false)
             });
     }, [sortType])
 
@@ -139,6 +142,7 @@ function ShowRoomBox(props) {
                                         showRoomModalShow={showRoomModalShow}
                                         setAccountJoinRoom={setAccountJoinRoom}
                                         acc={props.acc}
+                                        loading={loading}
                                     />
                                     :
                                     null}
