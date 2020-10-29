@@ -86,8 +86,9 @@ function CheckTrip(props) {
         )
     } else {
         return (
-            <div className="text-center">
-                CheckTrip
+            <>
+                <div className="text-center">
+                    CheckTrip
                 {tripList.map((trip) => {
                     return (
                         <>
@@ -119,7 +120,8 @@ function CheckTrip(props) {
                         </>
                     )
                 })}
-            </div >
+                </div >
+            </>
         )
     }
 }

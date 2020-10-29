@@ -79,8 +79,8 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#location") {
         reply(req)
     }
-    else if (msg === "#ปิดทริป") {
-        replyRating(req)
+    else if (msg === "#ยกเลิกทริป") {
+        replyDeleteTrip(reply_token, msg)
     }
     // else if (ev) {
     //     replyWeatherMaps(reply_token, msg)
@@ -1168,7 +1168,7 @@ function replyHelpBill(reply_token, msg) {
     });
 }
 
-function replyRating(reply_token, msg) {
+function replyDeleteTrip(reply_token, msg) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -1193,7 +1193,7 @@ function replyRating(reply_token, msg) {
                                 type: "text",
                                 align: "center",
                                 weight: "bold",
-                                text: "ให้คะแนนเจ้าของทริปกันสักหน่อย!"
+                                text: "ทริปถูกยกเลิกสำเร็จ มาสร้างใหม่กันเถอะ!"
                             }
                         ],
                         type: "box"
@@ -1207,7 +1207,7 @@ function replyRating(reply_token, msg) {
                                 action: {
                                     label: "สร้างทริป",
                                     type: "uri",
-                                    uri: "https://mr-journey.com/"
+                                    uri: "https://liff.line.me/1653975470-jV83lv9w"
                                 },
                                 type: "button",
                                 color: "#C25738",

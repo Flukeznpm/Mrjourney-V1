@@ -2,12 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from "styled-components";
 import '../../static/css/App.css';
 import { Link } from 'react-router-dom';
+import liff from '@line/liff';
 import Logo from '../../static/img/success.png';
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
-import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
-import { HookContext } from '../../store/HookProvider'
 import Stepper from '../components/Stepper';
 import {
     Button as AntButton,
@@ -88,6 +85,10 @@ function CreateTripStep3() {
     //         });
     // }
 
+    const closedLiff = () => {
+        liff.closeWindow()
+    }
+
     return (
         <div className="top-page">
             <div className="pb-2">
@@ -109,11 +110,13 @@ function CreateTripStep3() {
                                 <div className="button-page py-3 mt-4">
                                     <Row className="py-2">
                                         <Col span={24}>
-                                            <PrimaryButton
-                                                type="primary"
-                                                size={"large"}
-                                                block htmlType="submit"
-                                            >ดูแผนทั้งหมด</PrimaryButton>
+                                            <Link to="/CheckTrip">
+                                                <PrimaryButton
+                                                    type="primary"
+                                                    size={"large"}
+                                                    block htmlType="submit"
+                                                >ดูแผนทั้งหมด</PrimaryButton>
+                                            </Link>
                                         </Col>
                                     </Row>
 
@@ -133,6 +136,7 @@ function CreateTripStep3() {
                                                 type="primary"
                                                 size={"large"}
                                                 block htmlType="submit"
+                                                onClick={() => closedLiff()}
                                             >กลับสู่ห้องแชท</ThirdButton>
                                         </Col>
                                     </Row>

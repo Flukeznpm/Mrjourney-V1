@@ -58,24 +58,19 @@ const OutlineButton = styled(AntButton)`
 function DeleteTripModal(props) {
 
     const onDeleteTrip = async (lineGroupID, lineID, tripID) => {
-        let dataTrip = {
-            lineID: lineID,
-            lineGroupID: lineGroupID,
-            tripID: tripID
-        }
-        await axios.delete('https://mrjourney-senior.herokuapp.com/trip/deleteTrip', dataTrip)
+        await axios.delete(`https://mrjourney-senior.herokuapp.com/trip/deleteTrip?lineID=${lineID}&lineGroupID=${lineGroupID}&tripID=${tripID}`)
             .then(res => {
                 console.log(res)
             })
         props.setVisible(false)
+        liff.closeWindow()
         if (liff.getContext().type !== "none") {
             liff.sendMessages([
                 {
                     "type": "text",
-                    "text": "#ปิดทริป"
+                    "text": "#ยกเลิกทริป"
                 }
             ])
-            alert("Message sent")
         }
     }
 
