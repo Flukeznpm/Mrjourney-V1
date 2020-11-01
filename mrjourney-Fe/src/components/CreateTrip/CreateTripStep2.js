@@ -129,6 +129,7 @@ function CreateTripStep2(props) {
     const [LineID, setLineID] = useState('')
     const [LineName, setLineName] = useState('')
     const [LinePicture, setLinePicture] = useState('')
+    const [loading, isLoading] = useState(false)
 
     useEffect(() => {
         liff.init({ liffId: '1653975470-jV83lv9w' }).then(async () => {
@@ -159,107 +160,117 @@ function CreateTripStep2(props) {
             tripStatus: tripStatus,
             totalDate: Trip.totalDate
         }
+        isLoading(true)
         await axios.post('https://mrjourney-senior.herokuapp.com/trip/createTrip', dataTrip)
             .then(res => {
                 console.log(res)
             });
         nextTripStep(1)
     }
-
-    return (
-        <Wrapper>
-            <div className="top-page mb-4 pb-4">
-                <Stepper typeStep="trip" step={2} />
-                <Row justify="center ">
-                    <div className="container">
-                        <Col span={24} className="pb-3">
-                            <div className="pt-4 pb-2" >
-                                <ShowStartToEnd />
-                            </div>
-                            {Trip.totalDate.map((PerDay, key) => {
-                                return (
-                                    <>
-                                        {Trip.activeEvent !== key ?
-                                            <DateCardNotActive onClick={() => setActiveEvent(key)}>
-                                                <Row justify="center">
-                                                    {momentjs(PerDay.eventDate).format('ll')}
-                                                    <CaretDownOutlined />
-                                                </Row>
-                                            </DateCardNotActive>
-                                            :
-                                            <div>
-                                                <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
+    if (loading) {
+        return (
+            <WrapperLoading>
+                <RowLoading justify="center">
+                    <LoadingGif src="/gif/loading.gif" alt="loading..." />
+                </RowLoading>
+            </WrapperLoading>
+        )
+    } else {
+        return (
+            <Wrapper>
+                <div className="top-page mb-4 pb-4">
+                    <Stepper typeStep="trip" step={2} />
+                    <Row justify="center ">
+                        <div className="container">
+                            <Col span={24} className="pb-3">
+                                <div className="pt-4 pb-2" >
+                                    <ShowStartToEnd />
+                                </div>
+                                {Trip.totalDate.map((PerDay, key) => {
+                                    return (
+                                        <>
+                                            {Trip.activeEvent !== key ?
+                                                <DateCardNotActive onClick={() => setActiveEvent(key)}>
                                                     <Row justify="center">
                                                         {momentjs(PerDay.eventDate).format('ll')}
-                                                        <CaretUpOutlined />
+                                                        <CaretDownOutlined />
                                                     </Row>
                                                 </DateCardNotActive>
-                                                {PerDay.event.map((eventDetail, key) => {
-                                                    return (
-                                                        <Row className="my-1">
-                                                            <Col span={19}>
-                                                                <div className="container">
-                                                                    <EventCard>
-                                                                        <ShowEventBox eventDetail={eventDetail} />
-                                                                    </EventCard>
-                                                                </div>
-                                                            </Col>
-                                                            <Col span={5} >
-                                                                <DeleteEventCard onClick={() => deleteEvent(eventDetail, key)}>
-                                                                    <DeleteButton />
-                                                                </DeleteEventCard>
-                                                            </Col>
+                                                :
+                                                <div>
+                                                    <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
+                                                        <Row justify="center">
+                                                            {momentjs(PerDay.eventDate).format('ll')}
+                                                            <CaretUpOutlined />
                                                         </Row>
-                                                    )
-                                                })}
-                                                <AddEventButton block
-                                                    size={"large"} htmlType="submit"
-                                                    onClick={() => eventModalShow(key)}
-                                                >
-                                                    <PlusOutlined />
-                                                </AddEventButton>
-                                                <CreateTripModal
-                                                    centered
-                                                    show={addModalShow}
-                                                    onConfirm={() => setEvent(keyModal)}
-                                                    onHide={() => eventModalClose(keyModal)}
-                                                ></CreateTripModal>
-                                            </div>
-                                        }
-                                    </>
-                                )
-                            })}
+                                                    </DateCardNotActive>
+                                                    {PerDay.event.map((eventDetail, key) => {
+                                                        return (
+                                                            <Row className="my-1">
+                                                                <Col span={19}>
+                                                                    <div className="container">
+                                                                        <EventCard>
+                                                                            <ShowEventBox eventDetail={eventDetail} />
+                                                                        </EventCard>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col span={5} >
+                                                                    <DeleteEventCard onClick={() => deleteEvent(eventDetail, key)}>
+                                                                        <DeleteButton />
+                                                                    </DeleteEventCard>
+                                                                </Col>
+                                                            </Row>
+                                                        )
+                                                    })}
+                                                    <AddEventButton block
+                                                        size={"large"} htmlType="submit"
+                                                        onClick={() => eventModalShow(key)}
+                                                    >
+                                                        <PlusOutlined />
+                                                    </AddEventButton>
+                                                    <CreateTripModal
+                                                        centered
+                                                        show={addModalShow}
+                                                        onConfirm={() => setEvent(keyModal)}
+                                                        onHide={() => eventModalClose(keyModal)}
+                                                    ></CreateTripModal>
+                                                </div>
+                                            }
+                                        </>
+                                    )
+                                })}
 
-                        </Col>
-                    </div>
+                            </Col>
+                        </div>
+                    </Row>
+                </div>
+                <Row justify="center" className="bg-white fixed-bottom">
+                    <AntForm className="container">
+                        <AntFormItem>
+                            <Row>
+                                <Col span={8}>
+                                    <PrevButton
+                                        type="link"
+                                        size={"large"}
+                                        block htmlType="button"
+                                        onClick={() => prevTripStep(1)}
+                                    >ย้อนกลับ</PrevButton>
+                                </Col>
+                                <Col span={16}>
+                                    <PrimaryButton
+                                        type="primary"
+                                        size={"large"}
+                                        block htmlType="submit"
+                                        onClick={handleSubmit}
+                                    >ยืนยัน</PrimaryButton>
+                                </Col>
+                            </Row>
+                        </AntFormItem>
+                    </AntForm>
                 </Row>
-            </div>
-            <Row justify="center" className="bg-white fixed-bottom">
-                <AntForm className="container">
-                    <AntFormItem>
-                        <Row>
-                            <Col span={8}>
-                                <PrevButton
-                                    type="link"
-                                    size={"large"}
-                                    block htmlType="button"
-                                    onClick={() => prevTripStep(1)}
-                                >ย้อนกลับ</PrevButton>
-                            </Col>
-                            <Col span={16}>
-                                <PrimaryButton
-                                    type="primary"
-                                    size={"large"}
-                                    block htmlType="submit"
-                                    onClick={handleSubmit}
-                                >ยืนยัน</PrimaryButton>
-                            </Col>
-                        </Row>
-                    </AntFormItem>
-                </AntForm>
-            </Row>
-        </Wrapper>
-    )
+            </Wrapper>
+        )
+    }
 }
 
 export default withRouter(CreateTripStep2);

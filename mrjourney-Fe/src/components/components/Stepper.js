@@ -80,33 +80,45 @@ function Stepper(props) {
                 <>
                     {props.step === 1 ?
                         <HeaderStep>
-                        <Row className="container h-100">
-                            <ColStepText span={16}>
-                                <HeaderStepText>สร้างแผนการท่องเที่ยว</HeaderStepText>
-                            </ColStepText>
-                            <ColStepImg span={8}>
-                                <img src={'/img/menu-03.png'} width={150} />
-                            </ColStepImg>
-                        </Row>
-                    </HeaderStep>
+                            <Row className="container h-100">
+                                <ColStepText span={16}>
+                                    <HeaderStepText>สร้างแผนการท่องเที่ยว</HeaderStepText>
+                                </ColStepText>
+                                <ColStepImg span={8}>
+                                    <img src={'/img/menu-03.png'} width={150} />
+                                </ColStepImg>
+                            </Row>
+                        </HeaderStep>
                         : null}
                     {props.step === 2 ?
                         <HeaderStep>
-                        <Row className="container h-100">
-                            <ColStepText span={16}>
-                                <HeaderStepText>ระบุรายละเอียดแต่ละวัน</HeaderStepText>
-                            </ColStepText>
-                            <ColStepImg span={8}>
-                                <img src={'/img/menu-02.png'} width={150} />
-                            </ColStepImg>
-                        </Row>
-                    </HeaderStep>
+                            <Row className="container h-100">
+                                <ColStepText span={16}>
+                                    <HeaderStepText>ระบุรายละเอียดแต่ละวัน</HeaderStepText>
+                                </ColStepText>
+                                <ColStepImg span={8}>
+                                    <img src={'/img/menu-02.png'} width={150} />
+                                </ColStepImg>
+                            </Row>
+                        </HeaderStep>
                         : null}
                     {props.step === 3 ?
                         <HeaderStep>
                             <Row className="container h-100">
                                 <ColStepText span={17}>
                                     <HeaderStepText>เสร็จสิ้นการสร้างแผน</HeaderStepText>
+                                </ColStepText>
+                                <ColStepImg span={7}>
+                                    <img src={'/img/menu-03.png'} width={150} />
+                                </ColStepImg>
+                            </Row>
+                        </HeaderStep>
+                        : null}
+                    {props.step === 4 ?
+                        <HeaderStep>
+                            <Row className="container h-100">
+                                <ColStepText span={17}>
+                                    <HeaderStepText>ตรวจสอบทริป</HeaderStepText>
                                 </ColStepText>
                                 <ColStepImg span={7}>
                                     <img src={'/img/menu-03.png'} width={150} />
