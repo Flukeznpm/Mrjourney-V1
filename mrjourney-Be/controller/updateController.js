@@ -58,7 +58,7 @@ router.post('/enableRoom', async function (req, res, next) {
 router.post('/enableTrip', async function (req, res, next) {
     let datas = req.body;
     if (
-        datas.today == undefined || datas.today == null ||
+        datas.currentDate == undefined || datas.currentDate == null ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400);
@@ -93,7 +93,7 @@ router.post('/enableTrip', async function (req, res, next) {
                 // for (i = 0; i <= allDateCount; i++) {
                 //     let dateID = allDate[i];
                 //     // console.log('dateID loop: ', dateID);
-                //     if (datas.today == dateID) {
+                //     if (datas.currentDate == dateID) {
                 //         return res.status(200).json({
                 //             message: "Enjoy your trip !!"
                 //         });
