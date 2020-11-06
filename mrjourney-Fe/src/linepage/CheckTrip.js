@@ -5,7 +5,8 @@ import axios from 'axios';
 import {
     Row, Col, Card,
     Button as AntButton,
-    Form as AntForm
+    Form as AntForm,
+    Switch
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { HookContext } from '../store/HookProvider'
@@ -51,6 +52,31 @@ const PrimaryButton = styled(AntButton)`
         background: ${props => (props.theme.color.primaryPress)};
         border: ${props => (props.theme.color.primaryPress)};
     }
+`;
+
+const SwitchComponent = styled(Switch)`
+  background-color: #E9DDD1;
+  &.ant-switch-checked {
+    background-color: ${props => (props.theme.color.primary)};
+  }
+`;
+
+const DeleteEventCard = styled(Card)`
+  border-radius: 10px;
+  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  background: #FF4647;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  .ant-card-body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 12px;
+  }
+  height: 100%;
 `;
 
 const DateCardNotActive = styled(Card)`
@@ -138,23 +164,35 @@ function CheckTrip(props) {
         setVisible(true)
     }
 
+    const onChangeEdit = () => {
+        setEditTrip(!isEditTrip)
+    }
+
+    const backToChat = () => {
+        liff.closeWindow()
+    }
+
     if (loading) {
         return (
             <WrapperLoading>
                 <RowLoading justify="center">
-                    <LoadingGif src="/gif/loading.gif" alt="loading..." />
+                    <LoadingGif src="/gif/loading-v2.gif" alt="loading..." />
                 </RowLoading>
             </WrapperLoading>
         )
     } else {
         return (
-
             <Wrapper>
                 {tripList.map((trip) => {
                     return (
                         <>
                             <div className="top-page mb-4 pb-4">
                                 <Stepper typeStep="trip" step={4} />
+                                <Row className="py-3">
+                                    <Col span={6} offset={18}>
+                                        < SwitchComponent onChange={onChangeEdit} />
+                                    </Col>
+                                </Row>
                                 {isEditTrip === true ?
                                     <Row justify="center ">
                                         <div className="container">
@@ -183,12 +221,17 @@ function CheckTrip(props) {
                                                                     {totalDate.events.map((events, key) => {
                                                                         return (
                                                                             <Row className="my-1">
-                                                                                <Col span={24}>
+                                                                                <Col span={19}>
                                                                                     <div className="container">
                                                                                         <EventCard>
                                                                                             <ShowEventBox eventDetail={events} />
                                                                                         </EventCard>
                                                                                     </div>
+                                                                                </Col>
+                                                                                <Col span={5} >
+                                                                                    <DeleteEventCard>
+                                                                                        <DeleteButton />
+                                                                                    </DeleteEventCard>
                                                                                 </Col>
                                                                             </Row>
                                                                         )
@@ -269,9 +312,9 @@ function CheckTrip(props) {
                                     </Row>
                                 }
                             </div>
-                            <Row justify="center" className="bg-white fixed-bottom">
-                                <AntForm className="container">
-                                    {trip.ownerID === LineID ?
+                            {trip.ownerTrip === LineID ?
+                                <Row justify="center" className="bg-white fixed-bottom">
+                                    <AntForm className="container">
                                         <AntFormItem>
                                             <Row>
                                                 <Col span={8}>
@@ -284,16 +327,29 @@ function CheckTrip(props) {
                                                 <Col span={16}>
                                                     <PrimaryButton type="primary" size={"large"}
                                                         block htmlType="button"
-                                                        onClick={() => setEditTrip(true)}
-                                                    >แก้ไขทริป</PrimaryButton>
+                                                        onClick={() => backToChat()}
+                                                    >กลับสู่ห้องแชท</PrimaryButton>
                                                 </Col>
                                             </Row>
                                         </AntFormItem>
-                                        :
-                                        null
-                                    }
-                                </AntForm>
-                            </Row>
+                                    </AntForm>
+                                </Row>
+                                :
+                                <Row justify="center" className="bg-white fixed-bottom">
+                                    <AntForm className="container">
+                                        <AntFormItem>
+                                            <Row>
+                                                <Col span={24}>
+                                                    <PrimaryButton type="primary" size={"large"}
+                                                        block htmlType="button"
+                                                        onClick={() => backToChat()}
+                                                    >กลับสู่ห้องแชท</PrimaryButton>
+                                                </Col>
+                                            </Row>
+                                        </AntFormItem>
+                                    </AntForm>
+                                </Row>
+                            }
                         </>
                     )
                 })

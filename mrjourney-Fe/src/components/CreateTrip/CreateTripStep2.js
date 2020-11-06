@@ -39,6 +39,24 @@ const DateCardNotActive = styled(Card)`
   }
 `;
 
+const WrapperLoading = styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+`;
+
+const RowLoading = styled(Row)`
+    display: flex;
+    align-items: center;
+    height: 100%;
+`
+
+const LoadingGif = styled.img`
+    height: 250px;
+    width: 250px;
+   
+`;
+
 const EventCard = styled(Card)`
   border-radius: 10px;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.025), 0px 3px 4px rgba(0, 0, 0, 0.06);
@@ -165,13 +183,21 @@ function CreateTripStep2(props) {
             .then(res => {
                 console.log(res)
             });
+        if (liff.getContext().type !== "none") {
+            liff.sendMessages([
+                {
+                    "type": "text",
+                    "text": "สร้างทริปสำเร็จ!"
+                }
+            ])
+        }
         nextTripStep(1)
     }
     if (loading) {
         return (
             <WrapperLoading>
                 <RowLoading justify="center">
-                    <LoadingGif src="/gif/loading.gif" alt="loading..." />
+                    <LoadingGif src="/gif/loading-v2.gif" alt="loading..." />
                 </RowLoading>
             </WrapperLoading>
         )
