@@ -19,6 +19,7 @@ import 'antd/dist/antd.css';
 import Profile from './webpage/Profile';
 import NotMatchPage from './NotMatchPage';
 import RoomHistoryJoin from './components/JoinedRoom/RoomHistoryJoin.js/View';
+import Rating from './linepage/Rating';
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
       <Switch>
         <Route path="/Home">
           <Home />
+        </Route>
+        <Route path="/Rating">
+          <Rating />
         </Route>
         <Route path="/CheckTrip" >
           <CheckTrip />
