@@ -12,7 +12,7 @@ import {
 import { withRouter } from 'react-router-dom';
 
 const Wrapper = styled.div`
-    padding: 30px 30px 30px 30px;
+    padding: 20px 30px 20px 30px;
     font-size: 24px;
 `;
 
@@ -35,7 +35,7 @@ const LoadingGif = styled.img`
 `;
 
 const ImgCover = styled.img`
-    height: 175px;
+    height: 155px;
     width: 100%;
     object-fit: cover;
     border-radius: 14px;
@@ -55,20 +55,20 @@ const PrimaryButton = styled(AntButton)`
 
 const AntFormItem = styled(AntForm.Item)`
     margin-bottom: 0px;
-    padding: 10px;
+    padding: 5px;
 `;
 
 const RateComponent = styled(Rate)`
+    padding: 5px;
     .ant-rate-star {
         color: ${props => (props.theme.color.primary)};
-        font-size: 25px;
-        /* padding: 5px; */
+        font-size: 40px;
     }
 `;
 
 const TripNameText = styled.div`
-    padding-top: 20px; 
-    padding-bottom: 20px;
+    padding-top: 10px; 
+    padding-bottom: 10px;
 `;
 
 function Rating(props) {
@@ -81,29 +81,28 @@ function Rating(props) {
     const [LinePicture, setLinePicture] = useState('')
     const [LineGroup, setLineGroup] = useState('')
 
-    // useEffect(async () => {
-    //     liff.init({ liffId: '1653975470-q8mJvPdV' }).then(async () => {
-    //         if (liff.isLoggedIn()) {
-    //             if (!LineGroup || LineGroup === '') {
-    //                 let profile = await liff.getProfile();
-    //                 setLineID(profile.userId);
-    //                 setLineName(profile.displayName);
-    //                 setLinePicture(profile.pictureUrl);
-    //                 const context = await liff.getContext();
-    //                 setLineGroup(context.groupId)
-    //                 isLoading(true)
-    //             } else {
-    //                 await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
-    //                     .then(res => {
-    //                         setTripList(res.data)
-    //                         isLoading(false)
-    //                     });
-    //             }
-    //         } else {
-    //             props.history.push('/Home');
-    //         }
-    //     })
-    // }, [LineGroup]);
+    useEffect(() => {
+        liff.init({ liffId: '1653975470-q8mJvPdV' }).then(async () => {
+            if (liff.isLoggedIn()) {
+                if (!LineGroup || LineGroup === '') {
+                    let profile = await liff.getProfile();
+                    setLineID(profile.userId);
+                    setLineName(profile.displayName);
+                    setLinePicture(profile.pictureUrl);
+                    const context = await liff.getContext();
+                    setLineGroup(context.groupId)
+                } else {
+                    await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
+                        .then(res => {
+                            setTripList(res.data)
+                            isLoading(false)
+                        });
+                }
+            } else {
+                props.history.push('/Home');
+            }
+        })
+    }, [LineGroup]);
 
     const onFinish = values => {
         setRating(values.ratingOne + values.ratingTwo + values.ratingThree)
@@ -121,13 +120,13 @@ function Rating(props) {
         return (
             <Wrapper>
                 <ImgCover src="/img/pr-01.png" />
-                {/* {tripList.map((trip) => {
+                {tripList.map((trip) => {
                     return (
                         <TripNameText>
                             {trip.tripName}
                         </TripNameText>
                     )
-                })} */}
+                })}
                 <Row justify="center">
                     <Col span={24} className="text-center">
                         <AntForm onFinish={onFinish}>
@@ -145,9 +144,6 @@ function Rating(props) {
                             </AntFormItem>
                         </AntForm>
                     </Col>
-                    <p>
-                        Result : {rating}
-                    </p>
                 </Row>
             </Wrapper>
         )
