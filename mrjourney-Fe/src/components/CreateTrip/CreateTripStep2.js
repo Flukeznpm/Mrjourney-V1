@@ -208,6 +208,7 @@ function CreateTripStep2(props) {
                                                         </Row>
                                                     )
                                                 })}
+                                                
                                                 <AddEventButton block
                                                     size={"large"} htmlType="submit"
                                                     onClick={() => eventModalShow(key)}
