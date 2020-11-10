@@ -500,7 +500,7 @@ async function updateTrip(datas) {
                 lineID: datas.lineID,
                 displayName: datas.displayName,
                 pictureURL: datas.pictureURL
-            })
+            });
             let CheckLineGroupinLineChatAccount = CheckLineChatAccountRef.collection('Group').doc(datas.lineGroupID);
             await CheckLineGroupinLineChatAccount.get().then(async data => {
                 if (data.exists) {
@@ -519,38 +519,38 @@ async function updateTrip(datas) {
                                                 startDate: datas.startDate,
                                                 endDate: datas.endDate,
                                                 tripStatus: datas.tripStatus
-                                            })
-                                            let CheckTripPerDay = db.collection('TripPerDay').doc(datas.tripID);
-                                            await CheckTripPerDay.get().then(async data => {
-                                                if (data.exists) {
-                                                    await CheckTripPerDay.update({
-                                                        totalDate: datas.totalDate
-                                                    })
-                                                    for (let i = 0; i <= 0; i++) {
-                                                        let count = (datas.totalDate.length) - 1;
-                                                        for (let j = 0; j <= count; j++) {
-                                                            if (j <= count) {
-                                                                let date = await datas.totalDate[j].eventDate;
-                                                                let event = await datas.totalDate[j].event;
-                                                                // let eventName = await datas.totalDate[j].event[i].eventName;
-                                                                // let startEvent = await datas.totalDate[j].event[i].startEvent;
-                                                                // let endEvent = await datas.totalDate[j].event[i].endEvent;
-                                                                // let eventType = await datas.totalDate[j].event[i].eventType;
-                                                                await db.collection('TripPerDay').doc(datas.tripID).collection('Date').doc(date).update({
-                                                                    event: event
-                                                                })
-                                                            } else {
-                                                                console.log('Error update trip loop')
-                                                            }
-                                                        } //loop1
-                                                    } //loop2
-                                                } else {
-                                                    console.log('Error Update Trip: TripPerDay not found')
-                                                    return res.status(400).json({
-                                                        message: 'Error Update Trip: TripPerDay not found'
-                                                    })
-                                                }
-                                            })
+                                            });
+                                            // let CheckTripPerDay = db.collection('TripPerDay').doc(datas.tripID);
+                                            // await CheckTripPerDay.get().then(async data => {
+                                            // if (data.exists) {
+                                            //     await CheckTripPerDay.update({
+                                            //         totalDate: datas.totalDate
+                                            //     })
+                                            for (let i = 0; i <= 0; i++) {
+                                                let count = (datas.totalDate.length) - 1;
+                                                for (let j = 0; j <= count; j++) {
+                                                    if (j <= count) {
+                                                        let date = await datas.totalDate[j].eventDate;
+                                                        let event = await datas.totalDate[j].event;
+                                                        // let eventName = await datas.totalDate[j].event[i].eventName;
+                                                        // let startEvent = await datas.totalDate[j].event[i].startEvent;
+                                                        // let endEvent = await datas.totalDate[j].event[i].endEvent;
+                                                        // let eventType = await datas.totalDate[j].event[i].eventType;
+                                                        await db.collection('TripPerDay').doc(datas.tripID).collection('Date').doc(date).update({
+                                                            event: event
+                                                        })
+                                                    } else {
+                                                        console.log('Error update trip loop')
+                                                    }
+                                                } //loop1
+                                            } //loop2
+                                            // } else {
+                                            //     console.log('Error Update Trip: TripPerDay not found')
+                                            //     return res.status(400).json({
+                                            //         message: 'Error Update Trip: TripPerDay not found'
+                                            //     })
+                                            // }
+                                            // })
                                         }
                                     })
                                 } else {
