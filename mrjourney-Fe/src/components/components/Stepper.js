@@ -46,7 +46,7 @@ const HeaderStepText = styled.div`
     font-size: 20px;
     font-weight: bold;
     color: #f9f9f9;
-`
+`;
 
 function Stepper(props) {
     const { Step } = Steps;

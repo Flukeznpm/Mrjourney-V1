@@ -58,55 +58,74 @@ router.post('/enableRoom', async function (req, res, next) {
 router.post('/enableTrip', async function (req, res, next) {
     let datas = req.body;
     if (
-        datas.today == undefined || datas.today == null ||
+        datas.currentDate == undefined || datas.currentDate == null ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400);
-    } else {
-        const allDate = [];
-        const tripIDList = [];
-        const checkTripIDRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').where('tripStatus', '==', true);
-        await checkTripIDRef.get().then(async snapshot => {
-            if (snapshot.empty) {
-                return res.status(202).json({
-                    message: "You do not have a trip"
-                })
-            } else {
-                snapshot.forEach(doc => {
-                    if (doc.exists) {
-                        tripIDList.push(doc.data());
-                    }
-                })
-
-                let tripID = tripIDList.map(t => t.tripID).toString();
-                // console.log('trip id: ', tripID)
-
-                let showTripPerDay = db.collection('TripPerDay').doc(tripID).collection('Date');
-                await showTripPerDay.get().then(data => {
-                    data.forEach(doc => {
-                        allDate.push(doc.id);
-                    });
-                })
-
-                // let allDateCount = (allDate.length) - 1;
-                // // console.log('allDateCount: ', allDateCount)
-                // for (i = 0; i <= allDateCount; i++) {
-                //     let dateID = allDate[i];
-                //     // console.log('dateID loop: ', dateID);
-                //     if (datas.today == dateID) {
-                //         return res.status(200).json({
-                //             message: "Enjoy your trip !!"
-                //         });
-                //     }
-                // }
-                // await enableTrip(datas, tripID);
-                // return res.status(201).json({
-                //     message: "You trip is end"
-                // })
-
-            }
-        });
     }
+    // else {
+    //     const allDate = [];
+    //     const tripIDList = [];
+    //     const checkTripIDRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').where('tripStatus', '==', true);
+    //     await checkTripIDRef.get().then(async snapshot => {
+    //         if (snapshot.empty) {
+    //             return res.status(202).json({
+    //                 message: "You do not have a trip"
+    //             })
+    //         } else {
+    //             snapshot.forEach(doc => {
+    //                 if (doc.exists) {
+    //                     tripIDList.push(doc.data());
+    //                 }
+    //             })
+    //             let tripID = tripIDList.map(t => t.tripID).toString();
+    //             let showTripPerDay = db.collection('TripPerDay').doc(tripID).collection('Date');
+    //             await showTripPerDay.get().then(data => {
+    //                 data.forEach(doc => {
+    //                     allDate.push(doc.id);
+    //                 });
+    //             })
+    // let allDateCount = (allDate.length) - 1;
+    // // console.log('allDateCount: ', allDateCount)
+    // for (i = 0; i <= allDateCount; i++) {
+    //     let dateID = allDate[i];
+    //     // console.log('dateID loop: ', dateID);
+    //     if (datas.currentDate == dateID) {
+    //         return res.status(200).json({
+    //             message: "Enjoy your trip !!"
+    //         });
+    //     }
+    // }
+    // await enableTrip(datas, tripID);
+    // return res.status(201).json({
+    //     message: "You trip is end"
+    // })
+    //         }
+    //     });
+    // }
+
+    const tripIDList = [];
+    const checkTripIDRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').where('tripStatus', '==', true);
+    await checkTripIDRef.get().then(async snapshot => {
+        if (snapshot.empty) {
+            return res.status(202).json({
+                message: "You do not have a trip"
+            })
+        } else {
+            snapshot.forEach(doc => {
+                if (doc.exists) {
+                    tripIDList.push(doc.data());
+                }
+            });
+
+            let tripID = tripIDList.map(t => t.tripID).toString();
+
+            await enableTrip(datas, tripID);
+            return res.status(201).json({
+                message: "You trip is end"
+            });
+        }
+    });
 });
 
 //---------------- Function ----------------//

@@ -108,10 +108,13 @@ function CreateTripStep1(props) {
                 } else {
                     await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
                         .then(res => {
-                            setTripList(res.data)
-                            // isLoading(false)
+                            if (res.status === 400) {
+                                isLoading(false)
+                            } else {
+                                setTripList(res.data)
+                                isLoading(false)
+                            }
                         });
-                    // isLoading(false)
                 }
 
             } else {
@@ -131,15 +134,15 @@ function CreateTripStep1(props) {
         confirmTripStep(1)
     };
 
-    // if (loading) {
-    //     return (
-    //         <WrapperLoading>
-    //             <RowLoading justify="center">
-    //                 <LoadingGif src="/gif/loading.gif" alt="loading..." />
-    //             </RowLoading>
-    //         </WrapperLoading>
-    //     )
-    // } else {
+    if (loading) {
+        return (
+            <WrapperLoading>
+                <RowLoading justify="center">
+                    <LoadingGif src="/gif/loading.gif" alt="loading..." />
+                </RowLoading>
+            </WrapperLoading>
+        )
+    } else {
         return (
             <div>
                 {tripList.map((trip) => {
@@ -225,7 +228,7 @@ function CreateTripStep1(props) {
             </div>
         )
     }
-// }
+}
 export default withRouter(CreateTripStep1);
 
 

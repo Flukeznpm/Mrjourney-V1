@@ -82,6 +82,9 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#ยกเลิกทริป") {
         replyDeleteTrip(reply_token, msg)
     }
+    else if (msg === "#ให้คะแนน") {
+        replyRating(reply_token, msg)
+    }
     // else if (ev) {
     //     replyWeatherMaps(reply_token, msg)
     // }
@@ -549,27 +552,45 @@ function replyCreateBill(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "text",
-                text: "อยากให้ผมสอนอะไรครับ ?",
-                quickReply: {
-                    items: [
-                        {
-                            type: "action",
-                            action: {
-                                type: "message",
-                                label: "สร้างบิล",
-                                text: "สร้างบิล"
+                type: 'text',
+                text: msg
+            },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "มาสร้างบิลกันเถอะ!"
                             }
-                        },
-                        {
-                            type: "action",
-                            action: {
-                                type: "message",
-                                label: "ดูบิล",
-                                text: "ดูบิล"
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "สร้างบิล",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-6rJYy1Qm"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
                             }
-                        }
-                    ]
+                        ]
+                    }
                 }
             }
         ]
@@ -1208,6 +1229,69 @@ function replyDeleteTrip(reply_token, msg) {
                                     label: "สร้างทริป",
                                     type: "uri",
                                     uri: "https://liff.line.me/1653975470-jV83lv9w"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRating(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: msg
+            },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "มาให้คะแนนกันเถอะ!"
+                            }
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "ให้คะแนน",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-q8mJvPdV"
                                 },
                                 type: "button",
                                 color: "#C25738",
