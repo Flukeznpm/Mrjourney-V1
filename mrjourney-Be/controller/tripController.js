@@ -191,17 +191,31 @@ router.delete('/deleteTrip', async function (req, res, next) {
     }
 });
 
+router.get('/score', async function (req, res, next) {
+    let datas = req.query;
+    let lineID = datas.lineID;
+    let Score = await getScoreByID(lineID);
+    res.status(200).json(Score);
+});
+
 router.post('/score', async function (req, res, next) {
     let datas = req.body;
 
-    //0--> กรณีที่ user ไม่ได้มีการสร้าง account บน web เลยจะไม่มี db ของ AccountProfile/Score มันเลยทำให้เวลากรอกคะแนนแล้วหา db ไม่เจอ
-    //1--> ต้องsetไว้ว่า ให้มี collection 'Score' ไว้อยู่แล้วเริ่มต้นที่ 0 ไม่งั้นมันจะ get ไม่ได้ ถ้าไม่มีข้อมูลอยู่
-    //2--> ต้องแบ่ง case ของคะแนนไหม หรือให้ fe จัดการมาให้เลยว่าคะแนนเป็นเท่าไหร่ โดนต้องเป็น Integer
+    // [ ] 0--> กรณีที่ user ไม่ได้มีการสร้าง account บน web เลยจะไม่มี db ของ AccountProfile/Score มันเลยทำให้เวลากรอกคะแนนแล้วหา db ไม่เจอ
+    //     ans: Check ว่า user มี account บนเว็บหรือเปล่า จะทำหลังจาก enableTrip ทำงาน --> แล้วเช็ค fn ใน bot.js จาก #ปิดทริป
+    // [ ] 1--> ต้องsetไว้ว่า ให้มี collection 'Score' ไว้อยู่แล้วเริ่มต้นที่ 0 ไม่งั้นมันจะ get ไม่ได้ ถ้าไม่มีข้อมูลอยู่
+    //     ans: เมื่อ user register บนเว็บครั้งแรก  ให้ create Collection: Score ให้ user โดยเริ่มจาก 0 
+    // [/] 2--> ต้องแบ่ง case ของคะแนนไหม หรือให้ fe จัดการมาให้เลยว่าคะแนนเป็นเท่าไหร่ โดนต้องเป็น Integer
+    //     ans: fe ทำให้
+    // [ ] 3--> เพิ่ม count การกดให้คะแนนแต่ละครั้ง
+    //     ans: เก็บการกด submit การให้ score แต่ละครั้งว่าเป็นครั้งที่เท่าไหร่ เพื่อนเอาไปหารกับคะแนนทั้งหมด
+    // [ ] 4--> เปลี่ยนชื่อตัวแปรทั้ง 3 ตัวนั้น
+
 
     await saveScoreTrip(datas).then(() => {
         return res.status(201).json({
             message: "Done!"
-        })
+        });
     });
 });
 
@@ -616,6 +630,15 @@ async function deleteTrip(datas) {
         }).catch(function (error) {
             console.error("Error deleted document trip: ", error);
         });
+};
+
+async function getScoreByID(lineID) {
+    let scoreList = [];
+    let getScoreByID = db.collection('AccountProfile').doc(lineID).collection('Score').doc(lineID);
+    await getScoreByID.get().then(async doc => {
+        scoreList.push(doc.data());
+    });
+    return scoreList;
 };
 
 async function saveScoreTrip(datas) {
