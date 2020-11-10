@@ -140,7 +140,7 @@ function ProfileDetails(props) {
                         <Col span={24}>
                             {props.lineID === props.acc.lineID ?
                                 <>
-                                    <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
+                                <Tooltip title="ใส่ข้อมูลเพื่อแนะนำตัวเองเพิ่มเติม">
                                         Bio
                                 </Tooltip>
                                     <AntParagraph
