@@ -16,6 +16,18 @@ async function checkTripAvaliable(data) {
     return status;
 };
 
+async function checkAccountProfile(data) {
+    const checkUserRef = db.collection('AccountProfile').doc(data);
+    await checkUserRef.get().then(async snapshot => {
+        if (snapshot.empty) {
+            status = false;
+        } else {
+            status = true;
+        }
+    })
+    return status;
+};
+
 async function getLocation(data) {
 
 };
@@ -24,4 +36,4 @@ async function getWeather(data) {
 
 };
 
-module.exports = { checkTripAvaliable };
+module.exports = { checkTripAvaliable, checkAccountProfile };

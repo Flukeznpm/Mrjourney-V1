@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable } = require('../controller/botController');
+const { checkTripAvaliable, checkAccountProfile } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
     let reply_token = req.body.events[0].replyToken

@@ -203,7 +203,6 @@ async function getAccountByID(datas) {
 };
 
 async function createAccountDetail(datas) {
-    // let genUserID = await generateUserID();
     await db.collection('AccountProfile').doc(datas.lineID).set({
         lineID: datas.lineID,
         displayName: datas.displayName,
@@ -214,6 +213,12 @@ async function createAccountDetail(datas) {
         birthday: datas.birthday,
         bio: datas.bio,
         userID: datas.lineID
+    });
+    await db.collection('AccountProfile').doc(datas.lineID).collection('Score').doc(datas.lineID).set({
+        preparation: 0,
+        entertainment: 0,
+        value: 0,
+        countOfSubmit: 0
     });
 };
 
