@@ -6,8 +6,7 @@ import {
     Row, Col,
     Rate,
     Form as AntForm,
-    Button as AntButton,
-    Descriptions
+    Button as AntButton
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 
@@ -31,7 +30,6 @@ const RowLoading = styled(Row)`
 const LoadingGif = styled.img`
     height: 250px;
     width: 250px;
-   
 `;
 
 const ImgCover = styled.img`
@@ -42,6 +40,7 @@ const ImgCover = styled.img`
 `;
 
 const PrimaryButton = styled(AntButton)`
+    margin-top: 20px;
     border-radius: 4px;
     font-size: 16px;
     height: 50px;
@@ -54,12 +53,17 @@ const PrimaryButton = styled(AntButton)`
 `;
 
 const AntFormItem = styled(AntForm.Item)`
-    margin-bottom: 0px;
-    padding: 5px;
+margin-bottom: 0px;
+    .ant-form-item {
+        margin-bottom: 0px;
+    }
+    .ant-form-item-label {
+        padding-bottom: 0px;
+    }
 `;
 
 const RateComponent = styled(Rate)`
-    padding: 5px;
+    padding: 10px;
     .ant-rate-star {
         color: ${props => (props.theme.color.primary)};
         font-size: 40px;
@@ -67,7 +71,7 @@ const RateComponent = styled(Rate)`
 `;
 
 const TripNameText = styled.div`
-    padding-top: 10px; 
+    padding-top: 10px;
     padding-bottom: 10px;
 `;
 
@@ -130,15 +134,15 @@ function Rating(props) {
                 <Row justify="center">
                     <Col span={24} className="text-center">
                         <AntForm onFinish={onFinish}>
-                            <AntForm.Item name="ratingOne" label="ความเพรียบพร้อม" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                            <AntFormItem name="ratingOne" label="ความเพรียบพร้อม" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                 <RateComponent allowHalf />
-                            </AntForm.Item>
-                            <AntForm.Item name="ratingTwo" label="ความคุ้มค่า" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                            </AntFormItem>
+                            <AntFormItem name="ratingTwo" label="ความคุ้มค่า" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                 <RateComponent allowHalf />
-                            </AntForm.Item>
-                            <AntForm.Item name="ratingThree" label="ความสนุก" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                            </AntFormItem>
+                            <AntFormItem name="ratingThree" label="ความสนุก" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                                 <RateComponent allowHalf />
-                            </AntForm.Item>
+                            </AntFormItem>
                             <AntFormItem>
                                 <PrimaryButton type="primary" size={"large"} block htmlType="เสร็จสิ้น">ถัดไป</PrimaryButton>
                             </AntFormItem>

@@ -167,14 +167,16 @@ function CreateBill(props) {
                         ยอดรวมบิล
                     </Row>
                     <Row>
-                        <AntParagraph
-                            editable={{
-                                onChange: (handleBill),
-                                maxLength: 5,
-                            }}
-                        >
-                            {totalBill}
-                        </AntParagraph>
+                        <Col span={24} className="text-right">
+                            <AntParagraph
+                                editable={{
+                                    onChange: (handleBill),
+                                    maxLength: 5,
+                                }}
+                            >
+                                {totalBill}
+                            </AntParagraph>
+                        </Col>
                     </Row>
                     <Row>
                         ยอดแต่ละคน
@@ -184,10 +186,10 @@ function CreateBill(props) {
                             return (
                                 <Col span={24}>
                                     <Row justify="space-between">
-                                        <Col span={18}>
+                                        <Col span={12}>
                                             {members}
                                         </Col>
-                                        <Col span={6}>
+                                        <Col span={12} className="text-right">
                                             {(totalBill / membersM.length).toFixed(2)}
                                         </Col>
                                     </Row>
