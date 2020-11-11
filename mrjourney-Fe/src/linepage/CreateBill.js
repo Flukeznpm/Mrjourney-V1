@@ -11,6 +11,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 import MoneyModal from '../components/components/MoneyModal';
+import BankPayment from '../components/components/Modal/BankPayment';
 
 const { Paragraph } = Typography;
 const AntParagraph = styled(Paragraph)`
@@ -122,8 +123,10 @@ function CreateBill(props) {
 
     const [loading, isLoading] = useState(true)
     const [totalBill, setTotalBill] = useState(0)
+    const [weather, setWeather] = useState([{}])
     const [isVisibleMoney, setVisibleMoney] = useState(false)
-    const [membersM, setMemberM] = useState(['rom', 'gun', 'fluke'])
+    const [isVisiblePayment, setVisiblePayment] = useState(false)
+    const [membersM, setMemberM] = useState([])
 
     useEffect(async () => {
         isLoading(false)
@@ -139,6 +142,10 @@ function CreateBill(props) {
 
     const onVisibleMoneyModal = () => {
         setVisibleMoney(true)
+    }
+
+    const onVisiblePaymentModal = () => {
+        setVisiblePayment(true)
     }
 
     if (loading) {
@@ -205,10 +212,24 @@ function CreateBill(props) {
                         <MoneyModal
                             isVisible={isVisibleMoney}
                             setVisible={setVisibleMoney}
+                            setMemberM={setMemberM}
+                            membersM={membersM}
                         />
                     </Row>
                     <Row>
-                        บัญชีเงินรับ
+                        บัญชีเงินรับ {console.log(membersM)}
+                    </Row>
+                    <Row>
+                        <AddEventButton block
+                            size={"large"} htmlType="submit"
+                            onClick={() => onVisiblePaymentModal()}
+                        >
+                            <PlusOutlined />
+                        </AddEventButton>
+                        <BankPayment
+                            isVisible={isVisiblePayment}
+                            setVisible={setVisiblePayment}
+                        />
                     </Row>
                 </WrapperContent>
                 <Row justify="center" className="bg-white fixed-bottom">

@@ -70,7 +70,7 @@ const InputComponent = styled(AntInput)`
 `;
 
 
-function MoneyModal(props) {
+function BankPayment(props) {
 
     const [form] = AntForm.useForm();
 
@@ -100,8 +100,8 @@ function MoneyModal(props) {
             <AntForm form={form} onFinish={onFinish}>
                 <Row justify="center" >
                     <ColButton span={20}>
-                        <AntForm.Item name="monName" label="ชือผู้จ่ายเงิน" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                            <InputComponent placeholder="ใส่ชื่อผู้คนที่ต้องเก็บเงิน" />
+                        <AntForm.Item name="OwnerName" label="ชือเจ้าของบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                            <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
                         </AntForm.Item>
                     </ColButton>
                 </Row>
@@ -131,4 +131,4 @@ function MoneyModal(props) {
 }
 
 
-export default MoneyModal;
+export default BankPayment;
