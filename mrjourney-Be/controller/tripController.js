@@ -645,10 +645,10 @@ async function saveScoreTrip(datas) {
     let entertainment = datas.entertainment;
     let value = datas.value;
     let lineID = datas.lineID;
-    let tripID = datas.tripID;
+    // let tripID = datas.tripID;
     let scoreList = [];
 
-    let saveScoreRef = db.collection('AccountProfile').doc(lineID).collection('Score').doc(tripID);
+    let saveScoreRef = db.collection('AccountProfile').doc(lineID).collection('Score').doc(lineID);
     await saveScoreRef.get().then(doc => {
         scoreList.push(doc.data());
     });
