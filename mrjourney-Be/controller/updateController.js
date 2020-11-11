@@ -58,7 +58,7 @@ router.post('/enableRoom', async function (req, res, next) {
 router.post('/enableTrip', async function (req, res, next) {
     let datas = req.body;
     if (
-        datas.currentDate == undefined || datas.currentDate == null ||
+        // datas.currentDate == undefined || datas.currentDate == null ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400);
@@ -119,8 +119,9 @@ router.post('/enableTrip', async function (req, res, next) {
             });
 
             let tripID = tripIDList.map(t => t.tripID).toString();
+            let lineGroupID = datas.lineGroupID;
 
-            await enableTrip(datas, tripID);
+            await enableTrip(lineGroupID, tripID);
             return res.status(201).json({
                 message: "You trip is end"
             });
@@ -187,8 +188,8 @@ async function updateProfile(datas) {
     // });
 };
 
-async function enableTrip(datas, tripID) {
-    let closeTrip = db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').doc(tripID);
+async function enableTrip(lineGroupID, tripID) {
+    let closeTrip = db.collection('LineGroup').doc(lineGroupID).collection('Trip').doc(tripID);
     await closeTrip.update({
         tripStatus: false
     })
