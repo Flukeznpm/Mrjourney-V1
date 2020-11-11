@@ -19,6 +19,7 @@ var accountProfileRouter = require('./controller/accountProfileController');
 var tripRouter = require('./controller/tripController');
 var roomRouter = require('./controller/roomController');
 var updateRouter = require('./controller/updateController');
+var billRouter = require('./controller/billController');
 var bot = require('./lineBot/bot');
 
 // app.use(bodyParser.json());
@@ -39,6 +40,7 @@ app.use("/update", updateRouter);
 app.use("/accountProfile", accountProfileRouter);
 app.use("/trip", tripRouter);
 app.use("/room", roomRouter);
+app.use("/bill", billRouter);
 app.use("/bot", bot);
 
 app.listen(process.env.PORT || 5000, () => {

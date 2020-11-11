@@ -8,6 +8,7 @@ import {
     Form as AntForm,
     Button as AntButton
 } from 'antd';
+import Swal from 'sweetalert2';
 import { withRouter } from 'react-router-dom';
 
 const Wrapper = styled.div`
@@ -77,13 +78,16 @@ const TripNameText = styled.div`
 
 function Rating(props) {
 
-    const [rating, setRating] = useState(0)
     const [loading, isLoading] = useState(true)
     const [tripList, setTripList] = useState([{}])
     const [LineID, setLineID] = useState('')
     const [LineName, setLineName] = useState('')
     const [LinePicture, setLinePicture] = useState('')
     const [LineGroup, setLineGroup] = useState('')
+    const [owner, setOwner] = useState('')
+    const [ratingOne, setRatingOne] = useState(0)
+    const [ratingTwo, setRatingTwo] = useState(0)
+    const [ratingThree, setRatingThree] = useState(0)
 
     useEffect(() => {
         liff.init({ liffId: '1653975470-q8mJvPdV' }).then(async () => {
@@ -107,9 +111,29 @@ function Rating(props) {
             }
         })
     }, [LineGroup]);
+    const onChangeRatingOne = e => {
+        setRatingOne(e)
+    }
 
-    const onFinish = values => {
-        setRating(values.ratingOne + values.ratingTwo + values.ratingThree)
+    const onChangeRatingTwo = e => {
+        setRatingTwo(e)
+    }
+
+    const onChangeRatingThree = e => {
+        setRatingThree(e)
+    }
+
+    const onFinish = async (e) => {
+        let dataRating = {
+            lineID: owner,
+            preparation: ratingOne,
+            value: ratingTwo,
+            entertainment: ratingThree
+        }
+        await axios.post(`https://mrjourney-senior.herokuapp.com/trip/score`, dataRating)
+            .then(res => {
+                liff.closeWindow()
+            });
     };
 
     if (loading) {
@@ -126,29 +150,31 @@ function Rating(props) {
                 <ImgCover src="/img/pr-01.png" />
                 {tripList.map((trip) => {
                     return (
-                        <TripNameText>
-                            {trip.tripName}
-                        </TripNameText>
+                        <>
+                            <TripNameText>
+                                {trip.tripName}
+                            </TripNameText>
+                            <Row justify="center">
+                                <Col span={24} className="text-center">
+                                    <AntForm onFinish={onFinish}>
+                                        <AntForm.Item name="ratingOne" label="ความเพรียบพร้อม" labelCol={{ span: 24 }}>
+                                            <RateComponent allowHalf onChange={onChangeRatingOne} />
+                                        </AntForm.Item>
+                                        <AntForm.Item name="ratingTwo" label="ความคุ้มค่า" labelCol={{ span: 24 }}>
+                                            <RateComponent allowHalf onChange={onChangeRatingTwo} />
+                                        </AntForm.Item>
+                                        <AntForm.Item name="ratingThree" label="ความสนุก" labelCol={{ span: 24 }}>
+                                            <RateComponent allowHalf onChange={onChangeRatingThree} />
+                                        </AntForm.Item>
+                                        <AntFormItem>
+                                            <PrimaryButton onClick={() => setOwner(trip.ownerTrip)} type="primary" size={"large"} block htmlType="เสร็จสิ้น">ถัดไป</PrimaryButton>
+                                        </AntFormItem>
+                                    </AntForm>
+                                </Col>
+                            </Row>
+                        </>
                     )
                 })}
-                <Row justify="center">
-                    <Col span={24} className="text-center">
-                        <AntForm onFinish={onFinish}>
-                            <AntFormItem name="ratingOne" label="ความเพรียบพร้อม" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                <RateComponent allowHalf />
-                            </AntFormItem>
-                            <AntFormItem name="ratingTwo" label="ความคุ้มค่า" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                <RateComponent allowHalf />
-                            </AntFormItem>
-                            <AntFormItem name="ratingThree" label="ความสนุก" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                <RateComponent allowHalf />
-                            </AntFormItem>
-                            <AntFormItem>
-                                <PrimaryButton type="primary" size={"large"} block htmlType="เสร็จสิ้น">ถัดไป</PrimaryButton>
-                            </AntFormItem>
-                        </AntForm>
-                    </Col>
-                </Row>
             </Wrapper>
         )
     }
