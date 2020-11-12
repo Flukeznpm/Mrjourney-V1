@@ -8,7 +8,8 @@ import {
     Row, Col,
     Button as AntButton,
     Form as AntForm,
-    Input as AntInput
+    Input as AntInput,
+    Radio
 } from 'antd';
 
 const DeleteModalComponent = styled(AntModal)`
@@ -24,6 +25,7 @@ const DeleteModalComponent = styled(AntModal)`
     }
     .ant-modal-body {
         padding-top: 0px;
+        padding-bottom: 0px;
     }
     .ant-modal-footer {
         border-top: none;
@@ -73,18 +75,31 @@ const InputComponent = styled(AntInput)`
 function BankPayment(props) {
 
     const [form] = AntForm.useForm();
+    const [value, setValue] = useState("พร้อมเพย์");
 
     const onCancel = () => {
         props.setVisible(false)
     };
 
     const onFinish = values => {
-        props.setMemberM(props.membersM.concat(values.monName))
+        if(value === "พร้อมเพย์") {
+            props.setPaymentBank(value)
+        } else {
+            props.setPaymentBank(values.bankName)
+        }
+        props.setOwnerName(values.ownerName)
+        props.setPaymentNumber(values.paymentNumber)
         form.setFieldsValue({
-            monName: null,
+            ownerName: null,
+            bankName: null,
+            paymentNumber: null
         })
         props.setVisible(false)
     };
+
+    const onChangePaymentType = e => {
+        setValue(e.target.value)
+    }
 
     return (
         <DeleteModalComponent
@@ -100,31 +115,58 @@ function BankPayment(props) {
             <AntForm form={form} onFinish={onFinish}>
                 <Row justify="center" >
                     <ColButton span={20}>
-                        <AntForm.Item name="OwnerName" label="ชือเจ้าของบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                        <AntForm.Item name="ownerName" label="ชือเจ้าของบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                             <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
+                        </AntForm.Item>
+                        <Radio.Group onChange={onChangePaymentType} value={value}>
+                            <Radio value="พร้อมเพย์">
+                                พร้อมเพย์
+                                {value === "พร้อมเพย์" ?
+                                    <AntForm.Item name="paymentNumber" label="เลขบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                        <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
+                                    </AntForm.Item>
+                                    :
+                                    null
+                                }
+                            </Radio>
+                            <Radio value="ธนาคาร">
+                                ธนาคาร
+                                {value === "ธนาคาร" ?
+                                    <>
+                                        <AntForm.Item name="bankName" label="ชื่อธนาคาร" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                            <InputComponent placeholder="ใส่ชื่อธนาคาร" />
+                                        </AntForm.Item>
+                                        <AntForm.Item name="paymentNumber" label="เลขบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                            <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
+                                        </AntForm.Item>
+                                    </>
+                                    :
+                                    null
+                                }
+                            </Radio>
+                        </Radio.Group>
+                    </ColButton>
+                </Row>
+                {/* <Col span={24}> */}
+                <Row justify="center" gutter={8}>
+                    <ColButton span={10}>
+                        <OutlineButton
+                            size={"large"}
+                            block htmlType="button"
+                            onClick={onCancel}
+                        >ยกเลิก</OutlineButton>
+                    </ColButton>
+                    <ColButton span={10}>
+                        <AntForm.Item>
+                            <PrimaryButton
+                                type="primary"
+                                size={"large"}
+                                block htmlType="submit"
+                            >ยืนยัน</PrimaryButton>
                         </AntForm.Item>
                     </ColButton>
                 </Row>
-                <Col span={24}>
-                    <Row justify="center" gutter={8}>
-                        <ColButton span={10}>
-                            <OutlineButton
-                                size={"large"}
-                                block htmlType="button"
-                                onClick={onCancel}
-                            >ยกเลิก</OutlineButton>
-                        </ColButton>
-                        <ColButton span={10}>
-                            <AntForm.Item>
-                                <PrimaryButton
-                                    type="primary"
-                                    size={"large"}
-                                    block htmlType="submit"
-                                >ยืนยัน</PrimaryButton>
-                            </AntForm.Item>
-                        </ColButton>
-                    </Row>
-                </Col>
+                {/* </Col> */}
             </AntForm>
         </DeleteModalComponent>
     )

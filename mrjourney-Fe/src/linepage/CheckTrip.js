@@ -51,7 +51,7 @@ function CheckTrip(props) {
     } else {
         return (
             <div className="text-center">
-                CheckTrip
+                CheckTrip {console.log(tripList)}
                 {tripList.map((trip) => {
                     return (
                         <>
