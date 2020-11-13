@@ -127,10 +127,12 @@ const AntFormItem = styled(AntForm.Item)`
 
 function CheckTrip(props) {
     const { Trip, setActiveEvent, setNotActiveEvent } = useContext(HookContext)
+    
     const [LineID, setLineID] = useState('')
     const [LineName, setLineName] = useState('')
     const [LinePicture, setLinePicture] = useState('')
     const [LineGroup, setLineGroup] = useState('')
+
     const [tripList, setTripList] = useState([{}])
     const [loading, isLoading] = useState(true)
     const [isVisible, setVisible] = useState(false)

@@ -79,7 +79,6 @@ function CreateRoomStep1(props) {
             handleRoomForm(roomQrCodeImg, 'qrCode')
             nextStep(1)
         }
-
     };
 
     const onStartDateChange = (date, dateString) => {

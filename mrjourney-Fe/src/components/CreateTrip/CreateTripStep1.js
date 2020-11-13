@@ -138,7 +138,7 @@ function CreateTripStep1(props) {
         return (
             <WrapperLoading>
                 <RowLoading justify="center">
-                    <LoadingGif src="/gif/loading.gif" alt="loading..." />
+                    <LoadingGif src="/gif/loading-v2.gif" alt="loading..." />
                 </RowLoading>
             </WrapperLoading>
         )

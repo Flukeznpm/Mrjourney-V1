@@ -16,6 +16,7 @@ import {
 import ProfileDetails from '../components/Profile/ProfileDetails';
 import HistoryCreateRoom from '../components/Profile/HistoryCreateRoom/View';
 import HistoryCreateTrip from '../components/Profile/HistoryCreateTrip/View';
+import Rating from '../components/Profile/Rating/View';
 
 const AntCard = styled(Card)`
   border-radius: 8px;
@@ -32,6 +33,7 @@ function Profile(props) {
     const [isEditProfile, setEditProfile] = useState(false)
     const [isEditBio, setEditBio] = useState(true);
     const [loading, isLoading] = useState(true)
+
 
     useEffect(() => {
         let loadJWT = cookie.load('jwt');
@@ -93,9 +95,8 @@ function Profile(props) {
                                             <Row>
                                                 <h4 style={{ fontWeight: "bold" }}>คะแนน</h4>
                                             </Row>
-                                            <Row justify="center">
-                                                <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5>
-                                            </Row>
+                                                <Rating />
+                                                {/* <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5> */}
                                         </AntCard>
                                     </Col>
                                 </Row>

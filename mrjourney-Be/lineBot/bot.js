@@ -516,7 +516,7 @@ function replyBill(reply_token, msg) {
                             action: {
                                 type: "message",
                                 label: "สร้างบิล",
-                                text: "สร้างบิล"
+                                text: "#สร้างบิล"
                             }
                         },
                         {
@@ -524,7 +524,7 @@ function replyBill(reply_token, msg) {
                             action: {
                                 type: "message",
                                 label: "ดูบิล",
-                                text: "ดูบิล"
+                                text: "#ดูบิล"
                             }
                         }
                     ]

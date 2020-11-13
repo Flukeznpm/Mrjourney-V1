@@ -24,6 +24,7 @@ const DeleteModalComponent = styled(AntModal)`
     }
     .ant-modal-body {
         padding-top: 0px;
+        padding-bottom: 0px;
     }
     .ant-modal-footer {
         border-top: none;
@@ -58,37 +59,21 @@ const OutlineButton = styled(AntButton)`
     }
 `;
 
-const InputComponent = styled(AntInput)`
-    border-radius: 4px;
-    height: 40px;
-    width: 100%;
-    font-size: 16px;
-    align-items: center;
-    &:hover , &:active, &:focus {
-        border-color: ${props => (props.theme.color.primary)};
-    }
-`;
+function CreateBillModal(props) {
 
-
-function MoneyModal(props) {
-
-    const [form] = AntForm.useForm();
 
     const onCancel = () => {
         props.setVisible(false)
     };
 
-    const onFinish = values => {
-        props.setMemberM(props.membersM.concat(values.monName))
-        form.setFieldsValue({
-            monName: null,
-        })
+    const onConfirm = values => {
+
         props.setVisible(false)
     };
 
     return (
         <DeleteModalComponent
-            title="แน่ใจหรือไม่ว่าต้องการลบห้อง?"
+            title="ยืนยันการสร้างบิล?"
             visible={props.isVisible}
             // onOk={handleOK}
             onCancel={onCancel}
@@ -97,38 +82,32 @@ function MoneyModal(props) {
             centered
             width={400}
         >
-            <AntForm form={form} onFinish={onFinish}>
-                <Row justify="center" >
-                    <ColButton span={20}>
-                        <AntForm.Item name="monName" label="ชือผู้จ่ายเงิน" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                            <InputComponent placeholder="ใส่ชื่อผู้คนที่ต้องเก็บเงิน" />
+
+            <Col span={24}>
+                <Row justify="center" gutter={8}>
+                    <ColButton span={10}>
+                        <OutlineButton
+                            size={"large"}
+                            block htmlType="button"
+                            onClick={onCancel}
+                        >ยกเลิก</OutlineButton>
+                    </ColButton>
+                    <ColButton span={10}>
+                        <AntForm.Item>
+                            <PrimaryButton
+                                type="primary"
+                                size={"large"}
+                                block htmlType="submit"
+                                onClick={() => onConfirm()}
+                            >ยืนยัน</PrimaryButton>
                         </AntForm.Item>
                     </ColButton>
                 </Row>
-                <Col span={24}>
-                    <Row justify="center" gutter={8}>
-                        <ColButton span={10}>
-                            <OutlineButton
-                                size={"large"}
-                                block htmlType="button"
-                                onClick={onCancel}
-                            >ยกเลิก</OutlineButton>
-                        </ColButton>
-                        <ColButton span={10}>
-                            <AntForm.Item>
-                                <PrimaryButton
-                                    type="primary"
-                                    size={"large"}
-                                    block htmlType="submit"
-                                >ยืนยัน</PrimaryButton>
-                            </AntForm.Item>
-                        </ColButton>
-                    </Row>
-                </Col>
-            </AntForm>
+            </Col>
+
         </DeleteModalComponent>
     )
 }
 
 
-export default MoneyModal;
+export default CreateBillModal;
