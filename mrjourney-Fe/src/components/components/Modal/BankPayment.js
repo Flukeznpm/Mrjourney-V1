@@ -60,6 +60,16 @@ const OutlineButton = styled(AntButton)`
     }
 `;
 
+const RadioComponent = styled(Radio)`
+    padding: 15px;
+    display: flex;
+    padding-left: 0px;
+`;
+
+const AntFormItem = styled(AntForm.Item)`
+    margin-bottom: 12px;
+`;
+
 const InputComponent = styled(AntInput)`
     border-radius: 4px;
     height: 40px;
@@ -82,7 +92,7 @@ function BankPayment(props) {
     };
 
     const onFinish = values => {
-        if(value === "พร้อมเพย์") {
+        if (value === "พร้อมเพย์") {
             props.setPaymentBank(value)
         } else {
             props.setPaymentBank(values.bankName)
@@ -103,7 +113,7 @@ function BankPayment(props) {
 
     return (
         <DeleteModalComponent
-            title="แน่ใจหรือไม่ว่าต้องการลบห้อง?"
+            title="บัญชีรับเงิน"
             visible={props.isVisible}
             // onOk={handleOK}
             onCancel={onCancel}
@@ -115,40 +125,39 @@ function BankPayment(props) {
             <AntForm form={form} onFinish={onFinish}>
                 <Row justify="center" >
                     <ColButton span={20}>
-                        <AntForm.Item name="ownerName" label="ชือเจ้าของบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                        <AntFormItem name="ownerName" label="ชือเจ้าของบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                             <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
-                        </AntForm.Item>
+                        </AntFormItem>
                         <Radio.Group onChange={onChangePaymentType} value={value}>
-                            <Radio value="พร้อมเพย์">
+                            <RadioComponent value="พร้อมเพย์">
                                 พร้อมเพย์
-                                {value === "พร้อมเพย์" ?
-                                    <AntForm.Item name="paymentNumber" label="เลขบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                        <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
-                                    </AntForm.Item>
-                                    :
-                                    null
-                                }
-                            </Radio>
-                            <Radio value="ธนาคาร">
+                            </RadioComponent>
+                            {value === "พร้อมเพย์" ?
+                                <AntFormItem name="paymentNumber" label="เลขบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                    <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
+                                </AntFormItem>
+                                :
+                                null
+                            }
+                            <RadioComponent value="ธนาคาร">
                                 ธนาคาร
-                                {value === "ธนาคาร" ?
-                                    <>
-                                        <AntForm.Item name="bankName" label="ชื่อธนาคาร" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                            <InputComponent placeholder="ใส่ชื่อธนาคาร" />
-                                        </AntForm.Item>
-                                        <AntForm.Item name="paymentNumber" label="เลขบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                                            <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
-                                        </AntForm.Item>
-                                    </>
-                                    :
-                                    null
-                                }
-                            </Radio>
+                            </RadioComponent>
+                            {value === "ธนาคาร" ?
+                                <>
+                                    <AntFormItem name="bankName" label="ชื่อธนาคาร" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                        <InputComponent placeholder="ใส่ชื่อธนาคาร" />
+                                    </AntFormItem>
+                                    <AntFormItem name="paymentNumber" label="เลขบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                        <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
+                                    </AntFormItem>
+                                </>
+                                :
+                                null
+                            }
                         </Radio.Group>
                     </ColButton>
                 </Row>
-                {/* <Col span={24}> */}
-                <Row justify="center" gutter={8}>
+                <Row justify="center" gutter={8} className="mt-2">
                     <ColButton span={10}>
                         <OutlineButton
                             size={"large"}
@@ -162,11 +171,10 @@ function BankPayment(props) {
                                 type="primary"
                                 size={"large"}
                                 block htmlType="submit"
-                            >ยืนยัน</PrimaryButton>
+                            >บันทึก</PrimaryButton>
                         </AntForm.Item>
                     </ColButton>
                 </Row>
-                {/* </Col> */}
             </AntForm>
         </DeleteModalComponent>
     )
