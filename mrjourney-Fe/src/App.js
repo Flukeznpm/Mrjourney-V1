@@ -20,8 +20,10 @@ import Profile from './webpage/Profile';
 import NotMatchPage from './NotMatchPage';
 import RoomHistoryJoin from './components/JoinedRoom/RoomHistoryJoin.js/View';
 import Rating from './linepage/Rating';
-import CreateBill from './linepage/CreateBill';
 import WeatherPage from './webpage/WeatherPage';
+import CreateBill from './linepage/Bill/CreateBill';
+import CheckBill from './linepage/Bill/CheckBill';
+import PayBill from './linepage/Bill/PayBill';
 
 function App() {
   return (
@@ -38,6 +40,12 @@ function App() {
         </Route>
         <Route path="/CreateBill">
           <CreateBill />
+        </Route>
+        <Route path="/CheckBill">
+          <CheckBill />
+        </Route>
+        <Route path="/PayBill">
+          <PayBill />
         </Route>
         <Route path="/CheckTrip" >
           <CheckTrip />

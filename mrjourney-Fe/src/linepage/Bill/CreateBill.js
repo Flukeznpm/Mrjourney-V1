@@ -11,9 +11,9 @@ import {
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
-import MoneyModal from '../components/components/MoneyModal';
-import BankPayment from '../components/components/Modal/BankPayment';
-import CreateBillModal from '../components/components/Modal/CreateBillModal';
+import MoneyModal from '../../components/components/MoneyModal'
+import BankPayment from '../../components/components/Modal/BankPayment';
+import CreateBillModal from '../../components/components/Modal/CreateBillModal'
 
 const { Paragraph } = Typography;
 const AntParagraph = styled(Paragraph)`
@@ -312,8 +312,8 @@ function CreateBill(props) {
                         setVisible={setVisiblePayment}
                         setOwnerName={setOwnerName}
                         setPaymentNumber={setPaymentNumber}
-                        setPaymentBank={setPaymentBank}
-                    />
+                        setPaymentBank={setPaymentBank}>
+                    </BankPayment>
                 </WrapperContent>
                 <Row justify="center" className="bg-white fixed-bottom">
                     <AntForm className="container">
