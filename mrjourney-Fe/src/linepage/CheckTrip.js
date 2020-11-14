@@ -16,6 +16,8 @@ import { CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/
 import ShowEventBox from '../components/CreateTrip/components/ShowEventBox';
 import momentjs from 'moment';
 import Stepper from '../components/components/Stepper';
+import EnableTripModal from '../components/components/Modal/EnableTripModal';
+import Swal from 'sweetalert2';
 
 const WrapperLoading = styled.div`
     width: 100%;
@@ -127,7 +129,7 @@ const AntFormItem = styled(AntForm.Item)`
 
 function CheckTrip(props) {
     const { Trip, setActiveEvent, setNotActiveEvent } = useContext(HookContext)
-    
+
     const [LineID, setLineID] = useState('')
     const [LineName, setLineName] = useState('')
     const [LinePicture, setLinePicture] = useState('')
@@ -137,6 +139,8 @@ function CheckTrip(props) {
     const [loading, isLoading] = useState(true)
     const [isVisible, setVisible] = useState(false)
     const [isEditTrip, setEditTrip] = useState(false)
+    const [isVisibleEnableTrip, setVisibleEnableTrip] = useState(false)
+    const [isEnableTrip, setEnableTrip] = useState(true)
 
     useEffect(() => {
         liff.init({ liffId: '1653975470-4Webv3MY' }).then(async () => {
@@ -172,6 +176,24 @@ function CheckTrip(props) {
 
     const backToChat = () => {
         liff.closeWindow()
+    }
+    const checkEnableTrip = (date) => {
+        let currentDate = new Date()
+        let endDateStr = momentjs(date).format('ll')
+        var endDate = new Date(Date.parse(endDateStr.replace(/-/g, " ")))
+        let checkEndDate = endDate <= currentDate;
+        if (checkEndDate === true) {
+            setVisibleEnableTrip(true)
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'ขออภัย!',
+                text: 'ทริปนี้ยังไม่ถึงวันจบทริป ไม่สามารถปิดทริปได้',
+                showCancelButton: false,
+                confirmButtonColor: '#D33',
+                confirmButtonText: 'ยอมรับ'
+            })
+        }
     }
 
     if (loading) {
@@ -324,6 +346,7 @@ function CheckTrip(props) {
                                                         type="link"
                                                         size={"large"}
                                                         block
+                                                        onClick={() => checkEnableTrip(trip.endDate)}
                                                     >ปิดทริป</SecondaryButton >
                                                 </Col>
                                                 <Col span={16}>
@@ -333,6 +356,12 @@ function CheckTrip(props) {
                                                     >กลับสู่ห้องแชท</PrimaryButton>
                                                 </Col>
                                             </Row>
+                                            <EnableTripModal
+                                                isVisible={isVisibleEnableTrip}
+                                                setVisible={setVisibleEnableTrip}
+                                                lineGroupID={LineGroup}
+                                                lineID={LineID}
+                                            />
                                         </AntFormItem>
                                     </AntForm>
                                 </Row>

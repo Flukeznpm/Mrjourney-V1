@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import cookie from 'react-cookies';
 import {
     Modal as AntModal,
     Row, Col,
-    Button as AntButton
+    Button as AntButton,
+    Form as AntForm,
+    Input as AntInput
 } from 'antd';
 import liff from '@line/liff';
 
@@ -20,6 +24,8 @@ const DeleteModalComponent = styled(AntModal)`
         padding-top: 18px;
     }
     .ant-modal-body {
+        padding-top: 0px;
+        padding-bottom: 0px;
     }
     .ant-modal-footer {
         border-top: none;
@@ -54,11 +60,15 @@ const OutlineButton = styled(AntButton)`
     }
 `;
 
+function EnableTripModal(props) {
 
-function DeleteTripModal(props) {
 
-    const onDeleteTrip = async (lineGroupID, lineID, tripID) => {
-        await axios.delete(`https://mrjourney-senior.herokuapp.com/trip/deleteTrip?lineID=${lineID}&lineGroupID=${lineGroupID}&tripID=${tripID}`)
+    const onCancel = () => {
+        props.setVisible(false)
+    };
+
+    const onConfirm = async (lineGroupID) => {
+        await axios.post(`https://mrjourney-senior.herokuapp.com/update/enableTrip?lineGroupID=${lineGroupID}`)
             .then(res => {
                 console.log(res)
             })
@@ -68,31 +78,15 @@ function DeleteTripModal(props) {
             liff.sendMessages([
                 {
                     "type": "text",
-                    "text": "#ยกเลิกทริป"
+                    "text": "#ปิดทริป"
                 }
             ])
         }
-    }
-
-    // const sendMsg = () => {
-    //     if (liff.getContext().type !== "none") {
-    //         liff.sendMessages([
-    //             {
-    //                 "type": "text",
-    //                 "text": "#ปิดทริป"
-    //             }
-    //         ])
-    //         alert("Message sent")
-    //     }
-    // }
-
-    const onCancel = () => {
-        props.setVisible(false)
     };
 
     return (
         <DeleteModalComponent
-            title="แน่ใจหรือไม่ว่าต้องการลบห้อง?"
+            title="ทริปสิ้นสุดแล้ว ต้องการปิดทริปหรือไม่?"
             visible={props.isVisible}
             // onOk={handleOK}
             onCancel={onCancel}
@@ -101,9 +95,6 @@ function DeleteTripModal(props) {
             centered
             width={400}
         >
-            lineID: {props.lineID}
-            <br />lineGroupID: {props.lineGroupID}
-            <br />tripID: {props.tripID}
             <Col span={24}>
                 <Row justify="center" gutter={8}>
                     <ColButton span={10}>
@@ -111,15 +102,17 @@ function DeleteTripModal(props) {
                             size={"large"}
                             block htmlType="button"
                             onClick={onCancel}
-                        >ย้อนกลับ</OutlineButton>
+                        >ยกเลิก</OutlineButton>
                     </ColButton>
                     <ColButton span={10}>
-                        <PrimaryButton
-                            type="primary"
-                            size={"large"}
-                            block htmlType="submit"
-                            onClick={() => onDeleteTrip(props.lineGroupID, props.lineID, props.tripID)}
-                        >ยืนยัน</PrimaryButton>
+                        <AntForm.Item>
+                            <PrimaryButton
+                                type="primary"
+                                size={"large"}
+                                block htmlType="submit"
+                                onClick={() => onConfirm(props.lineGroupID)}
+                            >ยืนยัน</PrimaryButton>
+                        </AntForm.Item>
                     </ColButton>
                 </Row>
             </Col>
@@ -128,4 +121,4 @@ function DeleteTripModal(props) {
 }
 
 
-export default DeleteTripModal;
+export default EnableTripModal;

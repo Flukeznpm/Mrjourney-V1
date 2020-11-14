@@ -171,30 +171,35 @@ function CreateBill(props) {
     const [isVisibleMoney, setVisibleMoney] = useState(false)
     const [isVisiblePayment, setVisiblePayment] = useState(false)
     const [isVisibleConfirm, setVisibleConfirm] = useState(false)
-    const [membersM, setMemberM] = useState([])
+    const [whoPay, setWhoPay] = useState([])
     const [ownerName, setOwnerName] = useState("");
     const [paymentNumber, setPaymentNumber] = useState("");
     const [paymentBank, setPaymentBank] = useState("");
 
+    // useEffect(() => {
+    //     liff.init({ liffId: '1653975470-6rJYy1Qm' }).then(async () => {
+    //         if (liff.isLoggedIn()) {
+    //             if (!LineGroup || LineGroup === '') {
+    //                 let profile = await liff.getProfile();
+    //                 setLineID(profile.userId);
+    //                 setLineName(profile.displayName);
+    //                 setLinePicture(profile.pictureUrl);
+    //                 const context = await liff.getContext();
+    //                 setLineGroup(context.groupId)
+    //                 isLoading(true)
+    //             } else {
+    //                 isLoading(false)
+    //             }
+    //         } else {
+    //             props.history.push('/Home');
+    //         }
+    //     })
+    // }, [LineGroup]);
+
+    
     useEffect(() => {
-        liff.init({ liffId: '1653975470-6rJYy1Qm' }).then(async () => {
-            if (liff.isLoggedIn()) {
-                if (!LineGroup || LineGroup === '') {
-                    let profile = await liff.getProfile();
-                    setLineID(profile.userId);
-                    setLineName(profile.displayName);
-                    setLinePicture(profile.pictureUrl);
-                    const context = await liff.getContext();
-                    setLineGroup(context.groupId)
-                    isLoading(true)
-                } else {
-                    isLoading(false)
-                }
-            } else {
-                props.history.push('/Home');
-            }
-        })
-    }, [LineGroup]);
+        isLoading(false)
+    }, []);
 
     const handleBill = (value) => {
         setTotalBill(value)
@@ -210,9 +215,10 @@ function CreateBill(props) {
     const onVisibleConfirmModal = () => {
         setVisibleConfirm(true)
     }
-    const onDeleteMember = async (key) => {
-        membersM.splice(key, 1);
-        setMemberM(membersM)
+    const onDeleteMember = (key) => {
+        let array = [...whoPay];
+        array.splice(key, 1);
+        setWhoPay(array)
     }
 
     if (loading) {
@@ -256,15 +262,15 @@ function CreateBill(props) {
                         ยอดแต่ละคน
                     </Row>
                     <Row>
-                        {membersM.map((members, key) => {
+                        {whoPay.map((who, key) => {
                             return (
                                 <Col span={24}>
                                     <Row justify="space-between">
                                         <Col span={16}>
-                                            {members}
+                                            {who}
                                         </Col>
                                         <Col span={6} className="text-right">
-                                            {(totalBill / membersM.length).toFixed(2)}
+                                            {(totalBill / whoPay.length).toFixed(2)}
                                         </Col>
                                         <Col span={2}>
                                             <DeleteMemberButton type="primary"
@@ -289,8 +295,8 @@ function CreateBill(props) {
                         <MoneyModal
                             isVisible={isVisibleMoney}
                             setVisible={setVisibleMoney}
-                            setMemberM={setMemberM}
-                            membersM={membersM}
+                            setMemberM={setWhoPay}
+                            membersM={whoPay}
                         />
                     </Row>
                     <Row>
@@ -349,7 +355,7 @@ function CreateBill(props) {
                                         block htmlType="button"
                                     >ยกเลิก</PrevButton>
                                 </Col>
-                                {ownerName && paymentBank && paymentNumber && membersM && totalBill ?
+                                {ownerName && paymentBank && paymentNumber && whoPay && totalBill ?
                                     <Col span={16}>
                                         <PrimaryButton
                                             type="primary"
@@ -374,7 +380,7 @@ function CreateBill(props) {
                                     ownerName={ownerName}
                                     paymentBank={paymentBank}
                                     paymentNumber={paymentNumber}
-                                    membersM={membersM}
+                                    membersM={whoPay}
                                     totalBill={totalBill}
                                 />
                             </Row>
