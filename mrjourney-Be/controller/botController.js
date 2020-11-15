@@ -29,6 +29,11 @@ async function checkAccountProfile(data) {
     return status;
 };
 
+// async function checkOwnerTrip(data) {
+//     let checkOwnerTrip = await checkOwnerTrip(groupId);
+//     return checkOwnerTrip.tripID;
+// };
+
 async function getLocation(data) {
 
 };

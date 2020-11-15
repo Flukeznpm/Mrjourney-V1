@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable, checkAccountProfile } = require('../controller/botController');
+const { checkTripAvaliable, checkAccountProfile, checkOwnerTrip } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
     let reply_token = req.body.events[0].replyToken
@@ -86,6 +86,9 @@ router.post('/webhook', async (req, res) => {
         // replyRating(reply_token, msg)
         let userId = req.body.events[0].source.userId
         let checkAccount = await checkAccountProfile(userId);
+
+        // let groupId = req.body.events[0].source.groupId
+        // let checkOwnerTrip = await checkOwnerTrip(groupId);
         if(checkAccount) {
             replyRating(reply_token, msg)
         } else {
