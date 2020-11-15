@@ -17,12 +17,13 @@ async function checkTripAvaliable(data) {
 };
 
 async function checkAccountProfile(data) {
+    let status = false;
     const checkUserRef = db.collection('AccountProfile').doc(data);
     await checkUserRef.get().then(async snapshot => {
-        if (snapshot.empty) {
-            status = false;
-        } else {
+        if (snapshot.exists) {
             status = true;
+        } else {
+            status = false;
         }
     })
     return status;

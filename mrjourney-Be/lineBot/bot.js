@@ -82,8 +82,15 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#ยกเลิกทริป") {
         replyDeleteTrip(reply_token, msg)
     }
-    else if (msg === "#ให้คะแนน") {
-        replyRating(reply_token, msg)
+    else if (msg === "#ปิดทริป") {
+        // replyRating(reply_token, msg)
+        let userId = req.body.events[0].source.userId
+        let checkAccount = await checkAccountProfile(userId);
+        if(checkAccount) {
+            replyRating(reply_token, msg)
+        } else {
+            reply(req) 
+        }
     }
     // else if (ev) {
     //     replyWeatherMaps(reply_token, msg)

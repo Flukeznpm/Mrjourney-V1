@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import styled from "styled-components";
 import liff from '@line/liff';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import {
     Row, Col, Card,
     Button as AntButton,
@@ -156,8 +157,12 @@ function CheckTrip(props) {
                 } else {
                     await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
                         .then(res => {
-                            setTripList(res.data)
-                            isLoading(false)
+                            if (res.status === 202) {
+                                isLoading(false)
+                            } else {
+                                setTripList(res.data)
+                                isLoading(false)
+                            }
                         });
                 }
             } else {
@@ -210,176 +215,199 @@ function CheckTrip(props) {
                 {tripList.map((trip) => {
                     return (
                         <>
-                            <div className="top-page mb-4 pb-4">
-                                <Stepper typeStep="trip" step={4} />
-                                <Row className="py-3">
-                                    <Col span={6} offset={18}>
-                                        < SwitchComponent onChange={onChangeEdit} />
-                                    </Col>
-                                </Row>
-                                {isEditTrip === true ?
-                                    <Row justify="center ">
-                                        <div className="container">
-                                            <Col span={24} className="pb-3">
-                                                <div className="p-2" style={{ fontSize: "16px" }}>
-                                                    {trip.tripName}
-                                                </div>
-                                                {trip.totalDate.map((totalDate, key) => {
-                                                    return (
-                                                        <>
-                                                            {Trip.activeEvent !== key ?
-                                                                <DateCardNotActive onClick={() => setActiveEvent(key)}>
-                                                                    <Row justify="center">
-                                                                        {momentjs(totalDate.eventDate).format('ll')}
-                                                                        <CaretDownOutlined />
-                                                                    </Row>
-                                                                </DateCardNotActive>
-                                                                :
-                                                                <div>
-                                                                    <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
-                                                                        <Row justify="center">
-                                                                            {momentjs(totalDate.eventDate).format('ll')}
-                                                                            <CaretUpOutlined />
-                                                                        </Row>
-                                                                    </DateCardNotActive>
-                                                                    {totalDate.events.map((events, key) => {
-                                                                        return (
-                                                                            <Row className="my-1">
-                                                                                <Col span={19}>
-                                                                                    <div className="container">
-                                                                                        <EventCard>
-                                                                                            <ShowEventBox eventDetail={events} />
-                                                                                        </EventCard>
-                                                                                    </div>
-                                                                                </Col>
-                                                                                <Col span={5} >
-                                                                                    <DeleteEventCard>
-                                                                                        <DeleteButton />
-                                                                                    </DeleteEventCard>
-                                                                                </Col>
-                                                                            </Row>
-                                                                        )
-                                                                    })}
-                                                                </div>
-                                                            }
-                                                        </>
-                                                    )
-                                                })}
+                            {trip.tripName ?
+                                <>
+                                    <div className="top-page mb-4 pb-4">
+                                        <Stepper typeStep="trip" step={4} />
+                                        <Row className="py-3">
+                                            <Col span={6} offset={18}>
+                                                < SwitchComponent onChange={onChangeEdit} />
                                             </Col>
-                                        </div>
+                                        </Row>
+                                        {isEditTrip === true ?
+                                            <Row justify="center ">
+                                                <div className="container">
+                                                    <Col span={24} className="pb-3">
+                                                        <div className="p-2" style={{ fontSize: "16px" }}>
+                                                            {trip.tripName}
+                                                        </div>
+                                                        {trip.totalDate.map((totalDate, key) => {
+                                                            return (
+                                                                <>
+                                                                    {Trip.activeEvent !== key ?
+                                                                        <DateCardNotActive onClick={() => setActiveEvent(key)}>
+                                                                            <Row justify="center">
+                                                                                {momentjs(totalDate.eventDate).format('ll')}
+                                                                                <CaretDownOutlined />
+                                                                            </Row>
+                                                                        </DateCardNotActive>
+                                                                        :
+                                                                        <div>
+                                                                            <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
+                                                                                <Row justify="center">
+                                                                                    {momentjs(totalDate.eventDate).format('ll')}
+                                                                                    <CaretUpOutlined />
+                                                                                </Row>
+                                                                            </DateCardNotActive>
+                                                                            {totalDate.events.map((events, key) => {
+                                                                                return (
+                                                                                    <Row className="my-1">
+                                                                                        <Col span={19}>
+                                                                                            <div className="container">
+                                                                                                <EventCard>
+                                                                                                    <ShowEventBox eventDetail={events} />
+                                                                                                </EventCard>
+                                                                                            </div>
+                                                                                        </Col>
+                                                                                        <Col span={5} >
+                                                                                            <DeleteEventCard>
+                                                                                                <DeleteButton />
+                                                                                            </DeleteEventCard>
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                )
+                                                                            })}
+                                                                        </div>
+                                                                    }
+                                                                </>
+                                                            )
+                                                        })}
+                                                    </Col>
+                                                </div>
+                                                <AntForm className="container">
+                                                    <AntFormItem>
+                                                        <Col span={24}>
+                                                            <SecondaryButton
+                                                                type="link"
+                                                                size={"large"}
+                                                                block
+                                                                onClick={() => onVisibleModal()}
+                                                                style={{ color: "#FF4647" }}
+                                                            >ลบทริป</SecondaryButton >
+                                                        </Col>
+                                                        <DeleteTripModal
+                                                            isVisible={isVisible}
+                                                            setVisible={setVisible}
+                                                            lineGroupID={LineGroup}
+                                                            lineID={LineID}
+                                                            tripID={trip.tripID}
+                                                        />
+                                                    </AntFormItem>
+                                                </AntForm>
+                                            </Row>
+                                            :
+                                            <Row justify="center ">
+                                                <div className="container">
+                                                    <Col span={24} className="pb-3">
+                                                        <div className="p-2" style={{ fontSize: "16px" }}>
+                                                            {trip.tripName}
+                                                        </div>
+                                                        {trip.totalDate.map((totalDate, key) => {
+                                                            return (
+                                                                <>
+                                                                    {Trip.activeEvent !== key ?
+                                                                        <DateCardNotActive onClick={() => setActiveEvent(key)}>
+                                                                            <Row justify="center">
+                                                                                {momentjs(totalDate.eventDate).format('ll')}
+                                                                                <CaretDownOutlined />
+                                                                            </Row>
+                                                                        </DateCardNotActive>
+                                                                        :
+                                                                        <div>
+                                                                            <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
+                                                                                <Row justify="center">
+                                                                                    {momentjs(totalDate.eventDate).format('ll')}
+                                                                                    <CaretUpOutlined />
+                                                                                </Row>
+                                                                            </DateCardNotActive>
+                                                                            {totalDate.events.map((events, key) => {
+                                                                                return (
+                                                                                    <Row className="my-1">
+                                                                                        <Col span={24}>
+                                                                                            <div className="container">
+                                                                                                <EventCard>
+                                                                                                    <ShowEventBox eventDetail={events} />
+                                                                                                </EventCard>
+                                                                                            </div>
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                )
+                                                                            })}
+                                                                        </div>
+                                                                    }
+                                                                </>
+                                                            )
+                                                        })}
+                                                    </Col>
+                                                </div>
+                                            </Row>
+                                        }
+                                    </div>
+                                    {trip.ownerTrip === LineID ?
+                                        <Row justify="center" className="bg-white fixed-bottom">
+                                            <AntForm className="container">
+                                                <AntFormItem>
+                                                    <Row>
+                                                        <Col span={8}>
+                                                            <SecondaryButton
+                                                                type="link"
+                                                                size={"large"}
+                                                                block
+                                                                onClick={() => checkEnableTrip(trip.endDate)}
+                                                            >ปิดทริป</SecondaryButton >
+                                                        </Col>
+                                                        <Col span={16}>
+                                                            <PrimaryButton type="primary" size={"large"}
+                                                                block htmlType="button"
+                                                                onClick={() => backToChat()}
+                                                            >กลับสู่ห้องแชท</PrimaryButton>
+                                                        </Col>
+                                                    </Row>
+                                                    <EnableTripModal
+                                                        isVisible={isVisibleEnableTrip}
+                                                        setVisible={setVisibleEnableTrip}
+                                                        lineGroupID={LineGroup}
+                                                        lineID={LineID}
+                                                    />
+                                                </AntFormItem>
+                                            </AntForm>
+                                        </Row>
+                                        :
+                                        <Row justify="center" className="bg-white fixed-bottom">
+                                            <AntForm className="container">
+                                                <AntFormItem>
+                                                    <Row>
+                                                        <Col span={24}>
+                                                            <PrimaryButton type="primary" size={"large"}
+                                                                block htmlType="button"
+                                                                onClick={() => backToChat()}
+                                                            >กลับสู่ห้องแชท</PrimaryButton>
+                                                        </Col>
+                                                    </Row>
+                                                </AntFormItem>
+                                            </AntForm>
+                                        </Row>
+                                    }
+                                </>
+                                :
+                                <WrapperLoading>
+                                    <RowLoading justify="center">
+                                        <h2 className="col-12 font-weight-bold text-center color-default py-4">
+                                            ขณะนี้ยังไม่มีทริปที่ถูกสร้าง
+                                      </h2>
                                         <AntForm className="container">
                                             <AntFormItem>
                                                 <Col span={24}>
-                                                    <SecondaryButton
-                                                        type="link"
-                                                        size={"large"}
-                                                        block
-                                                        onClick={() => onVisibleModal()}
-                                                        style={{ color: "#FF4647" }}
-                                                    >ลบทริป</SecondaryButton >
+                                                    <Link to={`/CheckTrip`}>
+                                                        <PrimaryButton type="primary" size={"large"}
+                                                            block htmlType="button"
+                                                        >สร้างแผนการท่องเที่ยว</PrimaryButton>
+                                                    </Link>
                                                 </Col>
-                                                <DeleteTripModal
-                                                    isVisible={isVisible}
-                                                    setVisible={setVisible}
-                                                    lineGroupID={LineGroup}
-                                                    lineID={LineID}
-                                                    tripID={trip.tripID}
-                                                />
                                             </AntFormItem>
                                         </AntForm>
-                                    </Row>
-                                    :
-                                    <Row justify="center ">
-                                        <div className="container">
-                                            <Col span={24} className="pb-3">
-                                                <div className="p-2" style={{ fontSize: "16px" }}>
-                                                    {trip.tripName}
-                                                </div>
-                                                {trip.totalDate.map((totalDate, key) => {
-                                                    return (
-                                                        <>
-                                                            {Trip.activeEvent !== key ?
-                                                                <DateCardNotActive onClick={() => setActiveEvent(key)}>
-                                                                    <Row justify="center">
-                                                                        {momentjs(totalDate.eventDate).format('ll')}
-                                                                        <CaretDownOutlined />
-                                                                    </Row>
-                                                                </DateCardNotActive>
-                                                                :
-                                                                <div>
-                                                                    <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
-                                                                        <Row justify="center">
-                                                                            {momentjs(totalDate.eventDate).format('ll')}
-                                                                            <CaretUpOutlined />
-                                                                        </Row>
-                                                                    </DateCardNotActive>
-                                                                    {totalDate.events.map((events, key) => {
-                                                                        return (
-                                                                            <Row className="my-1">
-                                                                                <Col span={24}>
-                                                                                    <div className="container">
-                                                                                        <EventCard>
-                                                                                            <ShowEventBox eventDetail={events} />
-                                                                                        </EventCard>
-                                                                                    </div>
-                                                                                </Col>
-                                                                            </Row>
-                                                                        )
-                                                                    })}
-                                                                </div>
-                                                            }
-                                                        </>
-                                                    )
-                                                })}
-                                            </Col>
-                                        </div>
-                                    </Row>
-                                }
-                            </div>
-                            {trip.ownerTrip === LineID ?
-                                <Row justify="center" className="bg-white fixed-bottom">
-                                    <AntForm className="container">
-                                        <AntFormItem>
-                                            <Row>
-                                                <Col span={8}>
-                                                    <SecondaryButton
-                                                        type="link"
-                                                        size={"large"}
-                                                        block
-                                                        onClick={() => checkEnableTrip(trip.endDate)}
-                                                    >ปิดทริป</SecondaryButton >
-                                                </Col>
-                                                <Col span={16}>
-                                                    <PrimaryButton type="primary" size={"large"}
-                                                        block htmlType="button"
-                                                        onClick={() => backToChat()}
-                                                    >กลับสู่ห้องแชท</PrimaryButton>
-                                                </Col>
-                                            </Row>
-                                            <EnableTripModal
-                                                isVisible={isVisibleEnableTrip}
-                                                setVisible={setVisibleEnableTrip}
-                                                lineGroupID={LineGroup}
-                                                lineID={LineID}
-                                            />
-                                        </AntFormItem>
-                                    </AntForm>
-                                </Row>
-                                :
-                                <Row justify="center" className="bg-white fixed-bottom">
-                                    <AntForm className="container">
-                                        <AntFormItem>
-                                            <Row>
-                                                <Col span={24}>
-                                                    <PrimaryButton type="primary" size={"large"}
-                                                        block htmlType="button"
-                                                        onClick={() => backToChat()}
-                                                    >กลับสู่ห้องแชท</PrimaryButton>
-                                                </Col>
-                                            </Row>
-                                        </AntFormItem>
-                                    </AntForm>
-                                </Row>
+                                    </RowLoading>
+                                </WrapperLoading>
                             }
                         </>
                     )

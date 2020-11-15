@@ -176,7 +176,8 @@ function CreateTripStep2(props) {
             startDate: momentjs(Trip.date).format('ll'),
             endDate: momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day').format('ll'),
             tripStatus: tripStatus,
-            totalDate: Trip.totalDate
+            totalDate: Trip.totalDate,
+            createDate: new Date()
         }
         isLoading(true)
         await axios.post('https://mrjourney-senior.herokuapp.com/trip/createTrip', dataTrip)

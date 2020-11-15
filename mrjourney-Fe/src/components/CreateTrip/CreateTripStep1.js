@@ -108,7 +108,7 @@ function CreateTripStep1(props) {
                 } else {
                     await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
                         .then(res => {
-                            if (res.status === 400) {
+                            if (res.status === 202) {
                                 isLoading(false)
                             } else {
                                 setTripList(res.data)
@@ -157,7 +157,7 @@ function CreateTripStep1(props) {
                                         <AntForm className="container">
                                             <AntFormItem>
                                                 <Col span={24}>
-                                                    <Link to={`/CheckTrip`}>
+                                                    <Link to={`/CreateTrip`}>
                                                         <PrimaryButton type="primary" size={"large"}
                                                             block htmlType="button"
                                                         >ดูแผนการท่องเที่ยว</PrimaryButton>
