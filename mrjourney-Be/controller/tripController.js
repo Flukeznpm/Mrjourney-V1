@@ -220,23 +220,7 @@ router.post('/score', async function (req, res, next) {
 
 router.get('/lastTrip', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
-    let list = [];
-    let listResult = [];
-    let resultRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').orderBy('createDate', 'desc');
-    await resultRef.get().then(async snapshot => {
-        snapshot.forEach(async doc => {
-            list.push(doc.data());
-        });
-    });
-    // console.log('result: ', list[0]);
-    let tripID = list.map(t => t.tripID);
-    let tripIDString = tripID[0].toString();
-
-    let result = db.collection('TripList').doc(tripIDString);
-    await result.get().then(doc => {
-        listResult.push(doc.data());
-    });
-    // console.log('listResult: ',listResult);
+    let listResult = await getLastTrip(lineGroupID);
     res.status(200).json(listResult);
 });
 
@@ -644,6 +628,26 @@ async function saveScoreTrip(datas) {
         value: new_value,
         countOfSubmit: new_count
     });
+}
+
+async function getLastTrip(lineGroupID) {
+    let list = [];
+    let listResult = [];
+    let resultRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').orderBy('createDate', 'desc');
+    await resultRef.get().then(async snapshot => {
+        snapshot.forEach(async doc => {
+            list.push(doc.data());
+        });
+    });
+    // console.log('result: ', list[0]);
+    let tripID = list.map(t => t.tripID);
+    let tripIDString = tripID[0].toString();
+
+    let result = db.collection('TripList').doc(tripIDString);
+    await result.get().then(doc => {
+        listResult.push(doc.data());
+    });
+    return listResult;
 }
 
 module.exports = router;
