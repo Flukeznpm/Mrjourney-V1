@@ -100,7 +100,7 @@ function Rating(props) {
                     const context = await liff.getContext();
                     setLineGroup(context.groupId)
                 } else {
-                    await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
+                    await axios.get(`https://mrjourney-senior.herokuapp.com/trip/lastTrip?lineGroupID=${LineGroup}`)
                         .then(res => {
                             setTripList(res.data)
                             isLoading(false)
