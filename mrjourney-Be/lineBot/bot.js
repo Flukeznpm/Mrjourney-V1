@@ -83,8 +83,6 @@ router.post('/webhook', async (req, res) => {
         replyDeleteTrip(reply_token, msg)
     }
     else if (msg === "#ปิดทริป") {
-        // replyRating(reply_token, msg)
-
         let userId = req.body.events[0].source.userId
         let groupId = req.body.events[0].source.groupId
         let checkOwner = await checkOwnerTrip(groupId, userId);
