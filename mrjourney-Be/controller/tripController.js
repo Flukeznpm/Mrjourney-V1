@@ -225,7 +225,7 @@ router.get('/lastTrip', async function (req, res, next) {
     let resultRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').orderBy('createDate', 'desc');
     await resultRef.get().then(async snapshot => {
         snapshot.forEach(async doc => {
-            await list.push(doc.data());
+            list.push(doc.data());
         });
     });
     // console.log('result: ', list[0]);
@@ -237,7 +237,7 @@ router.get('/lastTrip', async function (req, res, next) {
         listResult.push(doc.data());
     });
     // console.log('listResult: ',listResult);
-    return listResult;
+    res.status(200).json(listResult);
 });
 
 //---------------- Function ----------------//
