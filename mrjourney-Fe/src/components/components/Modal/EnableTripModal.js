@@ -68,7 +68,10 @@ function EnableTripModal(props) {
     };
 
     const onConfirm = async (lineGroupID) => {
-        await axios.post(`https://mrjourney-senior.herokuapp.com/update/enableTrip?lineGroupID=${lineGroupID}`)
+        let dataTrip = {
+            lineGroupID: lineGroupID
+        }
+        await axios.post(`https://mrjourney-senior.herokuapp.com/update/enableTrip`, dataTrip)
             .then(res => {
                 console.log(res)
             })
