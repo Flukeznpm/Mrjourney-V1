@@ -363,7 +363,8 @@ async function createTripList(datas) {
             let saveTripIDinGroup = saveGroupIDinGroupRef.collection('Trip').doc(genTripID);
             await saveTripIDinGroup.set({
                 tripID: genTripID,
-                tripStatus: datas.tripStatus
+                tripStatus: datas.tripStatus,
+                createDate: datas.createDate
             })
             let saveTripList = await db.collection('TripList').doc(genTripID).set({
                 tripID: genTripID,
