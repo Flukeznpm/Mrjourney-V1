@@ -28,7 +28,7 @@ router.get('/', async function (req, res, next) {
                 await checkTripIDRef.get().then(async snapshot => {
                     if (snapshot.empty) {
                         console.log('Alert: You do not have a trip')
-                        return res.status(400).json({ message: 'You do not have a trip' });
+                        return res.status(202).json({ message: 'You do not have a trip' });
                     } else {
                         // await snapshot.forEach(async doc => {
                         //     if (doc.exists) {
@@ -55,7 +55,7 @@ router.get('/', async function (req, res, next) {
                 });
             } else {
                 console.log('Alert: No Trip in the group , Please create trip.')
-                return res.status(400).json({ message: 'No Trip in the group, Please create trip.' });
+                return res.status(202).json({ message: 'No Trip in the group, Please create trip.' });
             }
         }).catch(err => {
             console.log('Error: ', err);
