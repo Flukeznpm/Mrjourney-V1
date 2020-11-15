@@ -39,7 +39,7 @@ router.get('/allBill', async function (req, res, next) {
         billNo: billNo,
         totalCost: totalCost,
         ownerName: ownerName,
-        userList: userList
+        user: userList
     }
     await result.push(returnData);
 
@@ -107,20 +107,43 @@ router.get('/whoPaidOrNot', async function (req, res, next) {
 router.delete('/deleteBill', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
     let billNo = req.query.billNo;
+    let getUser = [];
 
-    //--> GET user ออกม่ทั้งหมด แล้ววน loop ลบทีละคน
-    let deleteRef = db.collection('Bill').doc(lineGroupID)
+    let getUserIDRef = db.collection('Bill').doc(lineGroupID)
         .collection('BillNo').doc(billNo)
-        .collection('User').doc(fName);
+        .collection('User');
 
-    //--> ลบ BillNo ของ BillID นั้นๆ
+    await getUserIDRef.get().then(async data => {
+        if (data.empty) {
+            console.log('No matching documents.');
+            return;
+        } else {
+            data.forEach(async f => {
+                await getUser.push(f.id);
+            });
+            console.log('getDate: ', getUser)
 
+            let userCount = (getUser.length);
+            console.log('userCount: ', DateCount)
 
+            for (i = userCount; i <= userCount; i--) {
+                if (i > 0) {
+                    let userID = (getUser[i - 1]);
+                    let userIDString = userID.toString();
+                    console.log('userIDString loop: ', DateIDString);
+                    await getUserIDRef.doc(userIDString).delete();
+                } else {
+                    return;
+                }
+            }
+        }
+    });
 
-    //--> ลบ lineGroupID นั้น
-
-
-
+    await db.collection('Bill').doc(lineGroupID).collection('BillNo').doc(billNo).delete();
+    await db.collection('Bill').doc(lineGroupID).delete()
+        .then(() => {
+            res.status(200).json('Delete Bill Success !!');
+        })
 });
 
 //---------------- Function ----------------//
