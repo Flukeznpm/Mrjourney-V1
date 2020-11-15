@@ -57,6 +57,7 @@ router.post('/payBill', async function (req, res, next) {
         payStatus: false,
         waitAcceptStatus: true
     });
+    res.status(201).json('Pay Success');
 });
 
 router.get('/whoWaitAccept', async function (req, res, next) {
@@ -86,6 +87,7 @@ router.post('/acceptBill', async function (req, res, next) {
         payStatus: true,
         waitAcceptStatus: false
     });
+    res.status(201).json('Accept Success');
 });
 
 router.get('/whoPaidOrNot', async function (req, res, next) {
