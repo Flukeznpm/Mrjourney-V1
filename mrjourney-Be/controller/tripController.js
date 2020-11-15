@@ -228,13 +228,15 @@ router.get('/lastTrip', async function (req, res, next) {
             await list.push(doc.data());
         });
     });
-    // console.log('resul: ', result[0]);
-    let tripID = result[0].map(t => t.tripID);
-    let tripIDtoString = tripID.toString();
-    let result = db.collection('TripList').doc(tripIDtoString);
-    result.get().then(data => {
-        listResult.push(data.data());
-    })
+    // console.log('result: ', list[0]);
+    let tripID = list.map(t => t.tripID);
+    let tripIDString = tripID[0].toString();
+
+    let result = db.collection('TripList').doc(tripIDString);
+    await result.get().then(doc => {
+        listResult.push(doc.data());
+    });
+    // console.log('listResult: ',listResult);
     return listResult;
 });
 
