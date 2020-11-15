@@ -218,6 +218,26 @@ router.post('/score', async function (req, res, next) {
     });
 });
 
+router.get('/lastTrip', async function (req, res, next) {
+    let lineGroupID = req.query.lineGroupID;
+    let list = [];
+    let listResult = [];
+    let resultRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').orderBy('createDate', 'desc');
+    await resultRef.get().then(async snapshot => {
+        snapshot.forEach(async doc => {
+            await list.push(doc.data());
+        });
+    });
+    // console.log('resul: ', result[0]);
+    let tripID = result[0].map(t => t.tripID);
+    let tripIDtoString = tripID.toString();
+    let result = db.collection('TripList').doc(tripIDtoString);
+    result.get().then(data => {
+        listResult.push(data.data());
+    })
+    return listResult;
+});
+
 //---------------- Function ----------------//
 async function getAllTripByGroupID(lineGroupID) {
     let dataTripAllDay = [];
