@@ -28,7 +28,7 @@ router.get('/', async function (req, res, next) {
                 await checkTripIDRef.get().then(async snapshot => {
                     if (snapshot.empty) {
                         console.log('Alert: You do not have a trip')
-                        return res.status(400).json({ message: 'You do not have a trip' });
+                        return res.status(202).json({ message: 'You do not have a trip' });
                     } else {
                         // await snapshot.forEach(async doc => {
                         //     if (doc.exists) {
@@ -55,7 +55,7 @@ router.get('/', async function (req, res, next) {
                 });
             } else {
                 console.log('Alert: No Trip in the group , Please create trip.')
-                return res.status(400).json({ message: 'No Trip in the group, Please create trip.' });
+                return res.status(202).json({ message: 'No Trip in the group, Please create trip.' });
             }
         }).catch(err => {
             console.log('Error: ', err);
@@ -120,8 +120,8 @@ router.post('/createTrip', async function (req, res, next) {
         datas.province == undefined || datas.province == null || datas.province == '' ||
         datas.startDate == undefined || datas.startDate == null || datas.startDate == '' ||
         datas.endDate == undefined || datas.endDate == null || datas.endDate == '' ||
-        datas.tripStatus == undefined || datas.tripStatus == null || datas.tripStatus == false ||
-        datas.totalDate == undefined || datas.totalDate == null || datas.totalDate == false) {
+        datas.tripStatus == undefined || datas.tripStatus == null ||
+        datas.totalDate == undefined || datas.totalDate == null || datas.totalDate == '') {
         res.status(400).json({
             message: "The Data was empty or undefined"
         })
@@ -360,10 +360,6 @@ async function createTripList(datas) {
             await saveGroupIDinGroupRef.set({
                 lineGroupID: datas.lineGroupID,
             })
-            // let saveMemberinGroup = saveGroupIDinGroupRef.collection('Members').doc(datas.lineID);
-            // await saveMemberinGroup.set({
-            //     lineID: datas.lineID
-            // })
             let saveTripIDinGroup = saveGroupIDinGroupRef.collection('Trip').doc(genTripID);
             await saveTripIDinGroup.set({
                 tripID: genTripID,
@@ -381,26 +377,6 @@ async function createTripList(datas) {
             let saveTripPerDay = await db.collection('TripPerDay').doc(genTripID).set({
                 tripID: genTripID,
             })
-            // for (let i = 0; i <= 0; i++) {
-            //     let count = (datas.totalDate.length) - 1;
-            //     for (let j = 0; j <= count; j++) {
-            //         if (j <= count) {
-            //             let date = await datas.totalDate[j].eventDate;
-            //             let eventName = await datas.totalDate[j].event[i].eventName;
-            // let startEvent = await datas.totalDate[j].event[i].startEvent;
-            //             let endEvent = await datas.totalDate[j].event[i].endEvent;
-            //             let eventType = await datas.totalDate[j].event[i].eventType;
-            //             await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(date).set({
-            //                 eventName: eventName,
-            //                 startEvent: startEvent,
-            //                 endEvent: endEvent,
-            //                 eventType: eventType
-            //             })
-            //         } else {
-            //             console.log('Error create trip')
-            //         }
-            //     } //loop1
-            // } //loop2
             for (let i = 0; i <= 0; i++) {
                 let count = (datas.totalDate.length) - 1;
                 for (let j = 0; j <= count; j++) {
@@ -438,10 +414,6 @@ async function createTripList(datas) {
             await saveGroupIDinGroupRef.set({
                 lineGroupID: datas.lineGroupID,
             })
-            // let saveMemberinGroup = saveGroupIDinGroupRef.collection('Members').doc(datas.lineID);
-            // await saveMemberinGroup.set({
-            //     lineID: datas.lineID
-            // })
             let saveTripIDinGroup = saveGroupIDinGroupRef.collection('Trip').doc(genTripID);
             await saveTripIDinGroup.set({
                 tripID: genTripID,
@@ -459,26 +431,6 @@ async function createTripList(datas) {
             let saveTripPerDay = await db.collection('TripPerDay').doc(genTripID).set({
                 tripID: genTripID,
             })
-            // for (let i = 0; i <= 0; i++) {
-            //     let count = (datas.totalDate.length) - 1;
-            //     for (let j = 0; j <= count; j++) {
-            //         if (j <= count) {
-            //             let date = await datas.totalDate[j].eventDate;
-            //             let eventName = await datas.totalDate[j].event[i].eventName;
-            //             let startEvent = await datas.totalDate[j].event[i].startEvent;
-            //             let endEvent = await datas.totalDate[j].event[i].endEvent;
-            //             let eventType = await datas.totalDate[j].event[i].eventType;
-            //             await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(date).set({
-            //                 eventName: eventName,
-            //                 startEvent: startEvent,
-            //                 endEvent: endEvent,
-            //                 eventType: eventType
-            //             })
-            //         } else {
-            //             console.log('Error create trip')
-            //         }
-            //     } //loop1
-            // } //loop2
             for (let i = 0; i <= 0; i++) {
                 let count = (datas.totalDate.length) - 1;
                 for (let j = 0; j <= count; j++) {
