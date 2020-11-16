@@ -168,6 +168,7 @@ function CreateBill(props) {
     const [LineGroup, setLineGroup] = useState('')
 
     const [totalBill, setTotalBill] = useState(0)
+    const [billName, setBillName] = useState('')
     const [isVisibleMoney, setVisibleMoney] = useState(false)
     const [isVisiblePayment, setVisiblePayment] = useState(false)
     const [isVisibleConfirm, setVisibleConfirm] = useState(false)
@@ -196,13 +197,34 @@ function CreateBill(props) {
     //     })
     // }, [LineGroup]);
 
-    
+
     useEffect(() => {
         isLoading(false)
     }, []);
 
+    const onConfirmBill = async () => {
+        let dataBill = {
+            lineGroupID: 'Cbdab6c9dbd52c75350407118ed11983a',
+            ownerBillID: 'Uda66a8e7400b2e7fafd699f3b294ec4d',
+            ownerName: 'rom',
+            totalCost: totalBill,
+            receivingAccount: ownerName,
+            payMentNumber: paymentNumber,
+            bankName: paymentBank,
+            user: whoPay
+        }
+        // await axios.post('https://mrjourney-senior.herokuapp.com/bill/createBill', dataBill)
+        await axios.post('http://localhost:5000/bill/createBill', dataBill)
+            .then(res => {
+                console.log(res)
+            });
+    }
+
     const handleBill = (value) => {
         setTotalBill(value)
+    }
+    const handleBillName = (value) => {
+        setBillName(value)
     }
 
     const onVisibleMoneyModal = () => {
@@ -244,6 +266,18 @@ function CreateBill(props) {
                 </HeaderStep>
                 <WrapperContent>
                     <Row>
+                        <Col span={24}>
+                            <AntParagraph
+                                editable={{
+                                    onChange: (handleBillName),
+                                    maxLength: 20,
+                                }}
+                            >
+                                {billName}
+                            </AntParagraph>
+                        </Col>
+                    </Row>
+                    <Row>
                         ยอดรวมบิล
                     </Row>
                     <Row>
@@ -267,7 +301,7 @@ function CreateBill(props) {
                                 <Col span={24}>
                                     <Row justify="space-between">
                                         <Col span={16}>
-                                            {who}
+                                            {who.fName}
                                         </Col>
                                         <Col span={6} className="text-right">
                                             {(totalBill / whoPay.length).toFixed(2)}
@@ -295,8 +329,8 @@ function CreateBill(props) {
                         <MoneyModal
                             isVisible={isVisibleMoney}
                             setVisible={setVisibleMoney}
-                            setMemberM={setWhoPay}
-                            membersM={whoPay}
+                            setWhoPay={setWhoPay}
+                            whoPay={whoPay}
                         />
                     </Row>
                     <Row>
@@ -361,7 +395,8 @@ function CreateBill(props) {
                                             type="primary"
                                             size={"large"}
                                             block htmlType="submit"
-                                            onClick={() => onVisibleConfirmModal()}
+                                            // onClick={() => onVisibleConfirmModal()}
+                                            onClick={() => onConfirmBill()}
                                         >สร้างบิล</PrimaryButton>
                                     </Col>
                                     :

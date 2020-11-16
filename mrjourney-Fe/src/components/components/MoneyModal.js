@@ -73,13 +73,23 @@ const InputComponent = styled(AntInput)`
 function MoneyModal(props) {
 
     const [form] = AntForm.useForm();
+    const [user, setUser] = useState({ fName: '' })
 
     const onCancel = () => {
         props.setVisible(false)
     };
 
+    const onChange = e => {
+        const { value } = e.target;
+        setUser(prevState => ({
+            ...prevState,
+            ['fName']: value
+        }));
+    };
+
     const onFinish = values => {
-        props.setMemberM(props.membersM.concat(values.monName))
+        // props.setWhoPay(props.whoPay.concat(values.monName))
+        props.setWhoPay(props.whoPay.concat(user))
         form.setFieldsValue({
             monName: null,
         })
@@ -101,10 +111,11 @@ function MoneyModal(props) {
                 <Row justify="center" >
                     <ColButton span={20}>
                         <AntForm.Item name="monName" label="ชือผู้จ่ายเงิน" labelCol={{ span: 24 }} rules={[{ required: true }]}>
-                            <InputComponent placeholder="ใส่ชื่อผู้คนที่ต้องเก็บเงิน" />
+                            <InputComponent placeholder="ใส่ชื่อผู้คนที่ต้องเก็บเงิน" onChange={onChange} />
                         </AntForm.Item>
                     </ColButton>
                 </Row>
+                {console.log(user)}
                 <Col span={24}>
                     <Row justify="center" gutter={8}>
                         <ColButton span={10}>
