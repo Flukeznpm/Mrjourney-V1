@@ -93,11 +93,11 @@ function BankPayment(props) {
 
     const onFinish = values => {
         if (value === "พร้อมเพย์") {
-            props.setPaymentBank(value)
+            props.setBankName(value)
         } else {
-            props.setPaymentBank(values.bankName)
+            props.setBankName(values.bankName)
         }
-        props.setOwnerName(values.ownerName)
+        props.setReceivingAcc(values.receivingAcc)
         props.setPaymentNumber(values.paymentNumber)
         form.setFieldsValue({
             ownerName: null,
@@ -125,7 +125,7 @@ function BankPayment(props) {
             <AntForm form={form} onFinish={onFinish}>
                 <Row justify="center" >
                     <ColButton span={20}>
-                        <AntFormItem name="ownerName" label="ชือเจ้าของบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                        <AntFormItem name="receivingAcc" label="ชือเจ้าของบัญชี" labelCol={{ span: 24 }} rules={[{ required: true }]}>
                             <InputComponent placeholder="ใส่ชื่อเจ้าของบัญชี" />
                         </AntFormItem>
                         <Radio.Group onChange={onChangePaymentType} value={value}>

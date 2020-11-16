@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
+import liff from '@line/liff';
 import {
     Modal as AntModal,
     Row, Col,
@@ -66,13 +67,22 @@ function DeleteBillModal(props) {
         props.setVisible(false)
     };
 
-    const onConfirm = async values => {
-        await axios.delete(`http://localhost:5000/bill/deleteBill?lineGroupID=${props.lineGroupID}&billNo=${props.bill.billNo}`)
+    const onConfirm = async (lineGroupID, billNo) => {
+        await axios.delete(`https://mrjourney-senior.herokuapp.com/bill/deleteBill?lineGroupID=${lineGroupID}&billNo=${billNo}`)
             .then(res => {
                 console.log(res)
             });
         props.setVisible(false)
-    };
+        liff.closeWindow()
+        if (liff.getContext().type !== "none") {
+            liff.sendMessages([
+                {
+                    "type": "text",
+                    "text": "ลบบิลเสร็จสิ้น"
+                }
+            ])
+        }
+    }
 
     return (
         <DeleteModalComponent
@@ -101,7 +111,7 @@ function DeleteBillModal(props) {
                                 type="primary"
                                 size={"large"}
                                 block htmlType="submit"
-                                onClick={() => onConfirm()}
+                                onClick={() => onConfirm(props.lineGroupID, props.bill.billNo)}
                             >ยืนยัน</PrimaryButton>
                         </AntForm.Item>
                     </ColButton>

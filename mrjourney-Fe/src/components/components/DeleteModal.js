@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
+import liff from '@line/liff';
 import {
     Modal as AntModal,
     Row, Col,

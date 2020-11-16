@@ -173,53 +173,35 @@ function CreateBill(props) {
     const [isVisiblePayment, setVisiblePayment] = useState(false)
     const [isVisibleConfirm, setVisibleConfirm] = useState(false)
     const [whoPay, setWhoPay] = useState([])
-    const [ownerName, setOwnerName] = useState("");
+    const [receivingAcc, setReceivingAcc] = useState("");
     const [paymentNumber, setPaymentNumber] = useState("");
-    const [paymentBank, setPaymentBank] = useState("");
+    const [bankName, setBankName] = useState("");
 
-    // useEffect(() => {
-    //     liff.init({ liffId: '1653975470-6rJYy1Qm' }).then(async () => {
-    //         if (liff.isLoggedIn()) {
-    //             if (!LineGroup || LineGroup === '') {
-    //                 let profile = await liff.getProfile();
-    //                 setLineID(profile.userId);
-    //                 setLineName(profile.displayName);
-    //                 setLinePicture(profile.pictureUrl);
-    //                 const context = await liff.getContext();
-    //                 setLineGroup(context.groupId)
-    //                 isLoading(true)
-    //             } else {
-    //                 isLoading(false)
-    //             }
-    //         } else {
-    //             props.history.push('/Home');
-    //         }
-    //     })
-    // }, [LineGroup]);
-
+    const [billList, setBillList] = useState([{}]);
 
     useEffect(() => {
-        isLoading(false)
-    }, []);
-
-    const onConfirmBill = async () => {
-        let dataBill = {
-            lineGroupID: 'Cbdab6c9dbd52c75350407118ed11983a',
-            ownerBillID: 'Uda66a8e7400b2e7fafd699f3b294ec4d',
-            ownerName: 'rom',
-            billName: billName,
-            totalCost: totalBill,
-            receivingAccount: ownerName,
-            payMentNumber: paymentNumber,
-            bankName: paymentBank,
-            user: whoPay
-        }
-        // await axios.post('https://mrjourney-senior.herokuapp.com/bill/createBill', dataBill)
-        await axios.post('http://localhost:5000/bill/createBill', dataBill)
-            .then(res => {
-                console.log(res)
-            });
-    }
+        liff.init({ liffId: '1653975470-6rJYy1Qm' }).then(async () => {
+            if (liff.isLoggedIn()) {
+                if (!LineGroup || LineGroup === '') {
+                    let profile = await liff.getProfile();
+                    setLineID(profile.userId);
+                    setLineName(profile.displayName);
+                    setLinePicture(profile.pictureUrl);
+                    const context = await liff.getContext();
+                    setLineGroup(context.groupId)
+                    isLoading(true)
+                } else {
+                    await axios.get(`https://mrjourney-senior.herokuapp.com/bill/allBill?lineGroupID=${LineGroup}`)
+                        .then(res => {
+                            setBillList(res.data)
+                            isLoading(false)
+                        });
+                }
+            } else {
+                props.history.push('/Home');
+            }
+        })
+    }, [LineGroup]);
 
     const handleBill = (value) => {
         setTotalBill(value)
@@ -255,174 +237,207 @@ function CreateBill(props) {
     } else {
         return (
             <Wrapper>
-                <HeaderStep>
-                    <Row className="container h-100">
-                        <ColStepText span={16}>
-                            <HeaderStepText>สร้างบิลเรียกเก็บเงิน</HeaderStepText>
-                        </ColStepText>
-                        <ColStepImg span={8}>
-                            <img src={'/img/menu-02.png'} width={150} />
-                        </ColStepImg>
+                {billList.map((bill) => {
+                    return (
+                        <>
+                            {bill.billNo ?
+                                <WrapperLoading>
+                                    <RowLoading justify="center">
+                                        <h2 className="col-12 font-weight-bold text-center color-default py-4">
+                                            ขณะนี้มีบิลเรียกเก็บเงินเก่าที่ถูกสร้างอยู่แล้ว
+                                        </h2>
+                                        <AntForm className="container">
+                                            <AntFormItem>
+                                                <Col span={24}>
+                                                    <Link to={`/CheckBill`}>
+                                                        <PrimaryButton type="primary" size={"large"}
+                                                            block htmlType="button"
+                                                        >ดูบิล</PrimaryButton>
+                                                    </Link>
+                                                </Col>
+                                            </AntFormItem>
+                                        </AntForm>
+                                    </RowLoading>
+                                </WrapperLoading>
+                                :
+                                <>
+                                    <HeaderStep>
+                                        <Row className="container h-100">
+                                            <ColStepText span={16}>
+                                                <HeaderStepText>สร้างบิลเรียกเก็บเงิน</HeaderStepText>
+                                            </ColStepText>
+                                            <ColStepImg span={8}>
+                                                <img src={'/img/menu-02.png'} width={150} />
+                                            </ColStepImg>
+                                        </Row>
+                                    </HeaderStep>
+                                    <WrapperContent>
+                                        <Row>
+                                            <Col span={24}>
+                                                <AntParagraph
+                                                    editable={{
+                                                        onChange: (handleBillName),
+                                                        maxLength: 20,
+                                                    }}
+                                                >
+                                                    {billName}
+                                                </AntParagraph>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            ยอดรวมบิล
                     </Row>
-                </HeaderStep>
-                <WrapperContent>
-                    <Row>
-                        <Col span={24}>
-                            <AntParagraph
-                                editable={{
-                                    onChange: (handleBillName),
-                                    maxLength: 20,
-                                }}
-                            >
-                                {billName}
-                            </AntParagraph>
-                        </Col>
+                                        <Row>
+                                            <Col span={24} className="text-right">
+                                                <AntParagraph
+                                                    editable={{
+                                                        onChange: (handleBill),
+                                                        maxLength: 5,
+                                                    }}
+                                                >
+                                                    {totalBill}
+                                                </AntParagraph>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            ยอดแต่ละคน
                     </Row>
-                    <Row>
-                        ยอดรวมบิล
-                    </Row>
-                    <Row>
-                        <Col span={24} className="text-right">
-                            <AntParagraph
-                                editable={{
-                                    onChange: (handleBill),
-                                    maxLength: 5,
-                                }}
-                            >
-                                {totalBill}
-                            </AntParagraph>
-                        </Col>
-                    </Row>
-                    <Row>
-                        ยอดแต่ละคน
-                    </Row>
-                    <Row>
-                        {whoPay.map((who, key) => {
-                            return (
-                                <Col span={24}>
-                                    <Row justify="space-between">
-                                        <Col span={16}>
-                                            {who.fName}
-                                        </Col>
-                                        <Col span={6} className="text-right">
-                                            {(totalBill / whoPay.length).toFixed(2)}
-                                        </Col>
-                                        <Col span={2}>
-                                            <DeleteMemberButton type="primary"
+                                        <Row>
+                                            {whoPay.map((who, key) => {
+                                                return (
+                                                    <Col span={24}>
+                                                        <Row justify="space-between">
+                                                            <Col span={16}>
+                                                                {who.fName}
+                                                            </Col>
+                                                            <Col span={6} className="text-right">
+                                                                {(totalBill / whoPay.length).toFixed(2)}
+                                                            </Col>
+                                                            <Col span={2}>
+                                                                <DeleteMemberButton type="primary"
+                                                                    shape="circle"
+                                                                    size="small"
+                                                                    icon={<CloseOutlined />}
+                                                                    onClick={() => onDeleteMember(key)}
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                )
+                                            })}
+                                        </Row>
+                                        <Row>
+                                            <AddMemberButton type="primary"
                                                 shape="circle"
-                                                size="small"
-                                                icon={<CloseOutlined />}
-                                                onClick={() => onDeleteMember(key)}
+                                                size="middle"
+                                                icon={<PlusOutlined />}
+                                                onClick={() => onVisibleMoneyModal()}
                                             />
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            )
-                        })}
-                    </Row>
-                    <Row>
-                        <AddMemberButton type="primary"
-                            shape="circle"
-                            size="middle"
-                            icon={<PlusOutlined />}
-                            onClick={() => onVisibleMoneyModal()}
-                        />
-                        <MoneyModal
-                            isVisible={isVisibleMoney}
-                            setVisible={setVisibleMoney}
-                            setWhoPay={setWhoPay}
-                            whoPay={whoPay}
-                        />
-                    </Row>
-                    <Row>
-                        บัญชีเงินรับ
+                                            <MoneyModal
+                                                isVisible={isVisibleMoney}
+                                                setVisible={setVisibleMoney}
+                                                setWhoPay={setWhoPay}
+                                                whoPay={whoPay}
+                                            />
+                                        </Row>
+                                        <Row>
+                                            บัญชีเงินรับ
                     </Row>
 
-                    {ownerName ?
-                        <AntCard onClick={() => onVisiblePaymentModal()}>
-                            <Row>
-                                <Col span={21}>
-                                    <Row>
-                                        {ownerName}
+                                        {receivingAcc ?
+                                            <AntCard onClick={() => onVisiblePaymentModal()}>
+                                                <Row>
+                                                    <Col span={21}>
+                                                        <Row>
+                                                            {receivingAcc}
+                                                        </Row>
+                                                        <Row>
+                                                            {bankName} {paymentNumber}
+                                                        </Row>
+                                                    </Col>
+                                                    <ColButton span={3}>
+                                                        <EditOutlined />
+                                                    </ColButton>
+                                                </Row>
+                                            </AntCard>
+                                            :
+                                            <AntCard onClick={() => onVisiblePaymentModal()}>
+                                                <Row>
+                                                    <Col span={22}>
+                                                        <Row>
+                                                            &nbsp;
                                     </Row>
-                                    <Row>
-                                        {paymentBank} {paymentNumber}
+                                                        <Row>
+                                                            &nbsp;
                                     </Row>
-                                </Col>
-                                <ColButton span={3}>
-                                    <EditOutlined />
-                                </ColButton>
-                            </Row>
-                        </AntCard>
-                        :
-                        <AntCard onClick={() => onVisiblePaymentModal()}>
-                            <Row>
-                                <Col span={22}>
-                                    <Row>
-                                        &nbsp;
+                                                    </Col>
+                                                    <ColButton span={2}>
+                                                        <EditOutlined />
+                                                    </ColButton>
+                                                </Row>
+                                            </AntCard>
+                                        }
+                                        <BankPayment
+                                            isVisible={isVisiblePayment}
+                                            setVisible={setVisiblePayment}
+                                            setReceivingAcc={setReceivingAcc}
+                                            setPaymentNumber={setPaymentNumber}
+                                            setBankName={setBankName}>
+                                        </BankPayment>
+                                    </WrapperContent>
+                                    <Row justify="center" className="bg-white fixed-bottom">
+                                        <AntForm className="container">
+                                            <AntFormItem>
+                                                <Row>
+                                                    <Col span={8}>
+                                                        <PrevButton
+                                                            type="link"
+                                                            size={"large"}
+                                                            block htmlType="button"
+                                                        >ยกเลิก</PrevButton>
+                                                    </Col>
+                                                    {receivingAcc && bankName && paymentNumber && whoPay && totalBill ?
+                                                        <Col span={16}>
+                                                            <PrimaryButton
+                                                                type="primary"
+                                                                size={"large"}
+                                                                block htmlType="submit"
+                                                                onClick={() => onVisibleConfirmModal()}
+                                                            // onClick={() => onConfirmBill()}
+                                                            >สร้างบิล</PrimaryButton>
+                                                        </Col>
+                                                        :
+                                                        <Col span={16}>
+                                                            <PrimaryButton
+                                                                type="primary"
+                                                                size={"large"}
+                                                                block htmlType="submit"
+                                                                disabled
+                                                            >สร้างบิล</PrimaryButton>
+                                                        </Col>
+                                                    }
+                                                    <CreateBillModal
+                                                        isVisible={isVisibleConfirm}
+                                                        setVisible={setVisibleConfirm}
+                                                        LineName={LineName}
+                                                        LineGroup={LineGroup}
+                                                        LineID={LineID}
+                                                        billName={billName}
+                                                        receivingAcc={receivingAcc}
+                                                        bankName={bankName}
+                                                        paymentNumber={paymentNumber}
+                                                        whoPay={whoPay}
+                                                        totalBill={totalBill}
+                                                    />
+                                                </Row>
+                                            </AntFormItem>
+                                        </AntForm>
                                     </Row>
-                                    <Row>
-                                        &nbsp;
-                                    </Row>
-                                </Col>
-                                <ColButton span={2}>
-                                    <EditOutlined />
-                                </ColButton>
-                            </Row>
-                        </AntCard>
-                    }
-                    <BankPayment
-                        isVisible={isVisiblePayment}
-                        setVisible={setVisiblePayment}
-                        setOwnerName={setOwnerName}
-                        setPaymentNumber={setPaymentNumber}
-                        setPaymentBank={setPaymentBank}>
-                    </BankPayment>
-                </WrapperContent>
-                <Row justify="center" className="bg-white fixed-bottom">
-                    <AntForm className="container">
-                        <AntFormItem>
-                            <Row>
-                                <Col span={8}>
-                                    <PrevButton
-                                        type="link"
-                                        size={"large"}
-                                        block htmlType="button"
-                                    >ยกเลิก</PrevButton>
-                                </Col>
-                                {ownerName && paymentBank && paymentNumber && whoPay && totalBill ?
-                                    <Col span={16}>
-                                        <PrimaryButton
-                                            type="primary"
-                                            size={"large"}
-                                            block htmlType="submit"
-                                            // onClick={() => onVisibleConfirmModal()}
-                                            onClick={() => onConfirmBill()}
-                                        >สร้างบิล</PrimaryButton>
-                                    </Col>
-                                    :
-                                    <Col span={16}>
-                                        <PrimaryButton
-                                            type="primary"
-                                            size={"large"}
-                                            block htmlType="submit"
-                                            disabled
-                                        >สร้างบิล</PrimaryButton>
-                                    </Col>
-                                }
-                                <CreateBillModal
-                                    isVisible={isVisibleConfirm}
-                                    setVisible={setVisibleConfirm}
-                                    ownerName={ownerName}
-                                    paymentBank={paymentBank}
-                                    paymentNumber={paymentNumber}
-                                    membersM={whoPay}
-                                    totalBill={totalBill}
-                                />
-                            </Row>
-                        </AntFormItem>
-                    </AntForm>
-                </Row>
+                                </>
+                            }
+                        </>
+                    )
+                })}
             </Wrapper>
         )
     }

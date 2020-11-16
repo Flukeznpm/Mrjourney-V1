@@ -5,13 +5,90 @@ const request = require('request');
 const { checkTripAvaliable, checkOwnerTrip } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
-    let reply_token = req.body.events[0].replyToken
+
     // let msg = req.body.events[0]
-    let msg = req.body.events[0].message.text
     // if (msg.type === "message" && msg.message.type === "text") {
+    let msg = req.body.events[0].message.text
+    let reply_token = req.body.events[0].replyToken
+    // let recommendEat = msg.subString(0, 7)
+    // let recommendTravel = msg.subString(0, 10)
+    // let recommendSleep = msg.subString(0, 7)
+
+    // let msgTest = []
+    // let sit = ['fluke', 'new', 'jok']
+    // sit.map((e) => {
+    //     msgTest.push({
+    //         type: 'text',
+    //         text: e
+    //     })
+    // })
+    // msgTest.push(   {
+    //     type: "flex",
+    //     altText: "Flex Message",
+    //     contents: {
+    //         type: "bubble",
+    //         body: {
+    //             layout: "vertical",
+    //             contents: [
+    //                 {
+    //                     type: "text",
+    //                     align: "center",
+    //                     weight: "bold",
+    //                     text: "อยากดูแบบไหนครับ?"
+    //                 }
+    //             ],
+    //             type: "box"
+    //         },
+    //         direction: "ltr",
+    //         footer: {
+    //             type: "box",
+    //             layout: "vertical",
+    //             contents: [
+    //                 {
+    //                     action: {
+    //                         label: "ดูแผนทั้งหมด",
+    //                         type: "uri",
+    //                         uri: "https://liff.line.me/1653975470-4Webv3MY"
+    //                     },
+    //                     type: "button",
+    //                     color: "#C25738",
+    //                     height: "sm",
+    //                     margin: "xs",
+    //                     style: "primary"
+    //                 },
+    //                 {
+    //                     margin: "xs",
+    //                     color: "#C25738",
+    //                     height: "sm",
+    //                     style: "primary",
+    //                     action: {
+    //                         data: "text",
+    //                         label: "ดูแผนวันนี้",
+    //                         type: "postback",
+    //                         text: "ดูแผนวันนี้"
+    //                     },
+    //                     type: "button"
+    //                 }
+    //             ]
+    //         }
+    //     }
+    // })
+
     if (msg === "อาจารย์โอ๋") {
         replyProfessor(reply_token, msg)
     }
+    // else if (recommendEat === "#ที่กิน") {
+    //     let provinceMsg = msg.subString(7)
+    //     replyBased(reply_token, provinceMsg)
+    // }
+    // else if (recommendTravel === "#ที่เที่ยว") {
+    //     let provinceMsg = msg.subString(10)
+    //     replyBased(reply_token, provinceMsg)
+    // }
+    // else if (recommendSleep === "#ที่พัก") {
+    //     let provinceMsg = msg.subString(7)
+    //     replyBased(reply_token, provinceMsg)
+    // }
     else if (msg === "#สร้างทริป") {
         let groundId = req.body.events[0].source.groupId
         let haveTrip = await checkTripAvaliable(groundId);
@@ -51,6 +128,7 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#แนะนำ") {
         replyRecommend(reply_token, msg)
     }
+
     else if (msg === "ที่กิน") {
         replyRecommendEat(reply_token, msg)
     }
@@ -93,6 +171,9 @@ router.post('/webhook', async (req, res) => {
             reply(req)
         }
     }
+    else if (msg === "ที่กิน") {
+        replyRecommendEat(reply_token, msg)
+    }
     // else if (ev) {
     //     replyWeatherMaps(reply_token, msg)
     // }
@@ -128,7 +209,7 @@ const reply = req => {
     });
 };
 
-function replyBased(reply_token, msg) {
+function replyBased(reply_token, provinceMsg) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -139,7 +220,7 @@ function replyBased(reply_token, msg) {
         messages: [
             {
                 type: 'text',
-                text: 'ส่งอะไรมาน้าาาา ผมไม่รู้คับ ฮือ ;_; '
+                text: provinceMsg
             }
         ]
     })
@@ -623,25 +704,56 @@ function replySeeBill(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "text",
-                text: "อยากให้ผมสอนอะไรครับ ?",
-                quickReply: {
-                    items: [
-                        {
-                            action: {
-                                type: "message",
-                                label: "สร้างบิล",
-                                text: "สร้างบิล"
+                type: 'text',
+                text: msg
+            },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "จ่ายเงินด้วยจ้าา"
                             }
-                        },
-                        {
-                            action: {
-                                type: "message",
-                                label: "ดูบิล",
-                                text: "ดูบิล"
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "ใครจ่ายแล้วบ้าง",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-DEq4WP1a"
+                                },
+                                type: "button",
+                                height: "sm",
+                                margin: "xs",
+                                style: "link"
+                            },
+                            {
+                                action: {
+                                    label: "จ่ายเงิน",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-JyVQ0Xr9"
+                                },
+                                margin: "xs",
+                                color: "#C25738",
+                                height: "sm",
+                                style: "primary",
+                                type: "button"
                             }
-                        }
-                    ]
+                        ]
+                    }
                 }
             }
         ]

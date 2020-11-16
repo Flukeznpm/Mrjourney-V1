@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
+import liff from '@line/liff';
 import {
     Modal as AntModal,
     Row, Col,
@@ -66,9 +67,32 @@ function CreateBillModal(props) {
         props.setVisible(false)
     };
 
-    const onConfirm = values => {
-
+    const onConfirm = async values => {
+        let dataBill = {
+            lineGroupID: props.LineGroup,
+            ownerBillID: props.LineID,
+            ownerName: props.LineName,
+            billName: props.billName,
+            totalCost: props.totalBill,
+            receivingAccount: props.receivingAcc,
+            payMentNumber: props.paymentNumber,
+            bankName: props.bankName,
+            user: props.whoPay
+        }
+        await axios.post('https://mrjourney-senior.herokuapp.com/bill/createBill', dataBill)
+            .then(res => {
+                console.log(res)
+            });
         props.setVisible(false)
+        liff.closeWindow()
+        if (liff.getContext().type !== "none") {
+            liff.sendMessages([
+                {
+                    "type": "text",
+                    "text": "สร้างบิลเสร็จสิ้น"
+                }
+            ])
+        }
     };
 
     return (

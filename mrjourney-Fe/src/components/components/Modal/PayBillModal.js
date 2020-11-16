@@ -72,7 +72,7 @@ function PayBillModal(props) {
             billNo: props.bill.billNo,
             userID: props.userSelected
         }
-        await axios.post(`http://localhost:5000/bill/payBill`, dataPay)
+        await axios.post(`https://mrjourney-senior.herokuapp.com/bill/payBill`, dataPay)
             .then(res => {
                 console.log(res)
             });
