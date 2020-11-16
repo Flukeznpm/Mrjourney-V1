@@ -220,7 +220,7 @@ async function createBill(datas) {
     let ownerBillID = datas.ownerBillID;
     let ownerName = datas.ownerName;
     let totalCost = datas.totalCost;
-
+    let billName = datas.billName;
     let receivingAccount = datas.receivingAccount; //ชื่อบัญชี
     let payMentNumber = datas.payMentNumber; //เลขบัญชี
     let bankName = datas.bankName; // ชื่อธนาคารหรือพร้อมเพย์
@@ -241,6 +241,7 @@ async function createBill(datas) {
         receivingAccount: receivingAccount,
         payMentNumber: payMentNumber,
         bankName: bankName,
+        billName: billName
         // paymentType: paymentType,
         // accountNumber: accountNumber
     });
