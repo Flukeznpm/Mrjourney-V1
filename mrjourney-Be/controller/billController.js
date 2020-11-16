@@ -174,6 +174,18 @@ router.delete('/deleteBill', async function (req, res, next) {
         })
 });
 
+router.get('/checkBill', async function (req, res, next) {
+    let lineGroupID = req.query.lineGroupID;
+    let getUserIDRef = db.collection('Bill').doc(lineGroupID);
+    await getUserIDRef.get().then(doc => {
+        if (doc.exists) {
+            res.status(201).json('You have a bill already');
+        } else {
+            res.status(202).json('You do not have a bill');
+        }
+    })
+});
+
 //---------------- Function ----------------//
 async function generateBillID(lineGroupID) {
     function ran() {
