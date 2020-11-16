@@ -157,7 +157,7 @@ function CheckBill(props) {
                                 <Row className="container h-100">
                                     <ColStepText span={16}>
                                         <Row>
-                                            <HeaderStepText>{bill.billNo}</HeaderStepText>
+                                            <HeaderStepText>{bill.billName}</HeaderStepText>
                                         </Row>
                                     </ColStepText>
                                     <ColStepImg span={8}>
