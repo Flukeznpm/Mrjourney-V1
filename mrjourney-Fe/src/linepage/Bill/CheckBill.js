@@ -108,7 +108,7 @@ const RadioComponent = styled(Radio)`
 
 function CheckBill(props) {
 
-    const [loading, isLoading] = useState(false)
+    const [loading, isLoading] = useState(true)
     const [totalBill, setTotalBill] = useState(500)
     const [isVisibleConfirm, setVisibleConfirm] = useState(false)
     const [whoPay, setWhoPay] = useState(['รอม', 'กัน', 'ฟลุ้ค'])
@@ -173,34 +173,38 @@ function CheckBill(props) {
                                         <Col span={24}>
                                             <Row>
                                                 รอการยืนยัน
-                                </Row>
-                                            <Row className="px-2">
-                                                <Col span={10}>
-                                                    กัน
-                                    </Col>
-                                                <Col span={14} className="text-right">
-                                                    <Row justify="space-between">
-                                                        <Col span={11}>
-                                                            <ConfirmButton
-                                                                type="primary"
-                                                                size={"small"}
-                                                                htmlType="submit"
-                                                                onClick={() => alert('ยอมรับ')}
-                                                                className="w-100"
-                                                            >ยอมรับ</ConfirmButton>
+                                    </Row>
+                                            {bill.user.map((user) => {
+                                                return (
+                                                    <Row className="px-2 my-2">
+                                                        <Col span={10}>
+                                                            {user.fName}
                                                         </Col>
-                                                        <Col span={11}>
-                                                            <PrimaryButton
-                                                                type="primary"
-                                                                size={"small"}
-                                                                htmlType="submit"
-                                                                onClick={() => alert('ยกเลิก')}
-                                                                className="w-100"
-                                                            >ยกเลิก</PrimaryButton>
+                                                        <Col span={14} className="text-right">
+                                                            <Row justify="space-between">
+                                                                <Col span={11}>
+                                                                    <ConfirmButton
+                                                                        type="primary"
+                                                                        size={"small"}
+                                                                        htmlType="submit"
+                                                                        onClick={() => alert('ยอมรับ')}
+                                                                        className="w-100"
+                                                                    >ยอมรับ</ConfirmButton>
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <PrimaryButton
+                                                                        type="primary"
+                                                                        size={"small"}
+                                                                        htmlType="submit"
+                                                                        onClick={() => alert('ยกเลิก')}
+                                                                        className="w-100"
+                                                                    >ยกเลิก</PrimaryButton>
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     </Row>
-                                                </Col>
-                                            </Row>
+                                                )
+                                            })}
                                         </Col>
                                     </Row>
                                 </AntCard>
