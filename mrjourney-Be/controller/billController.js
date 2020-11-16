@@ -14,6 +14,7 @@ router.post('/createBill', async function (req, res, next) {
 router.get('/allBill', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
     let billNoList = [];
+    let billIDList = [];
     let userList = [];
     let result = [];
 
@@ -21,11 +22,21 @@ router.get('/allBill', async function (req, res, next) {
     await getAllBill.get().then(async snapshot => {
         snapshot.forEach(doc => {
             billNoList.push(doc.data());
+            billIDList.push(doc.id);
         });
     });
-    let billNo = billNoList.map(b => b.billNo).toString();
+    console.log('billNoList: ', billNoList)
+
+    let billNo = billIDList.toString();
     let ownerName = billNoList.map(o => o.ownerName).toString();
     let totalCost = billNoList.map(t => t.totalCost).toString();
+    let ownerBillID = billNoList.map(t => t.ownerBillID).toString();
+    let receivingAccount = billNoList.map(t => t.receivingAccount).toString();
+    let bankName = billNoList.map(t => t.bankName).toString();
+    let payMentNumber = billNoList.map(t => t.payMentNumber).toString();
+
+
+    console.log('billNo: ', billNo)
 
     let getUser = getAllBill.doc(billNo).collection('User');
     await getUser.get().then(async snapshot => {
@@ -38,6 +49,10 @@ router.get('/allBill', async function (req, res, next) {
         billNo: billNo,
         totalCost: totalCost,
         ownerName: ownerName,
+        ownerBillID: ownerBillID,
+        receivingAccount: receivingAccount,
+        bankName: bankName,
+        payMentNumber: payMentNumber,
         user: userList
     }
     await result.push(returnData);
