@@ -7,9 +7,8 @@ let db = firebase.firestore();
 //---------------- Controller ----------------//
 router.post('/createBill', async function (req, res, next) {
     let datas = req.body;
-    let billNo = await createBill(datas).then(() => {
-        res.status(201).json(billNo);
-    })
+    let billNo = await createBill(datas);
+    res.status(201).json(billNo);
 });
 
 router.get('/allBill', async function (req, res, next) {
@@ -236,7 +235,7 @@ async function createBill(datas) {
     for (let j = 0; j <= count; j++) {
         if (j <= count) {
             // let userr = user[j].lineID + '';
-            let genUserID = await generateUserID(lineGroupID, genUserID);
+            let genUserID = await generateUserID(lineGroupID, genBillID);
             let fname = user[j].fname + '';
             // console.log('date: ', date)
             // let userrSub = userr.substring(0, 10);
