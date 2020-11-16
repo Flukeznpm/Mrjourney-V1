@@ -18,44 +18,50 @@ router.get('/allBill', async function (req, res, next) {
     let userList = [];
     let result = [];
 
-    let getAllBill = db.collection('Bill').doc(lineGroupID).collection('BillNo');
-    await getAllBill.get().then(async snapshot => {
-        snapshot.forEach(doc => {
-            billNoList.push(doc.data());
-            billIDList.push(doc.id);
-        });
+    let checkBill = db.collection('Bill').doc(lineGroupID);
+    await checkBill.get().then(async doc => {
+        if (doc.exists) {
+            let getAllBill = db.collection('Bill').doc(lineGroupID).collection('BillNo');
+            await getAllBill.get().then(async snapshot => {
+                snapshot.forEach(doc => {
+                    billNoList.push(doc.data());
+                    billIDList.push(doc.id);
+                });
+            });
+
+            let billNo = billIDList.toString();
+            let ownerName = billNoList.map(o => o.ownerName).toString();
+            let totalCost = billNoList.map(t => t.totalCost).toString();
+            let ownerBillID = billNoList.map(t => t.ownerBillID).toString();
+            let receivingAccount = billNoList.map(t => t.receivingAccount).toString();
+            let bankName = billNoList.map(t => t.bankName).toString();
+            let payMentNumber = billNoList.map(t => t.payMentNumber).toString();
+            let billName = billNoList.map(t => t.billName).toString();
+
+            let getUser = getAllBill.doc(billNo).collection('User');
+            await getUser.get().then(async snapshot => {
+                await snapshot.forEach(async doc => {
+                    userList.push(doc.data());
+                })
+            });
+
+            let returnData = {
+                billNo: billNo,
+                totalCost: totalCost,
+                ownerName: ownerName,
+                ownerBillID: ownerBillID,
+                receivingAccount: receivingAccount,
+                bankName: bankName,
+                payMentNumber: payMentNumber,
+                billName: billName,
+                user: userList
+            }
+            await result.push(returnData);
+            res.status(200).json(result);
+        } else {
+            res.status(202).json('You do not have a bill');
+        }
     });
-
-    let billNo = billIDList.toString();
-    let ownerName = billNoList.map(o => o.ownerName).toString();
-    let totalCost = billNoList.map(t => t.totalCost).toString();
-    let ownerBillID = billNoList.map(t => t.ownerBillID).toString();
-    let receivingAccount = billNoList.map(t => t.receivingAccount).toString();
-    let bankName = billNoList.map(t => t.bankName).toString();
-    let payMentNumber = billNoList.map(t => t.payMentNumber).toString();
-    let billName = billNoList.map(t => t.billName).toString();
-
-    let getUser = getAllBill.doc(billNo).collection('User');
-    await getUser.get().then(async snapshot => {
-        await snapshot.forEach(async doc => {
-            userList.push(doc.data());
-        })
-    });
-
-    let returnData = {
-        billNo: billNo,
-        totalCost: totalCost,
-        ownerName: ownerName,
-        ownerBillID: ownerBillID,
-        receivingAccount: receivingAccount,
-        bankName: bankName,
-        payMentNumber: payMentNumber,
-        billName: billName,
-        user: userList
-    }
-    await result.push(returnData);
-
-    res.status(200).json(result);
 });
 
 router.post('/payBill', async function (req, res, next) {
