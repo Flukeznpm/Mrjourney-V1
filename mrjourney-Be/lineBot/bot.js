@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable, checkAccountProfile } = require('../controller/botController');
+const { checkTripAvaliable, checkOwnerTrip } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
     let reply_token = req.body.events[0].replyToken
@@ -79,6 +79,20 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#location") {
         reply(req)
     }
+    else if (msg === "#ยกเลิกทริป") {
+        replyDeleteTrip(reply_token, msg)
+    }
+    else if (msg === "#ปิดทริป") {
+        let userId = req.body.events[0].source.userId
+        let groupId = req.body.events[0].source.groupId
+        let checkOwner = await checkOwnerTrip(groupId, userId);
+
+        if (checkOwner) {
+            replyRating(reply_token, msg)
+        } else {
+            reply(req)
+        }
+    }
     // else if (ev) {
     //     replyWeatherMaps(reply_token, msg)
     // }
@@ -102,7 +116,6 @@ const reply = req => {
             {
                 type: "text",
                 text: JSON.stringify(req.body)
-                // text: "hello"
             }
         ]
     })
@@ -204,7 +217,7 @@ function replyNotCreate(reply_token, msg) {
                                 action: {
                                     label: "ดูแผนทั้งหมด",
                                     type: "uri",
-                                    uri: "https://liff.line.me/1653975470-4Webv3M"
+                                    uri: "https://liff.line.me/1653975470-4Webv3MY"
                                 },
                                 type: "button",
                                 color: "#C25738",
@@ -343,7 +356,7 @@ function replyPlan(reply_token, msg) {
                                 action: {
                                     label: "ดูแผนทั้งหมด",
                                     type: "uri",
-                                    uri: "https://liff.line.me/1653975470-4Webv3M"
+                                    uri: "https://liff.line.me/1653975470-4Webv3MY"
                                 },
                                 type: "button",
                                 color: "#C25738",
@@ -511,7 +524,7 @@ function replyBill(reply_token, msg) {
                             action: {
                                 type: "message",
                                 label: "สร้างบิล",
-                                text: "สร้างบิล"
+                                text: "#สร้างบิล"
                             }
                         },
                         {
@@ -519,7 +532,7 @@ function replyBill(reply_token, msg) {
                             action: {
                                 type: "message",
                                 label: "ดูบิล",
-                                text: "ดูบิล"
+                                text: "#ดูบิล"
                             }
                         }
                     ]
@@ -547,27 +560,45 @@ function replyCreateBill(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "text",
-                text: "อยากให้ผมสอนอะไรครับ ?",
-                quickReply: {
-                    items: [
-                        {
-                            type: "action",
-                            action: {
-                                type: "message",
-                                label: "สร้างบิล",
-                                text: "สร้างบิล"
+                type: 'text',
+                text: msg
+            },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "มาสร้างบิลกันเถอะ!"
                             }
-                        },
-                        {
-                            type: "action",
-                            action: {
-                                type: "message",
-                                label: "ดูบิล",
-                                text: "ดูบิล"
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "สร้างบิล",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-6rJYy1Qm"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
                             }
-                        }
-                    ]
+                        ]
+                    }
                 }
             }
         ]
@@ -1157,6 +1188,132 @@ function replyHelpBill(reply_token, msg) {
             }
         ]
     })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyDeleteTrip(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: msg
+            },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "ทริปถูกยกเลิกสำเร็จ มาสร้างใหม่กันเถอะ!"
+                            }
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "สร้างทริป",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-jV83lv9w"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRating(reply_token, msg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: msg
+            },
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "มาให้คะแนนกันเถอะ!"
+                            }
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "ให้คะแนน",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-q8mJvPdV"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    })
+
     request.post({
         url: 'https://api.line.me/v2/bot/message/reply',
         headers: headers,
