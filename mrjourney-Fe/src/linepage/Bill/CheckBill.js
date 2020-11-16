@@ -117,10 +117,15 @@ function CheckBill(props) {
     const [paymentNumber, setPaymentNumber] = useState("");
     const [paymentBank, setPaymentBank] = useState("");
     const [value, setValue] = useState("");
+    const [billList, setBillList] = useState([{}]);
 
-    // useEffect(async () => {
-    //     isLoading(false)
-    // }, [])
+    useEffect(async () => {
+        await axios.get(`http://localhost:5000/bill/allBill?lineGroupID=Cbdab6c9dbd52c75350407118ed11983a`)
+            .then(res => {
+                setBillList(res.data)
+                isLoading(false)
+            });
+    }, [])
 
     const onFinish = values => {
 
@@ -145,135 +150,142 @@ function CheckBill(props) {
     } else {
         return (
             <Wrapper>
-                <HeaderStep>
-                    <Row className="container h-100">
-                        <ColStepText span={16}>
-                            <Row>
-                                <HeaderStepText>ชื่อบิลเก็บเงิน</HeaderStepText>
-                            </Row>
-                        </ColStepText>
-                        <ColStepImg span={8}>
-                            <img src={'/img/menu-02.png'} width={150} />
-                        </ColStepImg>
-                    </Row>
-                </HeaderStep>
-                <WrapperContent>
-
-                    {/* Can see only OwnerBill */}
-                    <AntCard className="my-3">
-                        <Row>
-                            <Col span={24}>
-                                <Row>
-                                    รอการยืนยัน
+                {billList.map((bill) => {
+                    return (
+                        <>
+                            <HeaderStep>
+                                <Row className="container h-100">
+                                    <ColStepText span={16}>
+                                        <Row>
+                                            <HeaderStepText>{bill.billNo}</HeaderStepText>
+                                        </Row>
+                                    </ColStepText>
+                                    <ColStepImg span={8}>
+                                        <img src={'/img/menu-02.png'} width={150} />
+                                    </ColStepImg>
                                 </Row>
-                                <Row className="px-2">
-                                    <Col span={10}>
-                                        กัน
+                            </HeaderStep>
+                            <WrapperContent>
+
+                                {/* Can see only OwnerBill */}
+                                <AntCard className="my-3">
+                                    <Row>
+                                        <Col span={24}>
+                                            <Row>
+                                                รอการยืนยัน
+                                </Row>
+                                            <Row className="px-2">
+                                                <Col span={10}>
+                                                    กัน
                                     </Col>
-                                    <Col span={14} className="text-right">
-                                        <Row justify="space-between">
-                                            <Col span={11}>
-                                                <ConfirmButton
-                                                    type="primary"
-                                                    size={"small"}
-                                                    htmlType="submit"
-                                                    onClick={() => alert('ยอมรับ')}
-                                                    className="w-100"
-                                                >ยอมรับ</ConfirmButton>
-                                            </Col>
-                                            <Col span={11}>
+                                                <Col span={14} className="text-right">
+                                                    <Row justify="space-between">
+                                                        <Col span={11}>
+                                                            <ConfirmButton
+                                                                type="primary"
+                                                                size={"small"}
+                                                                htmlType="submit"
+                                                                onClick={() => alert('ยอมรับ')}
+                                                                className="w-100"
+                                                            >ยอมรับ</ConfirmButton>
+                                                        </Col>
+                                                        <Col span={11}>
+                                                            <PrimaryButton
+                                                                type="primary"
+                                                                size={"small"}
+                                                                htmlType="submit"
+                                                                onClick={() => alert('ยกเลิก')}
+                                                                className="w-100"
+                                                            >ยกเลิก</PrimaryButton>
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                </AntCard>
+
+                                <AntCard className="my-3">
+                                    <Row>
+                                        <Col span={24}>
+                                            <Row>
+                                                คนที่จ่ายแล้ว
+                                </Row>
+                                            <Row>
+                                                &nbsp;
+                                </Row>
+                                        </Col>
+                                    </Row>
+                                </AntCard>
+
+                                <AntCard className="my-3">
+                                    <Row>
+                                        <Col span={24}>
+                                            <Row>
+                                                คนที่ยังไม่จ่าย
+                                </Row>
+                                            <Row>
+                                                {whoPay.map((who, key) => {
+                                                    return (
+                                                        <Col span={24} className="px-2">
+                                                            <Row justify="space-between">
+                                                                <Col span={18}>
+                                                                    {who}
+                                                                </Col>
+                                                                <Col span={6} className="text-right">
+                                                                    {(totalBill / whoPay.length).toFixed(2)}
+                                                                </Col>
+                                                            </Row>
+                                                        </Col>
+                                                    )
+                                                })}
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                </AntCard>
+
+                                <RowHeader>
+                                    บัญชีเงินรับ
+                    </RowHeader>
+                                <AntCard>
+                                    <Row>
+                                        <Col span={24}>
+                                            <Row>
+                                                &nbsp;
+                                    </Row>
+                                            <Row>
+                                                &nbsp;
+                                    </Row>
+                                        </Col>
+                                    </Row>
+                                </AntCard>
+
+                            </WrapperContent>
+
+                            <Row justify="center" className="bg-white fixed-bottom">
+                                <AntForm className="container">
+                                    <AntFormItem>
+                                        <Row>
+                                            <Col span={24}>
                                                 <PrimaryButton
                                                     type="primary"
-                                                    size={"small"}
-                                                     htmlType="submit"
-                                                    onClick={() => alert('ยกเลิก')}
-                                                    className="w-100"
-                                                >ยกเลิก</PrimaryButton>
+                                                    size={"large"}
+                                                    block htmlType="submit"
+                                                    onClick={() => onVisibleConfirmModal()}
+                                                >ลบบิล</PrimaryButton>
                                             </Col>
+                                            <DeleteBillModal
+                                                isVisible={isVisibleConfirm}
+                                                setVisible={setVisibleConfirm}
+                                            />
                                         </Row>
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Row>
-                    </AntCard>
-
-                    <AntCard className="my-3">
-                        <Row>
-                            <Col span={24}>
-                                <Row>
-                                    คนที่จ่ายแล้ว
-                                </Row>
-                                <Row>
-                                    &nbsp;
-                                </Row>
-                            </Col>
-                        </Row>
-                    </AntCard>
-
-                    <AntCard className="my-3">
-                        <Row>
-                            <Col span={24}>
-                                <Row>
-                                    คนที่ยังไม่จ่าย
-                                </Row>
-                                <Row>
-                                    {whoPay.map((who, key) => {
-                                        return (
-                                            <Col span={24} className="px-2">
-                                                <Row justify="space-between">
-                                                    <Col span={18}>
-                                                        {who}
-                                                    </Col>
-                                                    <Col span={6} className="text-right">
-                                                        {(totalBill / whoPay.length).toFixed(2)}
-                                                    </Col>
-                                                </Row>
-                                            </Col>
-                                        )
-                                    })}
-                                </Row>
-                            </Col>
-                        </Row>
-                    </AntCard>
-
-                    <RowHeader>
-                        บัญชีเงินรับ
-                    </RowHeader>
-                    <AntCard>
-                        <Row>
-                            <Col span={24}>
-                                <Row>
-                                    &nbsp;
-                                    </Row>
-                                <Row>
-                                    &nbsp;
-                                    </Row>
-                            </Col>
-                        </Row>
-                    </AntCard>
-
-                </WrapperContent>
-
-                <Row justify="center" className="bg-white fixed-bottom">
-                    <AntForm className="container">
-                        <AntFormItem>
-                            <Row>
-                                <Col span={24}>
-                                    <PrimaryButton
-                                        type="primary"
-                                        size={"large"}
-                                        block htmlType="submit"
-                                        onClick={() => onVisibleConfirmModal()}
-                                    >ลบบิล</PrimaryButton>
-                                </Col>
-                                <DeleteBillModal
-                                    isVisible={isVisibleConfirm}
-                                    setVisible={setVisibleConfirm}
-                                />
+                                    </AntFormItem>
+                                </AntForm>
                             </Row>
-                        </AntFormItem>
-                    </AntForm>
-                </Row>
+                        </>
+                    )
+                })}
+
             </Wrapper>
         )
     }
