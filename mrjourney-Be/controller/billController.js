@@ -125,13 +125,13 @@ router.delete('/deleteBill', async function (req, res, next) {
             console.log('getDate: ', getUser)
 
             let userCount = (getUser.length);
-            console.log('userCount: ', DateCount)
+            // console.log('userCount: ', DateCount)
 
             for (i = userCount; i <= userCount; i--) {
                 if (i > 0) {
                     let userID = (getUser[i - 1]);
                     let userIDString = userID.toString();
-                    console.log('userIDString loop: ', DateIDString);
+                    // console.log('userIDString loop: ', DateIDString);
                     await getUserIDRef.doc(userIDString).delete();
                 } else {
                     return;
@@ -236,7 +236,7 @@ async function createBill(datas) {
         if (j <= count) {
             // let userr = user[j].lineID + '';
             let genUserID = await generateUserID(lineGroupID, genBillID);
-            let fname = user[j].fname + '';
+            let fName = user[j].fName + '';
             // console.log('date: ', date)
             // let userrSub = userr.substring(0, 10);
             // console.log('dateSub: ', dateSub)
@@ -247,7 +247,7 @@ async function createBill(datas) {
             // let eventType = await datas.totalDate[j].event[i].eventType;
             await db.collection('Bill').doc(lineGroupID).collection('BillNo').doc(genBillID).collection('User').doc(genUserID).set({
                 userID: genUserID,
-                fname: fname,
+                fName: fName,
                 payStatus: false,
                 waitAcceptStatus: false
             });
