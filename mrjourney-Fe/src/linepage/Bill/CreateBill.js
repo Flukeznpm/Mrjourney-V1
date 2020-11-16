@@ -113,8 +113,6 @@ const AddMemberButton = styled(AntButton)`
     color: #F7F7F7;
     border: none;
     background: ${props => (props.theme.color.primary)};
-    margin: 10px 0px;
-    padding: 20px;
     .anticon {
       display: flex;
       font-size: 22px;
@@ -162,22 +160,51 @@ const DeleteMemberButton = styled(AntButton)`
 
 function CreateBill(props) {
 
-    const [loading, isLoading] = useState(false)
+    const [loading, isLoading] = useState(true)
+
+    const [LineID, setLineID] = useState('')
+    const [LineName, setLineName] = useState('')
+    const [LinePicture, setLinePicture] = useState('')
+    const [LineGroup, setLineGroup] = useState('')
+
     const [totalBill, setTotalBill] = useState(0)
+    const [billName, setBillName] = useState('')
     const [isVisibleMoney, setVisibleMoney] = useState(false)
     const [isVisiblePayment, setVisiblePayment] = useState(false)
     const [isVisibleConfirm, setVisibleConfirm] = useState(false)
-    const [membersM, setMemberM] = useState([])
+    const [whoPay, setWhoPay] = useState([])
     const [ownerName, setOwnerName] = useState("");
     const [paymentNumber, setPaymentNumber] = useState("");
     const [paymentBank, setPaymentBank] = useState("");
 
-    // useEffect(async () => {
-    //     isLoading(false)
-    // }, [])
+    useEffect(() => {
+        isLoading(false)
+    }, []);
+
+    const onConfirmBill = async () => {
+        let dataBill = {
+            lineGroupID: 'Cbdab6c9dbd52c75350407118ed11983a',
+            ownerBillID: 'Uda66a8e7400b2e7fafd699f3b294ec4d',
+            ownerName: 'rom',
+            billName: billName,
+            totalCost: totalBill,
+            receivingAccount: ownerName,
+            payMentNumber: paymentNumber,
+            bankName: paymentBank,
+            user: whoPay
+        }
+        // await axios.post('https://mrjourney-senior.herokuapp.com/bill/createBill', dataBill)
+        await axios.post('http://localhost:5000/bill/createBill', dataBill)
+            .then(res => {
+                console.log(res)
+            });
+    }
 
     const handleBill = (value) => {
         setTotalBill(value)
+    }
+    const handleBillName = (value) => {
+        setBillName(value)
     }
 
     const onVisibleMoneyModal = () => {
@@ -190,16 +217,17 @@ function CreateBill(props) {
     const onVisibleConfirmModal = () => {
         setVisibleConfirm(true)
     }
-    const onDeleteMember = async (key) => {
-        membersM.splice(key, 1);
-        setMemberM(membersM)
+    const onDeleteMember = (key) => {
+        let array = [...whoPay];
+        array.splice(key, 1);
+        setWhoPay(array)
     }
 
     if (loading) {
         return (
             <WrapperLoading>
                 <RowLoading justify="center">
-                    <LoadingGif src="/gif/loading.gif" alt="loading..." />
+                    <LoadingGif src="/gif/loading-v2.gif" alt="loading..." />
                 </RowLoading>
             </WrapperLoading>
         )
@@ -218,31 +246,45 @@ function CreateBill(props) {
                 </HeaderStep>
                 <WrapperContent>
                     <Row>
+                        <Col span={24}>
+                            <AntParagraph
+                                editable={{
+                                    onChange: (handleBillName),
+                                    maxLength: 20,
+                                }}
+                            >
+                                {billName}
+                            </AntParagraph>
+                        </Col>
+                    </Row>
+                    <Row>
                         ยอดรวมบิล
                     </Row>
                     <Row>
-                        <AntParagraph
-                            editable={{
-                                onChange: (handleBill),
-                                maxLength: 5,
-                            }}
-                        >
-                            {totalBill}
-                        </AntParagraph>
+                        <Col span={24} className="text-right">
+                            <AntParagraph
+                                editable={{
+                                    onChange: (handleBill),
+                                    maxLength: 5,
+                                }}
+                            >
+                                {totalBill}
+                            </AntParagraph>
+                        </Col>
                     </Row>
                     <Row>
                         ยอดแต่ละคน
                     </Row>
                     <Row>
-                        {membersM.map((members, key) => {
+                        {whoPay.map((who, key) => {
                             return (
                                 <Col span={24}>
                                     <Row justify="space-between">
                                         <Col span={16}>
-                                            {members}
+                                            {who.fName}
                                         </Col>
                                         <Col span={6} className="text-right">
-                                            {(totalBill / membersM.length).toFixed(2)}
+                                            {(totalBill / whoPay.length).toFixed(2)}
                                         </Col>
                                         <Col span={2}>
                                             <DeleteMemberButton type="primary"
@@ -260,14 +302,15 @@ function CreateBill(props) {
                     <Row>
                         <AddMemberButton type="primary"
                             shape="circle"
+                            size="middle"
                             icon={<PlusOutlined />}
                             onClick={() => onVisibleMoneyModal()}
                         />
                         <MoneyModal
                             isVisible={isVisibleMoney}
                             setVisible={setVisibleMoney}
-                            setMemberM={setMemberM}
-                            membersM={membersM}
+                            setWhoPay={setWhoPay}
+                            whoPay={whoPay}
                         />
                     </Row>
                     <Row>
@@ -326,13 +369,14 @@ function CreateBill(props) {
                                         block htmlType="button"
                                     >ยกเลิก</PrevButton>
                                 </Col>
-                                {ownerName && paymentBank && paymentNumber && membersM && totalBill ?
+                                {ownerName && paymentBank && paymentNumber && whoPay && totalBill ?
                                     <Col span={16}>
                                         <PrimaryButton
                                             type="primary"
                                             size={"large"}
                                             block htmlType="submit"
-                                            onClick={() => onVisibleConfirmModal()}
+                                            // onClick={() => onVisibleConfirmModal()}
+                                            onClick={() => onConfirmBill()}
                                         >สร้างบิล</PrimaryButton>
                                     </Col>
                                     :
@@ -351,7 +395,7 @@ function CreateBill(props) {
                                     ownerName={ownerName}
                                     paymentBank={paymentBank}
                                     paymentNumber={paymentNumber}
-                                    membersM={membersM}
+                                    membersM={whoPay}
                                     totalBill={totalBill}
                                 />
                             </Row>
