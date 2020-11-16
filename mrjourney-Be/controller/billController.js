@@ -43,7 +43,7 @@ router.get('/allBill', async function (req, res, next) {
     }
     await result.push(returnData);
 
-    return result
+    res.status(200).json(result);
 });
 
 router.post('/payBill', async function (req, res, next) {
@@ -73,7 +73,7 @@ router.get('/whoWaitAccept', async function (req, res, next) {
             UserHaveWaitingAccept.push(doc.data());
         });
     });
-    return UserHaveWaitingAccept;
+    res.status(200).json(UserHaveWaitingAccept);
 });
 
 router.post('/acceptBill', async function (req, res, next) {
@@ -103,7 +103,7 @@ router.get('/whoPaidOrNot', async function (req, res, next) {
             UserPaidOrNot.push(doc.data());
         });
     });
-    return UserPaidOrNot;
+    res.status(200).json(UserPaidOrNot);
 });
 
 router.delete('/deleteBill', async function (req, res, next) {
@@ -202,15 +202,17 @@ async function generateUserID(lineGroupID, genBillID) {
 async function createBill(datas) {
     let lineGroupID = datas.lineGroupID;
     let genBillID = await generateBillID(lineGroupID);
+
     let ownerBillID = datas.ownerBillID;
     let ownerName = datas.ownerName;
     let totalCost = datas.totalCost;
-    let receivingAccount = datas.receivingAccount;
-    let paymentType = datas.paymentType;
-    let promptPayNumber = datas.promptPayNumber;
-    let bankName = datas.bankName;
-    let accountNumber = datas.accountNumber;
-    let user = datas.user;
+
+    let receivingAccount = datas.receivingAccount; //ชื่อบัญชี
+    let payMentNumber = datas.payMentNumber; //เลขบัญชี
+    let bankName = datas.bankName; // ชื่อธนาคารหรือพร้อมเพย์
+    let user = datas.user; // รายชื่อคนที่ต้องจ่าย 
+    // let paymentType = datas.paymentType;
+    // let accountNumber = datas.accountNumber;
 
     let createBill_step1 = db.collection('Bill').doc(lineGroupID);
     await createBill_step1.set({
@@ -223,10 +225,10 @@ async function createBill(datas) {
         ownerBillID: ownerBillID,
         ownerName: ownerName,
         receivingAccount: receivingAccount,
-        paymentType: paymentType,
-        promptPayNumber: promptPayNumber,
+        payMentNumber: payMentNumber,
         bankName: bankName,
-        accountNumber: accountNumber
+        // paymentType: paymentType,
+        // accountNumber: accountNumber
     });
 
     // for (let i = 0; i <= 0; i++) {
