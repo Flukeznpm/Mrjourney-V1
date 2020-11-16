@@ -66,8 +66,11 @@ function DeleteBillModal(props) {
         props.setVisible(false)
     };
 
-    const onConfirm = values => {
-
+    const onConfirm = async values => {
+        await axios.delete(`http://localhost:5000/bill/deleteBill?lineGroupID=${props.lineGroupID}&billNo=${props.bill.billNo}`)
+            .then(res => {
+                console.log(res)
+            });
         props.setVisible(false)
     };
 

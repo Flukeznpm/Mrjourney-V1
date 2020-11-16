@@ -66,8 +66,16 @@ function PayBillModal(props) {
         props.setVisible(false)
     };
 
-    const onConfirm = values => {
-
+    const onConfirm = async values => {
+        let dataPay = {
+            lineGroupID: props.lineGroupID,
+            billNo: props.bill.billNo,
+            userID: props.userSelected
+        }
+        await axios.post(`http://localhost:5000/bill/payBill`, dataPay)
+            .then(res => {
+                console.log(res)
+            });
         props.setVisible(false)
     };
 
