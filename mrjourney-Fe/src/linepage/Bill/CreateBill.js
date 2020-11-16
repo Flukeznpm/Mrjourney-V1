@@ -207,6 +207,7 @@ function CreateBill(props) {
             lineGroupID: 'Cbdab6c9dbd52c75350407118ed11983a',
             ownerBillID: 'Uda66a8e7400b2e7fafd699f3b294ec4d',
             ownerName: 'rom',
+            billName: billName,
             totalCost: totalBill,
             receivingAccount: ownerName,
             payMentNumber: paymentNumber,
