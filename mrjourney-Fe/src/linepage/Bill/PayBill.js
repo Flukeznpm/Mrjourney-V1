@@ -10,8 +10,8 @@ import {
     Card
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import CreateBillModal from '../../components/components/Modal/CreateBillModal'
 import PayBillModal from '../../components/components/Modal/PayBillModal';
+import { Link } from 'react-router-dom';
 
 const Wrapper = styled.div`
     font-size: 18px;
@@ -122,15 +122,38 @@ function PayBill(props) {
     const [paymentBank, setPaymentBank] = useState("");
     const [value, setValue] = useState("");
     const [billList, setBillList] = useState([{}]);
-    const [LineGroup, setLineGroup] = useState('Cbdab6c9dbd52c75350407118ed11983a');
 
-    useEffect(async () => {
-        await axios.get(`http://localhost:5000/bill/allBill?lineGroupID=Cbdab6c9dbd52c75350407118ed11983a`)
-            .then(res => {
-                setBillList(res.data)
-                isLoading(false)
-            });
-    }, [])
+    const [LineID, setLineID] = useState('')
+    const [LineName, setLineName] = useState('')
+    const [LinePicture, setLinePicture] = useState('')
+    const [LineGroup, setLineGroup] = useState('')
+
+    useEffect(() => {
+        liff.init({ liffId: '1653975470-JyVQ0Xr9' }).then(async () => {
+            if (liff.isLoggedIn()) {
+                if (!LineGroup || LineGroup === '') {
+                    let profile = await liff.getProfile();
+                    setLineID(profile.userId);
+                    setLineName(profile.displayName);
+                    setLinePicture(profile.pictureUrl);
+                    const context = await liff.getContext();
+                    setLineGroup(context.groupId)
+                } else {
+                    await axios.get(`${process.env.REACT_APP_FE_PATH}/bill/allBill?lineGroupID=${LineGroup}`)
+                        .then(res => {
+                            if (res.status === 202) {
+                                isLoading(false)
+                            } else {
+                                setBillList(res.data)
+                                isLoading(false)
+                            }
+                        });
+                }
+            } else {
+                props.history.push('/Home');
+            }
+        })
+    }, [LineGroup]);
 
     const onFinish = values => {
 
@@ -148,7 +171,7 @@ function PayBill(props) {
         return (
             <WrapperLoading>
                 <RowLoading justify="center">
-                    <LoadingGif src="/gif/loading.gif" alt="loading..." />
+                    <LoadingGif src="/gif/loading-v2.gif" alt="loading..." />
                 </RowLoading>
             </WrapperLoading>
         )
@@ -158,111 +181,134 @@ function PayBill(props) {
                 {billList.map((bill) => {
                     return (
                         <>
-                            <HeaderStep>
-                                <Row className="container h-100">
-                                    <ColStepText span={16}>
-                                        <Row>
-                                            <HeaderStepText>{bill.billName}</HeaderStepText>
+                            {bill.billNo ?
+
+                                <>
+                                    <HeaderStep>
+                                        <Row className="container h-100">
+                                            <ColStepText span={16}>
+                                                <Row>
+                                                    <HeaderStepText>{bill.billName}</HeaderStepText>
+                                                </Row>
+                                            </ColStepText>
+                                            <ColStepImg span={8}>
+                                                <img src={'/img/menu-02.png'} width={150} />
+                                            </ColStepImg>
                                         </Row>
-                                    </ColStepText>
-                                    <ColStepImg span={8}>
-                                        <img src={'/img/menu-02.png'} width={150} />
-                                    </ColStepImg>
-                                </Row>
-                            </HeaderStep>
-                            <WrapperContent>
-                                <RowHeader>
-                                    ยอดแต่ละคน
+                                    </HeaderStep>
+                                    <WrapperContent>
+                                        <RowHeader>
+                                            ยอดแต่ละคน
                                 </RowHeader>
 
-                                <Row>
-                                    {bill.user.map((user) => {
-                                        return (
-                                            <>
-                                                {
-                                                    !user.waitAcceptStatus ?
-                                                        <Col span={24}>
-                                                            <Row justify="space-between">
-                                                                <Col span={3}>
-                                                                    <Radio.Group onChange={onChangeSelecteWhoPay} value={value}>
-                                                                        <RadioComponent value={user.userID}>
-                                                                        </RadioComponent>
-                                                                    </Radio.Group>
+                                        <Row>
+                                            {bill.user.map((user) => {
+                                                return (
+                                                    <>
+                                                        {
+                                                            user.waitAcceptStatus === false && user.payStatus === false ?
+                                                                <Col span={24}>
+                                                                    <Row justify="space-between">
+                                                                        <Col span={3}>
+                                                                            <Radio.Group onChange={onChangeSelecteWhoPay} value={value}>
+                                                                                <RadioComponent value={user.userID}>
+                                                                                </RadioComponent>
+                                                                            </Radio.Group>
+                                                                        </Col>
+                                                                        <Col span={14}>
+                                                                            {user.fName}
+                                                                        </Col>
+                                                                        <Col span={7} className="text-right">
+                                                                            {(bill.totalCost / bill.user.length).toFixed(2)} ฿
                                                                 </Col>
-                                                                <Col span={15}>
-                                                                    {user.fName}
+                                                                    </Row>
                                                                 </Col>
-                                                                <Col span={6} className="text-right">
-                                                                    {(bill.totalCost / bill.user.length).toFixed(2)} ฿
-                                                                </Col>
+                                                                :
+                                                                null
+                                                        }
+                                                    </>
+                                                )
+                                            })}
+                                        </Row>
 
-                                                            </Row>
+                                        <RowHeader>
+                                            บัญชีเงินรับ
+                                </RowHeader>
+                                        <AntCard>
+                                            <Row>
+                                                <Col span={24}>
+                                                    <Row>
+                                                        {bill.receivingAccount}
+                                                    </Row>
+                                                    <Row>
+                                                        {bill.bankName} {bill.payMentNumber}
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                        </AntCard>
+                                    </WrapperContent>
+                                    <Row justify="center" className="bg-white fixed-bottom">
+                                        <AntForm className="container">
+                                            <AntFormItem>
+                                                <Row>
+                                                    <Col span={8}>
+                                                        <PrevButton
+                                                            type="link"
+                                                            size={"large"}
+                                                            block htmlType="button"
+                                                        >ยกเลิก</PrevButton>
+                                                    </Col>
+                                                    {selectedPay === true ?
+                                                        <Col span={16}>
+                                                            <PrimaryButton
+                                                                type="primary"
+                                                                size={"large"}
+                                                                block htmlType="submit"
+                                                                onClick={() => onVisibleConfirmModal()}
+                                                            >จ่ายเงิน</PrimaryButton>
                                                         </Col>
                                                         :
-                                                        null
-                                                }
-                                            </>
-                                        )
-                                    })}
-                                </Row>
-
-                                <RowHeader>
-                                    บัญชีเงินรับ
-                                </RowHeader>
-                                <AntCard>
-                                    <Row>
-                                        <Col span={24}>
-                                            <Row>
-                                                {bill.receivingAccount}
-                                            </Row>
-                                            <Row>
-                                                {bill.bankName} {bill.payMentNumber}
-                                            </Row>
-                                        </Col>
+                                                        <Col span={16}>
+                                                            <PrimaryButton
+                                                                type="primary"
+                                                                size={"large"}
+                                                                block htmlType="submit"
+                                                                disabled
+                                                            >จ่ายเงิน</PrimaryButton>
+                                                        </Col>
+                                                    }
+                                                    <PayBillModal
+                                                        isVisible={isVisibleConfirm}
+                                                        setVisible={setVisibleConfirm}
+                                                        bill={bill}
+                                                        lineGroupID={LineGroup}
+                                                        userSelected={value}
+                                                    />
+                                                </Row>
+                                            </AntFormItem>
+                                        </AntForm>
                                     </Row>
-                                </AntCard>
-                            </WrapperContent>
-                            <Row justify="center" className="bg-white fixed-bottom">
-                                <AntForm className="container">
-                                    <AntFormItem>
-                                        <Row>
-                                            <Col span={8}>
-                                                <PrevButton
-                                                    type="link"
-                                                    size={"large"}
-                                                    block htmlType="button"
-                                                >ยกเลิก</PrevButton>
-                                            </Col>
-                                            {selectedPay === true ?
-                                                <Col span={16}>
-                                                    <PrimaryButton
-                                                        type="primary"
-                                                        size={"large"}
-                                                        block htmlType="submit"
-                                                        onClick={() => onVisibleConfirmModal()}
-                                                    >จ่ายเงิน</PrimaryButton>
+                                </>
+                                :
+                                <WrapperLoading>
+                                    <RowLoading justify="center">
+                                        <h2 className="col-12 font-weight-bold text-center color-default py-4">
+                                            ขณะนี้ยังไม่มีบิลเรียกเก็บเงินที่ถูกสร้าง
+                                        </h2>
+                                        <AntForm className="container">
+                                            <AntFormItem>
+                                                <Col span={24}>
+                                                    <Link to={`/CreateBill`}>
+                                                        <PrimaryButton type="primary" size={"large"}
+                                                            block htmlType="button"
+                                                        >สร้างบิล</PrimaryButton>
+                                                    </Link>
                                                 </Col>
-                                                :
-                                                <Col span={16}>
-                                                    <PrimaryButton
-                                                        type="primary"
-                                                        size={"large"}
-                                                        block htmlType="submit"
-                                                        disabled
-                                                    >จ่ายเงิน</PrimaryButton>
-                                                </Col>
-                                            }
-                                            <PayBillModal
-                                                isVisible={isVisibleConfirm}
-                                                setVisible={setVisibleConfirm}
-                                                bill={bill}
-                                                lineGroupID={LineGroup}
-                                                userSelected={value}
-                                            />
-                                        </Row>
-                                    </AntFormItem>
-                                </AntForm>
-                            </Row>
+                                            </AntFormItem>
+                                        </AntForm>
+                                    </RowLoading>
+                                </WrapperLoading>
+                            }
                         </>
                     )
                 })}
