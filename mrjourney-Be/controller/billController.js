@@ -102,6 +102,20 @@ router.post('/acceptBill', async function (req, res, next) {
     res.status(201).json('Accept Success');
 });
 
+router.post('/cancleAcceptBill', async function (req, res, next) {
+    let lineGroupID = req.body.lineGroupID;
+    let billNo = req.body.billNo;
+    let userID = req.body.userID;
+    let updatePayStatus = db.collection('Bill').doc(lineGroupID)
+        .collection('BillNo').doc(billNo)
+        .collection('User').doc(userID);
+    await updatePayStatus.update({
+        payStatus: false,
+        waitAcceptStatus: false
+    });
+    res.status(201).json('Accept Success');
+});
+
 router.get('/whoPaidOrNot', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
     let billNo = req.query.billNo;
