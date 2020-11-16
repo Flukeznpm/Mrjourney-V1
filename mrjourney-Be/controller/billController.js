@@ -25,7 +25,6 @@ router.get('/allBill', async function (req, res, next) {
             billIDList.push(doc.id);
         });
     });
-    console.log('billNoList: ', billNoList)
 
     let billNo = billIDList.toString();
     let ownerName = billNoList.map(o => o.ownerName).toString();
@@ -34,9 +33,7 @@ router.get('/allBill', async function (req, res, next) {
     let receivingAccount = billNoList.map(t => t.receivingAccount).toString();
     let bankName = billNoList.map(t => t.bankName).toString();
     let payMentNumber = billNoList.map(t => t.payMentNumber).toString();
-
-
-    console.log('billNo: ', billNo)
+    let billName = billNoList.map(t => t.billName).toString();
 
     let getUser = getAllBill.doc(billNo).collection('User');
     await getUser.get().then(async snapshot => {
@@ -53,6 +50,7 @@ router.get('/allBill', async function (req, res, next) {
         receivingAccount: receivingAccount,
         bankName: bankName,
         payMentNumber: payMentNumber,
+        billName: billName,
         user: userList
     }
     await result.push(returnData);
@@ -216,7 +214,6 @@ async function generateUserID(lineGroupID, genBillID) {
 async function createBill(datas) {
     let lineGroupID = datas.lineGroupID;
     let genBillID = await generateBillID(lineGroupID);
-
     let ownerBillID = datas.ownerBillID;
     let ownerName = datas.ownerName;
     let totalCost = datas.totalCost;
@@ -225,8 +222,6 @@ async function createBill(datas) {
     let payMentNumber = datas.payMentNumber; //เลขบัญชี
     let bankName = datas.bankName; // ชื่อธนาคารหรือพร้อมเพย์
     let user = datas.user; // รายชื่อคนที่ต้องจ่าย 
-    // let paymentType = datas.paymentType;
-    // let accountNumber = datas.accountNumber;
 
     let createBill_step1 = db.collection('Bill').doc(lineGroupID);
     await createBill_step1.set({
@@ -242,25 +237,13 @@ async function createBill(datas) {
         payMentNumber: payMentNumber,
         bankName: bankName,
         billName: billName
-        // paymentType: paymentType,
-        // accountNumber: accountNumber
     });
 
-    // for (let i = 0; i <= 0; i++) {
     let count = (user.length) - 1;
     for (let j = 0; j <= count; j++) {
         if (j <= count) {
-            // let userr = user[j].lineID + '';
             let genUserID = await generateUserID(lineGroupID, genBillID);
             let fName = user[j].fName + '';
-            // console.log('date: ', date)
-            // let userrSub = userr.substring(0, 10);
-            // console.log('dateSub: ', dateSub)
-            // let event = await user[j].event;
-            // let eventName = await datas.totalDate[j].event[i].eventName;
-            // let startEvent = await datas.totalDate[j].event[i].startEvent;
-            // let endEvent = await datas.totalDate[j].event[i].endEvent;
-            // let eventType = await datas.totalDate[j].event[i].eventType;
             await db.collection('Bill').doc(lineGroupID).collection('BillNo').doc(genBillID).collection('User').doc(genUserID).set({
                 userID: genUserID,
                 fName: fName,
@@ -271,7 +254,6 @@ async function createBill(datas) {
             console.log('Error create bill')
         }
     }
-    // }
     return genBillID;
 }
 
