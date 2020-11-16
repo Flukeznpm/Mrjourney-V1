@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PayBillModal from '../../components/components/Modal/PayBillModal';
+import { Link } from 'react-router-dom';
 
 const Wrapper = styled.div`
     font-size: 18px;
@@ -140,8 +141,12 @@ function PayBill(props) {
                 } else {
                     await axios.get(`https://mrjourney-senior.herokuapp.com/bill/allBill?lineGroupID=${LineGroup}`)
                         .then(res => {
-                            setBillList(res.data)
-                            isLoading(false)
+                            if (res.status === 202) {
+                                isLoading(false)
+                            } else {
+                                setBillList(res.data)
+                                isLoading(false)
+                            }
                         });
                 }
             } else {

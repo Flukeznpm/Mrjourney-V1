@@ -13,6 +13,7 @@ import { withRouter } from 'react-router-dom';
 import CreateBillModal from '../../components/components/Modal/CreateBillModal'
 import PayBillModal from '../../components/components/Modal/PayBillModal';
 import DeleteBillModal from '../../components/components/Modal/DeleteBillModal';
+import { Link } from 'react-router-dom';
 
 const Wrapper = styled.div`
     font-size: 18px;
@@ -132,8 +133,12 @@ function CheckBill(props) {
                 } else {
                     await axios.get(`https://mrjourney-senior.herokuapp.com/bill/allBill?lineGroupID=${LineGroup}`)
                         .then(res => {
-                            setBillList(res.data)
-                            isLoading(false)
+                            if (res.status === 202) {
+                                isLoading(false)
+                            } else {
+                                setBillList(res.data)
+                                isLoading(false)
+                            }
                         });
                 }
             } else {

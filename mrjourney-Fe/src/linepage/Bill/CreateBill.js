@@ -14,6 +14,7 @@ import { PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
 import MoneyModal from '../../components/components/MoneyModal'
 import BankPayment from '../../components/components/Modal/BankPayment';
 import CreateBillModal from '../../components/components/Modal/CreateBillModal'
+import { Link } from 'react-router-dom';
 
 const { Paragraph } = Typography;
 const AntParagraph = styled(Paragraph)`
@@ -193,8 +194,12 @@ function CreateBill(props) {
                 } else {
                     await axios.get(`https://mrjourney-senior.herokuapp.com/bill/allBill?lineGroupID=${LineGroup}`)
                         .then(res => {
-                            setBillList(res.data)
-                            isLoading(false)
+                            if (res.status === 202) {
+                                isLoading(false)
+                            } else {
+                                setBillList(res.data)
+                                isLoading(false)
+                            }
                         });
                 }
             } else {

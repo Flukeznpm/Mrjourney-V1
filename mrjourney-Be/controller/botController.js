@@ -22,10 +22,10 @@ async function checkOwnerTrip(groupId, userId) {
     let tripID = checkTripRef.map(e => e.tripID)
     let toStringID = tripID.toString()
 
-    let checkStatus = checkTripRef.map(e => e.tripStatus)
-    if (checkStatus) {
-        status = false;
-    } else {
+    // let checkStatus = checkTripRef.map(e => e.tripStatus)
+    // if (checkStatus) {
+    //     status = false;
+    // } else {
         let checkUserRef = db.collection('TripList').where('tripID', '==', toStringID).where('ownerTrip', '==', userId);
         await checkUserRef.get().then(async doc => {
             if (doc.empty) {
@@ -41,7 +41,7 @@ async function checkOwnerTrip(groupId, userId) {
                 })
             }
         });
-    }
+    // }
     return status;
 };
 
