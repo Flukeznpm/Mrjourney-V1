@@ -111,13 +111,9 @@ function CheckBill(props) {
     const [loading, isLoading] = useState(true)
     const [totalBill, setTotalBill] = useState(500)
     const [isVisibleConfirm, setVisibleConfirm] = useState(false)
-    const [whoPay, setWhoPay] = useState(['รอม', 'กัน', 'ฟลุ้ค'])
-    const [selectedPay, setSelectedPay] = useState(true)
-    const [ownerName, setOwnerName] = useState("");
-    const [paymentNumber, setPaymentNumber] = useState("");
-    const [paymentBank, setPaymentBank] = useState("");
-    const [value, setValue] = useState("");
     const [billList, setBillList] = useState([{}]);
+    const [LineGroup, setLineGroup] = useState('Cbdab6c9dbd52c75350407118ed11983a');
+    const [updateBill, setUpdateBill] = useState(0);
 
     useEffect(async () => {
         await axios.get(`http://localhost:5000/bill/allBill?lineGroupID=Cbdab6c9dbd52c75350407118ed11983a`)
@@ -135,8 +131,28 @@ function CheckBill(props) {
         setVisibleConfirm(true)
     }
 
-    const onChangeSelecteWhoPay = e => {
-        setValue(e.target.value)
+    const onCancelAcceptBill = async (bill, user) => {
+        let dataBill = {
+            lineGroupID: LineGroup,
+            billNo: bill.billNo,
+            userID: user.userID
+        }
+        await axios.post(`http://localhost:5000/bill/cancleAcceptBill`, dataBill)
+            .then(res => {
+                console.log(res)
+            });
+    }
+
+    const onAcceptBill = async (bill, user) => {
+        let dataBill = {
+            lineGroupID: LineGroup,
+            billNo: bill.billNo,
+            userID: user.userID
+        }
+        await axios.post(`http://localhost:5000/bill/acceptBill`, dataBill)
+            .then(res => {
+                console.log(res)
+            });
     }
 
     if (loading) {
@@ -173,35 +189,43 @@ function CheckBill(props) {
                                         <Col span={24}>
                                             <Row>
                                                 รอการยืนยัน
-                                    </Row>
+                                            </Row>
                                             {bill.user.map((user) => {
                                                 return (
                                                     <Row className="px-2 my-2">
-                                                        <Col span={10}>
-                                                            {user.fName}
-                                                        </Col>
-                                                        <Col span={14} className="text-right">
-                                                            <Row justify="space-between">
-                                                                <Col span={11}>
-                                                                    <ConfirmButton
-                                                                        type="primary"
-                                                                        size={"small"}
-                                                                        htmlType="submit"
-                                                                        onClick={() => alert('ยอมรับ')}
-                                                                        className="w-100"
-                                                                    >ยอมรับ</ConfirmButton>
+                                                        {user.waitAcceptStatus && user.payStatus === false ?
+                                                            <>
+                                                                <Col span={10}>
+                                                                    {user.fName}
                                                                 </Col>
-                                                                <Col span={11}>
-                                                                    <PrimaryButton
-                                                                        type="primary"
-                                                                        size={"small"}
-                                                                        htmlType="submit"
-                                                                        onClick={() => alert('ยกเลิก')}
-                                                                        className="w-100"
-                                                                    >ยกเลิก</PrimaryButton>
+                                                                <Col span={14} className="text-right">
+                                                                    <Row justify="space-between">
+                                                                        <Col span={11}>
+                                                                            <ConfirmButton
+                                                                                type="primary"
+                                                                                size={"small"}
+                                                                                htmlType="submit"
+                                                                                onClick={() => alert('ยอมรับ')}
+                                                                                className="w-100"
+                                                                                onClick={() => onAcceptBill(bill, user)}
+                                                                            >ยอมรับ</ConfirmButton>
+                                                                        </Col>
+                                                                        <Col span={11}>
+                                                                            <PrimaryButton
+                                                                                type="primary"
+                                                                                size={"small"}
+                                                                                htmlType="submit"
+                                                                                onClick={() => alert('ยกเลิก')}
+                                                                                className="w-100"
+                                                                                onClick={() => onCancelAcceptBill(bill, user)}
+                                                                            >ยกเลิก</PrimaryButton>
+                                                                        </Col>
+                                                                    </Row>
                                                                 </Col>
-                                                            </Row>
-                                                        </Col>
+                                                            </>
+                                                            :
+                                                            null
+                                                        }
                                                     </Row>
                                                 )
                                             })}
@@ -214,10 +238,25 @@ function CheckBill(props) {
                                         <Col span={24}>
                                             <Row>
                                                 คนที่จ่ายแล้ว
-                                </Row>
-                                            <Row>
-                                                &nbsp;
-                                </Row>
+                                            </Row>
+                                            {bill.user.map((user) => {
+                                                return (
+                                                    <Row className="px-2">
+                                                        {user.payStatus === true ?
+                                                            <>
+                                                                <Col span={10}>
+                                                                    {user.fName}
+                                                                </Col>
+                                                                <Col span={14} className="text-right">
+                                                                    {(bill.totalCost / bill.user.length).toFixed(2)} ฿
+                                                                </Col>
+                                                            </>
+                                                            :
+                                                            null
+                                                        }
+                                                    </Row>
+                                                )
+                                            })}
                                         </Col>
                                     </Row>
                                 </AntCard>
@@ -227,19 +266,23 @@ function CheckBill(props) {
                                         <Col span={24}>
                                             <Row>
                                                 คนที่ยังไม่จ่าย
-                                </Row>
+                                            </Row>
                                             <Row>
-                                                {whoPay.map((who, key) => {
+                                                {bill.user.map((user) => {
                                                     return (
                                                         <Col span={24} className="px-2">
-                                                            <Row justify="space-between">
-                                                                <Col span={18}>
-                                                                    {who}
+                                                            {user.payStatus === false ?
+                                                                <Row justify="space-between">
+                                                                    <Col span={18}>
+                                                                        {user.fName}
+                                                                    </Col>
+                                                                    <Col span={6} className="text-right">
+                                                                        {(bill.totalCost / bill.user.length).toFixed(2)} ฿
                                                                 </Col>
-                                                                <Col span={6} className="text-right">
-                                                                    {(totalBill / whoPay.length).toFixed(2)}
-                                                                </Col>
-                                                            </Row>
+                                                                </Row>
+                                                                :
+                                                                null
+                                                            }
                                                         </Col>
                                                     )
                                                 })}
@@ -250,16 +293,16 @@ function CheckBill(props) {
 
                                 <RowHeader>
                                     บัญชีเงินรับ
-                    </RowHeader>
+                                </RowHeader>
                                 <AntCard>
                                     <Row>
                                         <Col span={24}>
                                             <Row>
-                                                &nbsp;
-                                    </Row>
+                                                {bill.receivingAccount}
+                                            </Row>
                                             <Row>
-                                                &nbsp;
-                                    </Row>
+                                                {bill.bankName} {bill.payMentNumber}
+                                            </Row>
                                         </Col>
                                     </Row>
                                 </AntCard>
@@ -281,6 +324,8 @@ function CheckBill(props) {
                                             <DeleteBillModal
                                                 isVisible={isVisibleConfirm}
                                                 setVisible={setVisibleConfirm}
+                                                bill={bill}
+                                                lineGroupID={LineGroup}
                                             />
                                         </Row>
                                     </AntFormItem>
