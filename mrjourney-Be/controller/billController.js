@@ -245,7 +245,7 @@ async function createBill(datas) {
             // let startEvent = await datas.totalDate[j].event[i].startEvent;
             // let endEvent = await datas.totalDate[j].event[i].endEvent;
             // let eventType = await datas.totalDate[j].event[i].eventType;
-            await createBill_step2.collection('User').doc(genUserID).set({
+            await db.collection('Bill').doc(lineGroupID).collection('BillNo').doc(genBillID).collection('User').doc(genUserID).set({
                 userID: genUserID,
                 fname: fname,
                 payStatus: false,
