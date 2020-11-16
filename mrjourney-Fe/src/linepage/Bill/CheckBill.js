@@ -13,6 +13,7 @@ import { withRouter } from 'react-router-dom';
 import CreateBillModal from '../../components/components/Modal/CreateBillModal'
 import PayBillModal from '../../components/components/Modal/PayBillModal';
 import DeleteBillModal from '../../components/components/Modal/DeleteBillModal';
+import { Link } from 'react-router-dom';
 
 const Wrapper = styled.div`
     font-size: 18px;
@@ -112,16 +113,39 @@ function CheckBill(props) {
     const [totalBill, setTotalBill] = useState(500)
     const [isVisibleConfirm, setVisibleConfirm] = useState(false)
     const [billList, setBillList] = useState([{}]);
-    const [LineGroup, setLineGroup] = useState('Cbdab6c9dbd52c75350407118ed11983a');
-    const [updateBill, setUpdateBill] = useState(0);
+    const [updateBill, setUpdateBill] = useState('');
 
-    useEffect(async () => {
-        await axios.get(`http://localhost:5000/bill/allBill?lineGroupID=Cbdab6c9dbd52c75350407118ed11983a`)
-            .then(res => {
-                setBillList(res.data)
-                isLoading(false)
-            });
-    }, [])
+    const [LineID, setLineID] = useState('')
+    const [LineName, setLineName] = useState('')
+    const [LinePicture, setLinePicture] = useState('')
+    const [LineGroup, setLineGroup] = useState('')
+
+    useEffect(() => {
+        liff.init({ liffId: '1653975470-DEq4WP1a' }).then(async () => {
+            if (liff.isLoggedIn()) {
+                if (!LineGroup || LineGroup === '') {
+                    let profile = await liff.getProfile();
+                    setLineID(profile.userId);
+                    setLineName(profile.displayName);
+                    setLinePicture(profile.pictureUrl);
+                    const context = await liff.getContext();
+                    setLineGroup(context.groupId)
+                } else {
+                    await axios.get(`${process.env.REACT_APP_FE_PATH}/bill/allBill?lineGroupID=${LineGroup}`)
+                        .then(res => {
+                            if (res.status === 202) {
+                                isLoading(false)
+                            } else {
+                                setBillList(res.data)
+                                isLoading(false)
+                            }
+                        });
+                }
+            } else {
+                props.history.push('/Home');
+            }
+        })
+    }, [LineGroup]);
 
     const onFinish = values => {
 
@@ -137,7 +161,7 @@ function CheckBill(props) {
             billNo: bill.billNo,
             userID: user.userID
         }
-        await axios.post(`http://localhost:5000/bill/cancleAcceptBill`, dataBill)
+        await axios.post(`https://mrjourney-senior.herokuapp.com/bill/cancleAcceptBill`, dataBill)
             .then(res => {
                 console.log(res)
             });
@@ -149,9 +173,10 @@ function CheckBill(props) {
             billNo: bill.billNo,
             userID: user.userID
         }
-        await axios.post(`http://localhost:5000/bill/acceptBill`, dataBill)
+        await axios.post(`https://mrjourney-senior.herokuapp.com/bill/acceptBill`, dataBill)
             .then(res => {
                 console.log(res)
+                setUpdateBill(bill.billNo)
             });
     }
 
@@ -159,7 +184,7 @@ function CheckBill(props) {
         return (
             <WrapperLoading>
                 <RowLoading justify="center">
-                    <LoadingGif src="/gif/loading.gif" alt="loading..." />
+                    <LoadingGif src="/gif/loading-v2.gif" alt="loading..." />
                 </RowLoading>
             </WrapperLoading>
         )
@@ -169,168 +194,195 @@ function CheckBill(props) {
                 {billList.map((bill) => {
                     return (
                         <>
-                            <HeaderStep>
-                                <Row className="container h-100">
-                                    <ColStepText span={16}>
-                                        <Row>
-                                            <HeaderStepText>{bill.billName}</HeaderStepText>
+                            {bill.billNo ?
+                                <>
+                                    <HeaderStep>
+                                        <Row className="container h-100">
+                                            <ColStepText span={16}>
+                                                <Row>
+                                                    <HeaderStepText>{bill.billName}</HeaderStepText>
+                                                </Row>
+                                            </ColStepText>
+                                            <ColStepImg span={8}>
+                                                <img src={'/img/menu-02.png'} width={150} />
+                                            </ColStepImg>
                                         </Row>
-                                    </ColStepText>
-                                    <ColStepImg span={8}>
-                                        <img src={'/img/menu-02.png'} width={150} />
-                                    </ColStepImg>
-                                </Row>
-                            </HeaderStep>
-                            <WrapperContent>
+                                    </HeaderStep>
+                                    <WrapperContent>
 
-                                {/* Can see only OwnerBill */}
-                                <AntCard className="my-3">
-                                    <Row>
-                                        <Col span={24}>
-                                            <Row>
-                                                รอการยืนยัน
+                                        {/* Can see only OwnerBill */}
+                                        {LineID === bill.ownerBillID ?
+                                            <AntCard className="my-3">
+                                                <Row>
+                                                    <Col span={24}>
+                                                        <Row>
+                                                            รอการยืนยัน
                                             </Row>
-                                            {bill.user.map((user) => {
-                                                return (
-                                                    <Row className="px-2 my-2">
-                                                        {user.waitAcceptStatus && user.payStatus === false ?
-                                                            <>
-                                                                <Col span={10}>
-                                                                    {user.fName}
-                                                                </Col>
-                                                                <Col span={14} className="text-right">
-                                                                    <Row justify="space-between">
-                                                                        <Col span={11}>
-                                                                            <ConfirmButton
-                                                                                type="primary"
-                                                                                size={"small"}
-                                                                                htmlType="submit"
-                                                                                onClick={() => alert('ยอมรับ')}
-                                                                                className="w-100"
-                                                                                onClick={() => onAcceptBill(bill, user)}
-                                                                            >ยอมรับ</ConfirmButton>
-                                                                        </Col>
-                                                                        <Col span={11}>
-                                                                            <PrimaryButton
-                                                                                type="primary"
-                                                                                size={"small"}
-                                                                                htmlType="submit"
-                                                                                onClick={() => alert('ยกเลิก')}
-                                                                                className="w-100"
-                                                                                onClick={() => onCancelAcceptBill(bill, user)}
-                                                                            >ยกเลิก</PrimaryButton>
-                                                                        </Col>
-                                                                    </Row>
-                                                                </Col>
-                                                            </>
-                                                            :
-                                                            null
-                                                        }
-                                                    </Row>
-                                                )
-                                            })}
-                                        </Col>
-                                    </Row>
-                                </AntCard>
-
-                                <AntCard className="my-3">
-                                    <Row>
-                                        <Col span={24}>
-                                            <Row>
-                                                คนที่จ่ายแล้ว
-                                            </Row>
-                                            {bill.user.map((user) => {
-                                                return (
-                                                    <Row className="px-2">
-                                                        {user.payStatus === true ?
-                                                            <>
-                                                                <Col span={10}>
-                                                                    {user.fName}
-                                                                </Col>
-                                                                <Col span={14} className="text-right">
-                                                                    {(bill.totalCost / bill.user.length).toFixed(2)} ฿
-                                                                </Col>
-                                                            </>
-                                                            :
-                                                            null
-                                                        }
-                                                    </Row>
-                                                )
-                                            })}
-                                        </Col>
-                                    </Row>
-                                </AntCard>
-
-                                <AntCard className="my-3">
-                                    <Row>
-                                        <Col span={24}>
-                                            <Row>
-                                                คนที่ยังไม่จ่าย
-                                            </Row>
-                                            <Row>
-                                                {bill.user.map((user) => {
-                                                    return (
-                                                        <Col span={24} className="px-2">
-                                                            {user.payStatus === false ?
-                                                                <Row justify="space-between">
-                                                                    <Col span={18}>
-                                                                        {user.fName}
-                                                                    </Col>
-                                                                    <Col span={6} className="text-right">
-                                                                        {(bill.totalCost / bill.user.length).toFixed(2)} ฿
-                                                                </Col>
+                                                        {bill.user.map((user) => {
+                                                            return (
+                                                                <Row className="px-2 my-2">
+                                                                    {user.waitAcceptStatus && user.payStatus === false ?
+                                                                        <>
+                                                                            <Col span={10}>
+                                                                                {user.fName}
+                                                                            </Col>
+                                                                            <Col span={14} className="text-right">
+                                                                                <Row justify="space-between">
+                                                                                    <Col span={11}>
+                                                                                        <ConfirmButton
+                                                                                            type="primary"
+                                                                                            size={"small"}
+                                                                                            htmlType="submit"
+                                                                                            onClick={() => alert('ยอมรับ')}
+                                                                                            className="w-100"
+                                                                                            onClick={() => onAcceptBill(bill, user)}
+                                                                                        >ยอมรับ</ConfirmButton>
+                                                                                    </Col>
+                                                                                    <Col span={11}>
+                                                                                        <PrimaryButton
+                                                                                            type="primary"
+                                                                                            size={"small"}
+                                                                                            htmlType="submit"
+                                                                                            onClick={() => alert('ยกเลิก')}
+                                                                                            className="w-100"
+                                                                                            onClick={() => onCancelAcceptBill(bill, user)}
+                                                                                        >ยกเลิก</PrimaryButton>
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Col>
+                                                                        </>
+                                                                        :
+                                                                        null
+                                                                    }
                                                                 </Row>
-                                                                :
-                                                                null
-                                                            }
-                                                        </Col>
-                                                    )
-                                                })}
-                                            </Row>
-                                        </Col>
-                                    </Row>
-                                </AntCard>
+                                                            )
+                                                        })}
+                                                    </Col>
+                                                </Row>
+                                            </AntCard>
+                                            :
+                                            null
+                                        }
 
-                                <RowHeader>
-                                    บัญชีเงินรับ
+                                        <AntCard className="my-3">
+                                            <Row>
+                                                <Col span={24}>
+                                                    <Row>
+                                                        คนที่จ่ายแล้ว
+                                            </Row>
+                                                    {bill.user.map((user) => {
+                                                        return (
+                                                            <Row className="px-2">
+                                                                {user.payStatus === true ?
+                                                                    <>
+                                                                        <Col span={10}>
+                                                                            {user.fName}
+                                                                        </Col>
+                                                                        <Col span={14} className="text-right">
+                                                                            {(bill.totalCost / bill.user.length).toFixed(2)} ฿
+                                                                </Col>
+                                                                    </>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </Row>
+                                                        )
+                                                    })}
+                                                </Col>
+                                            </Row>
+                                        </AntCard>
+
+                                        <AntCard className="my-3">
+                                            <Row>
+                                                <Col span={24}>
+                                                    <Row>
+                                                        คนที่ยังไม่จ่าย
+                                            </Row>
+                                                    <Row>
+                                                        {bill.user.map((user) => {
+                                                            return (
+                                                                <Col span={24} className="px-2">
+                                                                    {user.payStatus === false ?
+                                                                        <Row justify="space-between">
+                                                                            <Col span={18}>
+                                                                                {user.fName}
+                                                                            </Col>
+                                                                            <Col span={6} className="text-right">
+                                                                                {(bill.totalCost / bill.user.length).toFixed(2)} ฿
+                                                                </Col>
+                                                                        </Row>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </Col>
+                                                            )
+                                                        })}
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                        </AntCard>
+
+                                        <RowHeader>
+                                            บัญชีเงินรับ
                                 </RowHeader>
-                                <AntCard>
-                                    <Row>
-                                        <Col span={24}>
+                                        <AntCard>
                                             <Row>
-                                                {bill.receivingAccount}
+                                                <Col span={24}>
+                                                    <Row>
+                                                        {bill.receivingAccount}
+                                                    </Row>
+                                                    <Row>
+                                                        {bill.bankName} {bill.payMentNumber}
+                                                    </Row>
+                                                </Col>
                                             </Row>
-                                            <Row>
-                                                {bill.bankName} {bill.payMentNumber}
-                                            </Row>
-                                        </Col>
+                                        </AntCard>
+
+                                    </WrapperContent>
+
+                                    <Row justify="center" className="bg-white fixed-bottom">
+                                        <AntForm className="container">
+                                            <AntFormItem>
+                                                <Row>
+                                                    <Col span={24}>
+                                                        <PrimaryButton
+                                                            type="primary"
+                                                            size={"large"}
+                                                            block htmlType="submit"
+                                                            onClick={() => onVisibleConfirmModal()}
+                                                        >ลบบิล</PrimaryButton>
+                                                    </Col>
+                                                    <DeleteBillModal
+                                                        isVisible={isVisibleConfirm}
+                                                        setVisible={setVisibleConfirm}
+                                                        bill={bill}
+                                                        lineGroupID={LineGroup}
+                                                    />
+                                                </Row>
+                                            </AntFormItem>
+                                        </AntForm>
                                     </Row>
-                                </AntCard>
-
-                            </WrapperContent>
-
-                            <Row justify="center" className="bg-white fixed-bottom">
-                                <AntForm className="container">
-                                    <AntFormItem>
-                                        <Row>
-                                            <Col span={24}>
-                                                <PrimaryButton
-                                                    type="primary"
-                                                    size={"large"}
-                                                    block htmlType="submit"
-                                                    onClick={() => onVisibleConfirmModal()}
-                                                >ลบบิล</PrimaryButton>
-                                            </Col>
-                                            <DeleteBillModal
-                                                isVisible={isVisibleConfirm}
-                                                setVisible={setVisibleConfirm}
-                                                bill={bill}
-                                                lineGroupID={LineGroup}
-                                            />
-                                        </Row>
-                                    </AntFormItem>
-                                </AntForm>
-                            </Row>
+                                </>
+                                :
+                                <WrapperLoading>
+                                    <RowLoading justify="center">
+                                        <h2 className="col-12 font-weight-bold text-center color-default py-4">
+                                            ขณะนี้ยังไม่มีบิลเรียกเก็บเงินที่ถูกสร้าง
+                                      </h2>
+                                        <AntForm className="container">
+                                            <AntFormItem>
+                                                <Col span={24}>
+                                                    <Link to={`/CreateBill`}>
+                                                        <PrimaryButton type="primary" size={"large"}
+                                                            block htmlType="button"
+                                                        >สร้างบิล</PrimaryButton>
+                                                    </Link>
+                                                </Col>
+                                            </AntFormItem>
+                                        </AntForm>
+                                    </RowLoading>
+                                </WrapperLoading>
+                            }
                         </>
                     )
                 })}
