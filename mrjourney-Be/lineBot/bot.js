@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable, checkOwnerTrip } = require('../controller/botController');
+const { checkTripAvaliable, checkOwnerTrip, RecommendEat } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
 
@@ -10,85 +10,29 @@ router.post('/webhook', async (req, res) => {
     // if (msg.type === "message" && msg.message.type === "text") {
     let msg = req.body.events[0].message.text
     let reply_token = req.body.events[0].replyToken
-    // let recommendEat = msg.subString(0, 7)
-    // let recommendTravel = msg.subString(0, 10)
-    // let recommendSleep = msg.subString(0, 7)
 
-    // let msgTest = []
-    // let sit = ['fluke', 'new', 'jok']
-    // sit.map((e) => {
-    //     msgTest.push({
-    //         type: 'text',
-    //         text: e
-    //     })
-    // })
-    // msgTest.push(   {
-    //     type: "flex",
-    //     altText: "Flex Message",
-    //     contents: {
-    //         type: "bubble",
-    //         body: {
-    //             layout: "vertical",
-    //             contents: [
-    //                 {
-    //                     type: "text",
-    //                     align: "center",
-    //                     weight: "bold",
-    //                     text: "อยากดูแบบไหนครับ?"
-    //                 }
-    //             ],
-    //             type: "box"
-    //         },
-    //         direction: "ltr",
-    //         footer: {
-    //             type: "box",
-    //             layout: "vertical",
-    //             contents: [
-    //                 {
-    //                     action: {
-    //                         label: "ดูแผนทั้งหมด",
-    //                         type: "uri",
-    //                         uri: "https://liff.line.me/1653975470-4Webv3MY"
-    //                     },
-    //                     type: "button",
-    //                     color: "#C25738",
-    //                     height: "sm",
-    //                     margin: "xs",
-    //                     style: "primary"
-    //                 },
-    //                 {
-    //                     margin: "xs",
-    //                     color: "#C25738",
-    //                     height: "sm",
-    //                     style: "primary",
-    //                     action: {
-    //                         data: "text",
-    //                         label: "ดูแผนวันนี้",
-    //                         type: "postback",
-    //                         text: "ดูแผนวันนี้"
-    //                     },
-    //                     type: "button"
-    //                 }
-    //             ]
-    //         }
-    //     }
-    // })
+    // let locationMsg = req.body.message.type
+
+    let typeEat = msg.substring(0, 7)
+    let typeTravel = msg.substring(0, 10)
+    let typeSleep = msg.substring(0, 7)
 
     if (msg === "อาจารย์โอ๋") {
-        replyProfessor(reply_token, msg)
+        replyProfessor(reply_token)
     }
-    // else if (recommendEat === "#ที่กิน") {
-    //     let provinceMsg = msg.subString(7)
-    //     replyBased(reply_token, provinceMsg)
-    // }
-    // else if (recommendTravel === "#ที่เที่ยว") {
-    //     let provinceMsg = msg.subString(10)
-    //     replyBased(reply_token, provinceMsg)
-    // }
-    // else if (recommendSleep === "#ที่พัก") {
-    //     let provinceMsg = msg.subString(7)
-    //     replyBased(reply_token, provinceMsg)
-    // }
+    else if (typeEat === "#ที่กิน") {
+        let provinceMsg = req.body.events[0].message.text.substring(8)
+        let locationEat = await RecommendEat(provinceMsg);
+        replyRecommendEat(reply_token, locationEat)
+    }
+    else if (typeTravel === "#ที่เที่ยว") {
+        let provinceMsg = req.body.events[0].message.text.substring(11)
+        replyRecon(reply_token, provinceMsg)
+    }
+    else if (typeSleep === "#ที่พัก") {
+        let provinceMsg = req.body.events[0].message.text.substring(8)
+        replyRecon(reply_token, provinceMsg)
+    }
     else if (msg === "#สร้างทริป") {
         let groundId = req.body.events[0].source.groupId
         let haveTrip = await checkTripAvaliable(groundId);
@@ -98,6 +42,9 @@ router.post('/webhook', async (req, res) => {
             replyCreate(reply_token, msg)
         }
     }
+    // else if (locationMsg === "location") {
+    //     replyProfessor(reply_token)
+    // }
     else if (msg === "#ดูแผน") {
         let groundId = req.body.events[0].source.groupId
         let haveTrip = await checkTripAvaliable(groundId);
@@ -127,16 +74,6 @@ router.post('/webhook', async (req, res) => {
     }
     else if (msg === "#แนะนำ") {
         replyRecommend(reply_token, msg)
-    }
-
-    else if (msg === "ที่กิน") {
-        replyRecommendEat(reply_token, msg)
-    }
-    else if (msg === "ที่เที่ยว") {
-        replyRecommendTravel(reply_token, msg)
-    }
-    else if (msg === "ที่พัก") {
-        replyRecommendSleep(reply_token, msg)
     }
     else if (msg === "#อากาศ") {
         replyWeather(reply_token, msg)
@@ -171,15 +108,6 @@ router.post('/webhook', async (req, res) => {
             reply(req)
         }
     }
-    else if (msg === "ที่กิน") {
-        replyRecommendEat(reply_token, msg)
-    }
-    // else if (ev) {
-    //     replyWeatherMaps(reply_token, msg)
-    // }
-    // else {
-    //     replyBased(reply_token, msg)
-    // }
 
     // reply(req)
     res.sendStatus(200)
@@ -234,7 +162,57 @@ function replyBased(reply_token, provinceMsg) {
     });
 }
 
-function replyProfessor(reply_token, msg) {
+function replyRecommendEat(reply_token, locationEat) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: locationEat
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRecon(reply_token, provinceMsg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: provinceMsg
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyProfessor(reply_token) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -978,206 +956,206 @@ function replyRecommend(reply_token, msg) {
     });
 }
 
-function replyRecommendEat(reply_token, msg) {
-    let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
-    }
+// function replyRecommendEat(reply_token, msg) {
+//     let headers = {
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+//     }
 
-    let body = JSON.stringify({
-        replyToken: reply_token,
-        messages: [
-            {
-                type: "carousel",
-                contents: [
-                    {
-                        type: "bubble",
-                        direction: "ltr",
-                        hero: {
-                            type: "image",
-                            url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "text",
-                                    text: "สร้างแผนการท่องเที่ยว",
-                                    weight: "bold",
-                                    size: "lg",
-                                    align: "center",
-                                    wrap: true,
-                                    contents: []
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "message",
-                                        label: "#สร้างทริป",
-                                        text: "#สร้างทริป"
-                                    },
-                                    color: "#F37945",
-                                    style: "primary"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        type: "bubble",
-                        direction: "ltr",
-                        hero: {
-                            type: "image",
-                            url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "text",
-                                    text: "วิธีการใช้งาน",
-                                    weight: "bold",
-                                    size: "lg",
-                                    align: "center",
-                                    wrap: true,
-                                    contents: []
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "message",
-                                        label: "#วิธีการใช้",
-                                        text: "#วิธีการใช้"
-                                    },
-                                    color: "#F37945",
-                                    style: "primary"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        type: "bubble",
-                        direction: "ltr",
-                        hero: {
-                            type: "image",
-                            url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "text",
-                                    text: "ดูแผนการท่องเที่ยว",
-                                    weight: "bold",
-                                    size: "lg",
-                                    align: "center",
-                                    wrap: true,
-                                    contents: []
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "message",
-                                        label: "#ดูทริป",
-                                        text: "#ดูทริป"
-                                    },
-                                    color: "#F37945",
-                                    style: "primary"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        type: "bubble",
-                        direction: "ltr",
-                        hero: {
-                            type: "image",
-                            url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "text",
-                                    text: "แนะนำสถานที่",
-                                    weight: "bold",
-                                    size: "lg",
-                                    align: "center",
-                                    wrap: true,
-                                    contents: []
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "message",
-                                        label: "#แนะนำ",
-                                        text: "#แนะนำ"
-                                    },
-                                    color: "#F37945",
-                                    style: "primary"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        ]
-    })
-    request.post({
-        url: 'https://api.line.me/v2/bot/message/reply',
-        headers: headers,
-        body: body
-    }, (err, res, body) => {
-        console.log('status = ' + res.statusCode);
-    });
-}
+//     let body = JSON.stringify({
+//         replyToken: reply_token,
+//         messages: [
+//             {
+//                 type: "carousel",
+//                 contents: [
+//                     {
+//                         type: "bubble",
+//                         direction: "ltr",
+//                         hero: {
+//                             type: "image",
+//                             url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
+//                             size: "full",
+//                             aspectRatio: "16:9",
+//                             aspectMode: "cover"
+//                         },
+//                         body: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "text",
+//                                     text: "สร้างแผนการท่องเที่ยว",
+//                                     weight: "bold",
+//                                     size: "lg",
+//                                     align: "center",
+//                                     wrap: true,
+//                                     contents: []
+//                                 }
+//                             ]
+//                         },
+//                         footer: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "button",
+//                                     action: {
+//                                         type: "message",
+//                                         label: "#สร้างทริป",
+//                                         text: "#สร้างทริป"
+//                                     },
+//                                     color: "#F37945",
+//                                     style: "primary"
+//                                 }
+//                             ]
+//                         }
+//                     },
+//                     {
+//                         type: "bubble",
+//                         direction: "ltr",
+//                         hero: {
+//                             type: "image",
+//                             url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
+//                             size: "full",
+//                             aspectRatio: "16:9",
+//                             aspectMode: "cover"
+//                         },
+//                         body: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "text",
+//                                     text: "วิธีการใช้งาน",
+//                                     weight: "bold",
+//                                     size: "lg",
+//                                     align: "center",
+//                                     wrap: true,
+//                                     contents: []
+//                                 }
+//                             ]
+//                         },
+//                         footer: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "button",
+//                                     action: {
+//                                         type: "message",
+//                                         label: "#วิธีการใช้",
+//                                         text: "#วิธีการใช้"
+//                                     },
+//                                     color: "#F37945",
+//                                     style: "primary"
+//                                 }
+//                             ]
+//                         }
+//                     },
+//                     {
+//                         type: "bubble",
+//                         direction: "ltr",
+//                         hero: {
+//                             type: "image",
+//                             url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
+//                             size: "full",
+//                             aspectRatio: "16:9",
+//                             aspectMode: "cover"
+//                         },
+//                         body: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "text",
+//                                     text: "ดูแผนการท่องเที่ยว",
+//                                     weight: "bold",
+//                                     size: "lg",
+//                                     align: "center",
+//                                     wrap: true,
+//                                     contents: []
+//                                 }
+//                             ]
+//                         },
+//                         footer: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "button",
+//                                     action: {
+//                                         type: "message",
+//                                         label: "#ดูทริป",
+//                                         text: "#ดูทริป"
+//                                     },
+//                                     color: "#F37945",
+//                                     style: "primary"
+//                                 }
+//                             ]
+//                         }
+//                     },
+//                     {
+//                         type: "bubble",
+//                         direction: "ltr",
+//                         hero: {
+//                             type: "image",
+//                             url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
+//                             size: "full",
+//                             aspectRatio: "16:9",
+//                             aspectMode: "cover"
+//                         },
+//                         body: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "text",
+//                                     text: "แนะนำสถานที่",
+//                                     weight: "bold",
+//                                     size: "lg",
+//                                     align: "center",
+//                                     wrap: true,
+//                                     contents: []
+//                                 }
+//                             ]
+//                         },
+//                         footer: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "button",
+//                                     action: {
+//                                         type: "message",
+//                                         label: "#แนะนำ",
+//                                         text: "#แนะนำ"
+//                                     },
+//                                     color: "#F37945",
+//                                     style: "primary"
+//                                 }
+//                             ]
+//                         }
+//                     }
+//                 ]
+//             }
+//         ]
+//     })
+//     request.post({
+//         url: 'https://api.line.me/v2/bot/message/reply',
+//         headers: headers,
+//         body: body
+//     }, (err, res, body) => {
+//         console.log('status = ' + res.statusCode);
+//     });
+// }
 
 function replyHelp(reply_token, msg) {
     let headers = {
@@ -1434,5 +1412,63 @@ function replyRating(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
-
+// let msgTest = []
+// let sit = ['fluke', 'new', 'jok']
+// sit.map((e) => {
+//     msgTest.push({
+//         type: 'text',
+//         text: e
+//     })
+// })
+// msgTest.push(   {
+//     type: "flex",
+//     altText: "Flex Message",
+//     contents: {
+//         type: "bubble",
+//         body: {
+//             layout: "vertical",
+//             contents: [
+//                 {
+//                     type: "text",
+//                     align: "center",
+//                     weight: "bold",
+//                     text: "อยากดูแบบไหนครับ?"
+//                 }
+//             ],
+//             type: "box"
+//         },
+//         direction: "ltr",
+//         footer: {
+//             type: "box",
+//             layout: "vertical",
+//             contents: [
+//                 {
+//                     action: {
+//                         label: "ดูแผนทั้งหมด",
+//                         type: "uri",
+//                         uri: "https://liff.line.me/1653975470-4Webv3MY"
+//                     },
+//                     type: "button",
+//                     color: "#C25738",
+//                     height: "sm",
+//                     margin: "xs",
+//                     style: "primary"
+//                 },
+//                 {
+//                     margin: "xs",
+//                     color: "#C25738",
+//                     height: "sm",
+//                     style: "primary",
+//                     action: {
+//                         data: "text",
+//                         label: "ดูแผนวันนี้",
+//                         type: "postback",
+//                         text: "ดูแผนวันนี้"
+//                     },
+//                     type: "button"
+//                 }
+//             ]
+//         }
+//     }
+// })
 module.exports = router;

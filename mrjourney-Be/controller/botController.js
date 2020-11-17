@@ -22,25 +22,26 @@ async function checkOwnerTrip(groupId, userId) {
     let tripID = checkTripRef.map(e => e.tripID)
     let toStringID = tripID.toString()
 
+    let checkUserRef = db.collection('TripList').where('tripID', '==', toStringID).where('ownerTrip', '==', userId);
+    await checkUserRef.get().then(async doc => {
+        if (doc.empty) {
+            status = false;
+        } else {
+            let checkAccRef = db.collection('AccountProfile').doc(userId);
+            await checkAccRef.get().then(async snapshot => {
+                if (snapshot.exists) {
+                    status = true;
+                } else {
+                    status = false;
+                }
+            })
+        }
+    });
+
     // let checkStatus = checkTripRef.map(e => e.tripStatus)
     // if (checkStatus) {
     //     status = false;
     // } else {
-        let checkUserRef = db.collection('TripList').where('tripID', '==', toStringID).where('ownerTrip', '==', userId);
-        await checkUserRef.get().then(async doc => {
-            if (doc.empty) {
-                status = false;
-            } else {
-                let checkAccRef = db.collection('AccountProfile').doc(userId);
-                await checkAccRef.get().then(async snapshot => {
-                    if (snapshot.exists) {
-                        status = true;
-                    } else {
-                        status = false;
-                    }
-                })
-            }
-        });
     // }
     return status;
 };
@@ -65,12 +66,45 @@ async function getLastTrip(lineGroupID) {
     return listResult;
 }
 
-async function getLocation(data) {
+async function RecommendEat(province) {
+    let provinceRef = await getLocationEat(province);
+    let placeID = provinceRef.result.map(e => e.place_id)
+    let toStringPlaceID = placeID[0].toString()
+    return toStringPlaceID;
+};
 
+async function getLocationEat(province) {
+    let dataList = [];
+    const https = require('https')
+    const options = {
+        hostname: 'tatapi.tourismthailand.org',
+        port: 443,
+        path: `/tatapi/v5/places/search?categorycodes=RESTAURANT&provincename=${province}&numberofresult=5`,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json, text/json',
+            'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
+            'Accept-Language': 'TH'
+        }
+    }
+    const req = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
+        res.on('data', d => {
+            // dataList.push(d.data());
+            d.data()
+        })
+    })
+    req.on('error', error => {
+        console.error(error)
+    })
+    req.end();
+
+    let data = req ;
+    return data;
 };
 
 async function getWeather(data) {
 
 };
 
-module.exports = { checkTripAvaliable, checkOwnerTrip };
+module.exports = { checkTripAvaliable, checkOwnerTrip, RecommendEat };
