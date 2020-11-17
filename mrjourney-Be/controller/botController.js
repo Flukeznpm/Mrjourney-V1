@@ -103,8 +103,14 @@ async function getLocationEat(province) {
     return data;
 };
 
-async function getWeather(data) {
+async function getWeather(province) {
+    let currentDate = new Date();
+    const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(currentDate);
+    const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(currentDate);
+    const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(currentDate);
+    let date = `${ye}-${mo}-${da}-${province}`
 
+    return date;
 };
 
-module.exports = { checkTripAvaliable, checkOwnerTrip, RecommendEat };
+module.exports = { checkTripAvaliable, checkOwnerTrip, RecommendEat, getWeather };

@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable, checkOwnerTrip, RecommendEat } = require('../controller/botController');
+const { checkTripAvaliable, checkOwnerTrip, RecommendEat, getWeather } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
 
@@ -12,6 +12,7 @@ router.post('/webhook', async (req, res) => {
     let reply_token = req.body.events[0].replyToken
 
     // let locationMsg = req.body.message.type
+    let weatherMsg = msg.substring(0, 7)
 
     let typeEat = msg.substring(0, 7)
     let typeTravel = msg.substring(0, 10)
@@ -32,6 +33,11 @@ router.post('/webhook', async (req, res) => {
     else if (typeSleep === "#ที่พัก") {
         let provinceMsg = req.body.events[0].message.text.substring(8)
         replyRecon(reply_token, provinceMsg)
+    }
+    else if (weatherMsg === "#อากาศ,") {
+        let provinceWeather = req.body.events[0].message.text.substring(7)
+        let date = await getWeather(provinceWeather);
+        replyRecon(reply_token, date)
     }
     else if (msg === "#สร้างทริป") {
         let groundId = req.body.events[0].source.groupId
@@ -224,6 +230,31 @@ function replyProfessor(reply_token) {
             {
                 type: 'text',
                 text: '♥'
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyCheckWeather(reply_token, date) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: date
             }
         ]
     })
