@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable, checkOwnerTrip, RecommendEat, getWeather } = require('../controller/botController');
+const { checkTripAvaliable, checkOwnerTrip, RecommendEat, getWeather, checkPayBill, checkTripPerDay } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
 
@@ -48,9 +48,6 @@ router.post('/webhook', async (req, res) => {
             replyCreate(reply_token, msg)
         }
     }
-    // else if (locationMsg === "location") {
-    //     replyProfessor(reply_token)
-    // }
     else if (msg === "#ดูแผน") {
         let groundId = req.body.events[0].source.groupId
         let haveTrip = await checkTripAvaliable(groundId);
@@ -64,7 +61,13 @@ router.post('/webhook', async (req, res) => {
         replyPlanAll(reply_token, msg)
     }
     else if (msg === "ดูแผนวันนี้") {
-        replyPlanPerDay(reply_token, msg)
+        let groupId = req.body.events[0].source.groupId
+        let perday = await checkTripPerDay(groupId)
+        if (perday.tripName) {
+            replyPlanPerDay(reply_token, perday)
+        } else {
+            replyNotBill(reply_token)
+        }
     }
     else if (msg === "#ช่วย") {
         replyHelp(reply_token, msg)
@@ -95,7 +98,13 @@ router.post('/webhook', async (req, res) => {
         replyCreateBill(reply_token, msg)
     }
     else if (msg === "#ดูบิล") {
-        replySeeBill(reply_token, msg)
+        let groupId = req.body.events[0].source.groupId
+        let bill = await checkPayBill(groupId)
+        if (bill.billName) {
+            replySeeBill(reply_token, bill)
+        } else {
+            replyNotBill(reply_token)
+        }
     }
     else if (msg === "#location") {
         reply(req)
@@ -470,6 +479,7 @@ function replyPlan(reply_token, msg) {
                         ]
                     }
                 }
+
             }
         ]
 
@@ -547,7 +557,18 @@ function replyCantSeePlan(reply_token, msg) {
     });
 }
 
-function replyPlanPerDay(reply_token, msg) {
+function replyPlanPerDay(reply_token, perday) {
+
+    let contentEventName = []
+    perday.totalDate[0].events.map((u) => contentEventName.push({
+        type: "text",
+        text: u.eventName
+    }))
+    let contentEventTime = []
+    perday.totalDate[0].events.map((u) => contentEventTime.push({
+        type: "text",
+        text: u.startEvent+"น."+" - "+u.endEvent+"น."
+    }))
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -557,9 +578,93 @@ function replyPlanPerDay(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: 'text',
-                text: "Flex msg Perday"
-            },
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    size: "mega",
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [],
+                                flex: 2,
+                                backgroundColor: "#C15638"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [],
+                                flex: 3
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: contentEventName,
+                                width: "50%",
+                                position: "absolute",
+                                offsetTop: "50%",
+                                offsetStart: "15px"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: contentEventTime,
+                                position: "absolute",
+                                offsetTop: "50%",
+                                offsetEnd: "15px"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: perday.province,
+                                        size: "lg",
+                                        color: "#FFFFFF"
+                                    },
+                                    {
+                                        type: "text",
+                                        text: perday.tripName,
+                                        size: "xxl",
+                                        color: "#FFFFFF"
+                                    }
+                                ],
+                                position: "absolute",
+                                offsetTop: "15px",
+                                offsetStart: "15px"
+                            }
+                        ],
+                        height: "240px",
+                        paddingAll: "0px"
+                    },
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "button",
+                                action: {
+                                    type: "uri",
+                                    label: "ดูทริปทั้งหมด",
+                                    uri: "https://liff.line.me/1653975470-4Webv3MY"
+                                },
+                                style: "primary",
+                                color: "#C15638"
+                            }
+                        ]
+                    },
+                    styles: {
+                        footer: {
+                            separator: true
+                        }
+                    }
+                }
+            }
         ]
     })
     request.post({
@@ -703,7 +808,7 @@ function replyCreateBill(reply_token, msg) {
     });
 }
 
-function replySeeBill(reply_token, msg) {
+function replyNotBill(reply_token) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -712,10 +817,6 @@ function replySeeBill(reply_token, msg) {
     let body = JSON.stringify({
         replyToken: reply_token,
         messages: [
-            {
-                type: 'text',
-                text: msg
-            },
             {
                 type: "flex",
                 altText: "Flex Message",
@@ -728,7 +829,7 @@ function replySeeBill(reply_token, msg) {
                                 type: "text",
                                 align: "center",
                                 weight: "bold",
-                                text: "จ่ายเงินด้วยจ้าา"
+                                text: "ขณะนี้ยังไม่มีบิล มาสร้างบิลกันเถอะ!"
                             }
                         ],
                         type: "box"
@@ -740,28 +841,144 @@ function replySeeBill(reply_token, msg) {
                         contents: [
                             {
                                 action: {
-                                    label: "ใครจ่ายแล้วบ้าง",
+                                    label: "สร้างบิล",
                                     type: "uri",
-                                    uri: "https://liff.line.me/1653975470-DEq4WP1a"
+                                    uri: "https://liff.line.me/1653975470-6rJYy1Qm"
                                 },
                                 type: "button",
-                                height: "sm",
-                                margin: "xs",
-                                style: "link"
-                            },
-                            {
-                                action: {
-                                    label: "จ่ายเงิน",
-                                    type: "uri",
-                                    uri: "https://liff.line.me/1653975470-JyVQ0Xr9"
-                                },
-                                margin: "xs",
                                 color: "#C25738",
                                 height: "sm",
-                                style: "primary",
-                                type: "button"
+                                margin: "xs",
+                                style: "primary"
                             }
                         ]
+                    }
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replySeeBill(reply_token, bill) {
+    let contentName = []
+    bill.user.map((u) => contentName.push({
+        type: "text",
+        text: u.fName
+    }))
+    let contentCost = []
+    bill.user.map((u) => contentCost.push({
+        type: "text",
+        text: (bill.totalCost / bill.user.length).toFixed(2)+" ฿"
+    }))
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    size: "mega",
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [],
+                                flex: 2,
+                                backgroundColor: "#C15638"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [],
+                                flex: 3
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: contentName,
+                                width: "50%",
+                                position: "absolute",
+                                offsetTop: "50%",
+                                offsetStart: "15px"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: contentCost,
+                                position: "absolute",
+                                offsetTop: "50%",
+                                offsetEnd: "15px"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: bill.billName,
+                                        size: "lg",
+                                        color: "#FFFFFF"
+                                    },
+                                    {
+                                        type: "text",
+                                        text: bill.totalCost + ' ฿',
+                                        size: "xxl",
+                                        color: "#FFFFFF"
+                                    }
+                                ],
+                                position: "absolute",
+                                offsetTop: "15px",
+                                offsetStart: "15px"
+                            }
+                        ],
+                        height: "240px",
+                        paddingAll: "0px"
+                    },
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "button",
+                                action: {
+                                    type: "uri",
+                                    label: "ใครจ่ายแล้วบ้าง",
+                                    uri: "https://liff.line.me/1653975470-DEq4WP1a"
+                                }
+                            },
+                            {
+                                type: "button",
+                                action: {
+                                    type: "uri",
+                                    label: "จ่ายเงิน",
+                                    uri: "https://liff.line.me/1653975470-JyVQ0Xr9"
+                                },
+                                style: "primary",
+                                color: "#C15638"
+                            }
+                        ]
+                    },
+                    styles: {
+                        footer: {
+                            separator: true
+                        }
                     }
                 }
             }

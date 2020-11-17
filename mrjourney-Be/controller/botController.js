@@ -37,12 +37,6 @@ async function checkOwnerTrip(groupId, userId) {
             })
         }
     });
-
-    // let checkStatus = checkTripRef.map(e => e.tripStatus)
-    // if (checkStatus) {
-    //     status = false;
-    // } else {
-    // }
     return status;
 };
 
@@ -55,7 +49,6 @@ async function getLastTrip(lineGroupID) {
             list.push(doc.data());
         });
     });
-    // console.log('result: ', list[0]);
     let tripID = list.map(t => t.tripID);
     let tripIDString = tripID[0].toString();
 
@@ -99,9 +92,129 @@ async function getLocationEat(province) {
     })
     req.end();
 
-    let data = req ;
+    let data = req;
     return data;
 };
+
+async function checkPayBill(lineGroupID) {
+    let billRef = await getBill(lineGroupID);
+    let billResult = billRef[0]
+    return billResult;
+};
+
+async function getBill(lineGroupID) {
+    let billNoList = [];
+    let billIDList = [];
+    let userList = [];
+    let result = [];
+
+    let checkBill = db.collection('Bill').doc(lineGroupID);
+    await checkBill.get().then(async doc => {
+        console.log('1');
+        if (doc.exists) {
+            let getAllBill = db.collection('Bill').doc(lineGroupID).collection('BillNo');
+            await getAllBill.get().then(async snapshot => {
+                snapshot.forEach(doc => {
+                    billNoList.push(doc.data());
+                    billIDList.push(doc.id);
+                });
+            });
+
+            let billNo = billIDList.toString();
+            let ownerName = billNoList.map(o => o.ownerName).toString();
+            let totalCost = billNoList.map(t => t.totalCost).toString();
+            let ownerBillID = billNoList.map(t => t.ownerBillID).toString();
+            let receivingAccount = billNoList.map(t => t.receivingAccount).toString();
+            let bankName = billNoList.map(t => t.bankName).toString();
+            let payMentNumber = billNoList.map(t => t.payMentNumber).toString();
+            let billName = billNoList.map(t => t.billName).toString();
+
+            let getUser = getAllBill.doc(billNo).collection('User');
+            await getUser.get().then(async snapshot => {
+                await snapshot.forEach(async doc => {
+                    userList.push(doc.data());
+                })
+            });
+
+            let returnData = {
+                billNo: billNo,
+                totalCost: totalCost,
+                ownerName: ownerName,
+                ownerBillID: ownerBillID,
+                receivingAccount: receivingAccount,
+                bankName: bankName,
+                payMentNumber: payMentNumber,
+                billName: billName,
+                user: userList
+            }
+            await result.push(returnData);
+            console.log('res', result);
+        }
+    });
+    console.log('res', result);
+    return result
+}
+
+async function checkTripPerDay(lineGroupID) {
+    let currentDate = new Date();
+    const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(currentDate);
+    const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(currentDate);
+    const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(currentDate);
+    let date = `${ye}-${mo}-${da}`
+    let perDayRef = await getTripPerDayByDate(lineGroupID, date);
+    let perDayResult = perDayRef[0]
+    return perDayResult;
+};
+
+async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
+    let data_TripList_TripPerDay = [];
+    let dataTripList = [];
+    const dataTripPerDay = [];
+    const tripIDList = [];
+    const checkTripIDRef = db.collection('LineGroup').doc(lineGroupID).collection('Trip').where('tripStatus', '==', true);
+
+    await checkTripIDRef.get().then(async snapshot => {
+        await snapshot.forEach(doc => {
+            tripIDList.push(doc.data());
+        });
+
+        let tripID = tripIDList.map(t => t.tripID).toString();
+        let getAllTrip = db.collection('TripList').doc(tripID);
+        await getAllTrip.get().then(async doc1 => {
+            await dataTripList.push(doc1.data());
+            let ownerTrip = dataTripList.map(ow => ow.ownerTrip).toString();
+            let tripId = dataTripList.map(tid => tid.tripID).toString();
+            let tripName = dataTripList.map(tn => tn.tripName).toString();
+            let province = dataTripList.map(p => p.province).toString();
+            let startDate = dataTripList.map(sd => sd.startDate).toString();
+            let endDate = dataTripList.map(ed => ed.endDate).toString();
+            let tripStatus = dataTripList.map(ts => ts.tripStatus).toString();
+
+            const showTripPerDay = db.collection('TripPerDay');
+            const queryTPD = showTripPerDay.doc(tripID).collection('Date').doc(dateOfTrip);
+            await queryTPD.get().then(async doc => {
+                await dataTripPerDay.push((doc.data()));
+                let dataAll = {
+                    ownerTrip: ownerTrip,
+                    tripID: tripId,
+                    tripName: tripName,
+                    province: province,
+                    startDate: startDate,
+                    endDate: endDate,
+                    tripStatus: tripStatus,
+                    totalDate: dataTripPerDay
+                }
+                data_TripList_TripPerDay.push(dataAll);
+            });
+        })
+            .catch(err => {
+                console.log('Error getting All Trip detail', err);
+            });
+    })
+    return data_TripList_TripPerDay;
+};
+
+
 
 async function getWeather(province) {
     let currentDate = new Date();
@@ -113,4 +226,5 @@ async function getWeather(province) {
     return date;
 };
 
-module.exports = { checkTripAvaliable, checkOwnerTrip, RecommendEat, getWeather };
+
+module.exports = { checkTripAvaliable, checkOwnerTrip, RecommendEat, getWeather, checkPayBill, checkTripPerDay };

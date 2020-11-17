@@ -15,10 +15,11 @@ import DeleteTripModal from '../components/components/DeleteTripModal';
 import { ReactComponent as DeleteButton } from '../static/icons/delete.svg';
 import { CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
 import ShowEventBox from '../components/CreateTrip/components/ShowEventBox';
-import momentjs from 'moment';
 import Stepper from '../components/components/Stepper';
 import EnableTripModal from '../components/components/Modal/EnableTripModal';
 import Swal from 'sweetalert2';
+import EditTrip from './Trip/EditTrip';
+import momentjs from 'moment'
 
 const WrapperLoading = styled.div`
     width: 100%;
@@ -131,6 +132,8 @@ const AntFormItem = styled(AntForm.Item)`
 function CheckTrip(props) {
     const { Trip, setActiveEvent, setNotActiveEvent } = useContext(HookContext)
 
+    // const [LineID, setLineID] = useState('Uda66a8e7400b2e7fafd699f3b294ec4d')
+    // const [LineGroup, setLineGroup] = useState('Cbdab6c9dbd52c75350407118ed11983a')
     const [LineID, setLineID] = useState('')
     const [LineName, setLineName] = useState('')
     const [LinePicture, setLinePicture] = useState('')
@@ -138,10 +141,8 @@ function CheckTrip(props) {
 
     const [tripList, setTripList] = useState([{}])
     const [loading, isLoading] = useState(true)
-    const [isVisible, setVisible] = useState(false)
     const [isEditTrip, setEditTrip] = useState(false)
     const [isVisibleEnableTrip, setVisibleEnableTrip] = useState(false)
-    const [isEnableTrip, setEnableTrip] = useState(true)
 
     useEffect(() => {
         liff.init({ liffId: '1653975470-4Webv3MY' }).then(async () => {
@@ -171,9 +172,14 @@ function CheckTrip(props) {
         })
     }, [LineGroup]);
 
-    const onVisibleModal = () => {
-        setVisible(true)
-    }
+    // useEffect(async () => {
+    //     isLoading(true)
+    //     await axios.get(`http://localhost:5000/trip?lineGroupID=${LineGroup}`)
+    //         .then(res => {
+    //             setTripList(res.data)
+    //             isLoading(false)
+    //         });
+    // }, [])
 
     const onChangeEdit = () => {
         setEditTrip(!isEditTrip)
@@ -221,80 +227,16 @@ function CheckTrip(props) {
                                         <Stepper typeStep="trip" step={4} />
                                         <Row className="py-3">
                                             <Col span={6} offset={18}>
-                                                < SwitchComponent onChange={onChangeEdit} />
+                                                <SwitchComponent onChange={onChangeEdit} />
                                             </Col>
                                         </Row>
                                         {isEditTrip === true ?
-                                            <Row justify="center ">
-                                                <div className="container">
-                                                    <Col span={24} className="pb-3">
-                                                        <div className="p-2" style={{ fontSize: "16px" }}>
-                                                            {trip.tripName}
-                                                        </div>
-                                                        {trip.totalDate.map((totalDate, key) => {
-                                                            return (
-                                                                <>
-                                                                    {Trip.activeEvent !== key ?
-                                                                        <DateCardNotActive onClick={() => setActiveEvent(key)}>
-                                                                            <Row justify="center">
-                                                                                {momentjs(totalDate.eventDate).format('ll')}
-                                                                                <CaretDownOutlined />
-                                                                            </Row>
-                                                                        </DateCardNotActive>
-                                                                        :
-                                                                        <div>
-                                                                            <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
-                                                                                <Row justify="center">
-                                                                                    {momentjs(totalDate.eventDate).format('ll')}
-                                                                                    <CaretUpOutlined />
-                                                                                </Row>
-                                                                            </DateCardNotActive>
-                                                                            {totalDate.events.map((events, key) => {
-                                                                                return (
-                                                                                    <Row className="my-1">
-                                                                                        <Col span={19}>
-                                                                                            <div className="container">
-                                                                                                <EventCard>
-                                                                                                    <ShowEventBox eventDetail={events} />
-                                                                                                </EventCard>
-                                                                                            </div>
-                                                                                        </Col>
-                                                                                        <Col span={5} >
-                                                                                            <DeleteEventCard>
-                                                                                                <DeleteButton />
-                                                                                            </DeleteEventCard>
-                                                                                        </Col>
-                                                                                    </Row>
-                                                                                )
-                                                                            })}
-                                                                        </div>
-                                                                    }
-                                                                </>
-                                                            )
-                                                        })}
-                                                    </Col>
-                                                </div>
-                                                <AntForm className="container">
-                                                    <AntFormItem>
-                                                        <Col span={24}>
-                                                            <SecondaryButton
-                                                                type="link"
-                                                                size={"large"}
-                                                                block
-                                                                onClick={() => onVisibleModal()}
-                                                                style={{ color: "#FF4647" }}
-                                                            >ลบทริป</SecondaryButton >
-                                                        </Col>
-                                                        <DeleteTripModal
-                                                            isVisible={isVisible}
-                                                            setVisible={setVisible}
-                                                            lineGroupID={LineGroup}
-                                                            lineID={LineID}
-                                                            tripID={trip.tripID}
-                                                        />
-                                                    </AntFormItem>
-                                                </AntForm>
-                                            </Row>
+                                            <EditTrip trip={trip}
+                                                LineGroup={LineGroup}
+                                                LinePicture={LinePicture}
+                                                LineName={LineName}
+                                                LineID={LineID}
+                                                setEditTrip={setEditTrip} />
                                             :
                                             <Row justify="center ">
                                                 <div className="container">
