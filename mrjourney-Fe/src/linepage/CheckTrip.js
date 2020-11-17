@@ -6,6 +6,8 @@ import {
     Row
 } from 'antd';
 import { withRouter } from 'react-router-dom';
+import EditTrip from './Trip/EditTrip';
+import momentjs from 'moment'
 
 const Wrapper = styled.div`
     width: 100%;
@@ -28,7 +30,8 @@ const LoadingGif = styled.img`
 function CheckTrip(props) {
 
     const [tripList, setTripList] = useState([{}])
-    const [tripEvent, setTripEvent] = useState([{}])
+    const [tripEvent, setTripEvent] = useState([])
+
     const [loading, isLoading] = useState(true)
 
     useEffect(async () => {
@@ -38,8 +41,13 @@ function CheckTrip(props) {
                 setTripList(res.data)
                 isLoading(false)
             });
-
     }, [])
+
+    // const onAddEvent = values => {
+    //     console.log(values);
+    //     setTripEvent(tripEvent.concat(values))
+    // };
+
     if (loading) {
         return (
             <Wrapper>
@@ -51,28 +59,32 @@ function CheckTrip(props) {
     } else {
         return (
             <div className="text-center">
-                CheckTrip {console.log(tripList)}
+                CheckTrip
+
                 {tripList.map((trip) => {
                     return (
                         <>
-                            {trip.tripName}
-                            {trip.totalDate.map((totalDate) => {
+                            TripName: {trip.tripName} <p></p>
+                            TripProvince: {trip.province} <p></p>
+                            {trip.totalDate.map((totalDate, key) => {
                                 return (
                                     <>
-                                        {totalDate.eventDate}
+                                        TripDate: {totalDate.eventDate}<p></p>
                                         {totalDate.events.map((events) => {
                                             return (
                                                 <>
-                                                    {events.eventName}
+                                                    EventName: {events.eventName} &nbsp; {events.startEvent}-{events.endEvent}<p></p>
                                                 </>
                                             )
                                         })}
                                     </>
                                 )
                             })}
+                             <EditTrip trip={trip} />
                         </>
                     )
                 })}
+
             </div>
         )
     }
