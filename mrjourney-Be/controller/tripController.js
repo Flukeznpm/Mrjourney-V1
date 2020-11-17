@@ -3,6 +3,8 @@ var router = express.Router();
 var firebase = require('firebase-admin');
 const { firestore } = require('firebase-admin');
 let db = firebase.firestore();
+const https = require('https');
+const axios = require('axios');
 
 //---------------- Controller ----------------//
 // GET /trip  (ดูข้อมูลทริปทั้งหมด)
@@ -10,6 +12,106 @@ let db = firebase.firestore();
 // POST /trip/createTrip   (เก็บข้อมูลทริป)
 // PUT /trip/editTrip  (แก้ไขข้อมูลริป)
 // DELETE /trip/deleteTrip  (ลบทริป)
+
+router.get('/l', async function (req, res, next) {
+    let province = req.query.province;
+    const dataResult = await getLocationEat(province)
+    console.log('dataResult: ', dataResult);
+    res.status(200).json(dataResult);
+})
+
+async function getLocationEat(province) {
+    const headers = {
+        'Content-Type': 'application/json, text/json',
+        'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
+        'Accept-Language': 'th'
+    }
+
+    let url = encodeURI(`https://tatapi.tourismthailand.org/tatapi/v5/places/search?categorycodes=RESTAURANT&provincename=${province}&numberofresult=5`)
+
+    return new Promise(async (resolve, reject) => {
+        await axios.get(url, { headers: headers })
+            .then(res => {
+                resolve(res.data);
+            }).catch(e => {
+                // console.log('e: ', e);
+                resolve({});
+            });
+    });
+};
+
+async function getLocationTravel(province) {
+    const headers = {
+        'Content-Type': 'application/json, text/json',
+        'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
+        'Accept-Language': 'th'
+    }
+
+    let url = encodeURI(`https://tatapi.tourismthailand.org/tatapi/v5/places/search?categorycodes=ATTRACTION&provincename=${province}&numberofresult=5`)
+
+    return new Promise(async (resolve, reject) => {
+        await axios.get(url, { headers: headers })
+            .then(res => {
+                resolve(res.data);
+            }).catch(e => {
+                // console.log('e: ', e);
+                resolve({});
+            });
+    });
+};
+
+async function getLocationSleep(province) {
+    const headers = {
+        'Content-Type': 'application/json, text/json',
+        'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
+        'Accept-Language': 'th'
+    }
+
+    let url = encodeURI(`https://tatapi.tourismthailand.org/tatapi/v5/places/search?categorycodes=ACCOMMODATION&provincename=${province}&numberofresult=5`)
+
+    return new Promise(async (resolve, reject) => {
+        await axios.get(url, { headers: headers })
+            .then(res => {
+                resolve(res.data);
+            }).catch(e => {
+                // console.log('e: ', e);
+                resolve({});
+            });
+    });
+};
+
+router.get('/w', async function (req, res, next) {
+    const dataResult = await getWeather(req.query.province)
+    console.log('dataResult: ', dataResult);
+    res.status(200).json(dataResult);
+})
+
+async function getWeather(province) {
+    const currentDate = new Date();
+    const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(currentDate);
+    const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(currentDate);
+    const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(currentDate);
+    let dateFormat = `${ye}-${mo}-${da}`
+    let amphoe = 'เมือง' + province;
+
+    const headers = {
+        'Content-Type': 'application/json, text/json',
+        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImNlYjI0N2Y5YmJjMDRlNjk0ZDAyNjMyMDIyZmEwYWY0ZjNlYjU1MTZiNjVmZjllNTg5YTkzZGUyNjFlZmM5NzMwMTdjMzc2OTQxMmI2YjljIn0.eyJhdWQiOiIyIiwianRpIjoiY2ViMjQ3ZjliYmMwNGU2OTRkMDI2MzIwMjJmYTBhZjRmM2ViNTUxNmI2NWZmOWU1ODlhOTNkZTI2MWVmYzk3MzAxN2MzNzY5NDEyYjZiOWMiLCJpYXQiOjE2MDUxMjQyMzAsIm5iZiI6MTYwNTEyNDIzMCwiZXhwIjoxNjM2NjYwMjMwLCJzdWIiOiI5NzkiLCJzY29wZXMiOltdfQ.bUEK9H2ZEG7JzOKJ1YPKEHnxGLUVrD1InK-B6vqvpt-Ug6CvTtVcqY0Ppb4YQmJ_5-5vNwruB-LRfQj563lLjlqCbBmkudKoLE6ogA2xZGPmZoxeAQ2lhweWlwSJrxfXAI9A8KExwavFXQUPHDgkY4hx5Dqyakxbr_AHtQYNOY0wJugDiw9Zoty-SCbz9inWBZ69aSY590VF0Znf8UyFhIAUkj8ku5q44Kn0oB1YafHaJi4WFWoJBTEsp4ZOFkKI8auxH88hVqxr7oZzEDjoX0W7xagMb5hECFA9MSl5UO_-3TE2AS5WXdtnU2e8s9W22Zo_VpPwSdcVrCplF90JXXH3LC0MenlSpIgO4wpL2cg7DEfzyQPdaW7ZIoONea_FuMAq9-kcoU0QLOn9c-Wgv3ikTOzYisGCLSxXv2Zz1t0FgM86vKsdPd_3pvw4YR3qOvKPtlvHPv4uAXm0SXtAiABlibmXeAHZTkQ8tGn3bN-GFouUrbfYVeUIdrTdFAPIMyefbgdVjSK2ZHbWOx1UwXZM4FivwPKYaEhXf_2wOTfF424XcVZtcxX8HCPnCXVXSIVtMn9LXe6SZDLCEERYbRJ38AP8Pv2XlkUfCkJBIewfs5ttuj-kU2adHgzbtAx571ihsb1-Rh4W_mMr3NxUFrx3mls79qrW5EA7gLS7hhM',
+        'accept': 'application/json',
+    }
+
+    let url = encodeURI(`https://data.tmd.go.th/nwpapi/v1/forecast/location/daily/place?province=${province}&amphoe=${amphoe}&fields=tc_max,rh&date=${dateFormat}&duration=2`)
+
+    return new Promise(async (resolve, reject) => {
+        await axios.get(url, { headers: headers })
+            .then(res => {
+                resolve(res.data);
+            }).catch(e => {
+                // console.log('e: ', e);
+                resolve({});
+            });
+    });
+};
 
 router.get('/', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
@@ -67,7 +169,7 @@ router.get('/tripperday', async function (req, res, next) {
     const lineGroupID = req.query.lineGroupID;
     const dateOfTrip = req.query.dateOfTrip + '';
     const tripIDList = [];
-    dateOfTrip.substring(0, 10);
+    // dateOfTrip.substring(0, 10);
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
         dateOfTrip == undefined || dateOfTrip == null || dateOfTrip == '') {
@@ -488,7 +590,7 @@ async function updateTrip(datas) {
                                                 tripName: datas.tripName,
                                                 province: datas.province,
                                                 startDate: datas.startDate,
-                                                endDate: datas.endDate,
+                                                endDate: datas.endDate
                                             });
                                             let count = (datas.totalDate.length) - 1;
                                             for (let j = 0; j <= count; j++) {
@@ -608,7 +710,7 @@ async function saveScoreTrip(datas) {
         value: new_value,
         countOfSubmit: new_count
     });
-}
+};
 
 async function getLastTrip(lineGroupID) {
     let list = [];
