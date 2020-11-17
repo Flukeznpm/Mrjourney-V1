@@ -3,6 +3,7 @@ var router = express.Router();
 var firebase = require('firebase-admin');
 const { firestore } = require('firebase-admin');
 let db = firebase.firestore();
+const https = require('https')
 
 //---------------- Controller ----------------//
 // GET /trip  (ดูข้อมูลทริปทั้งหมด)
@@ -10,6 +11,122 @@ let db = firebase.firestore();
 // POST /trip/createTrip   (เก็บข้อมูลทริป)
 // PUT /trip/editTrip  (แก้ไขข้อมูลริป)
 // DELETE /trip/deleteTrip  (ลบทริป)
+
+router.get('/l', async function (req, res, next) {
+    const dataResult = await getLocationEat(req.query.province)
+    console.log('dataResult: ', dataResult);
+    res.status(200).json(dataResult);
+})
+
+function getLocationEat(province) {
+    const options = {
+        hostname: 'tatapi.tourismthailand.org',
+        port: 443,
+        path: `/tatapi/v5/places/search?categorycodes=RESTAURANT&provincename=${province}&numberofresult=5`,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json, text/json',
+            'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
+            'Accept-Language': 'TH'
+        }
+    }
+
+    return new Promise((resolve, reject) => {
+        https.get(options, (res) => {
+            var { statusCode } = res;
+            var contentType = res.headers['content-type'];
+
+            if (statusCode !== 200) {
+                error = new Error('Request Failed.\n' +
+                    `Status Code: ${statusCode}`);
+            } else if (!/^application\/json/.test(contentType)) {
+                error = new Error('Invalid content-type.\n' +
+                    `Expected application/json but received ${contentType}`);
+            }
+
+            res.setEncoding('utf8');
+            let rawData = '';
+
+            res.on('data', (chunk) => {
+                rawData += chunk;
+            });
+
+            res.on('end', () => {
+                try {
+                    const parsedData = JSON.parse(rawData);
+                    resolve(parsedData);
+                } catch (e) {
+                    resolve('Your province is empty in API');
+                }
+            });
+        }).on('error', (e) => {
+            resolve('Your province is empty in API')
+        });
+    });
+};
+
+router.get('/w', async function (req, res, next) {
+    const dataResult = await getWeather(req.query.province)
+    console.log('dataResult: ', dataResult);
+    res.status(200).json(dataResult);
+})
+
+async function getWeather(province) {
+    let currentDate = '2020-11-17';
+    let amphoe = 'เมือง' + province;
+
+    if (province == 'กรุงเทพมหานคร') {
+        console.log('Province => กทม');
+    } else {
+        const options = {
+            hostname: 'data.tmd.go.th',
+            port: 443,
+            path: '/nwpapi/v1/forecast/location/daily/place?province=นครปฐม&amphoe=สามพราน&fields=tc_max&date=2017-11-17&duration=2',
+            // path: `/nwpapi/v1/forecast/location/daily/place?province=${province}&amphoe=${amphoe}&fields=tc_max,rh&date=2020-11-17&duration=2`,
+            method: 'GET',
+            headers: {
+                // 'Content-Type': 'application/json, text/json',
+                'accept': 'application/json',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImNlYjI0N2Y5YmJjMDRlNjk0ZDAyNjMyMDIyZmEwYWY0ZjNlYjU1MTZiNjVmZjllNTg5YTkzZGUyNjFlZmM5NzMwMTdjMzc2OTQxMmI2YjljIn0.eyJhdWQiOiIyIiwianRpIjoiY2ViMjQ3ZjliYmMwNGU2OTRkMDI2MzIwMjJmYTBhZjRmM2ViNTUxNmI2NWZmOWU1ODlhOTNkZTI2MWVmYzk3MzAxN2MzNzY5NDEyYjZiOWMiLCJpYXQiOjE2MDUxMjQyMzAsIm5iZiI6MTYwNTEyNDIzMCwiZXhwIjoxNjM2NjYwMjMwLCJzdWIiOiI5NzkiLCJzY29wZXMiOltdfQ.bUEK9H2ZEG7JzOKJ1YPKEHnxGLUVrD1InK-B6vqvpt-Ug6CvTtVcqY0Ppb4YQmJ_5-5vNwruB-LRfQj563lLjlqCbBmkudKoLE6ogA2xZGPmZoxeAQ2lhweWlwSJrxfXAI9A8KExwavFXQUPHDgkY4hx5Dqyakxbr_AHtQYNOY0wJugDiw9Zoty-SCbz9inWBZ69aSY590VF0Znf8UyFhIAUkj8ku5q44Kn0oB1YafHaJi4WFWoJBTEsp4ZOFkKI8auxH88hVqxr7oZzEDjoX0W7xagMb5hECFA9MSl5UO_-3TE2AS5WXdtnU2e8s9W22Zo_VpPwSdcVrCplF90JXXH3LC0MenlSpIgO4wpL2cg7DEfzyQPdaW7ZIoONea_FuMAq9-kcoU0QLOn9c-Wgv3ikTOzYisGCLSxXv2Zz1t0FgM86vKsdPd_3pvw4YR3qOvKPtlvHPv4uAXm0SXtAiABlibmXeAHZTkQ8tGn3bN-GFouUrbfYVeUIdrTdFAPIMyefbgdVjSK2ZHbWOx1UwXZM4FivwPKYaEhXf_2wOTfF424XcVZtcxX8HCPnCXVXSIVtMn9LXe6SZDLCEERYbRJ38AP8Pv2XlkUfCkJBIewfs5ttuj-kU2adHgzbtAx571ihsb1-Rh4W_mMr3NxUFrx3mls79qrW5EA7gLS7hhM',
+            }
+        }
+
+        console.log('Path ====> ', options.path);
+
+        return new Promise((resolve, reject) => {
+            https.get(options, (res) => {
+                var { statusCode } = res;
+                var contentType = res.headers['content-type'];
+
+                if (statusCode !== 200) {
+                    error = new Error('Request Failed.\n' +
+                        `Status Code: ${statusCode}`);
+                } else if (!/^application\/json/.test(contentType)) {
+                    error = new Error('Invalid content-type.\n' +
+                        `Expected application/json but received ${contentType}`);
+                }
+
+                res.setEncoding('utf8');
+                let rawData = '';
+
+                res.on('data', (chunk) => {
+                    rawData += chunk;
+                });
+
+                res.on('end', () => {
+                    try {
+                        const parsedData = JSON.parse(rawData);
+                        resolve(parsedData);
+                    } catch (e) {
+                        resolve('Your province is empty in API');
+                    }
+                });
+            }).on('error', (e) => {
+                resolve('Your province is empty in API')
+            });
+        });
+    }
+};
 
 router.get('/', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
@@ -67,7 +184,7 @@ router.get('/tripperday', async function (req, res, next) {
     const lineGroupID = req.query.lineGroupID;
     const dateOfTrip = req.query.dateOfTrip + '';
     const tripIDList = [];
-    dateOfTrip.substring(0, 10);
+    // dateOfTrip.substring(0, 10);
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
         dateOfTrip == undefined || dateOfTrip == null || dateOfTrip == '') {
@@ -478,7 +595,7 @@ async function updateTrip(datas) {
                     let CheckTripRef = db.collection('LineGroup').doc(datas.lineGroupID);
                     await CheckTripRef.get().then(async data => {
                         if (data.exists) {
-                            let CheckTripinLineGroup = await checkTripRef.collection('Trip').doc(datas.tripID);
+                            let CheckTripinLineGroup = await CheckTripRef.collection('Trip').doc(datas.tripID);
                             await CheckTripinLineGroup.get().then(async data => {
                                 if (data.exists) {
                                     let CheckTripListRef = db.collection('TripList').doc(datas.tripID);
@@ -488,17 +605,16 @@ async function updateTrip(datas) {
                                                 tripName: datas.tripName,
                                                 province: datas.province,
                                                 startDate: datas.startDate,
-                                                endDate: datas.endDate,
+                                                endDate: datas.endDate
                                             });
                                             let count = (datas.totalDate.length) - 1;
                                             for (let j = 0; j <= count; j++) {
                                                 if (j <= count) {
                                                     let date = await datas.totalDate[j].eventDate;
-                                                    let dateSub = date.substring(0, 10);
-                                                    let event = await datas.totalDate[j].event;
-                                                    await db.collection('TripPerDay').doc(datas.tripID).collection('Date').doc(dateSub).update({
-                                                        eventDate: dateSub,
-                                                        event: event
+                                                    let event = await datas.totalDate[j].events;
+                                                    await db.collection('TripPerDay').doc(datas.tripID).collection('Date').doc(date).update({
+                                                        eventDate: date,
+                                                        events: event
                                                     })
                                                 } else {
                                                     console.log('Error update trip loop')
@@ -609,7 +725,7 @@ async function saveScoreTrip(datas) {
         value: new_value,
         countOfSubmit: new_count
     });
-}
+};
 
 async function getLastTrip(lineGroupID) {
     let list = [];
