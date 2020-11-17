@@ -27,49 +27,61 @@ const LoadingGif = styled.img`
 
 function EditTrip(props) {
 
-    const [tripEvent, setTripEvent] = useState([{}])
+    const [tripEvent, setTripEvent] = useState({})
     const [loading, isLoading] = useState(true)
     const [user, setUser] = useState({ eventName: "นอนน", startEvent: "08:00", eventType: "travel", endEvent: "20:00" })
 
     useEffect(async () => {
-        // setTripEvent(props.trip)
+        setTripEvent(props.trip)
         isLoading(false)
     }, [])
 
-    // const onAddEvent = (events) => {
+    const onAddEvent = (key) => {
+        let trip = tripEvent;
+        trip.totalDate[key].events.push({
+            eventName: "นอนน",
+            startEvent: "08:00",
+            eventType: "travel",
+            endEvent: "20:00"
+        })
+        setTripEvent({ ...trip })
+    };
 
-    //     console.log(events);
-    //     // setTripEvent(events.concat(user))
-    // };
-
+    const onDeleteEvent = (key, keyE) => {
+        let trip = tripEvent;
+        trip.totalDate[key].events.splice(keyE, 1)
+        setTripEvent({ ...trip })
+    };
+    console.log(tripEvent);
     if (loading) {
         return (
             <Wrapper>
                 <RowLoading justify="center">
                     <LoadingGif src="/gif/loading.gif" alt="loading..." />
                 </RowLoading>
-            </Wrapper> 
+            </Wrapper>
         )
     } else {
         return (
             <div className="text-center">
-                {/* Edit<p></p> 
+                Edit<p></p> {console.log(props.trip)}
                 TripName: {props.trip.tripName} <p></p>
-                {props.trip.totalDate.map((totalDate) => {
+                {props.trip.totalDate.map((totalDate, key) => {
                     return (
                         <>
                             TripDate: {totalDate.eventDate}<p></p>
-                            {totalDate.events.map((events) => {
+                            {totalDate.events.map((events, keyE) => {
                                 return (
                                     <>
                                         EventName: {events.eventName} &nbsp; {events.startEvent}-{events.endEvent}<p></p>
+                                        <button type="button" onClick={() => onDeleteEvent(key, keyE)}>deleteEvent</button> <p></p>
                                     </>
                                 )
                             })}
-                            <button type="button">addEvent</button> <p></p>
+                            <button type="button" onClick={() => onAddEvent(key)}>addEvent</button> <p></p>
                         </>
                     )
-                })} */}
+                })}
             </div>
         )
     }
