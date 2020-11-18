@@ -61,43 +61,6 @@ async function getLastTrip(lineGroupID) {
     return listResult;
 }
 
-async function RecommendEat(province) {
-    let provinceRef = await getLocationEat(province);
-    let placeID = provinceRef.result.map(e => e.place_id)
-    let toStringPlaceID = placeID[0].toString()
-    return toStringPlaceID;
-};
-
-async function getLocationEat(province) {
-    let dataList = [];
-    const https = require('https')
-    const options = {
-        hostname: 'tatapi.tourismthailand.org',
-        port: 443,
-        path: `/tatapi/v5/places/search?categorycodes=RESTAURANT&provincename=${province}&numberofresult=5`,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json, text/json',
-            'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
-            'Accept-Language': 'TH'
-        }
-    }
-    const req = https.request(options, res => {
-        console.log(`statusCode: ${res.statusCode}`)
-        res.on('data', d => {
-            // dataList.push(d.data());
-            d.data()
-        })
-    })
-    req.on('error', error => {
-        console.error(error)
-    })
-    req.end();
-
-    let data = req;
-    return data;
-};
-
 async function checkPayBill(lineGroupID) {
     let billRef = await getBill(lineGroupID);
     let billResult = billRef[0]
@@ -218,9 +181,7 @@ async function getTripPerDayByDate(lineGroupID, dateOfTrip) {
 
 async function checkWeather(province) {
     const weatherRef = await getWeather(province);
-    console.log('weatherRef', weatherRef);
     const weatherResult = weatherRef.WeatherForecasts[0]
-    console.log('weatherResult', weatherResult);
     return weatherResult;
 }
 
@@ -230,7 +191,6 @@ async function getWeather(province) {
     const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(currentDate);
     const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(currentDate);
     let dateFormat = `${ye}-${mo}-${da}`
-    // let dateFormat = `2020-11-18`
     let amphoe = 'เมือง' + province;
     console.log('dateFormat', dateFormat);
     const headers = {
@@ -253,5 +213,83 @@ async function getWeather(province) {
     });
 };
 
+async function RecommendEat(province) {
+    const recommendRef = await getLocationEat(province);
+    const recommendResult = recommendRef.result
+    return recommendResult;
+};
 
-module.exports = { checkTripAvaliable, checkOwnerTrip, RecommendEat, checkWeather, checkPayBill, checkTripPerDay };
+async function RecommendTravel(province) {
+    const recommendRef = await getLocationTravel(province);
+    const recommendResult = recommendRef.result
+    return recommendResult;
+};
+
+async function RecommendSleep(province) {
+    const recommendRef = await getLocationSleep(province);
+    const recommendResult = recommendRef.result
+    return recommendResult;
+};
+
+async function getLocationEat(province) {
+    const headers = {
+        'Content-Type': 'application/json, text/json',
+        'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
+        'Accept-Language': 'th'
+    }
+
+    let url = encodeURI(`https://tatapi.tourismthailand.org/tatapi/v5/places/search?categorycodes=RESTAURANT&provincename=${province}&numberofresult=5`)
+
+    return new Promise(async (resolve, reject) => {
+        await axios.get(url, { headers: headers })
+            .then(res => {
+                resolve(res.data);
+            }).catch(e => {
+                // console.log('e: ', e);
+                resolve({});
+            });
+    });
+};
+
+async function getLocationTravel(province) {
+    const headers = {
+        'Content-Type': 'application/json, text/json',
+        'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
+        'Accept-Language': 'th'
+    }
+
+    let url = encodeURI(`https://tatapi.tourismthailand.org/tatapi/v5/places/search?categorycodes=ATTRACTION&provincename=${province}&numberofresult=5`)
+
+    return new Promise(async (resolve, reject) => {
+        await axios.get(url, { headers: headers })
+            .then(res => {
+                resolve(res.data);
+            }).catch(e => {
+                // console.log('e: ', e);
+                resolve({});
+            });
+    });
+};
+
+async function getLocationSleep(province) {
+    const headers = {
+        'Content-Type': 'application/json, text/json',
+        'Authorization': 'Bearer G6PJYs30zPWoS0O3tAWzXTIUa4OnayhOu7J2CxyY3Dfdsh0vOMjd)S)nxCBEs1OxwZGITATS6RmMQb31o2HLyh0=====2',
+        'Accept-Language': 'th'
+    }
+
+    let url = encodeURI(`https://tatapi.tourismthailand.org/tatapi/v5/places/search?categorycodes=ACCOMMODATION&provincename=${province}&numberofresult=5`)
+
+    return new Promise(async (resolve, reject) => {
+        await axios.get(url, { headers: headers })
+            .then(res => {
+                resolve(res.data);
+            }).catch(e => {
+                // console.log('e: ', e);
+                resolve({});
+            });
+    });
+};
+
+
+module.exports = { checkTripAvaliable, checkOwnerTrip, RecommendEat, RecommendTravel, RecommendSleep, checkWeather, checkPayBill, checkTripPerDay };

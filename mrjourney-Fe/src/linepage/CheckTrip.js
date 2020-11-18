@@ -207,6 +207,10 @@ function CheckTrip(props) {
         }
     }
 
+    const closedLiff = () => {
+        liff.closeWindow()
+    }
+
     if (loading) {
         return (
             <WrapperLoading>
@@ -225,11 +229,14 @@ function CheckTrip(props) {
                                 <>
                                     <div className="top-page mb-4 pb-4">
                                         <Stepper typeStep="trip" step={4} />
-                                        <Row className="py-3">
-                                            <Col span={6} offset={18}>
-                                                <SwitchComponent onChange={onChangeEdit} />
-                                            </Col>
-                                        </Row>
+                                        {trip.ownerTrip === LineID ?
+                                            < Row className="py-3">
+                                                <Col span={10} offset={14}>
+                                                    เปิด/ปิดแก้ไข <SwitchComponent onChange={onChangeEdit} />
+                                                </Col>
+                                            </Row>
+                                            : null
+                                        }
                                         {isEditTrip === true ?
                                             <EditTrip trip={trip}
                                                 LineGroup={LineGroup}
@@ -340,11 +347,10 @@ function CheckTrip(props) {
                                         <AntForm className="container">
                                             <AntFormItem>
                                                 <Col span={24}>
-                                                    <Link to={`/CheckTrip`}>
-                                                        <PrimaryButton type="primary" size={"large"}
-                                                            block htmlType="button"
-                                                        >สร้างแผนการท่องเที่ยว</PrimaryButton>
-                                                    </Link>
+                                                    <PrimaryButton type="primary" size={"large"}
+                                                        block htmlType="button"
+                                                        onClick={() => closedLiff()}
+                                                    >กลับสู่ห้องแชท</PrimaryButton>
                                                 </Col>
                                             </AntFormItem>
                                         </AntForm>

@@ -134,6 +134,10 @@ function CreateTripStep1(props) {
         confirmTripStep(1)
     };
 
+    const closedLiff = () => {
+        liff.closeWindow()
+    }
+
     if (loading) {
         return (
             <WrapperLoading>
@@ -157,11 +161,10 @@ function CreateTripStep1(props) {
                                         <AntForm className="container">
                                             <AntFormItem>
                                                 <Col span={24}>
-                                                    <Link to={`/CreateTrip`}>
-                                                        <PrimaryButton type="primary" size={"large"}
-                                                            block htmlType="button"
-                                                        >ดูแผนการท่องเที่ยว</PrimaryButton>
-                                                    </Link>
+                                                    <PrimaryButton type="primary" size={"large"}
+                                                        block htmlType="button"
+                                                        onClick={() => closedLiff()}
+                                                    >กลับสู่ห้องแชท</PrimaryButton>
                                                 </Col>
                                             </AntFormItem>
                                         </AntForm>

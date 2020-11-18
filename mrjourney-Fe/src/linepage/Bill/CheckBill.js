@@ -180,6 +180,10 @@ function CheckBill(props) {
             });
     }
 
+    const closedLiff = () => {
+        liff.closeWindow()
+    }
+
     if (loading) {
         return (
             <WrapperLoading>
@@ -372,11 +376,10 @@ function CheckBill(props) {
                                         <AntForm className="container">
                                             <AntFormItem>
                                                 <Col span={24}>
-                                                    <Link to={`/CreateBill`}>
                                                         <PrimaryButton type="primary" size={"large"}
                                                             block htmlType="button"
+                                                            onClick={() => closedLiff()}
                                                         >สร้างบิล</PrimaryButton>
-                                                    </Link>
                                                 </Col>
                                             </AntFormItem>
                                         </AntForm>

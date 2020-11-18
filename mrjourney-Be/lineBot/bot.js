@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable, checkOwnerTrip, RecommendEat, checkWeather, checkPayBill, checkTripPerDay } = require('../controller/botController');
+const { checkTripAvaliable, checkOwnerTrip, RecommendEat, RecommendTravel, RecommendSleep, checkWeather, checkPayBill, checkTripPerDay } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
 
@@ -28,11 +28,13 @@ router.post('/webhook', async (req, res) => {
     }
     else if (typeTravel === "#ที่เที่ยว") {
         let provinceMsg = req.body.events[0].message.text.substring(11)
-        replyRecon(reply_token, provinceMsg)
+        let locationTravel = await RecommendTravel(provinceMsg);
+        replyRecommendTravel(reply_token, locationTravel)
     }
     else if (typeSleep === "#ที่พัก") {
         let provinceMsg = req.body.events[0].message.text.substring(8)
-        replyRecon(reply_token, provinceMsg)
+        let locationSleep = await RecommendSleep(provinceMsg);
+        replyRecommendSleep(reply_token, locationSleep)
     }
     else if (weatherMsg === "#อากาศ,") {
         let provinceWeather = req.body.events[0].message.text.substring(7)
@@ -264,7 +266,7 @@ function replyCheckWeather(reply_token, temp) {
         messages: [
             {
                 type: 'text',
-                text: temp+" องศา"
+                text: temp + " องศา"
             }
         ]
     })
@@ -1661,63 +1663,226 @@ function replyRating(reply_token, msg) {
         console.log('status = ' + res.statusCode);
     });
 }
-// let msgTest = []
-// let sit = ['fluke', 'new', 'jok']
-// sit.map((e) => {
-//     msgTest.push({
-//         type: 'text',
-//         text: e
-//     })
-// })
-// msgTest.push(   {
-//     type: "flex",
-//     altText: "Flex Message",
-//     contents: {
-//         type: "bubble",
-//         body: {
-//             layout: "vertical",
-//             contents: [
-//                 {
-//                     type: "text",
-//                     align: "center",
-//                     weight: "bold",
-//                     text: "อยากดูแบบไหนครับ?"
-//                 }
-//             ],
-//             type: "box"
-//         },
-//         direction: "ltr",
-//         footer: {
-//             type: "box",
-//             layout: "vertical",
-//             contents: [
-//                 {
-//                     action: {
-//                         label: "ดูแผนทั้งหมด",
-//                         type: "uri",
-//                         uri: "https://liff.line.me/1653975470-4Webv3MY"
-//                     },
-//                     type: "button",
-//                     color: "#C25738",
-//                     height: "sm",
-//                     margin: "xs",
-//                     style: "primary"
-//                 },
-//                 {
-//                     margin: "xs",
-//                     color: "#C25738",
-//                     height: "sm",
-//                     style: "primary",
-//                     action: {
-//                         data: "text",
-//                         label: "ดูแผนวันนี้",
-//                         type: "postback",
-//                         text: "ดูแผนวันนี้"
-//                     },
-//                     type: "button"
-//                 }
-//             ]
-//         }
-//     }
-// })
+
+function replyRecommendEat(reply_token, locationEat) {
+    let contentShow = []
+
+    locationEat.map((u) => {
+        if (u.thumbnail_url === "") {
+            contentShow.push({
+                thumbnailImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1605729496312plan-01.png?alt=media&token=2b1e04e9-33b6-49dd-b68f-e8ec2490b50c",
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        } else {
+            contentShow.push({
+                thumbnailImageUrl: u.thumbnail_url,
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        }
+    })
+
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "template",
+                altText: "This is a carousel template",
+                template: {
+                    type: "carousel",
+                    imageAspectRatio: "rectangle",
+                    imageSize: "cover",
+                    columns: contentShow,
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRecommendTravel(reply_token, locationTravel) {
+    let contentShow = []
+    locationTravel.map((u) => {
+        if (u.thumbnail_url === "") {
+            contentShow.push({
+                thumbnailImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1605729496312plan-01.png?alt=media&token=2b1e04e9-33b6-49dd-b68f-e8ec2490b50c",
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        } else {
+            contentShow.push({
+                thumbnailImageUrl: u.thumbnail_url,
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        }
+    })
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "template",
+                altText: "This is a carousel template",
+                template: {
+                    type: "carousel",
+                    imageAspectRatio: "rectangle",
+                    imageSize: "cover",
+                    columns: contentShow,
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRecommendSleep(reply_token, locationSleep) {
+    let contentShow = []
+    locationSleep.map((u) => {
+        if (u.thumbnail_url === "") {
+            contentShow.push({
+                thumbnailImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1605729496312plan-01.png?alt=media&token=2b1e04e9-33b6-49dd-b68f-e8ec2490b50c",
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        } else {
+            contentShow.push({
+                thumbnailImageUrl: u.thumbnail_url,
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        }
+    })
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "template",
+                altText: "This is a carousel template",
+                template: {
+                    type: "carousel",
+                    imageAspectRatio: "rectangle",
+                    imageSize: "cover",
+                    columns: contentShow,
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
 module.exports = router;

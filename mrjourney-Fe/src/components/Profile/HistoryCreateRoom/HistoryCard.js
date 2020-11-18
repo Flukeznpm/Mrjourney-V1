@@ -51,7 +51,7 @@ function HistoryCard(props) {
         return (
             <Row justify="center">
                 <AntCard>
-                    <Skeleton.Image style={{ width: "200px", height: "90px"}} />
+                    <Skeleton.Image style={{ width: "200px", height: "90px" }} />
                     <Skeleton paragraph={{ rows: 2 }} />
                 </AntCard>
             </Row>
@@ -61,9 +61,9 @@ function HistoryCard(props) {
             <Row gutter={18, 18}>
                 {hisRoom.map((history) => {
                     return (
-                        <HisRoomCard>
-                            <Link to={`/RoomHistoryJoin?roomID=${history.roomID}`}>
-                                <Col lg={12} md={12} sm={24} xs={24} className="container py-2 d-flex justify-content-center">
+                        <Col lg={12} md={12} sm={24} xs={24} className="container py-2 d-flex justify-content-center">
+                            <HisRoomCard>
+                                <Link to={`/RoomHistoryJoin?roomID=${history.roomID}`}>
                                     <div class="card" style={{ width: "95%" }}>
                                         <ImgCover class="card-img-top" src={history.roomCover} alt="Card image cap" />
                                         <div class="card-body">
@@ -86,9 +86,9 @@ function HistoryCard(props) {
                                             </div>
                                         </div>
                                     </div>
-                                </Col>
-                            </Link>
-                        </HisRoomCard>
+                                </Link>
+                            </HisRoomCard>
+                        </Col>
                     )
                 })}
             </Row>

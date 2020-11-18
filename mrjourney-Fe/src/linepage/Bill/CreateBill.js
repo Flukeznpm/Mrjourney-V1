@@ -230,6 +230,9 @@ function CreateBill(props) {
         array.splice(key, 1);
         setWhoPay(array)
     }
+    const closedLiff = () => {
+        liff.closeWindow()
+    }
 
     if (loading) {
         return (
@@ -254,11 +257,10 @@ function CreateBill(props) {
                                         <AntForm className="container">
                                             <AntFormItem>
                                                 <Col span={24}>
-                                                    <Link to={`/CheckBill`}>
-                                                        <PrimaryButton type="primary" size={"large"}
-                                                            block htmlType="button"
-                                                        >ดูบิล</PrimaryButton>
-                                                    </Link>
+                                                    <PrimaryButton type="primary" size={"large"}
+                                                        block htmlType="button"
+                                                        onClick={() => closedLiff()}
+                                                    >ดูบิล</PrimaryButton>
                                                 </Col>
                                             </AntFormItem>
                                         </AntForm>
