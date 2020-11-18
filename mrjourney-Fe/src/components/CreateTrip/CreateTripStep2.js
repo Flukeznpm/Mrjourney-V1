@@ -111,20 +111,20 @@ const PrevButton = styled(AntButton)`
 `;
 
 const AddEventButton = styled(AntButton)`
-    border-radius: 4px;
-    font-size: 16px;
     box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+    color: #F7F7F7;
     border: none;
-    margin: 10px 0px;
+    background: ${props => (props.theme.color.primary)};
     .anticon {
       display: flex;
+      font-size: 22px;
       justify-content: center;
       align-items: center;
   }
     &:hover , &:active , &:focus {
-        color: ${props => (props.theme.color.primary)};
+        color: #F7F7F7;
         border: none;
-        background: #F5F5F5;
+        background: ${props => (props.theme.color.primaryPress)};
     }
 `;
 
@@ -249,12 +249,12 @@ function CreateTripStep2(props) {
                                                             </Row>
                                                         )
                                                     })}
-                                                    <AddEventButton block
-                                                        size={"large"} htmlType="submit"
+                                                    <AddEventButton type="primary"
+                                                        shape="circle"
+                                                        size="middle"
                                                         onClick={() => eventModalShow(key)}
-                                                    >
-                                                        <PlusOutlined />
-                                                    </AddEventButton>
+                                                        icon={<PlusOutlined />}
+                                                    />
                                                     <CreateTripModal
                                                         centered
                                                         show={addModalShow}

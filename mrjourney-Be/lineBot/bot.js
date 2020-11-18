@@ -2,7 +2,7 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable, checkOwnerTrip, RecommendEat, getWeather, checkPayBill, checkTripPerDay } = require('../controller/botController');
+const { checkTripAvaliable, checkOwnerTrip, RecommendEat, checkWeather, checkPayBill, checkTripPerDay } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
 
@@ -36,8 +36,9 @@ router.post('/webhook', async (req, res) => {
     }
     else if (weatherMsg === "#อากาศ,") {
         let provinceWeather = req.body.events[0].message.text.substring(7)
-        let date = await getWeather(provinceWeather);
-        replyRecon(reply_token, date)
+        let weather = await checkWeather(provinceWeather);
+        let temp = weather.forecasts[0].data.tc_max;
+        replyCheckWeather(reply_token, temp)
     }
     else if (msg === "#สร้างทริป") {
         let groundId = req.body.events[0].source.groupId
@@ -252,7 +253,7 @@ function replyProfessor(reply_token) {
     });
 }
 
-function replyCheckWeather(reply_token, date) {
+function replyCheckWeather(reply_token, temp) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -263,7 +264,7 @@ function replyCheckWeather(reply_token, date) {
         messages: [
             {
                 type: 'text',
-                text: date
+                text: temp+" องศา"
             }
         ]
     })
@@ -567,7 +568,7 @@ function replyPlanPerDay(reply_token, perday) {
     let contentEventTime = []
     perday.totalDate[0].events.map((u) => contentEventTime.push({
         type: "text",
-        text: u.startEvent+"น."+" - "+u.endEvent+"น."
+        text: u.startEvent + "น." + " - " + u.endEvent + "น."
     }))
     let headers = {
         'Content-Type': 'application/json',
@@ -876,7 +877,7 @@ function replySeeBill(reply_token, bill) {
     let contentCost = []
     bill.user.map((u) => contentCost.push({
         type: "text",
-        text: (bill.totalCost / bill.user.length).toFixed(2)+" ฿"
+        text: (bill.totalCost / bill.user.length).toFixed(2) + " ฿"
     }))
     let headers = {
         'Content-Type': 'application/json',
@@ -1030,68 +1031,68 @@ function replyWeather(reply_token, msg) {
     });
 }
 
-function replyWeatherMaps(reply_token, msg) {
-    let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImIwYmYzY2E2YzFiZTI3ZjZkOGY5NDFhNjgyMmY2MjE4ZWViMDIzMzYyNDE1NDA3Nzk1NzIxNGYwYTkxNjJiNzljYjZjZTc1MGM4MzEwNGRmIn0.eyJhdWQiOiIyIiwianRpIjoiYjBiZjNjYTZjMWJlMjdmNmQ4Zjk0MWE2ODIyZjYyMThlZWIwMjMzNjI0MTU0MDc3OTU3MjE0ZjBhOTE2MmI3OWNiNmNlNzUwYzgzMTA0ZGYiLCJpYXQiOjE2MDA1MzE1NTEsIm5iZiI6MTYwMDUzMTU1MSwiZXhwIjoxNjMyMDY3NTUxLCJzdWIiOiI5NzkiLCJzY29wZXMiOltdfQ.FMch8VXWx957OH1FjR28JKaHcfxsHV4fSL5Scc_hflnRClf95iND0YaqbxNkiUX7f0TuhxzIMl0GFbrvQ6NKXOvYSj4dfU8jJMuDDG3QZTkLgExXDvQtsH2Ui5ZpAhHgPtkK7lPV1fGsQG_d5Ad9GjOD_oxgZygm6_iSM2ERh76kd2YywxFuN3_pBrBmLOm7kNFYatm_Ntg0Xir7NnnKVsE_S2RYYqsIoM5ZRjrWKK4A0Erk6WiXtXeD0fAFuv-Ope8cG_4Bh3VBgvhbFW3jNZ1OniutHYcba2Bv_P_WoL-xrRzxxvMSIKNXLfneoLNW5HPo0DNV273ZemPgbC6x3LdeFOCxtjy1YA-DZ2tTuQycm32CrD3GJXxQAaYC9TjthkCLXrcu40S6D2jQWOt-brkwhUuY2vNEdVx0YZDZXZ34TWLXYLVoJs-lSMI_NMtMdhhxo29gXr07YJFB7E8NvN2HSVA_Y4lCsz8KIP7ZNhK8QeuR3raxuFPxBM-3e0a-sEiQs3c5NvzEZhLrVD-ldxkCD5t6PdtgUOgaWk9tUfltrZ0sQsga6RFx0sj-R7TvwPHA8oOjarVIc-e-2vixGxipSmXccZ47-SxfAXUn91XfhZwg3zs4UyrVEjy1n62lFLGfmzMSOL05w9fLdJd7cMOs14d67ldnWvXQGV-aQL4'
-    }
-    exports.LineBotPush = functions.https.onRequest((req, res) => {
-        events.location
-        return request({
-            method: `GET`,
-            uri: `https://data.tmd.go.th/nwpapi/v1/forecast/location/daily/at`,
-            json: true
-        }).then((response) => {
-            const message = `City: ${response.name}\nWeather: ${response.weather[0].description}\nTemperature: ${response.main.temp}`;
-            return push(res, message);
-        }).catch((error) => {
-            return res.status(500).send(error);
-        });
-    });
+// function replyWeatherMaps(reply_token, msg) {
+//     let headers = {
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImIwYmYzY2E2YzFiZTI3ZjZkOGY5NDFhNjgyMmY2MjE4ZWViMDIzMzYyNDE1NDA3Nzk1NzIxNGYwYTkxNjJiNzljYjZjZTc1MGM4MzEwNGRmIn0.eyJhdWQiOiIyIiwianRpIjoiYjBiZjNjYTZjMWJlMjdmNmQ4Zjk0MWE2ODIyZjYyMThlZWIwMjMzNjI0MTU0MDc3OTU3MjE0ZjBhOTE2MmI3OWNiNmNlNzUwYzgzMTA0ZGYiLCJpYXQiOjE2MDA1MzE1NTEsIm5iZiI6MTYwMDUzMTU1MSwiZXhwIjoxNjMyMDY3NTUxLCJzdWIiOiI5NzkiLCJzY29wZXMiOltdfQ.FMch8VXWx957OH1FjR28JKaHcfxsHV4fSL5Scc_hflnRClf95iND0YaqbxNkiUX7f0TuhxzIMl0GFbrvQ6NKXOvYSj4dfU8jJMuDDG3QZTkLgExXDvQtsH2Ui5ZpAhHgPtkK7lPV1fGsQG_d5Ad9GjOD_oxgZygm6_iSM2ERh76kd2YywxFuN3_pBrBmLOm7kNFYatm_Ntg0Xir7NnnKVsE_S2RYYqsIoM5ZRjrWKK4A0Erk6WiXtXeD0fAFuv-Ope8cG_4Bh3VBgvhbFW3jNZ1OniutHYcba2Bv_P_WoL-xrRzxxvMSIKNXLfneoLNW5HPo0DNV273ZemPgbC6x3LdeFOCxtjy1YA-DZ2tTuQycm32CrD3GJXxQAaYC9TjthkCLXrcu40S6D2jQWOt-brkwhUuY2vNEdVx0YZDZXZ34TWLXYLVoJs-lSMI_NMtMdhhxo29gXr07YJFB7E8NvN2HSVA_Y4lCsz8KIP7ZNhK8QeuR3raxuFPxBM-3e0a-sEiQs3c5NvzEZhLrVD-ldxkCD5t6PdtgUOgaWk9tUfltrZ0sQsga6RFx0sj-R7TvwPHA8oOjarVIc-e-2vixGxipSmXccZ47-SxfAXUn91XfhZwg3zs4UyrVEjy1n62lFLGfmzMSOL05w9fLdJd7cMOs14d67ldnWvXQGV-aQL4'
+//     }
+//     exports.LineBotPush = functions.https.onRequest((req, res) => {
+//         events.location
+//         return request({
+//             method: `GET`,
+//             uri: `https://data.tmd.go.th/nwpapi/v1/forecast/location/daily/at`,
+//             json: true
+//         }).then((response) => {
+//             const message = `City: ${response.name}\nWeather: ${response.weather[0].description}\nTemperature: ${response.main.temp}`;
+//             return push(res, message);
+//         }).catch((error) => {
+//             return res.status(500).send(error);
+//         });
+//     });
 
 
-    let body = JSON.stringify({
-        replyToken: reply_token,
-        messages: [
-            {
-                weather_forecast: {
-                    locations: [
-                        {
-                            location: {
-                                lat: 13.0068,
-                                lon: 100.0829
-                            },
-                            forecasts: [
-                                {
-                                    time: "2017-08-17T00:00:00+07:00",
-                                    data: {
-                                        rh: 88.54,
-                                        tc_max: 28.56
-                                    }
-                                },
-                                {
-                                    time: "2017-08-18T00:00:00+07:00",
-                                    data: {
-                                        rh: 87.44,
-                                        tc_max: 27.21
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
-    })
+//     let body = JSON.stringify({
+//         replyToken: reply_token,
+//         messages: [
+//             {
+//                 weather_forecast: {
+//                     locations: [
+//                         {
+//                             location: {
+//                                 lat: 13.0068,
+//                                 lon: 100.0829
+//                             },
+//                             forecasts: [
+//                                 {
+//                                     time: "2017-08-17T00:00:00+07:00",
+//                                     data: {
+//                                         rh: 88.54,
+//                                         tc_max: 28.56
+//                                     }
+//                                 },
+//                                 {
+//                                     time: "2017-08-18T00:00:00+07:00",
+//                                     data: {
+//                                         rh: 87.44,
+//                                         tc_max: 27.21
+//                                     }
+//                                 }
+//                             ]
+//                         }
+//                     ]
+//                 }
+//             }
+//         ]
+//     })
 
-    request.post({
-        url: 'https://api.line.me/v2/bot/message/reply',
-        headers: headers,
-        body: body
-    }, (err, res, body) => {
-        console.log('status = ' + res.statusCode);
-    });
-}
+//     request.post({
+//         url: 'https://api.line.me/v2/bot/message/reply',
+//         headers: headers,
+//         body: body
+//     }, (err, res, body) => {
+//         console.log('status = ' + res.statusCode);
+//     });
+// }
 
 function replyContact(reply_token, msg) {
     let headers = {

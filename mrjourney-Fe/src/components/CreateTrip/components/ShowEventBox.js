@@ -11,10 +11,15 @@ import momentjs from 'moment';
 
 const TypeButton = styled(AntButton)`
     font-size: 18px;
-    display: flex;
+   /* display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
+    justify-content: center; */
+    padding: 20px; 
+    .anticon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
 `;
 
 const TypeButtonEat = styled(TypeButton)`
@@ -47,19 +52,25 @@ function ShowEventBox(props) {
                 <TypeCol span={5}>
                     {props.eventDetail.eventType === 'eating' ?
                         <TypeButtonEat
+                            type="primary"
                             shape="circle"
+                            size="middle"
                             icon={<img src="/img/icons/eat.png" />}
                         />
                         : null}
                     {props.eventDetail.eventType === 'travel' ?
                         <TypeButtonTravel
+                            type="primary"
                             shape="circle"
+                            size="middle"
                             icon={<img src="/img/icons/travel.png" />}
                         />
                         : null}
                     {props.eventDetail.eventType === 'sleeping' ?
                         <TypeButtonSleep
+                            type="primary"
                             shape="circle"
+                            size="middle"
                             icon={<img src="/img/icons/sleep.png" />}
                         />
                         : null}

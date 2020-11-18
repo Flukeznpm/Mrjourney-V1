@@ -17,6 +17,7 @@ import { ReactComponent as DeleteButton } from '../../static/icons/delete.svg';
 import DeleteTripModal from '../../components/components/DeleteTripModal';
 import ShowEventBox from '../../components/CreateTrip/components/ShowEventBox';
 import CreateTripModal from '../../components/Modal/CreateTripModal';
+import EditTripModal from '../../components/components/Modal/EditTripModal';
 
 
 const InputComponent = styled(AntInput)`
@@ -89,11 +90,10 @@ const DateCardNotActive = styled(Card)`
 `;
 
 const AddEventButton = styled(AntButton)`
-    border-radius: 4px;
-    font-size: 16px;
-    box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+     box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+    color: #F7F7F7;
     border: none;
-    margin: 10px 0px;
+    background: ${props => (props.theme.color.primary)};
     .anticon {
       display: flex;
       justify-content: center;
@@ -142,27 +142,18 @@ const Wrapper = styled.div`
 `;
 
 function EditTrip(props) {
-    const { Trip, setActiveEvent, setNotActiveEvent, keyModal, addModalShow, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
+    const { Trip, setActiveEvent, setNotActiveEvent, keyModal, Event, setEvent, eventModalShow } = useContext(HookContext)
     const [isVisible, setVisible] = useState(false)
     const [tripEvent, setTripEvent] = useState(props.trip)
     const [form] = AntForm.useForm();
+    const [isVisibleEditModal, setVisibleEditModal] = useState(false)
+    const [keyEdit, setKeyEdit] = useState(1);
 
     useEffect(() => {
         form.setFieldsValue({
             tripName: props.trip.tripName
         })
     }, [])
-
-    const onAddEvent = (key) => {
-        let trip = tripEvent;
-        trip.totalDate[key].events.push({
-            eventName: "นอนน",
-            startEvent: "08:00",
-            eventType: "travel",
-            endEvent: "20:00"
-        })
-        setTripEvent({ ...trip })
-    };
 
     const onDeleteEvent = (key, keyE) => {
         let trip = tripEvent;
@@ -172,6 +163,11 @@ function EditTrip(props) {
 
     const onVisibleModal = () => {
         setVisible(true)
+    }
+
+    const onVisibleEditModal = (key) => {
+        setVisibleEditModal(true)
+        eventModalShow(key)
     }
 
     const onFinish = async values => {
@@ -190,7 +186,7 @@ function EditTrip(props) {
         }
         console.log('total', dataEdit.totalDate);
         await axios.put('https://mrjourney-senior.herokuapp.com/trip/editTrip', dataEdit)
-        // await axios.put('http://localhost:5000/trip/editTrip', dataEdit)
+            // await axios.put('http://localhost:5000/trip/editTrip', dataEdit)
             .then(res => {
                 console.log('edit: ', res)
                 props.setEditTrip(false)
@@ -244,19 +240,22 @@ function EditTrip(props) {
                                                         </Row>
                                                     )
                                                 })}
-                                                <AddEventButton block
-                                                    size={"large"}
-                                                    // onClick={() => eventModalShow(key)}
-                                                onClick={() => onAddEvent(key)}
-                                                >
-                                                    <PlusOutlined />
-                                                </AddEventButton>
-                                                <CreateTripModal
+                                                <AddEventButton type="primary"
+                                                    shape="circle"
+                                                    size="middle"
+                                                    onClick={() => onVisibleEditModal(key)}
+                                                    icon={<PlusOutlined />}
+                                                />
+                                                <EditTripModal
                                                     centered
-                                                    show={addModalShow}
-                                                    onConfirm={() => setEvent(keyModal)}
-                                                    onHide={() => eventModalClose(keyModal)}
-                                                ></CreateTripModal>
+                                                    show={isVisibleEditModal}
+                                                    setVisibleEditModal={setVisibleEditModal}
+                                                    onHide={() => setVisibleEditModal(false)}
+                                                    trip={props.trip}
+                                                    setTripEvent={setTripEvent}
+                                                    tripEvent={tripEvent}
+                                             
+                                                />
                                             </div>
                                         }
                                     </>

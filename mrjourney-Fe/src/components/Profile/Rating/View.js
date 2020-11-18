@@ -28,7 +28,7 @@ function View(props) {
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let getUserID = params.get('userID');
-        axios.get(`http://localhost:5000/trip/score?lineID=${getUserID}`)
+        axios.get(`https://mrjourney-senior.herokuapp.com/trip/score?lineID=${getUserID}`)
             .then(res => {
                 setRating(res.data)
             })
