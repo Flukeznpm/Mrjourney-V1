@@ -28,7 +28,7 @@ function View(props) {
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let getUserID = params.get('userID');
-        axios.get(`http://localhost:5000/trip/score?lineID=${getUserID}`)
+        axios.get(`${process.env.REACT_APP_FE_PATH}/trip/score?lineID=${getUserID}`)
             .then(res => {
                 setRating(res.data)
             })
@@ -42,19 +42,19 @@ function View(props) {
                         <Col span={6} className="text-center">
                             ความเพรียบพร้อม
                             <AntCard style={{ padding: 0 }}>
-                                {rating.preparation/rating.countOfSubmit}/5
+                                {(rating.preparation/rating.countOfSubmit).toFixed(2)}/5
                             </AntCard>
                         </Col>
                         <Col span={6} className="text-center">
                             ความคุ้มค่า
                             <AntCard style={{ padding: 0 }}>
-                                {rating.entertainment/rating.countOfSubmit}/5
+                                {(rating.entertainment/rating.countOfSubmit).toFixed(2)}/5
                             </AntCard>
                         </Col>
                         <Col span={6} className="text-center">
                             ความสนุก
                             <AntCard style={{ padding: 0 }}>
-                                {rating.value/rating.countOfSubmit}/5
+                                {(rating.value/rating.countOfSubmit).toFixed(2)} /5
                             </AntCard>
                         </Col>
                     </Row>
