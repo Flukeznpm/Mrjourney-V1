@@ -2,15 +2,45 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const request = require('request');
-const { checkTripAvaliable, checkOwnerTrip } = require('../controller/botController');
+const { checkTripAvaliable, checkOwnerTrip, RecommendEat, RecommendTravel, RecommendSleep, checkWeather, checkPayBill, checkTripPerDay } = require('../controller/botController');
 
 router.post('/webhook', async (req, res) => {
-    let reply_token = req.body.events[0].replyToken
+
     // let msg = req.body.events[0]
-    let msg = req.body.events[0].message.text
     // if (msg.type === "message" && msg.message.type === "text") {
+    let msg = req.body.events[0].message.text
+    let reply_token = req.body.events[0].replyToken
+
+    // let locationMsg = req.body.message.type
+    let weatherMsg = msg.substring(0, 7)
+
+    let typeEat = msg.substring(0, 7)
+    let typeTravel = msg.substring(0, 10)
+    let typeSleep = msg.substring(0, 7)
+
     if (msg === "อาจารย์โอ๋") {
-        replyProfessor(reply_token, msg)
+        replyProfessor(reply_token)
+    }
+    else if (typeEat === "#ที่กิน") {
+        let provinceMsg = req.body.events[0].message.text.substring(8)
+        let locationEat = await RecommendEat(provinceMsg);
+        replyRecommendEat(reply_token, locationEat)
+    }
+    else if (typeTravel === "#ที่เที่ยว") {
+        let provinceMsg = req.body.events[0].message.text.substring(11)
+        let locationTravel = await RecommendTravel(provinceMsg);
+        replyRecommendTravel(reply_token, locationTravel)
+    }
+    else if (typeSleep === "#ที่พัก") {
+        let provinceMsg = req.body.events[0].message.text.substring(8)
+        let locationSleep = await RecommendSleep(provinceMsg);
+        replyRecommendSleep(reply_token, locationSleep)
+    }
+    else if (weatherMsg === "#อากาศ,") {
+        let provinceWeather = req.body.events[0].message.text.substring(7)
+        let weather = await checkWeather(provinceWeather);
+        let temp = weather.forecasts[0].data.tc_max;
+        replyCheckWeather(reply_token, temp)
     }
     else if (msg === "#สร้างทริป") {
         let groundId = req.body.events[0].source.groupId
@@ -34,7 +64,13 @@ router.post('/webhook', async (req, res) => {
         replyPlanAll(reply_token, msg)
     }
     else if (msg === "ดูแผนวันนี้") {
-        replyPlanPerDay(reply_token, msg)
+        let groupId = req.body.events[0].source.groupId
+        let perday = await checkTripPerDay(groupId)
+        if (perday.tripName) {
+            replyPlanPerDay(reply_token, perday)
+        } else {
+            replyNotBill(reply_token)
+        }
     }
     else if (msg === "#ช่วย") {
         replyHelp(reply_token, msg)
@@ -51,15 +87,6 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#แนะนำ") {
         replyRecommend(reply_token, msg)
     }
-    else if (msg === "ที่กิน") {
-        replyRecommendEat(reply_token, msg)
-    }
-    else if (msg === "ที่เที่ยว") {
-        replyRecommendTravel(reply_token, msg)
-    }
-    else if (msg === "ที่พัก") {
-        replyRecommendSleep(reply_token, msg)
-    }
     else if (msg === "#อากาศ") {
         replyWeather(reply_token, msg)
     }
@@ -74,7 +101,13 @@ router.post('/webhook', async (req, res) => {
         replyCreateBill(reply_token, msg)
     }
     else if (msg === "#ดูบิล") {
-        replySeeBill(reply_token, msg)
+        let groupId = req.body.events[0].source.groupId
+        let bill = await checkPayBill(groupId)
+        if (bill.billName) {
+            replySeeBill(reply_token, bill)
+        } else {
+            replyNotBill(reply_token)
+        }
     }
     else if (msg === "#location") {
         reply(req)
@@ -93,12 +126,6 @@ router.post('/webhook', async (req, res) => {
             reply(req)
         }
     }
-    // else if (ev) {
-    //     replyWeatherMaps(reply_token, msg)
-    // }
-    // else {
-    //     replyBased(reply_token, msg)
-    // }
 
     // reply(req)
     res.sendStatus(200)
@@ -128,7 +155,7 @@ const reply = req => {
     });
 };
 
-function replyBased(reply_token, msg) {
+function replyBased(reply_token, provinceMsg) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -139,7 +166,7 @@ function replyBased(reply_token, msg) {
         messages: [
             {
                 type: 'text',
-                text: 'ส่งอะไรมาน้าาาา ผมไม่รู้คับ ฮือ ;_; '
+                text: provinceMsg
             }
         ]
     })
@@ -153,7 +180,57 @@ function replyBased(reply_token, msg) {
     });
 }
 
-function replyProfessor(reply_token, msg) {
+function replyRecommendEat(reply_token, locationEat) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: locationEat
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRecon(reply_token, provinceMsg) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: provinceMsg
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyProfessor(reply_token) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -165,6 +242,31 @@ function replyProfessor(reply_token, msg) {
             {
                 type: 'text',
                 text: '♥'
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyCheckWeather(reply_token, temp) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: temp + " องศา"
             }
         ]
     })
@@ -380,6 +482,7 @@ function replyPlan(reply_token, msg) {
                         ]
                     }
                 }
+
             }
         ]
 
@@ -457,7 +560,18 @@ function replyCantSeePlan(reply_token, msg) {
     });
 }
 
-function replyPlanPerDay(reply_token, msg) {
+function replyPlanPerDay(reply_token, perday) {
+
+    let contentEventName = []
+    perday.totalDate[0].events.map((u) => contentEventName.push({
+        type: "text",
+        text: u.eventName
+    }))
+    let contentEventTime = []
+    perday.totalDate[0].events.map((u) => contentEventTime.push({
+        type: "text",
+        text: u.startEvent + "น." + " - " + u.endEvent + "น."
+    }))
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -467,9 +581,93 @@ function replyPlanPerDay(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: 'text',
-                text: "Flex msg Perday"
-            },
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    size: "mega",
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [],
+                                flex: 2,
+                                backgroundColor: "#C15638"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [],
+                                flex: 3
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: contentEventName,
+                                width: "50%",
+                                position: "absolute",
+                                offsetTop: "50%",
+                                offsetStart: "15px"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: contentEventTime,
+                                position: "absolute",
+                                offsetTop: "50%",
+                                offsetEnd: "15px"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: perday.province,
+                                        size: "lg",
+                                        color: "#FFFFFF"
+                                    },
+                                    {
+                                        type: "text",
+                                        text: perday.tripName,
+                                        size: "xxl",
+                                        color: "#FFFFFF"
+                                    }
+                                ],
+                                position: "absolute",
+                                offsetTop: "15px",
+                                offsetStart: "15px"
+                            }
+                        ],
+                        height: "240px",
+                        paddingAll: "0px"
+                    },
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "button",
+                                action: {
+                                    type: "uri",
+                                    label: "ดูทริปทั้งหมด",
+                                    uri: "https://liff.line.me/1653975470-4Webv3MY"
+                                },
+                                style: "primary",
+                                color: "#C15638"
+                            }
+                        ]
+                    },
+                    styles: {
+                        footer: {
+                            separator: true
+                        }
+                    }
+                }
+            }
         ]
     })
     request.post({
@@ -613,7 +811,7 @@ function replyCreateBill(reply_token, msg) {
     });
 }
 
-function replySeeBill(reply_token, msg) {
+function replyNotBill(reply_token) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -623,25 +821,168 @@ function replySeeBill(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "text",
-                text: "อยากให้ผมสอนอะไรครับ ?",
-                quickReply: {
-                    items: [
-                        {
-                            action: {
-                                type: "message",
-                                label: "สร้างบิล",
-                                text: "สร้างบิล"
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "ขณะนี้ยังไม่มีบิล มาสร้างบิลกันเถอะ!"
                             }
-                        },
-                        {
-                            action: {
-                                type: "message",
-                                label: "ดูบิล",
-                                text: "ดูบิล"
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "สร้างบิล",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-6rJYy1Qm"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
                             }
+                        ]
+                    }
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replySeeBill(reply_token, bill) {
+    let contentName = []
+    bill.user.map((u) => contentName.push({
+        type: "text",
+        text: u.fName
+    }))
+    let contentCost = []
+    bill.user.map((u) => contentCost.push({
+        type: "text",
+        text: (bill.totalCost / bill.user.length).toFixed(2) + " ฿"
+    }))
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    size: "mega",
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [],
+                                flex: 2,
+                                backgroundColor: "#C15638"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [],
+                                flex: 3
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: contentName,
+                                width: "50%",
+                                position: "absolute",
+                                offsetTop: "50%",
+                                offsetStart: "15px"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: contentCost,
+                                position: "absolute",
+                                offsetTop: "50%",
+                                offsetEnd: "15px"
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: bill.billName,
+                                        size: "lg",
+                                        color: "#FFFFFF"
+                                    },
+                                    {
+                                        type: "text",
+                                        text: bill.totalCost + ' ฿',
+                                        size: "xxl",
+                                        color: "#FFFFFF"
+                                    }
+                                ],
+                                position: "absolute",
+                                offsetTop: "15px",
+                                offsetStart: "15px"
+                            }
+                        ],
+                        height: "240px",
+                        paddingAll: "0px"
+                    },
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "button",
+                                action: {
+                                    type: "uri",
+                                    label: "ใครจ่ายแล้วบ้าง",
+                                    uri: "https://liff.line.me/1653975470-DEq4WP1a"
+                                }
+                            },
+                            {
+                                type: "button",
+                                action: {
+                                    type: "uri",
+                                    label: "จ่ายเงิน",
+                                    uri: "https://liff.line.me/1653975470-JyVQ0Xr9"
+                                },
+                                style: "primary",
+                                color: "#C15638"
+                            }
+                        ]
+                    },
+                    styles: {
+                        footer: {
+                            separator: true
                         }
-                    ]
+                    }
                 }
             }
         ]
@@ -692,68 +1033,68 @@ function replyWeather(reply_token, msg) {
     });
 }
 
-function replyWeatherMaps(reply_token, msg) {
-    let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImIwYmYzY2E2YzFiZTI3ZjZkOGY5NDFhNjgyMmY2MjE4ZWViMDIzMzYyNDE1NDA3Nzk1NzIxNGYwYTkxNjJiNzljYjZjZTc1MGM4MzEwNGRmIn0.eyJhdWQiOiIyIiwianRpIjoiYjBiZjNjYTZjMWJlMjdmNmQ4Zjk0MWE2ODIyZjYyMThlZWIwMjMzNjI0MTU0MDc3OTU3MjE0ZjBhOTE2MmI3OWNiNmNlNzUwYzgzMTA0ZGYiLCJpYXQiOjE2MDA1MzE1NTEsIm5iZiI6MTYwMDUzMTU1MSwiZXhwIjoxNjMyMDY3NTUxLCJzdWIiOiI5NzkiLCJzY29wZXMiOltdfQ.FMch8VXWx957OH1FjR28JKaHcfxsHV4fSL5Scc_hflnRClf95iND0YaqbxNkiUX7f0TuhxzIMl0GFbrvQ6NKXOvYSj4dfU8jJMuDDG3QZTkLgExXDvQtsH2Ui5ZpAhHgPtkK7lPV1fGsQG_d5Ad9GjOD_oxgZygm6_iSM2ERh76kd2YywxFuN3_pBrBmLOm7kNFYatm_Ntg0Xir7NnnKVsE_S2RYYqsIoM5ZRjrWKK4A0Erk6WiXtXeD0fAFuv-Ope8cG_4Bh3VBgvhbFW3jNZ1OniutHYcba2Bv_P_WoL-xrRzxxvMSIKNXLfneoLNW5HPo0DNV273ZemPgbC6x3LdeFOCxtjy1YA-DZ2tTuQycm32CrD3GJXxQAaYC9TjthkCLXrcu40S6D2jQWOt-brkwhUuY2vNEdVx0YZDZXZ34TWLXYLVoJs-lSMI_NMtMdhhxo29gXr07YJFB7E8NvN2HSVA_Y4lCsz8KIP7ZNhK8QeuR3raxuFPxBM-3e0a-sEiQs3c5NvzEZhLrVD-ldxkCD5t6PdtgUOgaWk9tUfltrZ0sQsga6RFx0sj-R7TvwPHA8oOjarVIc-e-2vixGxipSmXccZ47-SxfAXUn91XfhZwg3zs4UyrVEjy1n62lFLGfmzMSOL05w9fLdJd7cMOs14d67ldnWvXQGV-aQL4'
-    }
-    exports.LineBotPush = functions.https.onRequest((req, res) => {
-        events.location
-        return request({
-            method: `GET`,
-            uri: `https://data.tmd.go.th/nwpapi/v1/forecast/location/daily/at`,
-            json: true
-        }).then((response) => {
-            const message = `City: ${response.name}\nWeather: ${response.weather[0].description}\nTemperature: ${response.main.temp}`;
-            return push(res, message);
-        }).catch((error) => {
-            return res.status(500).send(error);
-        });
-    });
+// function replyWeatherMaps(reply_token, msg) {
+//     let headers = {
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImIwYmYzY2E2YzFiZTI3ZjZkOGY5NDFhNjgyMmY2MjE4ZWViMDIzMzYyNDE1NDA3Nzk1NzIxNGYwYTkxNjJiNzljYjZjZTc1MGM4MzEwNGRmIn0.eyJhdWQiOiIyIiwianRpIjoiYjBiZjNjYTZjMWJlMjdmNmQ4Zjk0MWE2ODIyZjYyMThlZWIwMjMzNjI0MTU0MDc3OTU3MjE0ZjBhOTE2MmI3OWNiNmNlNzUwYzgzMTA0ZGYiLCJpYXQiOjE2MDA1MzE1NTEsIm5iZiI6MTYwMDUzMTU1MSwiZXhwIjoxNjMyMDY3NTUxLCJzdWIiOiI5NzkiLCJzY29wZXMiOltdfQ.FMch8VXWx957OH1FjR28JKaHcfxsHV4fSL5Scc_hflnRClf95iND0YaqbxNkiUX7f0TuhxzIMl0GFbrvQ6NKXOvYSj4dfU8jJMuDDG3QZTkLgExXDvQtsH2Ui5ZpAhHgPtkK7lPV1fGsQG_d5Ad9GjOD_oxgZygm6_iSM2ERh76kd2YywxFuN3_pBrBmLOm7kNFYatm_Ntg0Xir7NnnKVsE_S2RYYqsIoM5ZRjrWKK4A0Erk6WiXtXeD0fAFuv-Ope8cG_4Bh3VBgvhbFW3jNZ1OniutHYcba2Bv_P_WoL-xrRzxxvMSIKNXLfneoLNW5HPo0DNV273ZemPgbC6x3LdeFOCxtjy1YA-DZ2tTuQycm32CrD3GJXxQAaYC9TjthkCLXrcu40S6D2jQWOt-brkwhUuY2vNEdVx0YZDZXZ34TWLXYLVoJs-lSMI_NMtMdhhxo29gXr07YJFB7E8NvN2HSVA_Y4lCsz8KIP7ZNhK8QeuR3raxuFPxBM-3e0a-sEiQs3c5NvzEZhLrVD-ldxkCD5t6PdtgUOgaWk9tUfltrZ0sQsga6RFx0sj-R7TvwPHA8oOjarVIc-e-2vixGxipSmXccZ47-SxfAXUn91XfhZwg3zs4UyrVEjy1n62lFLGfmzMSOL05w9fLdJd7cMOs14d67ldnWvXQGV-aQL4'
+//     }
+//     exports.LineBotPush = functions.https.onRequest((req, res) => {
+//         events.location
+//         return request({
+//             method: `GET`,
+//             uri: `https://data.tmd.go.th/nwpapi/v1/forecast/location/daily/at`,
+//             json: true
+//         }).then((response) => {
+//             const message = `City: ${response.name}\nWeather: ${response.weather[0].description}\nTemperature: ${response.main.temp}`;
+//             return push(res, message);
+//         }).catch((error) => {
+//             return res.status(500).send(error);
+//         });
+//     });
 
 
-    let body = JSON.stringify({
-        replyToken: reply_token,
-        messages: [
-            {
-                weather_forecast: {
-                    locations: [
-                        {
-                            location: {
-                                lat: 13.0068,
-                                lon: 100.0829
-                            },
-                            forecasts: [
-                                {
-                                    time: "2017-08-17T00:00:00+07:00",
-                                    data: {
-                                        rh: 88.54,
-                                        tc_max: 28.56
-                                    }
-                                },
-                                {
-                                    time: "2017-08-18T00:00:00+07:00",
-                                    data: {
-                                        rh: 87.44,
-                                        tc_max: 27.21
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
-    })
+//     let body = JSON.stringify({
+//         replyToken: reply_token,
+//         messages: [
+//             {
+//                 weather_forecast: {
+//                     locations: [
+//                         {
+//                             location: {
+//                                 lat: 13.0068,
+//                                 lon: 100.0829
+//                             },
+//                             forecasts: [
+//                                 {
+//                                     time: "2017-08-17T00:00:00+07:00",
+//                                     data: {
+//                                         rh: 88.54,
+//                                         tc_max: 28.56
+//                                     }
+//                                 },
+//                                 {
+//                                     time: "2017-08-18T00:00:00+07:00",
+//                                     data: {
+//                                         rh: 87.44,
+//                                         tc_max: 27.21
+//                                     }
+//                                 }
+//                             ]
+//                         }
+//                     ]
+//                 }
+//             }
+//         ]
+//     })
 
-    request.post({
-        url: 'https://api.line.me/v2/bot/message/reply',
-        headers: headers,
-        body: body
-    }, (err, res, body) => {
-        console.log('status = ' + res.statusCode);
-    });
-}
+//     request.post({
+//         url: 'https://api.line.me/v2/bot/message/reply',
+//         headers: headers,
+//         body: body
+//     }, (err, res, body) => {
+//         console.log('status = ' + res.statusCode);
+//     });
+// }
 
 function replyContact(reply_token, msg) {
     let headers = {
@@ -866,206 +1207,206 @@ function replyRecommend(reply_token, msg) {
     });
 }
 
-function replyRecommendEat(reply_token, msg) {
-    let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
-    }
+// function replyRecommendEat(reply_token, msg) {
+//     let headers = {
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+//     }
 
-    let body = JSON.stringify({
-        replyToken: reply_token,
-        messages: [
-            {
-                type: "carousel",
-                contents: [
-                    {
-                        type: "bubble",
-                        direction: "ltr",
-                        hero: {
-                            type: "image",
-                            url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "text",
-                                    text: "สร้างแผนการท่องเที่ยว",
-                                    weight: "bold",
-                                    size: "lg",
-                                    align: "center",
-                                    wrap: true,
-                                    contents: []
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "message",
-                                        label: "#สร้างทริป",
-                                        text: "#สร้างทริป"
-                                    },
-                                    color: "#F37945",
-                                    style: "primary"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        type: "bubble",
-                        direction: "ltr",
-                        hero: {
-                            type: "image",
-                            url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "text",
-                                    text: "วิธีการใช้งาน",
-                                    weight: "bold",
-                                    size: "lg",
-                                    align: "center",
-                                    wrap: true,
-                                    contents: []
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "message",
-                                        label: "#วิธีการใช้",
-                                        text: "#วิธีการใช้"
-                                    },
-                                    color: "#F37945",
-                                    style: "primary"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        type: "bubble",
-                        direction: "ltr",
-                        hero: {
-                            type: "image",
-                            url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "text",
-                                    text: "ดูแผนการท่องเที่ยว",
-                                    weight: "bold",
-                                    size: "lg",
-                                    align: "center",
-                                    wrap: true,
-                                    contents: []
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "message",
-                                        label: "#ดูทริป",
-                                        text: "#ดูทริป"
-                                    },
-                                    color: "#F37945",
-                                    style: "primary"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        type: "bubble",
-                        direction: "ltr",
-                        hero: {
-                            type: "image",
-                            url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
-                            size: "full",
-                            aspectRatio: "16:9",
-                            aspectMode: "cover"
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "text",
-                                    text: "แนะนำสถานที่",
-                                    weight: "bold",
-                                    size: "lg",
-                                    align: "center",
-                                    wrap: true,
-                                    contents: []
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            spacing: "sm",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "message",
-                                        label: "#แนะนำ",
-                                        text: "#แนะนำ"
-                                    },
-                                    color: "#F37945",
-                                    style: "primary"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        ]
-    })
-    request.post({
-        url: 'https://api.line.me/v2/bot/message/reply',
-        headers: headers,
-        body: body
-    }, (err, res, body) => {
-        console.log('status = ' + res.statusCode);
-    });
-}
+//     let body = JSON.stringify({
+//         replyToken: reply_token,
+//         messages: [
+//             {
+//                 type: "carousel",
+//                 contents: [
+//                     {
+//                         type: "bubble",
+//                         direction: "ltr",
+//                         hero: {
+//                             type: "image",
+//                             url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
+//                             size: "full",
+//                             aspectRatio: "16:9",
+//                             aspectMode: "cover"
+//                         },
+//                         body: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "text",
+//                                     text: "สร้างแผนการท่องเที่ยว",
+//                                     weight: "bold",
+//                                     size: "lg",
+//                                     align: "center",
+//                                     wrap: true,
+//                                     contents: []
+//                                 }
+//                             ]
+//                         },
+//                         footer: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "button",
+//                                     action: {
+//                                         type: "message",
+//                                         label: "#สร้างทริป",
+//                                         text: "#สร้างทริป"
+//                                     },
+//                                     color: "#F37945",
+//                                     style: "primary"
+//                                 }
+//                             ]
+//                         }
+//                     },
+//                     {
+//                         type: "bubble",
+//                         direction: "ltr",
+//                         hero: {
+//                             type: "image",
+//                             url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
+//                             size: "full",
+//                             aspectRatio: "16:9",
+//                             aspectMode: "cover"
+//                         },
+//                         body: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "text",
+//                                     text: "วิธีการใช้งาน",
+//                                     weight: "bold",
+//                                     size: "lg",
+//                                     align: "center",
+//                                     wrap: true,
+//                                     contents: []
+//                                 }
+//                             ]
+//                         },
+//                         footer: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "button",
+//                                     action: {
+//                                         type: "message",
+//                                         label: "#วิธีการใช้",
+//                                         text: "#วิธีการใช้"
+//                                     },
+//                                     color: "#F37945",
+//                                     style: "primary"
+//                                 }
+//                             ]
+//                         }
+//                     },
+//                     {
+//                         type: "bubble",
+//                         direction: "ltr",
+//                         hero: {
+//                             type: "image",
+//                             url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
+//                             size: "full",
+//                             aspectRatio: "16:9",
+//                             aspectMode: "cover"
+//                         },
+//                         body: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "text",
+//                                     text: "ดูแผนการท่องเที่ยว",
+//                                     weight: "bold",
+//                                     size: "lg",
+//                                     align: "center",
+//                                     wrap: true,
+//                                     contents: []
+//                                 }
+//                             ]
+//                         },
+//                         footer: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "button",
+//                                     action: {
+//                                         type: "message",
+//                                         label: "#ดูทริป",
+//                                         text: "#ดูทริป"
+//                                     },
+//                                     color: "#F37945",
+//                                     style: "primary"
+//                                 }
+//                             ]
+//                         }
+//                     },
+//                     {
+//                         type: "bubble",
+//                         direction: "ltr",
+//                         hero: {
+//                             type: "image",
+//                             url: "https://food.mthai.com/app/uploads/2013/07/10.jpg",
+//                             size: "full",
+//                             aspectRatio: "16:9",
+//                             aspectMode: "cover"
+//                         },
+//                         body: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "text",
+//                                     text: "แนะนำสถานที่",
+//                                     weight: "bold",
+//                                     size: "lg",
+//                                     align: "center",
+//                                     wrap: true,
+//                                     contents: []
+//                                 }
+//                             ]
+//                         },
+//                         footer: {
+//                             type: "box",
+//                             layout: "vertical",
+//                             spacing: "sm",
+//                             contents: [
+//                                 {
+//                                     type: "button",
+//                                     action: {
+//                                         type: "message",
+//                                         label: "#แนะนำ",
+//                                         text: "#แนะนำ"
+//                                     },
+//                                     color: "#F37945",
+//                                     style: "primary"
+//                                 }
+//                             ]
+//                         }
+//                     }
+//                 ]
+//             }
+//         ]
+//     })
+//     request.post({
+//         url: 'https://api.line.me/v2/bot/message/reply',
+//         headers: headers,
+//         body: body
+//     }, (err, res, body) => {
+//         console.log('status = ' + res.statusCode);
+//     });
+// }
 
 function replyHelp(reply_token, msg) {
     let headers = {
@@ -1309,6 +1650,227 @@ function replyRating(reply_token, msg) {
                             }
                         ]
                     }
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRecommendEat(reply_token, locationEat) {
+    let contentShow = []
+
+    locationEat.map((u) => {
+        if (u.thumbnail_url === "") {
+            contentShow.push({
+                thumbnailImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1605729496312plan-01.png?alt=media&token=2b1e04e9-33b6-49dd-b68f-e8ec2490b50c",
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        } else {
+            contentShow.push({
+                thumbnailImageUrl: u.thumbnail_url,
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        }
+    })
+
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "template",
+                altText: "This is a carousel template",
+                template: {
+                    type: "carousel",
+                    imageAspectRatio: "rectangle",
+                    imageSize: "cover",
+                    columns: contentShow,
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRecommendTravel(reply_token, locationTravel) {
+    let contentShow = []
+    locationTravel.map((u) => {
+        if (u.thumbnail_url === "") {
+            contentShow.push({
+                thumbnailImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1605729496312plan-01.png?alt=media&token=2b1e04e9-33b6-49dd-b68f-e8ec2490b50c",
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        } else {
+            contentShow.push({
+                thumbnailImageUrl: u.thumbnail_url,
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        }
+    })
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "template",
+                altText: "This is a carousel template",
+                template: {
+                    type: "carousel",
+                    imageAspectRatio: "rectangle",
+                    imageSize: "cover",
+                    columns: contentShow,
+                }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyRecommendSleep(reply_token, locationSleep) {
+    let contentShow = []
+    locationSleep.map((u) => {
+        if (u.thumbnail_url === "") {
+            contentShow.push({
+                thumbnailImageUrl: "https://firebasestorage.googleapis.com/v0/b/test-storage-rom.appspot.com/o/1605729496312plan-01.png?alt=media&token=2b1e04e9-33b6-49dd-b68f-e8ec2490b50c",
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        } else {
+            contentShow.push({
+                thumbnailImageUrl: u.thumbnail_url,
+                imageBackgroundColor: "#FFFFFF",
+                title: u.place_name,
+                text: u.category_description,
+                defaultAction: {
+                    type: "uri",
+                    label: "LINE",
+                    uri: "https://www.google.com/maps"
+                },
+                actions: [
+                    {
+                        type: "uri",
+                        label: "Google Map",
+                        uri: "https://www.google.com/maps"
+                    }
+                ]
+            })
+        }
+    })
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "template",
+                altText: "This is a carousel template",
+                template: {
+                    type: "carousel",
+                    imageAspectRatio: "rectangle",
+                    imageSize: "cover",
+                    columns: contentShow,
                 }
             }
         ]
