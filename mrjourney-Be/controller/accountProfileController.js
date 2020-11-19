@@ -186,20 +186,6 @@ async function getAccountByID(datas) {
             console.log('Error getting AccountPorfile', err);
         });
     return dataAcc;
-
-    // let showDataAcc = db.collection("AccountProfile").where('userID', '==', datas.userID);
-    // if (showDataAcc.empty) {
-    //     console.log('No matching data')
-    //     return;
-    // } else {
-    //     await showDataAcc.get().then(doc => {
-    //         dataAcc.push(doc.data());
-    //     })
-    //         .catch(err => {
-    //             console.log('Error getting AccountPorfile', err);
-    //         });
-    // }
-    // return dataAcc;
 };
 
 async function createAccountDetail(datas) {
@@ -215,10 +201,10 @@ async function createAccountDetail(datas) {
         userID: datas.lineID
     });
     await db.collection('AccountProfile').doc(datas.lineID).collection('Score').doc(datas.lineID).set({
-        preparation: 0,
-        entertainment: 0,
-        value: 0,
-        countOfSubmit: 0
+        countOfSubmit: 0,
+        entertainmentScore: 0,
+        preparationScore: 0,
+        worthinessScore: 0
     });
 };
 
