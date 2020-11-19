@@ -190,7 +190,7 @@ function CreateTripStep2(props) {
                                                         <CaretUpOutlined />
                                                     </Row>
                                                 </DateCardNotActive>
-                                                {PerDay.event.map((eventDetail, key) => {
+                                                {PerDay.event.map((eventDetail, keyE) => {
                                                     return (
                                                         <Row className="my-1">
                                                             <Col span={19}>
@@ -201,7 +201,7 @@ function CreateTripStep2(props) {
                                                                 </div>
                                                             </Col>
                                                             <Col span={5} >
-                                                                <DeleteEventCard onClick={() => deleteEvent(eventDetail, key)}>
+                                                                <DeleteEventCard onClick={() => deleteEvent(key, keyE)}>
                                                                     <DeleteButton />
                                                                 </DeleteEventCard>
                                                             </Col>
