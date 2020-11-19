@@ -229,10 +229,7 @@ const hookReducer = (state, action) => {
       }
     case "DELETE_EVENT":
       let AllDateDelete = state.Trip.totalDate //new
-      const newAllEvent = AllDateDelete[action.key].event.filter(Event => {
-        return Event !== action.eventDetail
-      })
-      AllDateDelete[action.key].event = newAllEvent
+      AllDateDelete[action.key].event.splice(action.keyE, 1)
       return {
         ...state,
         Trip: {
@@ -335,8 +332,8 @@ export const HookProvider = ({ children }) => {
     hookDispatch({ type: "SELECT_EVENT_TYPE", payload })
   const eventModalShow = payload =>
     hookDispatch({ type: "EVENT_MODAL_SHOW", payload })
-  const deleteEvent = (eventDetail, key) =>
-    hookDispatch({ type: "DELETE_EVENT", eventDetail, key })
+  const deleteEvent = (key, keyE) =>
+    hookDispatch({ type: "DELETE_EVENT", key, keyE })
   const showRoomModalShow = payload =>
     hookDispatch({ type: "SHOW_ROOM_MODAL_SHOW", payload })
   const showRoomModalClose = payload =>

@@ -184,15 +184,19 @@ function CreateTripStep2(props) {
             .then(res => {
                 console.log(res)
             });
+        nextTripStep(1)
         if (liff.getContext().type !== "none") {
             liff.sendMessages([
                 {
                     "type": "text",
                     "text": "สร้างทริปสำเร็จ!"
+                },
+                {
+                    "type": "text",
+                    "text": "#ดูแผน"
                 }
             ])
         }
-        nextTripStep(1)
     }
     if (loading) {
         return (
@@ -231,7 +235,7 @@ function CreateTripStep2(props) {
                                                             <CaretUpOutlined />
                                                         </Row>
                                                     </DateCardNotActive>
-                                                    {PerDay.event.map((eventDetail, key) => {
+                                                    {PerDay.event.map((eventDetail, keyE) => {
                                                         return (
                                                             <Row className="my-1">
                                                                 <Col span={19}>
@@ -242,7 +246,7 @@ function CreateTripStep2(props) {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={5} >
-                                                                    <DeleteEventCard onClick={() => deleteEvent(eventDetail, key)}>
+                                                                    <DeleteEventCard onClick={() => deleteEvent(key, keyE)}>
                                                                         <DeleteButton />
                                                                     </DeleteEventCard>
                                                                 </Col>
