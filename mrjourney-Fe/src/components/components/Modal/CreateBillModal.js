@@ -3,7 +3,6 @@ import styled from "styled-components";
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
-import liff from '@line/liff';
 import {
     Modal as AntModal,
     Row, Col,
@@ -11,6 +10,7 @@ import {
     Form as AntForm,
     Input as AntInput
 } from 'antd';
+import liff from '@line/liff';
 
 const DeleteModalComponent = styled(AntModal)`
     .ant-modal-content {

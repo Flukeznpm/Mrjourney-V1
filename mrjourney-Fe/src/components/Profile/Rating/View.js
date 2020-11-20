@@ -42,19 +42,33 @@ function View(props) {
                         <Col span={6} className="text-center">
                             ความเพรียบพร้อม
                             <AntCard style={{ padding: 0 }}>
-                                {(rating.preparationScore/rating.countOfSubmit).toFixed(2)}/5
+                                {rating.preparationScore === 0 ?
+                                    <>0/5</>
+                                    :
+                                    <>{(rating.preparationScore / rating.countOfSubmit).toFixed(2)}/5</>
+                                }
                             </AntCard>
                         </Col>
                         <Col span={6} className="text-center">
                             ความคุ้มค่า
                             <AntCard style={{ padding: 0 }}>
-                                {(rating.entertainmentScore/rating.countOfSubmit).toFixed(2)}/5
+                                {rating.entertainmentScore === 0 ?
+                                    <>0/5</>
+                                    :
+                                    <>{(rating.entertainmentScore / rating.countOfSubmit).toFixed(2)}/5</>
+                                }
                             </AntCard>
                         </Col>
                         <Col span={6} className="text-center">
                             ความสนุก
                             <AntCard style={{ padding: 0 }}>
-                                {(rating.worthinessScore/rating.countOfSubmit).toFixed(2)} /5
+                                {rating.worthinessScore === 0 ?
+                                    <>0/5</>
+                                    :
+                                    <>
+                                        {(rating.worthinessScore / rating.countOfSubmit).toFixed(2)}/5
+                                    </>
+                                }
                             </AntCard>
                         </Col>
                     </Row>

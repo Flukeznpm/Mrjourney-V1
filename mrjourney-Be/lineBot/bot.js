@@ -66,11 +66,16 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "ดูแผนวันนี้") {
         let groupId = req.body.events[0].source.groupId
         let perday = await checkTripPerDay(groupId)
-        if (perday.tripName) {
-            replyPlanPerDay(reply_token, perday)
+        if (perday.totalDate) {
+            if (perday.totalDate[0]) {
+                replyPlanPerDay(reply_token, perday)
+            } else {
+                replyNotPlanPerDay(reply_token)
+            }
         } else {
-            replyNotBill(reply_token)
+            replyNotRating(reply_token)
         }
+
     }
     else if (msg === "#ช่วย") {
         replyHelp(reply_token, msg)
@@ -103,7 +108,7 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#ดูบิล") {
         let groupId = req.body.events[0].source.groupId
         let bill = await checkPayBill(groupId)
-        if (bill.billName) {
+        if (bill) {
             replySeeBill(reply_token, bill)
         } else {
             replyNotBill(reply_token)
@@ -115,7 +120,7 @@ router.post('/webhook', async (req, res) => {
     else if (msg === "#ยกเลิกทริป") {
         replyDeleteTrip(reply_token, msg)
     }
-    else if (msg === "#ปิดทริป") {
+    else if (msg === "#ให้คะแนน") {
         let userId = req.body.events[0].source.userId
         let groupId = req.body.events[0].source.groupId
         let checkOwner = await checkOwnerTrip(groupId, userId);
@@ -123,7 +128,7 @@ router.post('/webhook', async (req, res) => {
         if (checkOwner) {
             replyRating(reply_token, msg)
         } else {
-            reply(req)
+            replyNotRating(reply_token)
         }
     }
 
@@ -595,6 +600,65 @@ function replyPlanPerDay(reply_token, perday) {
             }
         ]
     })
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyNotPlanPerDay(reply_token) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: "flex",
+                altText: "Flex Message",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                align: "center",
+                                weight: "bold",
+                                text: "ไม่มีแผนการท่องเที่ยวที่สร้างขึ้นในวันนี้"
+                            }
+                        ],
+                        type: "box"
+                    },
+                    direction: "ltr",
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                action: {
+                                    label: "ดูแผนทั้งหมด",
+                                    type: "uri",
+                                    uri: "https://liff.line.me/1653975470-4Webv3MY"
+                                },
+                                type: "button",
+                                color: "#C25738",
+                                height: "sm",
+                                margin: "xs",
+                                style: "primary"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    })
+
     request.post({
         url: 'https://api.line.me/v2/bot/message/reply',
         headers: headers,
@@ -1363,6 +1427,31 @@ function replyRating(reply_token, msg) {
                         ]
                     }
                 }
+            }
+        ]
+    })
+
+    request.post({
+        url: 'https://api.line.me/v2/bot/message/reply',
+        headers: headers,
+        body: body
+    }, (err, res, body) => {
+        console.log('status = ' + res.statusCode);
+    });
+}
+
+function replyNotRating(reply_token) {
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
+    }
+
+    let body = JSON.stringify({
+        replyToken: reply_token,
+        messages: [
+            {
+                type: 'text',
+                text: 'เงื่อนไขการเรียกใช้ไม่ถูกต้อง'
             }
         ]
     })

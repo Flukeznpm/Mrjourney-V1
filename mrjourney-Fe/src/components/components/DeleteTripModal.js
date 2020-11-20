@@ -68,7 +68,7 @@ function DeleteTripModal(props) {
             liff.sendMessages([
                 {
                     "type": "text",
-                    "text": "#ยกเลิกทริป"
+                    "text": "ยกเลิกทริปเสร็จสิ้น"
                 }
             ])
         }

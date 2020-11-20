@@ -81,7 +81,11 @@ function EnableTripModal(props) {
             liff.sendMessages([
                 {
                     "type": "text",
-                    "text": "#ปิดทริป"
+                    "text": "ปิดทริปเสร็จสิ้น"
+                },
+                {
+                    "type": "text",
+                    "text": "#ให้คะแนน"
                 }
             ])
         }

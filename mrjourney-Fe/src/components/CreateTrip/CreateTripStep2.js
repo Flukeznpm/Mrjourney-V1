@@ -184,12 +184,11 @@ function CreateTripStep2(props) {
             .then(res => {
                 console.log(res)
             });
-        nextTripStep(1)
         if (liff.getContext().type !== "none") {
             liff.sendMessages([
                 {
                     "type": "text",
-                    "text": "สร้างทริปสำเร็จ!"
+                    "text": "สร้างทริปสำเร็จ"
                 },
                 {
                     "type": "text",
@@ -197,6 +196,7 @@ function CreateTripStep2(props) {
                 }
             ])
         }
+        nextTripStep(1)
     }
     if (loading) {
         return (
