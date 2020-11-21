@@ -3,7 +3,6 @@ var router = express.Router();
 var firebase = require('firebase-admin');
 let db = firebase.firestore()
 
-//---------------- Controller ----------------//
 // POST /update/syncLine (อัพเดทข้อมูลชื่อและรูปภาพของ user ตามไลน์)
 // POST /update/checkUserRegister (API สำหรับเช็คว่าUserมีอยู่ในระบบหรือเปล่า และใช้ในกรณีที่Userหนีการลงทะเบียน)
 // POST /update/enableTrip (เช็คอัตโนมัติว่า trip ถึงวันที่จบหรือยัง)
@@ -58,52 +57,11 @@ router.post('/enableRoom', async function (req, res, next) {
 router.post('/enableTrip', async function (req, res, next) {
     let datas = req.body;
     if (
-        // datas.currentDate == undefined || datas.currentDate == null ||
         datas.lineGroupID == undefined || datas.lineGroupID == null || datas.lineGroupID == '') {
         console.log('Alert: The Data was empty or undefined"')
         return res.status(400);
     }
-    // else {
-    //     const allDate = [];
-    //     const tripIDList = [];
-    //     const checkTripIDRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').where('tripStatus', '==', true);
-    //     await checkTripIDRef.get().then(async snapshot => {
-    //         if (snapshot.empty) {
-    //             return res.status(202).json({
-    //                 message: "You do not have a trip"
-    //             })
-    //         } else {
-    //             snapshot.forEach(doc => {
-    //                 if (doc.exists) {
-    //                     tripIDList.push(doc.data());
-    //                 }
-    //             })
-    //             let tripID = tripIDList.map(t => t.tripID).toString();
-    //             let showTripPerDay = db.collection('TripPerDay').doc(tripID).collection('Date');
-    //             await showTripPerDay.get().then(data => {
-    //                 data.forEach(doc => {
-    //                     allDate.push(doc.id);
-    //                 });
-    //             })
-    // let allDateCount = (allDate.length) - 1;
-    // // console.log('allDateCount: ', allDateCount)
-    // for (i = 0; i <= allDateCount; i++) {
-    //     let dateID = allDate[i];
-    //     // console.log('dateID loop: ', dateID);
-    //     if (datas.currentDate == dateID) {
-    //         return res.status(200).json({
-    //             message: "Enjoy your trip !!"
-    //         });
-    //     }
-    // }
-    // await enableTrip(datas, tripID);
-    // return res.status(201).json({
-    //     message: "You trip is end"
-    // })
-    //         }
-    //     });
-    // }
-
+    
     const tripIDList = [];
     const checkTripIDRef = db.collection('LineGroup').doc(datas.lineGroupID).collection('Trip').where('tripStatus', '==', true);
     await checkTripIDRef.get().then(async snapshot => {
@@ -129,7 +87,6 @@ router.post('/enableTrip', async function (req, res, next) {
     });
 });
 
-//---------------- Function ----------------//
 async function updateProfile(datas) {
     // >>> Sync: AccountProfile Db , Room Db <<< //
     // Update profile on AccountProfile of User //
@@ -159,12 +116,10 @@ async function updateProfile(datas) {
             });
 
             let roomIDArray = getRoom.map(r => r.roomID);
-            // console.log('roomIDArray: ', roomIDArray)
             let roomIDCount = (roomIDArray.length) - 1;
 
             for (i = 0; i <= roomIDCount; i++) {
                 let roomID = roomIDArray[i];
-                // console.log('RoomID loop: ', roomID);
                 await db.collection('Room').doc(roomID).update({
                     ownerRoomName: datas.displayName,
                     ownerPicRoom: datas.pictureURL
@@ -173,19 +128,6 @@ async function updateProfile(datas) {
         }
     });
 
-    // Update profile Members on all room of User //
-    // const updateAccMembersRef = db.collection('Room').doc(datas.lineID);
-    // await updateAccRef.get().then(async data => {
-    //     if (data.exists) {
-    //         await updateAccRef.update({
-    //             displayName: datas.displayName,
-    //             pictureURL: datas.pictureURL
-    //         })
-    //     } else {
-    //         console.log('No matching documents.');
-    //         return;
-    //     }
-    // });
 };
 
 async function enableTrip(lineGroupID, tripID) {

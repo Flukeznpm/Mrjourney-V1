@@ -3,7 +3,6 @@ var router = express.Router();
 var firebase = require('firebase-admin');
 const db = firebase.firestore();
 
-//---------------- Controller ----------------//
 // GET : /accountProfile  (แสดง profile ทั้งหมด ของ user)
 // POST : /accountProfile/createAccountDetail  (First time login to create profile)
 // PUT : /accountProfile/editAccountDetail (Edit profile)
@@ -175,7 +174,6 @@ router.get('/RoomHistory', async function (req, res, next) {
     }
 });
 
-//---------------- Function ----------------//
 async function getAccountByID(datas) {
     let dataAcc = [];
     let showDataAcc = db.collection("AccountProfile").doc(datas.userID);
@@ -216,8 +214,7 @@ async function updateAccountDetail(datas) {
         fName: datas.fName,
         lName: datas.lName,
         gender: datas.gender,
-        birthday: datas.birthday,
-        //rating: datas.rating
+        birthday: datas.birthday
     });
 };
 
@@ -240,23 +237,17 @@ async function deleteAccount(datas) {
             });
 
             let RoomIDArray = await getRoomID.map(r => r.lineID);
-            // console.log('MemberIDArray: ', MemberIDArray)
             let RoomIDCount = (RoomIDArray.length);
-            // console.log('MemberIDCount: ', MemberIDCount)
 
             for (i = RoomIDCount; i <= RoomIDCount; i--) {
                 if (i > 0) {
                     let RoomID = (RoomIDArray[i - 1]);
                     let RoomIDString = RoomID.toString();
-                    // console.log('MembersID loop: ', MembersID);
 
                     // ลบ Room ทั้งหมดตาม AccountProfile ของ User นั้นๆ //
                     await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(RoomIDString).delete();
-
-
                     // ลบ Owner room ทั้งหมดที่ fix เอาไว้ //
                     await db.collection('Room').doc(RoomIDString).collection('Members').doc('A').delete();
-
                     // ลบ Member ใน Room ทั้งหมดของ User นั้นๆ //
                     let getMemberID = [];
                     const GetRoomFromAccIDRef = db.collection('Room').doc(datas.roomID).collection('Members');
@@ -270,15 +261,12 @@ async function deleteAccount(datas) {
                             });
 
                             let MemberIDArray = await getMemberID.map(r => r.lineID);
-                            // console.log('MemberIDArray: ', MemberIDArray)
                             let MemberIDCount = (MemberIDArray.length);
-                            // console.log('MemberIDCount: ', MemberIDCount)
 
                             for (i = MemberIDCount; i <= MemberIDCount; i--) {
                                 if (i > 0) {
                                     let MembersID = (MemberIDArray[i - 1]);
                                     let MembersIDString = MembersID.toString();
-                                    // console.log('MembersID loop: ', MembersID);
                                     await db.collection('Room').doc(RoomIDString).collection('Members').doc(MembersIDString).delete();
                                 } else {
                                     return;
@@ -286,7 +274,6 @@ async function deleteAccount(datas) {
                             }
                         }
                     });
-
                     // ลบ Room ของ User นั้นๆทั้งหมด //
                     await db.collection('Room').doc(RoomIDString).delete();
                 } else {
@@ -295,7 +282,6 @@ async function deleteAccount(datas) {
             }
         }
     });
-
     // ลบ AccountProfile ของ User นั้นๆ //
     await db.collection('AccountProfile').doc(datas.lineID).delete()
         .then(function () {
@@ -334,7 +320,6 @@ async function getJoinedRoomByID(datas) {
             await roomList.push(data.id);
         })
     });
-    // console.log('roomList: ', roomList)
 
     const countRoomList = (roomList.length) - 1;
     for (i = 0; i <= countRoomList; i++) {
@@ -344,12 +329,10 @@ async function getJoinedRoomByID(datas) {
         const queryAllRoomHaveUserJoinedRef2 = queryAllRoomHaveUserJoinedRef.collection('Members').doc(datas.lineID);
         await queryAllRoomHaveUserJoinedRef2.get().then(async res => {
             if (res.exists) {
-                // console.log('roomIDtoString: ', roomIDtoString);
                 await ownerJoinedRoomArray.push(roomIDtoString);
             }
         })
     }
-    // console.log('ownerJoinedRoomArray: ', ownerJoinedRoomArray)
 
     const countRoomArray = (ownerJoinedRoomArray.length) - 1;
     for (i = 0; i <= countRoomArray; i++) {
@@ -362,8 +345,6 @@ async function getJoinedRoomByID(datas) {
             }
         })
     }
-    // console.log('ownerJoinedRoomList: ', ownerJoinedRoomList);
-
     return ownerJoinedRoomList;
 };
 
