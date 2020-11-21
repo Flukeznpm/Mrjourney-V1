@@ -58,7 +58,7 @@ function HistoryCard(props) {
                                 history.tripStatus === false ?
                                     <Col lg={12} md={12} sm={24} xs={24} className="container py-2 d-flex justify-content-center">
                                         <div class="card" style={{ width: "95%" }}>
-                                            <ImgCover class="card-img-top" src='/img/pr-01.png' alt="Card image cap" />
+                                            <ImgCover class="card-img-top" src='/img/history-trip-01.png' alt="Card image cap" />
                                             <div class="card-body">
                                                 <h5 class="card-title" style={{ fontWeight: "bold" }}>
                                                     {history.tripName}
