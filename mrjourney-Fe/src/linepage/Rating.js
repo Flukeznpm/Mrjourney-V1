@@ -147,7 +147,7 @@ function Rating(props) {
     } else {
         return (
             <Wrapper>
-                <ImgCover src="/img/pr-01.png" />
+                <ImgCover src="/img/history-trip-01.png" />
                 {tripList.map((trip) => {
                     return (
                         <>
