@@ -1,5 +1,5 @@
 function Trip(genTripID, tripName, province, startDate, endDate, tripStatus) {
-        this.tripID = genTripID,
+    this.tripID = genTripID,
         this.tripName = tripName,
         this.province = province,
         this.startDate = startDate,
@@ -8,14 +8,15 @@ function Trip(genTripID, tripName, province, startDate, endDate, tripStatus) {
         this.tripPerday = tripPerdays
 }
 
-function TripPerDay(day, eventName, startEventTime, endEventTime, eventType) {
-    // let days = [];
-    // days[day] = [
-        this.eventName = eventName,
-        this.startEventTime = startEventTime,
-        this.endEventTime = endEventTime,
-        this.eventType = eventType
-    // ]
+function TripPerDay(eventDate, events, eventName, startEvent, endEvent, eventType) {
+    this.eventDate = eventDate,
+        this.events =
+        [
+            this.eventName = eventName,
+            this.endEvent = endEvent,
+            this.startEvent = startEvent,
+            this.eventType = eventType
+        ]
 }
 
 module.exports = Trip, TripPerDay;

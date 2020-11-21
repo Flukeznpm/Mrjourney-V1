@@ -11,10 +11,11 @@ function accountProfile(lineID, displayName, bio, birthday, gender, phone, fName
         this.rating = ratings
 }
 
-function Rating(entertainRating, worthRating, preparaionRating) {
-    this.entertainRating = entertainRating,
-        this.worthRating = worthRating,
-        this.preparaionRating = preparaionRating
+function Score(preparationScore, entertainmentScore, worthinessScore, countOfSubmit) {
+    this.preparationScore = preparationScore,
+        this.entertainmentScore = entertainmentScore,
+        this.worthinessScore = worthinessScore,
+        this.countOfSubmit = countOfSubmit
 }
 
-module.exports = accountProfile, Rating;
+module.exports = accountProfile, Score;
