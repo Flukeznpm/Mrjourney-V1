@@ -83,6 +83,17 @@ const RowHeader = styled.div`
 const PrimaryButton = styled(AntButton)`
     border-radius: 4px;
     font-size: 12px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const DeleteButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 12px;
     background: #FF4647;
     border: ${props => (props.theme.color.primary)};
     &:hover , &:active, &:focus {
@@ -221,7 +232,7 @@ function CheckBill(props) {
                                                     <Col span={24}>
                                                         <Row>
                                                             รอการยืนยัน
-                                            </Row>
+                                                        </Row>
                                                         {bill.user.map((user) => {
                                                             return (
                                                                 <Row className="px-2 my-2">
@@ -343,29 +354,32 @@ function CheckBill(props) {
                                         </AntCard>
 
                                     </WrapperContent>
-
-                                    <Row justify="center" className="bg-white fixed-bottom">
-                                        <AntForm className="container">
-                                            <AntFormItem>
-                                                <Row>
-                                                    <Col span={24}>
-                                                        <PrimaryButton
-                                                            type="primary"
-                                                            size={"large"}
-                                                            block htmlType="submit"
-                                                            onClick={() => onVisibleConfirmModal()}
-                                                        >ลบบิล</PrimaryButton>
-                                                    </Col>
-                                                    <DeleteBillModal
-                                                        isVisible={isVisibleConfirm}
-                                                        setVisible={setVisibleConfirm}
-                                                        bill={bill}
-                                                        lineGroupID={LineGroup}
-                                                    />
-                                                </Row>
-                                            </AntFormItem>
-                                        </AntForm>
-                                    </Row>
+                                    {LineID === bill.ownerBillID ?
+                                        <Row justify="center" className="bg-white fixed-bottom">
+                                            <AntForm className="container">
+                                                <AntFormItem>
+                                                    <Row>
+                                                        <Col span={24}>
+                                                            <DeleteButton
+                                                                type="primary"
+                                                                size={"large"}
+                                                                block htmlType="submit"
+                                                                onClick={() => onVisibleConfirmModal()}
+                                                            >ลบบิล</DeleteButton>
+                                                        </Col>
+                                                        <DeleteBillModal
+                                                            isVisible={isVisibleConfirm}
+                                                            setVisible={setVisibleConfirm}
+                                                            bill={bill}
+                                                            lineGroupID={LineGroup}
+                                                        />
+                                                    </Row>
+                                                </AntFormItem>
+                                            </AntForm>
+                                        </Row>
+                                        :
+                                        null
+                                    }
                                 </>
                                 :
                                 <WrapperLoading>
@@ -376,10 +390,10 @@ function CheckBill(props) {
                                         <AntForm className="container">
                                             <AntFormItem>
                                                 <Col span={24}>
-                                                        <PrimaryButton type="primary" size={"large"}
-                                                            block htmlType="button"
-                                                            onClick={() => closedLiff()}
-                                                        >สร้างบิล</PrimaryButton>
+                                                    <PrimaryButton type="primary" size={"large"}
+                                                        block htmlType="button"
+                                                        onClick={() => closedLiff()}
+                                                    >กลับส่ห้องแชท</PrimaryButton>
                                                 </Col>
                                             </AntFormItem>
                                         </AntForm>
