@@ -22,8 +22,6 @@ var updateRouter = require('./controller/updateController');
 var billRouter = require('./controller/billController');
 var bot = require('./lineBot/bot');
 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({
     limit: '50mb',

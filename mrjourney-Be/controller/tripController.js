@@ -6,7 +6,6 @@ let db = firebase.firestore();
 const https = require('https');
 const axios = require('axios');
 
-//---------------- Controller ----------------//
 // GET /trip  (ดูข้อมูลทริปทั้งหมด)
 // GET /trip/tripperday  (ดูข้อมูลทริปแบบรายวัน)
 // POST /trip/createTrip   (เก็บข้อมูลทริป)
@@ -15,7 +14,6 @@ const axios = require('axios');
 
 router.get('/', async function (req, res, next) {
     let lineGroupID = req.query.lineGroupID;
-    // let tripIDList = [];
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '') {
         console.log('Alert: The Data was empty or undefined"')
@@ -32,25 +30,9 @@ router.get('/', async function (req, res, next) {
                         console.log('Alert: You do not have a trip')
                         return res.status(202).json({ message: 'You do not have a trip' });
                     } else {
-                        // await snapshot.forEach(async doc => {
-                        //     if (doc.exists) {
-                        //         await tripIDList.push(doc.data());
-                        //     }
-                        // })
-                        // let tripID = tripIDList.map(t => t.tripID).toString();
-                        // let showAllDate = db.collection('TripPerDay').doc(tripID).collection('Date');
-                        // await showAllDate.get().then(async data => {
-                        // await data.forEach(async doc1 => {
-                        // if (doc1.exists) {
                         let result = await getAllTripByGroupID(lineGroupID);
                         console.log('Alert: get trip list success')
                         return res.status(200).json(result);
-                        // } else {
-                        //     console.log('Alert: You do not have some plan');
-                        //     return res.status(201).json({ message: "You do not have some plan" });
-                        // }
-                        // });
-                        // });
                     }
                 }).catch(err => {
                     console.log('Error: ', err);
@@ -69,7 +51,6 @@ router.get('/tripperday', async function (req, res, next) {
     const lineGroupID = req.query.lineGroupID;
     const dateOfTrip = req.query.dateOfTrip + '';
     const tripIDList = [];
-    // dateOfTrip.substring(0, 10);
 
     if (lineGroupID == undefined || lineGroupID == null || lineGroupID == '' ||
         dateOfTrip == undefined || dateOfTrip == null || dateOfTrip == '') {
@@ -325,11 +306,9 @@ async function generateTripID() {
         let tripID = 'T_' + id;
         let query = await CheckTripIDRef.doc(tripID).get()
             .then(doc => {
-                // ถ้าไม่มีข้อมูลอยู่
                 if (!doc.exists) {
                     checkDocumentisEmpty = false;
                     result = 'T_' + id;
-                    // console.log('You can use Trip ID : ' + result);
                 }
             })
     } while (checkDocumentisEmpty == true)
@@ -378,14 +357,8 @@ async function createTripList(datas) {
                 for (let j = 0; j <= count; j++) {
                     if (j <= count) {
                         let date = datas.totalDate[j].eventDate + '';
-                        // console.log('date: ', date)
                         let dateSub = date.substring(0, 10);
-                        // console.log('dateSub: ', dateSub)
                         let event = await datas.totalDate[j].event;
-                        // let eventName = await datas.totalDate[j].event[i].eventName;
-                        // let startEvent = await datas.totalDate[j].event[i].startEvent;
-                        // let endEvent = await datas.totalDate[j].event[i].endEvent;
-                        // let eventType = await datas.totalDate[j].event[i].eventType;
                         await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(dateSub).set({
                             eventDate: dateSub,
                             events: event
@@ -393,8 +366,8 @@ async function createTripList(datas) {
                     } else {
                         console.log('Error create trip')
                     }
-                } //loop1
-            } //loop2
+                }
+            }
         } else {
             // กรณี : User ใหม่ที่ต้องการจะ Create Trip
             await CheckLineChatAccountRef.set({
@@ -432,14 +405,8 @@ async function createTripList(datas) {
                 for (let j = 0; j <= count; j++) {
                     if (j <= count) {
                         let date = datas.totalDate[j].eventDate + '';
-                        // console.log('date: ', date)
                         let dateSub = date.substring(0, 10);
-                        // console.log('dateSub: ', dateSub)
                         let event = datas.totalDate[j].event;
-                        // let eventName = await datas.totalDate[j].event[i].eventName;
-                        // let startEvent = await datas.totalDate[j].event[i].startEvent;
-                        // let endEvent = await datas.totalDate[j].event[i].endEvent;
-                        // let eventType = await datas.totalDate[j].event[i].eventType;
                         await db.collection('TripPerDay').doc(genTripID).collection('Date').doc(dateSub).set({
                             eventDate: dateSub,
                             events: event
@@ -447,8 +414,8 @@ async function createTripList(datas) {
                     } else {
                         console.log('Error create trip loop')
                     }
-                } //loop1
-            } //loop2
+                }
+            }
         }
     })
 };
@@ -535,16 +502,13 @@ async function deleteTrip(datas) {
             data.forEach(async f => {
                 await getDate.push(f.id);
             });
-            // console.log('getDate: ', getDate)
 
             let DateCount = (getDate.length);
-            // console.log('DateCount: ', DateCount)
 
             for (i = DateCount; i <= DateCount; i--) {
                 if (i > 0) {
                     let DateID = (getDate[i - 1]);
                     let DateIDString = DateID.toString();
-                    // console.log('DateIDString loop: ', DateIDString);
                     await db.collection('TripPerDay').doc(datas.tripID).collection('Date').doc(DateIDString).delete();
                 } else {
                     return;
@@ -608,7 +572,6 @@ async function getLastTrip(lineGroupID) {
             list.push(doc.data());
         });
     });
-    // console.log('result: ', list[0]);
     let tripID = list.map(t => t.tripID);
     let tripIDString = tripID[0].toString();
 

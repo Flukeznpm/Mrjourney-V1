@@ -6,7 +6,6 @@ let db = firebase.firestore();
 var fs = require('fs');
 const gcs = require('@google-cloud/storage');
 
-//---------------- Controller ----------------//
 // GET /room  (แสดง room ทั้งหมดใน feed page)
 // GET /roomDetail (แสดงรายละเอียดของแต่ละ room)
 // GET /members (แสดงรายชื่อสมาชิกใน room)
@@ -84,8 +83,6 @@ router.put('/editRoom', async function (req, res, next) {
         datas.maxMember == undefined || datas.maxMember == null || datas.maxMember == '' ||
         datas.genderCondition == undefined || datas.genderCondition == null || datas.genderCondition == '' ||
         datas.ageCondition == undefined || datas.ageCondition == null || datas.ageCondition == '' ||
-        //datas.qrCode == undefined || datas.qrCode == null || datas.qrCode == '' ||
-        //datas.roomCover == undefined || datas.roomCover == null || datas.roomCover == '' ||
         datas.endDateStatus == undefined || datas.endDateStatus == null) {
         console.log('Alert: The Data was empty or undefined"')
         res.status(400).json({
@@ -296,7 +293,6 @@ router.get('/joinRoomAlready', async function (req, res, next) {
     })
 });
 
-//---------------- Function ----------------//
 async function getAllRoom() {
     let RoomList = [];
     let RoomList_FINAL = [];
@@ -344,13 +340,6 @@ async function getRoomMembers(datas) {
         OwnerMember.push(doc1.data());
     })
 
-    // let OwnerRoomID = OwnerMember.map(a => a.ownerRoomID).toString();
-    // let getOwnerProfileMember = db.collection('AccountProfile').doc(OwnerRoomID);
-
-    // await getOwnerProfileMember.get().then(doc2 => {
-    //     Members.push(doc2.data());
-    // })
-
     let showAllMembersRef = db.collection('Room').doc(datas.roomID).collection('Members');
     await showAllMembersRef.get().then(snapshot => {
         snapshot.forEach(doc => {
@@ -379,11 +368,9 @@ async function generateRoomID() {
         let roomID = 'R_' + id;
         let query = await CheckRoomIDRef.doc(roomID).get()
             .then(doc => {
-                // ถ้าไม่มีข้อมูลอยู่
                 if (!doc.exists) {
                     checkDocumentisEmpty = false;
                     result = 'R_' + id;
-                    // console.log('You can use Room ID : ' + result);
                 }
             })
     } while (checkDocumentisEmpty == true)
@@ -521,7 +508,6 @@ async function updateRoom(datas) {
         maxMember: datas.maxMember,
         genderCondition: datas.genderCondition,
         ageCondition: datas.ageCondition,
-        // roomStatus: datas.roomStatus,
         endDateStatus: datas.endDateStatus
     }).then(function () {
         console.log("Room successfully update!");
@@ -547,10 +533,8 @@ async function openRoom(datas, roomStatus) {
 async function deleteRoom(datas) {
     // ลบข้อมูลของ Room ที่ User มี ใน AccountProfile ตาม Room ID นั้น
     await db.collection('AccountProfile').doc(datas.lineID).collection('Room').doc(datas.roomID).delete();
-
     // ลบ owner room 
     await db.collection('Room').doc(datas.roomID).collection('Members').doc('A').delete();
-
     // ลบข้อมูลของ Member ทั้งหมด ใน Room ID นั้น
     let getMemberID = [];
     const GetRoomFromAccIDRef = db.collection('Room').doc(datas.roomID).collection('Members');
@@ -562,17 +546,12 @@ async function deleteRoom(datas) {
             data.forEach(f => {
                 getMemberID.push(f.data());
             });
-
             let MemberIDArray = await getMemberID.map(r => r.lineID);
-            // console.log('MemberIDArray: ', MemberIDArray)
             let MemberIDCount = (MemberIDArray.length);
-            // console.log('MemberIDCount: ', MemberIDCount)
-
             for (i = MemberIDCount; i <= MemberIDCount; i--) {
                 if (i > 0) {
                     let MembersID = (MemberIDArray[i - 1]);
                     let MembersIDString = MembersID.toString();
-                    // console.log('MembersID loop: ', MembersID);
                     await db.collection('Room').doc(datas.roomID).collection('Members').doc(MembersIDString).delete();
                 } else {
                     return;
@@ -580,7 +559,6 @@ async function deleteRoom(datas) {
             }
         }
     });
-
     // ลบข้อมูล Room ID นั้น
     await db.collection('Room').doc(datas.roomID).delete()
         .then(function () {

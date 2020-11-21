@@ -4,7 +4,6 @@ var firebase = require('firebase-admin');
 const { firestore } = require('firebase-admin');
 let db = firebase.firestore();
 
-//---------------- Controller ----------------//
 router.post('/createBill', async function (req, res, next) {
     let datas = req.body;
     let billNo = await createBill(datas);
@@ -155,16 +154,11 @@ router.delete('/deleteBill', async function (req, res, next) {
             data.forEach(async f => {
                 await getUser.push(f.id);
             });
-            console.log('getDate: ', getUser)
-
             let userCount = (getUser.length);
-            // console.log('userCount: ', DateCount)
-
             for (i = userCount; i <= userCount; i--) {
                 if (i > 0) {
                     let userID = (getUser[i - 1]);
                     let userIDString = userID.toString();
-                    // console.log('userIDString loop: ', DateIDString);
                     await getUserIDRef.doc(userIDString).delete();
                 } else {
                     return;
@@ -172,7 +166,6 @@ router.delete('/deleteBill', async function (req, res, next) {
             }
         }
     });
-
     await db.collection('Bill').doc(lineGroupID).collection('BillNo').doc(billNo).delete();
     await db.collection('Bill').doc(lineGroupID).delete()
         .then(() => {
@@ -192,7 +185,6 @@ router.get('/checkBill', async function (req, res, next) {
     })
 });
 
-//---------------- Function ----------------//
 async function generateBillID(lineGroupID) {
     function ran() {
         let myBillId = Math.floor(Math.random() * 1000000) + 1;
@@ -211,7 +203,6 @@ async function generateBillID(lineGroupID) {
                 if (!doc.exists) {
                     checkDocumentisEmpty = false;
                     result = 'B_' + id;
-                    // console.log('You can use Bill ID : ' + result);
                 }
             })
     } while (checkDocumentisEmpty == true)
@@ -236,7 +227,6 @@ async function generateUserID(lineGroupID, genBillID) {
                 if (!doc.exists) {
                     checkDocumentisEmpty = false;
                     result = 'U_' + id;
-                    // console.log('You can use Bill ID : ' + result);
                 }
             })
     } while (checkDocumentisEmpty == true)
@@ -250,10 +240,10 @@ async function createBill(datas) {
     let ownerName = datas.ownerName;
     let totalCost = datas.totalCost;
     let billName = datas.billName;
-    let receivingAccount = datas.receivingAccount; //ชื่อบัญชี
-    let payMentNumber = datas.payMentNumber; //เลขบัญชี
-    let bankName = datas.bankName; // ชื่อธนาคารหรือพร้อมเพย์
-    let user = datas.user; // รายชื่อคนที่ต้องจ่าย 
+    let receivingAccount = datas.receivingAccount;
+    let payMentNumber = datas.payMentNumber; 
+    let bankName = datas.bankName; 
+    let user = datas.user; 
 
     let createBill_step1 = db.collection('Bill').doc(lineGroupID);
     await createBill_step1.set({
