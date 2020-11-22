@@ -241,9 +241,9 @@ async function createBill(datas) {
     let totalCost = datas.totalCost;
     let billName = datas.billName;
     let receivingAccount = datas.receivingAccount;
-    let payMentNumber = datas.payMentNumber; 
-    let bankName = datas.bankName; 
-    let user = datas.user; 
+    let payMentNumber = datas.payMentNumber;
+    let bankName = datas.bankName;
+    let user = datas.user;
 
     let createBill_step1 = db.collection('Bill').doc(lineGroupID);
     await createBill_step1.set({
@@ -277,6 +277,148 @@ async function createBill(datas) {
         }
     }
     return genBillID;
+}
+
+async function getBill(lineGroupID) {
+    let billNoList = [];
+    let billIDList = [];
+    let userList = [];
+    let result = [];
+
+    let checkBill = db.collection('Bill').doc(lineGroupID);
+    await checkBill.get().then(async doc => {
+        if (doc.exists) {
+            let getAllBill = db.collection('Bill').doc(lineGroupID).collection('BillNo');
+            await getAllBill.get().then(async snapshot => {
+                snapshot.forEach(doc => {
+                    billNoList.push(doc.data());
+                    billIDList.push(doc.id);
+                });
+            });
+
+            let billNo = billIDList.toString();
+            let ownerName = billNoList.map(o => o.ownerName).toString();
+            let totalCost = billNoList.map(t => t.totalCost).toString();
+            let ownerBillID = billNoList.map(t => t.ownerBillID).toString();
+            let receivingAccount = billNoList.map(t => t.receivingAccount).toString();
+            let bankName = billNoList.map(t => t.bankName).toString();
+            let payMentNumber = billNoList.map(t => t.payMentNumber).toString();
+            let billName = billNoList.map(t => t.billName).toString();
+
+            let getUser = getAllBill.doc(billNo).collection('User');
+            await getUser.get().then(async snapshot => {
+                await snapshot.forEach(async doc => {
+                    userList.push(doc.data());
+                })
+            });
+
+            let returnData = {
+                billNo: billNo,
+                totalCost: totalCost,
+                ownerName: ownerName,
+                ownerBillID: ownerBillID,
+                receivingAccount: receivingAccount,
+                bankName: bankName,
+                payMentNumber: payMentNumber,
+                billName: billName,
+                user: userList
+            }
+            await result.push(returnData);
+            res.status(200).json(result);
+        } else {
+            res.status(202).json('You do not have a bill');
+        }
+    });
+}
+
+async function payBill(lineGroupID, billNo, userID) {
+    let updatePayStatus = db.collection('Bill').doc(lineGroupID)
+        .collection('BillNo').doc(billNo)
+        .collection('User').doc(userID);
+    await updatePayStatus.update({
+        payStatus: false,
+        waitAcceptStatus: true
+    });
+}
+
+async function acceptBill(lineGroupID, billNo, userID) {
+    let updatePayStatus = db.collection('Bill').doc(lineGroupID)
+        .collection('BillNo').doc(billNo)
+        .collection('User').doc(userID);
+    await updatePayStatus.update({
+        payStatus: true,
+        waitAcceptStatus: false
+    });
+}
+
+async function cancleAcceptBill(lineGroupID, billNo, userID) {
+    let updatePayStatus = db.collection('Bill').doc(lineGroupID)
+        .collection('BillNo').doc(billNo)
+        .collection('User').doc(userID);
+    await updatePayStatus.update({
+        payStatus: false,
+        waitAcceptStatus: false
+    });
+}
+
+async function deleteBill(lineGroupID, billNo) {
+    let getUser = [];
+
+    let getUserIDRef = db.collection('Bill').doc(lineGroupID)
+        .collection('BillNo').doc(billNo)
+        .collection('User');
+
+    await getUserIDRef.get().then(async data => {
+        if (data.empty) {
+            console.log('No matching documents.');
+            return;
+        } else {
+            data.forEach(async f => {
+                await getUser.push(f.id);
+            });
+            let userCount = (getUser.length);
+            for (i = userCount; i <= userCount; i--) {
+                if (i > 0) {
+                    let userID = (getUser[i - 1]);
+                    let userIDString = userID.toString();
+                    await getUserIDRef.doc(userIDString).delete();
+                } else {
+                    return;
+                }
+            }
+        }
+    });
+    await db.collection('Bill').doc(lineGroupID).collection('BillNo').doc(billNo).delete();
+    await db.collection('Bill').doc(lineGroupID).delete()
+        .then(() => {
+            res.status(200).json('Delete Bill Success !!');
+        })
+}
+
+async function whoWaitAccept(lineGroupID, billNo) {
+    let UserHaveWaitingAccept = [];
+
+    let getUserHaveWaitingAccept = db.collection('Bill').doc(lineGroupID)
+        .collection('BillNo').doc(billNo)
+        .collection('User').where('waitAcceptStatus', '==', true).where('payStatus', '==', false);
+    await getUserHaveWaitingAccept.get().then(async snapshot => {
+        snapshot.forEach(doc => {
+            UserHaveWaitingAccept.push(doc.data());
+        });
+    });
+}
+
+async function whoPaidOrNot(lineGroupID, billNo) {
+    let UserPaidOrNot = [];
+
+    let getUserHaveWaitingAccept = db.collection('Bill').doc(lineGroupID)
+        .collection('BillNo').doc(billNo)
+        .collection('User').where('payStatus', '==', true);
+    await getUserHaveWaitingAccept.get().then(async snapshot => {
+        snapshot.forEach(doc => {
+            UserPaidOrNot.push(doc.data());
+        });
+    });
 }
 
 module.exports = router;
