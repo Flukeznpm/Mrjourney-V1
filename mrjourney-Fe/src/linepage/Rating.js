@@ -167,7 +167,7 @@ function Rating(props) {
                                             <RateComponent allowHalf onChange={onChangeRatingThree} />
                                         </AntForm.Item>
                                         <AntFormItem>
-                                            <PrimaryButton onClick={() => setOwner(trip.ownerTrip)} type="primary" size={"large"} block htmlType="เสร็จสิ้น">ถัดไป</PrimaryButton>
+                                            <PrimaryButton onClick={() => setOwner(trip.ownerTrip)} type="primary" size={"large"} block htmlType="เสร็จสิ้น">ยืนยัน</PrimaryButton>
                                         </AntFormItem>
                                     </AntForm>
                                 </Col>

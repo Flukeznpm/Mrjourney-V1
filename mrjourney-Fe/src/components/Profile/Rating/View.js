@@ -47,10 +47,10 @@ function View(props) {
                             ความเพรียบพร้อม
                             {/* <AntCard style={{ padding: 0 }}> */}
                                 {rating.preparationScore === 0 ?
-                                    <ProgressScore type="circle" percent={0} format={() => `0/5`} />
+                                    <ProgressScore type="circle" percent={0} format={() => `0.0/5.0`} />
                                     :
                                     // <>{(rating.preparationScore / rating.countOfSubmit).toFixed(2)}/5</>
-                                    <ProgressScore type="circle" percent={((rating.preparationScore / rating.countOfSubmit) / 5) * 100} format={() => `${(rating.preparationScore / rating.countOfSubmit).toFixed(2)}/5`} />
+                                    <ProgressScore type="circle" percent={((rating.preparationScore / rating.countOfSubmit) / 5) * 100} format={() => `${(rating.preparationScore / rating.countOfSubmit).toFixed(1)}/5.0`} />
                                 }
                             {/* </AntCard> */}
                         </Col>
@@ -58,10 +58,10 @@ function View(props) {
                             ความคุ้มค่า
                             {/* <AntCard style={{ padding: 0 }}> */}
                                 {rating.entertainmentScore === 0 ?
-                                    <ProgressScore type="circle" percent={0} format={() => `0/5`} />
+                                    <ProgressScore type="circle" percent={0} format={() => `0.0/5.0`} />
                                     :
                                     // <>{(rating.entertainmentScore / rating.countOfSubmit).toFixed(2)}/5</>
-                                    <Progress type="circle" percent={((rating.entertainmentScore/rating.countOfSubmit)/5)*100} format={() => `${(rating.entertainmentScore / rating.countOfSubmit).toFixed(2)}/5`} />
+                                    <ProgressScore type="circle" percent={((rating.entertainmentScore/rating.countOfSubmit)/5)*100} format={() => `${(rating.entertainmentScore / rating.countOfSubmit).toFixed(1)}/5.0`} />
                                 }
                             {/* </AntCard> */}
                         </Col>
@@ -69,10 +69,10 @@ function View(props) {
                             ความสนุก
                             {/* <AntCard style={{ padding: 0 }}> */}
                                 {rating.worthinessScore === 0 ?
-                                    <ProgressScore type="circle" percent={0} format={() => `0/5`} />
+                                    <ProgressScore type="circle" percent={0} format={() => `0.0/5.0`} />
                                     :
                                     // <>{(rating.worthinessScore / rating.countOfSubmit).toFixed(2)}/5</>
-                                    <Progress type="circle" percent={((rating.worthinessScore/rating.countOfSubmit)/5)*100} format={() => `${(rating.worthinessScore / rating.countOfSubmit).toFixed(2)}/5`} />
+                                    <ProgressScore type="circle" percent={((rating.worthinessScore/rating.countOfSubmit)/5)*100} format={() => `${(rating.worthinessScore / rating.countOfSubmit).toFixed(1)}/5.0`} />
                                 }
                             {/* </AntCard> */}
                         </Col>
@@ -83,24 +83,3 @@ function View(props) {
     )
 }
 export default View;
-
-
-
-//  {/* <AntCard style={{ padding: 0 }}>
-//                                 {(rating.preparationScore/rating.countOfSubmit).toFixed(2)}/5
-//                             </AntCard> */}
-//                             <ProgressScore type="circle" percent={((rating.preparationScore/rating.countOfSubmit)/5)*100} format={() => `${(rating.preparationScore / rating.countOfSubmit).toFixed(2)}/5`} />
-//                         </Col>
-//                         <Col span={6} className="text-center">
-//                             ความคุ้มค่า
-//                             {/* <AntCard style={{ padding: 0 }}> */}
-//                             {/* {(rating.entertainmentScore/rating.countOfSubmit).toFixed(2)}/5 */}
-//                             <Progress type="circle" percent={((rating.entertainmentScore/rating.countOfSubmit)/5)*100} format={() => `${(rating.entertainmentScore / rating.countOfSubmit).toFixed(2)}/5`} />
-//                             {/* </AntCard> */}
-//                         </Col>
-//                         <Col span={6} className="text-center">
-//                             ความสนุก
-//                             {/* <AntCard style={{ padding: 0 }}> */}
-//                             {/* {(rating.worthinessScore/rating.countOfSubmit).toFixed(2)} /5 */}
-//                             <Progress type="circle" percent={((rating.worthinessScore/rating.countOfSubmit)/5)*100} format={() => `${(rating.worthinessScore / rating.countOfSubmit).toFixed(2)}/5`} />
-//                             {/* </AntCard> */}

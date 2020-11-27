@@ -107,6 +107,10 @@ const ConfirmButton = styled(AntButton)`
     font-size: 12px;
     background: #31CC71;
     border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background:  #31CC71;
+        border:  #31CC71;
+    }
 `;
 
 const AntFormItem = styled(AntForm.Item)`
@@ -130,6 +134,8 @@ function CheckBill(props) {
     const [LineName, setLineName] = useState('')
     const [LinePicture, setLinePicture] = useState('')
     const [LineGroup, setLineGroup] = useState('')
+
+    const [isUpdate, setUpdate] = useState(0)
 
     useEffect(() => {
         liff.init({ liffId: '1653975470-DEq4WP1a' }).then(async () => {
@@ -156,7 +162,7 @@ function CheckBill(props) {
                 props.history.push('/Home');
             }
         })
-    }, [LineGroup]);
+    }, [LineGroup, isUpdate]);
 
     const onFinish = values => {
 
@@ -176,6 +182,7 @@ function CheckBill(props) {
             .then(res => {
                 console.log(res)
             });
+        setUpdate(isUpdate - 1)
     }
 
     const onAcceptBill = async (bill, user) => {
@@ -189,6 +196,7 @@ function CheckBill(props) {
                 console.log(res)
                 setUpdateBill(bill.billNo)
             });
+        setUpdate(isUpdate + 1)
     }
 
     const closedLiff = () => {

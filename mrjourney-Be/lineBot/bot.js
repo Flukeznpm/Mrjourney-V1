@@ -97,7 +97,7 @@ router.post('/webhook', async (req, res) => {
     }
     // get locations here
     else if (msg === "#ติดต่อ") {
-        replyContact(reply_token, msg)
+        replyContact(reply_token)
     }
     else if (msg === "#บิล") {
         replyBill(reply_token, msg)
@@ -1048,7 +1048,7 @@ function replyWeather(reply_token, msg) {
     });
 }
 
-function replyContact(reply_token, msg) {
+function replyContact(reply_token) {
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {EUEqmnC5MpIHn7O3gS9uJ2AJBVt7JCotZj/+t2hOOlBTt7b/+4nPAg/9BFeRawRghXeIeqZe5EMVIexmmEh5c80nwP+BMli10YB6vNFLl38OHFljNNNy1jS9Ft52GmAIUro72i8ebhHfzD9mN9CX1QdB04t89/1O/w1cDnyilFU=}'
@@ -1058,39 +1058,8 @@ function replyContact(reply_token, msg) {
         replyToken: reply_token,
         messages: [
             {
-                type: "template",
-                altText: "This is a buttons template",
-                template: {
-                    type: "buttons",
-                    thumbnailImageUrl: "https://1.bp.blogspot.com/-U90M8DyKu7Q/W9EtONMCf6I/AAAAAAAAW_4/7L_jB_Rg9oweu2HKhULNdu9WNefw9zf9wCLcBGAs/s1600/sao-full.jpg",
-                    imageAspectRatio: "rectangle",
-                    imageSize: "cover",
-                    imageBackgroundColor: "#FFFFFF",
-                    title: "ติดต่อเจ้าหน้าที่",
-                    defaultAction: {
-                        type: "uri",
-                        label: "contact",
-                        uri: "https://www.google.com"
-                    },
-                    actions: [
-                        {
-                            type: "text",
-                            label: "อีเมลล์",
-                            text: "mrjourney.6012@gmail.com"
-                        },
-                        {
-                            type: "postback",
-                            label: "เพิ่มลงรถเข็น",
-                            data: "action=add&itemid=123"
-                        },
-                        {
-                            type: "uri",
-                            label: "อ่านรายละเอียด",
-                            uri: "https://www.google.com"
-                        }
-                    ]
-                }
-
+                type: 'text',
+                text: 'สามารถติดต่อได้ทาง '+ 'mrjourney.6012@gmail.com'
             }
         ]
     })

@@ -10,6 +10,7 @@ import {
     Form as AntForm,
     Input as AntInput
 } from 'antd';
+import liff from '@line/liff';
 
 const DeleteModalComponent = styled(AntModal)`
     .ant-modal-content {
@@ -77,6 +78,15 @@ function PayBillModal(props) {
                 console.log(res)
             });
         props.setVisible(false)
+        liff.closeWindow()
+        if (liff.getContext().type !== "none") {
+            liff.sendMessages([
+                {
+                    "type": "text",
+                    "text": "จ่ายบิล"
+                }
+            ])
+        }
     };
 
     return (
