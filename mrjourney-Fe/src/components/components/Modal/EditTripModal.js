@@ -91,6 +91,7 @@ function EditTripModal(props) {
     const { handleEventForm, Event, setEvent, keyModal, selectEventType } = useContext(HookContext)
     const format = 'HH:mm'
     const [timeStartEvent, setTimeStartEvent] = useState("");
+    const [form] = AntForm.useForm();
 
     // const onFinish = values => {
     //     handleEventForm(values.eventName, 'eventName')
@@ -111,9 +112,21 @@ function EditTripModal(props) {
         })
         props.setTripEvent({ ...trip })
         handleEventForm('', 'eventType')
+        form.setFieldsValue({
+            eventName: null,
+            startEvent: null,
+            endEvent: null,
+            eventType: null
+        })
         props.setVisibleEditModal(false)
     };
 
+    const onSelectEvent = (type) => {
+        selectEventType(type)
+        form.setFieldsValue({
+            eventType: 'selected'
+        })
+    }
 
     return (
         <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
@@ -121,7 +134,7 @@ function EditTripModal(props) {
                 <Modal.Title id="contained-modal-title-vcenter">
                 </Modal.Title>
             </ModalHeader>
-            <AntForm onFinish={onFinish}>
+            <AntForm form={form} onFinish={onFinish}>
                 <Modal.Body>
                     <div className="container">
                         <AntForm.Item name="eventName" label="ชื่อกิจกรรม" labelCol={{ span: 24 }} rules={[{ required: true }]}>
@@ -155,71 +168,72 @@ function EditTripModal(props) {
                                 </div>
                             </div>
                         </div>
-                        <label for="exampleInputEmail1" className="pt-2">ประเภท</label>
-                        <div className="container">
-                            <div className="row text-center">
-                                <ColButtonComponent className="col-4 ">
-                                    {Event.eventType === 'eating' ?
-                                        <TypeButtonSelected
-                                            shape="circle"
-                                            size={"large"}
-                                        // icon={<img src="/img/icons/eating.svg" />}
-                                        >
-                                            <EatingIcon style={{ margin: "5px", fill: "#F37945" }} />
-                                        </TypeButtonSelected>
-                                        :
-                                        <TypeButton
-                                            shape="circle"
-                                            size={"large"}
+                        <AntForm.Item name="eventType" label="ประเภท" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                            <div className="container">
+                                <div className="row text-center">
+                                    <ColButtonComponent className="col-4 ">
+                                        {Event.eventType === 'eating' ?
+                                            <TypeButtonSelected
+                                                shape="circle"
+                                                size={"large"}
                                             // icon={<img src="/img/icons/eating.svg" />}
-                                            onClick={() => selectEventType('eating')}
-                                        >
-                                            <EatingIcon style={{ margin: "5px" }} />
-                                        </TypeButton>
-                                    }
-                                </ColButtonComponent>
-                                <ColButtonComponent className="col-4 ">
-                                    {Event.eventType === 'travel' ?
-                                        <TypeButtonSelected
-                                            shape="circle"
-                                            size={"large"}
-                                        // icon={<img src="/img/icons/travelling.svg" />}
-                                        >
-                                            <TravellingIcon style={{ margin: "5px" }} />
-                                        </TypeButtonSelected>
-                                        :
-                                        <TypeButton
-                                            shape="circle"
-                                            size={"large"}
+                                            >
+                                                <EatingIcon style={{ margin: "5px", fill: "#F37945" }} />
+                                            </TypeButtonSelected>
+                                            :
+                                            <TypeButton
+                                                shape="circle"
+                                                size={"large"}
+                                                // icon={<img src="/img/icons/eating.svg" />}
+                                                onClick={() => onSelectEvent('eating')}
+                                            >
+                                                <EatingIcon style={{ margin: "5px" }} />
+                                            </TypeButton>
+                                        }
+                                    </ColButtonComponent>
+                                    <ColButtonComponent className="col-4 ">
+                                        {Event.eventType === 'travel' ?
+                                            <TypeButtonSelected
+                                                shape="circle"
+                                                size={"large"}
                                             // icon={<img src="/img/icons/travelling.svg" />}
-                                            onClick={() => selectEventType('travel')}
-                                        >
-                                            <TravellingIcon style={{ margin: "5px" }} />
-                                        </TypeButton>
-                                    }
-                                </ColButtonComponent>
-                                <ColButtonComponent className="col-4 ">
-                                    {Event.eventType === 'sleeping' ?
-                                        <TypeButtonSelected
-                                            shape="circle"
-                                            size={"large"}
-                                        // icon={<img src="/img/icons/sleeping.svg" />}
-                                        >
-                                            <SleepingIcon style={{ margin: "5px" }} />
-                                        </TypeButtonSelected>
-                                        :
-                                        <TypeButton
-                                            shape="circle"
-                                            size={"large"}
+                                            >
+                                                <TravellingIcon style={{ margin: "5px" }} />
+                                            </TypeButtonSelected>
+                                            :
+                                            <TypeButton
+                                                shape="circle"
+                                                size={"large"}
+                                                // icon={<img src="/img/icons/travelling.svg" />}
+                                                onClick={() => onSelectEvent('travel')}
+                                            >
+                                                <TravellingIcon style={{ margin: "5px" }} />
+                                            </TypeButton>
+                                        }
+                                    </ColButtonComponent>
+                                    <ColButtonComponent className="col-4 ">
+                                        {Event.eventType === 'sleeping' ?
+                                            <TypeButtonSelected
+                                                shape="circle"
+                                                size={"large"}
                                             // icon={<img src="/img/icons/sleeping.svg" />}
-                                            onClick={() => selectEventType('sleeping')}
-                                        >
-                                            <SleepingIcon style={{ margin: "5px" }} />
-                                        </TypeButton>
-                                    }
-                                </ColButtonComponent>
+                                            >
+                                                <SleepingIcon style={{ margin: "5px" }} />
+                                            </TypeButtonSelected>
+                                            :
+                                            <TypeButton
+                                                shape="circle"
+                                                size={"large"}
+                                                // icon={<img src="/img/icons/sleeping.svg" />}
+                                                onClick={() => onSelectEvent('sleeping')}
+                                            >
+                                                <SleepingIcon style={{ margin: "5px" }} />
+                                            </TypeButton>
+                                        }
+                                    </ColButtonComponent>
+                                </div>
                             </div>
-                        </div>
+                        </AntForm.Item>
                     </div>
                 </Modal.Body>
                 <ModalFooter>
