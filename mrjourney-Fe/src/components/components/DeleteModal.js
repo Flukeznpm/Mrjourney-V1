@@ -60,7 +60,7 @@ const OutlineButton = styled(AntButton)`
 function DeleteModal(props) {
 
     const onDeleteRoom = async (roomID, lineID) => {
-        await axios.delete(`http://localhost:5000/room/deleteRoom?roomID=${roomID}&lineID=${lineID}`)
+        await axios.delete(`https://mrjourney-senior.herokuapp.com/room/deleteRoom?roomID=${roomID}&lineID=${lineID}`)
             .then(res => {
                 console.log(res)
             })
