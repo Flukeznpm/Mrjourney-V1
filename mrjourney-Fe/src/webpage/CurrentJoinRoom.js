@@ -1,12 +1,10 @@
 import React from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
 import CarouselHeader from '../components/Home/CarouselHeader';
-import ShowRoomBox from '../components/Home/ShowRoomBox';
 import '../static/css/Show-Room.css';
 import "../static/css/Nav.css";
 import "../static/css/App.css";
 import BgSlide1 from '../static/img/pr-01.png';
-import Logo from '../static/img/logojourney.png';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 
 class CurrentJoinRoom extends React.Component {

@@ -1,223 +1,34 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import '../static/css/App.css';
 import CreateTripStep1 from '../components/CreateTrip/CreateTripStep1';
 import CreateTripStep2 from '../components/CreateTrip/CreateTripStep2';
 import NavWebPage from '../components/Nav/NavWebPage';
 import FooterWebPage from '../components/Footer/FooterWebPage';
 import CreateTripStep3 from '../components/CreateTrip/CreateTripStep3';
-import momentjs from 'moment'
+import { HookContext } from '../store/HookProvider'
 
-class CreateTrip extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            StepComponent: 1,
-            Trip: {
-                activeEvent: 0,
-                tripName: '',
-                province: '',
-                date: '',
-                numberAddDate: 1,
-                totalDate: [{}]
-            }
+function CreateTrip() {
+    const { tripStep } = useContext(HookContext)
 
+    const handleTripComponent = () => {
+        if (tripStep === 1) {
+            return <CreateTripStep1></CreateTripStep1>
+        } if (tripStep === 2) {
+            return <CreateTripStep2></CreateTripStep2>
+        } if (tripStep === 3) {
+            return <CreateTripStep3></CreateTripStep3>
         }
     }
 
-    // totalDate: [
-    //     {
-    //         eventDate: '2020-02-02',
-    //         event: [
-    //             {
-    //                 eventName: 'ดอยสุเทพ',
-    //                 eventTime: 0,
-    //                 eventType: 'กินข้าว'
-    //             },
-    //             {
-    //                 eventName: 'ดอยคำ',
-    //                 eventTime: 0,
-    //                 eventType: 'กินข้าว'
-    //             }
-    //         ]
-    //     },
-    // ]
-
-    onhandleFormText = async (e) => {
-        let value = e.target.value
-        let name = e.target.name
-
-        // let {value,name} = e.target
-        await this.setState(prevState => ({
-            Trip: {                   // object that we want to update
-                ...prevState.Trip,   // keep all other key-value pairs
-                [name]: value,  // update the value of specific key
-            }
-        }))
-    }
-
-    handleTripComponent = () => {
-        if (this.state.StepComponent === 1) {
-            return <CreateTripStep1 nextButton="ต่อไป"
-                handleStep={this.handleNextComponentStep1}
-                TripForm={this.state.Trip}
-                handleForm={this.onhandleFormText}
-                handleFormAddDate={this.handleNumberAddDate}
-                handleFormRemoveDate={this.handleNumberRemoveDate}
-            >
-            </CreateTripStep1>
-        } if (this.state.StepComponent === 2) {
-            return <CreateTripStep2
-                handleStep={this.handleNextComponentStep2}
-                TripForm={this.state.Trip}
-                handleForm={this.onhandleFormText}
-                handleSetEvent={this.handleSetEvent}
-                handleSetActiveEvent={this.handleSetActiveEvent}
-                handleSetNotActiveEvent={this.handleSetNotActiveEvent}
-                handleRemoveEvent={this.handleRemoveEvent}
-                handlePreviousStep={this.handlePreviousComponent} ></CreateTripStep2>
-        } if (this.state.StepComponent === 3) {
-            return <CreateTripStep3
-                handleStep={this.handleNextComponent}
-                TripForm={this.state.Trip}></CreateTripStep3>
-        }
-    }
-
-
-    //>>>>active
-    handleSetActiveEvent = (key) => {
-        this.setState(prevState => ({
-            Trip: {
-                ...prevState.Trip,
-                activeEvent: key
-            },
-        }))
-    }
-
-
-    //>>>>NotActive
-    handleSetNotActiveEvent = (key) => {
-        this.setState(prevState => ({
-            Trip: {
-                ...prevState.Trip,
-                activeEvent: key - 1
-            },
-        }))
-    }
-
-
-
-    handleNumberAddDate = () => {
-        this.setState(prevState => ({
-            Trip: {
-                ...prevState.Trip,
-                numberAddDate: this.state.Trip.numberAddDate + 1
-            }
-        }))
-    }
-
-    handleNumberRemoveDate = () => {
-        this.setState(prevState => ({
-            Trip: {
-                ...prevState.Trip,
-                numberAddDate: this.state.Trip.numberAddDate - 1
-            }
-        }))
-    }
-
-    handleSetEvent = (Event, key) => {
-        let AllDate = this.state.Trip.totalDate //new
-
-        AllDate[key].event.push(Event) //add
-        this.setState(prevState => ({
-            Trip: {
-                ...prevState.Trip,
-                totalDate: AllDate //old = new
-            }
-        }))
-    }
-
-    handleRemoveEvent = async (listevent, key) => {
-        let AllDate = this.state.Trip.totalDate //new
-        const newAllEvent = await AllDate[key].event.filter(Event => {
-            return Event !== listevent
-        })
-        AllDate[key].event = newAllEvent
-        console.log('showdate', newAllEvent);
-
-        this.setState(prevState => ({
-            Trip: {
-                ...prevState.Trip,
-                totalDate: AllDate
-            }
-        }))
-        // AllDate[key].event.push(Event) //add
-        // this.setState(prevState => ({
-        //     Trip: {
-        //         ...prevState.Trip,
-        //         totalDate: AllDate //old = new
-        //     }
-        // }))
-    }
-
-    setAllDate = (AllTripDate) => {
-        for (let index = 0; index < this.state.Trip.numberAddDate; index++) {
-            let ShowBox = {
-                eventDate: momentjs(this.state.Trip.date).add(index, 'day').format('DD/MM/YYYY'),
-                event: []
-            }
-            AllTripDate.push(ShowBox)
-        }
-        return AllTripDate
-    }
-
-    handleNextComponentStep1 = async () => {
-        let AllTripDate = []
-        let AllTripDate2 = await this.setAllDate(AllTripDate)
-        await this.setState(prevState => ({
-            Trip: {
-                ...prevState.Trip,
-                totalDate: AllTripDate2
-            }
-        }))
-        console.log(AllTripDate2);
-
-        if (this.state.StepComponent !== 3) {
-            await this.setState({ StepComponent: this.state.StepComponent + 1 })
-        }
-    }
-
-    handleNextComponentStep2 = async () => {
-        if (this.state.StepComponent !== 3) {
-            await this.setState({ StepComponent: this.state.StepComponent + 1 })
-        }
-    }
-    handlePreviousComponent = async () => {
-        if (this.state.StepComponent !== 1) {
-            await this.setState({ StepComponent: this.state.StepComponent - 1 })
-        }
-    }
-
-    render() {
-        return (
-            <div className="flex-wrapper">
-                <div className="top-page">
-                    <div className="Navbar-Component">
-                        <NavWebPage></NavWebPage>
-
-                    </div>
-                    <div className="Content-Component">
-
-                        {/* {this.state.Component} */}
-                        {this.handleTripComponent()}
-
-                    </div>
-                </div>
-                <div className="footer-page">
-                    <FooterWebPage></FooterWebPage>
+    return (
+        <div className="flex-wrapper">
+            <div className="top-page">
+                <div className="Content-Component">
+                    {handleTripComponent()}
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
 export default CreateTrip;
 

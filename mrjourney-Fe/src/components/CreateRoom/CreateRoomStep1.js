@@ -1,202 +1,221 @@
-import React from 'react';
-import '../../static/css/Stepper.css';
-import LogoStep1 from '../../static/img/LogoStep1.png'
-import LogoStep2 from '../../static/img/LogoStep2.png'
-import LogoStep3 from '../../static/img/LogoStep3.png'
-// import FooterTripPage from '../components/Footer/FooterTripPage';
-import FooterTripPage from '../../components/Footer/FooterTripPage'
+import React, { useContext, useState, useEffect } from 'react';
+import styled from "styled-components";
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
+import { HookContext } from '../../store/HookProvider'
+import {
+    Form as AntForm,
+    Input as AntInput,
+    Button as AntButton,
+    Select as AntSelect,
+    DatePicker,
+    Tooltip,
+} from 'antd';
+import momentjs from 'moment';
+import Stepper from '../components/Stepper';
 
-class CreateRoomStep1 extends React.Component {
-
-    constructor() {
-        super()
-        this.state = {
-            thaiprovince: [
-                'กรุงเทพมหานคร', 'กระบี่', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร',
-                'ขอบแก่น',
-                'จันทบุรี', 'ฉะเชิงเทรา', 'ชลบุรี', 'ชัยนาท', 'ชัยภูมิ', 'ชุมพร', 'เชียงราย', 'เชียงใหม่',
-                'ตรัง', 'ตราด', 'ตาก',
-                'นครนายก', 'นครปฐม', 'นครพนม', 'นครราชสีมา', 'นครศรีธรรมราข', 'นครสวรรค์', 'นนทบุรี', 'นราธิวาส', 'น่าน',
-                'บึงกาฬ', 'บุรีรัมย์',
-                'ปทุมธานี', 'ประจวบคีรีขันธ์', 'ปราจีนบุรี', 'ปัตตานี',
-                'พระนครศรีอยุธยา', 'พังงา', 'พัทลุง', 'พิจิตร', 'พิษณุโลก', 'เพชรบุรี', 'เพชรบูรณ์', 'แพร่', 'พะเยา',
-                'ภูเก็ต',
-                'มหาสารคาม', 'มุกดาหาร', 'แม่ฮ่องสอน',
-                'ยะลา', 'ยโสธร',
-                'ร้อยเอ็ด', 'ระนอง', 'ระยอง', 'ราชบุรี',
-                'ลพบุรี', 'ลำปาง', 'ลำพูน', 'เลย',
-                'ศรีสะเกษ',
-                'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรปราการ', 'สมุทรสงคราม', 'สมุทรสาคร', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์',
-                'หนองคาย', 'หนองบัวลำภู', 'อ่างทอง', 'อุดรธานี', 'อุทัยธานี', 'อุตรดิตถ์', 'อุบลราชธานี', 'อำนาจเจริญ']
-
-        }
+const PrimaryButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
     }
+`;
 
-    componentDidMount() {
+const InputComponent = styled(AntInput)`
+    border-radius: 4px;
+    height: 40px;
+    font-size: 16px;
+    align-items: center;
+    &:hover , &:active, &:focus {
+        border-color: ${props => (props.theme.color.primary)};
+    }
+`;
+
+const DatePickerComponent = styled(DatePicker)`
+    height: 40px;
+    border-radius: 4px;
+    &:hover , &:active, &:focus {
+        border-color: rgb(230, 111, 15);
+    }
+`
+
+function CreateRoomStep1(props) {
+    const { thaiprovince, nextStep, handleRoomForm, Room } = useContext(HookContext)
+    const [lineID, setLineId] = useState("");
+    const { Option } = AntSelect;
+    const { TextArea } = AntInput;
+    const dateFormat = 'DD-MM-YYYY';
+    const [fileRoomCover, setFileRoomCover] = useState('รูปหน้าปกห้อง')
+    const [fileQrCode, setFileQrCode] = useState('คิวอาร์โค้ดกลุ่มไลน์')
+    const [roomCoverImg, setRoomCoverImg] = useState(null)
+    const [roomQrCodeImg, setRoomQrCodeImg] = useState(null)
+
+    useEffect(() => {
         let loadJWT = cookie.load('jwt');
-        console.log(loadJWT)
-        if (loadJWT == undefined) {
-            this.props.history.push('/Home');
+        if (loadJWT === undefined) {
+            props.history.push('/Home');
         } else {
             var user = jwt.verify(loadJWT, 'secreatKey');
-            this.setState({
-                lineID: user.lineID,
-            })
+            setLineId(user.lineID)
+        }
+    }, [])
+
+    const onFinish = values => {
+        if (!roomCoverImg || !roomQrCodeImg) {
+            return false;
+        } else {
+            handleRoomForm(values.roomName, 'roomName')
+            handleRoomForm(values.province, 'province')
+            handleRoomForm(values.startDate, 'startDate')
+            handleRoomForm(values.endDate, 'endDate')
+            handleRoomForm(values.tripDetails, 'tripDetails')
+            handleRoomForm(roomCoverImg, 'roomCover')
+            handleRoomForm(roomQrCodeImg, 'qrCode')
+            nextStep(1)
+        }
+    };
+
+    const onStartDateChange = (date, dateString) => {
+        handleRoomForm(momentjs(date).format('YYYY-MM-DD'), 'startDate')
+    }
+
+    const onFileCoverChange = async (e) => {
+        const file = e.target.files[0];
+        setFileRoomCover(file.name)
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async () => {
+            let generateNameImage = 'roomCover' + new Date().getTime();
+            let dataBase64 = {
+                image: reader.result,
+                nameImage: generateNameImage
+            }
+            console.log(dataBase64.nameImage)
+            await axios.post('https://mrjourney-senior.herokuapp.com/room/uploadRoomCoverImage', dataBase64)
+                .then(res => {
+                    console.log('URL: ', res)
+                    setRoomCoverImg(res.data)
+                })
         }
     }
 
-    render() {
-        return (
-            <div>
-                <div className="show-step-room py-2">
-                    <div className="step-progress step-1 mt-3 pt-2">
-                        <ul>
-                            <li>
-                                <img src={LogoStep1} style={{ opacity: "80%" }} /><br />
-                                <i class="fas fa-sync-alt"></i>
-                                <p>สร้างห้อง</p>
-                            </li>
-                            <li>
-                                <img src={LogoStep2} style={{ opacity: '20%' }} /><br />
-                                {/* <i class="fas fa-sync-alt"></i> */}
-                                <i class="fas fa-times"></i>
-                                <p>ระบุเงื่อนไข</p>
-                            </li>
-                            <li>
-                                <img src={LogoStep3} style={{ opacity: '20%' }} /><br />
-                                <i class="fas fa-times"></i>
-                                <p>ตรวจสอบ</p>
-                            </li>
-                        </ul>
-                    </div>
+    const onFileQrCodeChange = async (e) => {
+        const file = e.target.files[0];
+        setFileQrCode(file.name)
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async () => {
+            let generateQrCodeName = 'roomQrCode' + new Date().getTime();
+            let dataBase64 = {
+                image: reader.result,
+                nameImage: generateQrCodeName
+            }
+            console.log(dataBase64.nameImage)
+            await axios.post('https://mrjourney-senior.herokuapp.com/room/uploadRoomQrCodeImage', dataBase64)
+                .then(res => {
+                    console.log('URL: ', res)
+                    setRoomQrCodeImg(res.data)
+                })
+        }
+    }
 
-                </div>
-                <div className="create-room-form py-3">
-                    <div className="col-12">
-                        <div className="row">
-                            <div className="col-2"></div>
-                            <div className="col-8">
-                                <form>
-                                    <div className="form-group">
-                                        <div className="container">
-
-
-
-
-
-
-                                            <div class="pt-4">
-                                                <label for="exampleInputEmail1">ชื่อทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                <input type="text" class="form-control"
-                                                    name="roomName"
-                                                    value={this.props.RoomForm.roomName}
-                                                    onChange={(e) => this.props.handleForm(e)}
-                                                    placeholder="ใส่ชื่อทริปของคุณ" />
-                                            </div>
-                                            <div class="pt-4 ">
-                                                <label for="exampleInputEmail1">หน้าปกทริป<span className="p-1" style={{ color: "red", fontSize: "12px" }}>(ขนาดไม่เกิน 800px)</span></label>
-                                                {/* <input type="file" class="form-control-file"
-                                                    name="roomCover"
-                                                    value={this.props.RoomForm.roomCover}
-                                                    onChange={(e) => this.props.handleForm(e)}
-                                                    placeholder="ใส่ชื่อทริปของคุณ" /> */}
-
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="validatedCustomFile"
-                                                        name="roomCover"
-                                                        value={this.props.RoomForm.roomCover}
-                                                        onChange={(e) => this.props.handleForm(e)}
-                                                    />
-                                                    <label class="custom-file-label" for="validatedCustomFile" >{this.props.RoomForm.roomCover}</label>
-                                                </div>
-
-                                            </div>
-                                            <div class="pt-4">
-                                                <label for="exampleInputEmail1" >จังหวัด<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                <div className="btn-group pl-5">
-                                                    <select className=" btn province-btn dropdown-toggle"
-                                                        name="province"
-                                                        value={this.props.RoomForm.province}
-                                                        onChange={(e) => this.props.handleForm(e)}
-                                                        id="dropdownMenuButton"
-                                                    >
-                                                        <option value="selected" selected>กรุณาเลือกจังหวัด</option>
-                                                        {this.state.thaiprovince.map((ThaiProvinceShow) => {
-                                                            return (
-                                                                <option value={ThaiProvinceShow}>{ThaiProvinceShow}</option>
-                                                            )
-                                                        })}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="pt-4">
-                                                <label for="exampleInputEmail1">วันเริ่มทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                <input type="date" class="form-control"
-                                                    name="startDate"
-                                                    value={this.props.RoomForm.startDate}
-                                                    onChange={(e) => this.props.handleForm(e)}
-                                                />
-                                            </div>
-                                            <div class="pt-4">
-                                                <label for="exampleInputEmail1">วันสิ้นสุดทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                <input type="date" class="form-control"
-                                                    name="endDate"
-                                                    value={this.props.RoomForm.endDate}
-                                                    onChange={(e) => this.props.handleForm(e)}
-                                                />
-                                            </div>
-                                            <div class="pt-4">
-                                                <label for="exampleInputEmail1">รายละเอียดการเดินทาง<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                <textarea class="form-control" rows="3"
-                                                    name="tripDetails"
-                                                    value={this.props.RoomForm.tripDetails}
-                                                    onChange={(e) => this.props.handleForm(e)}
-                                                />
-                                            </div>
-                                            <div class="pt-4">
-                                                <label for="exampleInputEmail1">คิวอาร์โค้ด<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                {/* <input type="file" class="form-control-file"
-                                                    name="qrCode"
-                                                    value={this.props.RoomForm.qrCode}
-                                                    onChange={(e) => this.props.handleForm(e)}
-                                                /> */}
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="validatedCustomFile"
-                                                        name="qrCode"
-                                                        value={this.props.RoomForm.qrCode}
-                                                        onChange={(e) => this.props.handleForm(e)}
-                                                    />
-                                                    <label class="custom-file-label" for="validatedCustomFile" >{this.props.RoomForm.qrCode}</label>
-                                                </div>
-
-                                            </div>
-
-
-
-                                            <div className="buttom-page py-3">
-                                                <div className="py-3" style={{ marginBottom: "25px", marginTop: "20px" }}>
-                                                    {/* <div className=" col-2 float-right "> */}
-                                                    <div className="next-btn">
-                                                        <button type="submit" className="btn btn-warning btn-lg btn-block text-white"
-                                                            onClick={this.props.handleStep}>ต่อไป</button>
-                                                    </div>
-                                                </div>
+    return (
+        <div>
+            <div className="container py-2 mt-3">
+                <Stepper typeStep="room" step={1} />
+            </div>
+            <div className="create-room-form pt-3">
+                <div className="col-12">
+                    <div className="row">
+                        <div className="col-md-3"></div>
+                        <div className="col-md-6">
+                            <AntForm onFinish={onFinish}>
+                                <AntForm.Item name="roomName" label="ชื่อทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                    <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
+                                </AntForm.Item>
+                                <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
+                                    <AntForm.Item name="roomCover" rules={[{ required: true }]}>
+                                        <div class="input-group pt-3">
+                                            <div class="custom-file" >
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                                    aria-describedby="inputGroupFileAddon01" onChange={onFileCoverChange} />
+                                                <label class="custom-file-label" for="inputGroupFile01">{fileRoomCover}</label>
                                             </div>
                                         </div>
+                                    </AntForm.Item>
+                                </Tooltip>
+                                <Tooltip title="รูปปกห้อง">
+                                    <div className="text-center pt-2">
+                                        <img width="150px" src={roomCoverImg} />
                                     </div>
-                                </form>
-                            </div>
-                            <div className="col-2"></div>
+                                </Tooltip>
+                                <AntForm.Item name="province" labelCol={{ span: 24 }} label="จังหวัด" rules={[{ required: true }]}>
+                                    <AntSelect
+                                        placeholder="กรุณาเลือกจังหวัด"
+                                    >
+                                        {thaiprovince.map((ThaiProvinceShow) => {
+                                            return (
+                                                <Option value={ThaiProvinceShow}>{ThaiProvinceShow}</Option>
+                                            )
+                                        })}
+                                    </AntSelect>
+                                </AntForm.Item>
+                                <div className="col-12 p-0">
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <AntForm.Item name="startDate" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                                <DatePickerComponent onChange={onStartDateChange}
+                                                    disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
+                                                    format={dateFormat} />
+                                            </AntForm.Item>
+                                        </div>
+                                        <div className="col-6">
+                                            <AntForm.Item name="endDate" label="วันสิ้นสุดทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                                <DatePickerComponent
+                                                    disabledDate={d => !d || d.isSameOrBefore(Room.startDate)}
+                                                    format={dateFormat} />
+                                            </AntForm.Item>
+                                        </div>
+                                    </div>
+                                </div>
+                                <AntForm.Item name="tripDetails" label="รายละเอียดการท่องเที่ยว" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                    <TextArea rows={4} placeholder="กรอกรายละเอียดการท่องเที่ยวของคุณ" />
+                                </AntForm.Item>
+                                <Tooltip title="กรุณารอรูปตัวอย่างแสดง">
+                                    <AntForm.Item name="roomQrCode" rules={[{ required: true }]}>
+                                        <div class="input-group pt-3 pb-2">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                                    aria-describedby="inputGroupFileAddon01" onChange={onFileQrCodeChange} />
+                                                <label class="custom-file-label" for="inputGroupFile01">{fileQrCode}</label>
+                                            </div>
+                                        </div>
+                                    </AntForm.Item>
+                                </Tooltip>
+                                <Tooltip title="รูปคิวอาร์โค้ดกลุ่มไลน์">
+                                    <div className="text-center pt-2">
+                                        <img width="150px" src={roomQrCodeImg} />
+                                    </div>
+                                </Tooltip>
+                                <div className="buttom-page pt-3">
+                                    <AntForm.Item>
+                                        <PrimaryButton type="primary" size={"large"} block htmlType="submit">ถัดไป</PrimaryButton>
+                                    </AntForm.Item>
+                                </div>
+                            </AntForm>
                         </div>
+                        <div className="col-md-3"></div>
                     </div>
-
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default withRouter(CreateRoomStep1);

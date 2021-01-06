@@ -1,20 +1,25 @@
-.nav-color {
-    background-color: #F37945;
+
+.join-btn-color {
+    background-color: #F37944;
 }
 
-.nav-color-2 {}
-
 .round {
-    border-radius: 18px;
+    border-radius: 16px;
+}
+
+.navbar {
+    padding: 6px 12px 6px 12px;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.04), 0px 3px 4px rgba(0, 0, 0, 0.07);
+    background-color: #f9f9f9;
 }
 
 .nav-color-owner {
-    color: #F37945;
-    border-color: #F37945;
+    color: #F37944;
+    border-color: #F37944;
 }
 
 .nav-color-owner:hover {
-    color: #F37945;
+    color: #F37944;
 }
 
 .round2 {
@@ -22,8 +27,23 @@
     width: 15%;
 }
 
+.nav-text-btn {
+    color: #231F20;
+    font-size: 20px;
+    margin-top: 4px;
+}
+
+.nav-text-btn:hover {
+    color: #C25738;
+}
+
 .signout-btn {
     cursor: pointer;
+}
+
+.dropdown:hover {
+    background-color: #eee9e3;
+    border-radius: 12px;
 }
 
 .a-dropdown {
@@ -31,18 +51,22 @@
 }
 
 .a-dropdown:hover {
-    color: #F37945;
+    color: #F37944;
+    text-decoration: none;
+}
+
+.a-dropdown:active {
+    color: #F37944;
+    background-color: white;
     text-decoration: none;
 }
 
 .dropdown-show-profile {
     padding-top: 5px;
     padding-bottom: 5px;
-    border-bottom: 1px solid lightgrey;
 }
 
 .dropdown-profile-label {
-    font-size: 20px;
     cursor: text;
 }
 
@@ -51,7 +75,7 @@
 }
 
 .create-btn {
-    background-color: #F37945;
+    background-color: #F37944;
 }
 
 .create-btn:hover {
@@ -63,17 +87,37 @@
 }
 
 .search-btn {
-    border: 2px solid #F37945;
+    border: 2px solid #F37944;
     font-weight: 500;
-    color: #F37945 !important;
+    color: #F37944 !important;
 }
 
-.search-btn:hover {
-    border: 2px solid #F37945;
-    background-color: #F37945;
-    font-weight: 500;
-    color: #f7f7f7 !important;
+.WebLogo {
+    width: 140px;
+    height: 60px;
 }
-.navbar-webpage{
-    border-bottom: 1px solid rgb(236, 236, 236);
+
+.dropdown-menu {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.a-dropdown:hover {
+    border-radius: 4px;
+    background-color: #eee9e3;
+    color: #231F20;
+}
+
+.dropdown-see-profile {
+    font-size: 10.5px;
+    text-decoration: none;
+    color: #231F20;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-see-profile:hover {
+    text-decoration: none;
+    color: #C25738;
 }

@@ -1,297 +1,305 @@
-import React from 'react';
-import '../../static/css/App.css';
-import "../../static/css/Event-Trip.css";
-import Swal from 'sweetalert2';
+import React, { useContext, useEffect, useState } from 'react';
+import styled from "styled-components";
 import CreateTripModal from '../Modal/CreateTripModal'
-import LogoStep1 from '../../static/img/LogoStep1.png'
-import LogoStep2 from '../../static/img/LogoStep2.png'
-import LogoStep3 from '../../static/img/LogoStep3.png'
 import momentjs from 'moment'
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
+import { HookContext } from '../../store/HookProvider'
+import Stepper from '../components/Stepper';
+import liff from '@line/liff';
+import {
+    Card,
+    Form as AntForm,
+    Row,
+    Col,
+    Tooltip,
+    Button as AntButton,
+} from 'antd';
+import { CaretUpOutlined, CaretDownOutlined, PlusOutlined } from '@ant-design/icons';
+import { ReactComponent as DeleteButton } from '../../static/icons/delete.svg';
+import ShowStartToEnd from './components/ShowStartToEnd';
+import ShowEventBox from './components/ShowEventBox';
 
-class CreateTripStep2 extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            addModalShow: false,
-            Event: {
-                eventName: '',
-                startEvent: '',
-                endEvent: '',
-                eventType: '',
+const DateCardNotActive = styled(Card)`
+  border-radius: 8px;
+  background: ${props => (props.theme.color.primary)};
+  color: white;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  margin: 10px 0px 10px 0px;
+  padding: 5px 0px 5px 0px;
+  font-size: 24px;
+  height: 100%;
+  cursor: pointer;
+  .anticon {
+      display: flex;
+      align-items: center;
+      padding: 0px 10px;
+  }
+`;
 
-            },
-            //>>>>>>>>>>>
-            keyModal: 0
-        }
+const WrapperLoading = styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+`;
+
+const RowLoading = styled(Row)`
+    display: flex;
+    align-items: center;
+    height: 100%;
+`
+
+const LoadingGif = styled.img`
+    height: 250px;
+    width: 250px;
+   
+`;
+
+const EventCard = styled(Card)`
+  border-radius: 10px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.025), 0px 3px 4px rgba(0, 0, 0, 0.06);
+  height: 100%;
+  .ant-card-body {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 12px;
+  }
+`;
+
+const DeleteEventCard = styled(Card)`
+  border-radius: 10px;
+  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  background: #FF4647;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  .ant-card-body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 12px;
+  }
+  height: 100%;
+`;
+
+const PrimaryButton = styled(AntButton)`
+    border-radius: 4px;
+    height: 50px;
+    font-size: 16px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
     }
+`;
 
-
-
-
-
-
-
-
-    componentDidMount() {
-        let loadJWT = cookie.load('jwt');
-        console.log(loadJWT)
-        if (loadJWT == undefined) {
-            this.props.history.push('/Home');
-        } else {
-            var user = jwt.verify(loadJWT, 'secreatKey');
-            this.setState({
-                Linename: user.displayName,
-                Linepicture: user.pictureURL
-            })
-        }
+const PrevButton = styled(AntButton)`
+    height: 50px;
+    border-radius: 4px;
+    font-size: 16px;
+    color: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        color: ${props => (props.theme.color.primaryPress)};
+        background: #F7F7F7;
     }
+`;
 
-    onhandleEventForm = async (e) => {
-        let value = e.target.value
-        let name = e.target.name
-        await this.setState(prevState => ({
-            Event: {
-                ...prevState.Event,
-                [name]: value,
+const AddEventButton = styled(AntButton)`
+    box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+    color: #F7F7F7;
+    border: none;
+    background: ${props => (props.theme.color.primary)};
+    .anticon {
+      display: flex;
+      font-size: 22px;
+      justify-content: center;
+      align-items: center;
+  }
+    &:hover , &:active , &:focus {
+        color: #F7F7F7;
+        border: none;
+        background: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
+`;
+
+const AntFormItem = styled(AntForm.Item)`
+    margin-bottom: 0px;
+    padding: 10px;
+`;
+
+function CreateTripStep2(props) {
+    const { nextTripStep, prevTripStep, deleteEvent, Trip, addModalShow, keyModal, setActiveEvent, setNotActiveEvent, eventModalClose, setEvent, eventModalShow } = useContext(HookContext)
+    const [lineGroupID, setLineGroupID] = useState('')
+    const [tripStatus, setTripStatus] = useState(true)
+    const [LineID, setLineID] = useState('')
+    const [LineName, setLineName] = useState('')
+    const [LinePicture, setLinePicture] = useState('')
+    const [loading, isLoading] = useState(false)
+
+    useEffect(() => {
+        liff.init({ liffId: '1653975470-jV83lv9w' }).then(async () => {
+            if (liff.isLoggedIn()) {
+                let profile = await liff.getProfile();
+                setLineID(profile.userId);
+                setLineName(profile.displayName);
+                setLinePicture(profile.pictureUrl);
+                const context = await liff.getContext();
+                setLineGroupID(context.groupId)
+            } else {
+                props.history.push('/Home');
             }
-        }))
-    }
+        });
+    }, [])
 
-    onSelectTypeEat = () => {
-        this.setState(prevState => ({
-            Event: {
-                ...prevState.Event,
-                eventType: this.state.Event.eventType = 'eating'
-            }
-        }))
-    }
-    onSelectTypeTravel = () => {
-        this.setState(prevState => ({
-            Event: {
-                ...prevState.Event,
-                eventType: this.state.Event.eventType = 'travel'
-            }
-        }))
-    }
-    onSelectTypeSleep = () => {
-        this.setState(prevState => ({
-            Event: {
-                ...prevState.Event,
-                eventType: this.state.Event.eventType = 'sleep'
-            }
-        }))
-    }
-
-    addModalClose = () => {
-        this.setState({
-            addModalShow: false,
-            Event: {
-                eventName: '',
-                startEvent: '',
-                endEvent: '',
-                eventType: ''
-            },
-        })
-    }
-
-    addModalConfirm = (key) => {
-        let Event = this.state.Event
-        // let Trip = this.props.
-        console.log('key', key);
-        this.props.handleSetEvent(Event, key)
-
-        this.setState({
-            addModalShow: false,
-            Event: {
-                eventName: '',
-                startEvent: '',
-                endEvent: '',
-                eventType: ''
-            },
-        })
-    }
-
-
-
-    handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         let dataTrip = {
-            tripname: this.state.tripname,
-            province: this.state.province,
-            date: this.state.date,
-            day: this.state.day
+            lineID: LineID,
+            displayName: LineName,
+            pictureURL: LinePicture,
+            lineGroupID: lineGroupID,
+            tripName: Trip.tripName,
+            province: Trip.province,
+            startDate: momentjs(Trip.date).format('ll'),
+            endDate: momentjs(Trip.date).add(Trip.numberAddDate - 1, 'day').format('ll'),
+            tripStatus: tripStatus,
+            totalDate: Trip.totalDate,
+            createDate: new Date()
         }
-        axios.post('http://localhost:5000/trip/createTrip', dataTrip)
+        isLoading(true)
+        await axios.post('https://mrjourney-senior.herokuapp.com/trip/createTrip', dataTrip)
             .then(res => {
                 console.log(res)
             });
+        if (liff.getContext().type !== "none") {
+            liff.sendMessages([
+                {
+                    "type": "text",
+                    "text": "สร้างทริปสำเร็จ"
+                },
+                {
+                    "type": "text",
+                    "text": "#ดูแผน"
+                }
+            ])
+        }
+        nextTripStep(1)
     }
-
-
-
-
-    render() {
+    if (loading) {
         return (
-            <div>
-                <div className="top-page mb-3">
-                    {/* <div className="container content-page py-2"> */}
-                    <div className=" step-progress step-2 mt-3 pt-2">
-                        <ul>
-                            <li>
-                                <img src={LogoStep1} style={{ opacity: "20%" }} /><br />
-                                <i class="fas fa-check"></i>
-                                <p>สร้างแผน</p>
-                            </li>
-                            <li>
-                                <img src={LogoStep2} style={{ opacity: '80%' }} /><br />
-                                {/* <i class="fas fa-sync-alt"></i> */}
-                                <i class="fas fa-sync-alt"></i>
-                                <p>ระบุรายละเอียด</p>
-                            </li>
-                            <li>
-                                <img src={LogoStep3} style={{ opacity: '20%' }} /><br />
-                                <i class="fas fa-times"></i>
-                                <p>เสร็จสิ้น</p>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="content-page py-2">
-                        <div className="col-12">
-                            <div className="row">
-                                <div className="col-2"></div>
-                                <div className="col-8">
-
-                                    {/* <div className="header-trip">
-                                        <h3>ชื่อทริป : {this.props.TripForm.tripName}</h3>
-                                        <h4>จังหวัด : {this.props.TripForm.province}</h4>
-                                    </div> */}
-                                    <div className="trip-perday-box py-3">
-
-                                        <div className="text-center " style={{paddingBottom:"25px"}}>
-                                            <span className="show-date-to-end ">
-                                                <span className="mt-2 mb-2 ml-3 mr-3" style={{fontWeight:"normal"}}>
-                                                    <span className="p-1"> {momentjs(this.props.TripForm.date).format('DD/MM/YYYY')}
-                                                    </span>
-                                                    &nbsp;-&nbsp;
-                                                    <span className="p-1">{momentjs(this.props.TripForm.date).add(this.props.TripForm.numberAddDate - 1, 'day').format('DD/MM/YYYY')}
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </div>
-
-                                        {this.props.TripForm.totalDate.map((PerDay, key) => {
-
-                                            return (
-                                                <div>
-
-                                                    {this.props.TripForm.activeEvent !== key ?
-                                                        <div class="alert event-box-disabled">
-                                                            <span className="text-white">{PerDay.eventDate}</span>
-                                                            <span className="float-right">
-                                                                <i class="fas fa-caret-down" onClick={() => this.props.handleSetActiveEvent(key)} />
-                                                            </span>
-                                                        </div>
-                                                        :
-                                                        <div class="alert event-box-active border-bottom" >
-                                                            <span style={{ color: "rgb(241, 82, 19)", fontSize: "24px" }}>{PerDay.eventDate}</span>
-                                                            <span className="float-right">
-                                                                <i class="fas fa-caret-up" onClick={() => this.props.handleSetNotActiveEvent(key)} />
-                                                            </span>
-                                                            {PerDay.event.map((eventDetail) => {
-                                                                return (
-                                                                    <div className="container">
-                                                                        <div className="row py-2">
-                                                                            <div className="col-9">
-                                                                                <span className="float-left">
-                                                                                    {eventDetail.eventName}
-                                                                                    <br />{eventDetail.startEvent}
-                                                                                </span>
-                                                                                <div className="m-2">
-                                                                                    {eventDetail.eventType == 'eating' ?
-                                                                                        <button
-                                                                                            type="button" class="event-type-btn btn p-0 ml-1 float-right">
-                                                                                            <span class="shadow fas fa-utensils"></span>
-                                                                                        </button>
-                                                                                        : ""}
-                                                                                    {eventDetail.eventType == 'travel' ?
-                                                                                        <button
-                                                                                            type="button" class="event-type-btn btn p-0 ml-1 float-right">
-                                                                                            <span class="shadow fas fa-car-side"></span>
-                                                                                        </button>
-                                                                                        : ""}
-
-                                                                                    {eventDetail.eventType == 'sleep' ?
-                                                                                        <button
-                                                                                            type="button" class="event-type-btn btn p-0 ml-1 float-right">
-                                                                                            <span class="shadow fas fa-bed"></span>
-                                                                                        </button>
-                                                                                        : ""}
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div className="col-3">
-                                                                                <div className="m-2">
-                                                                                    <button type="button"
-                                                                                        class="event-deleted-btn p-0 ml-1 btn float-right"
-                                                                                        onClick={() => this.props.handleRemoveEvent(eventDetail, key)}>
-                                                                                        <span class="shadow fas fa-trash-alt"></span></button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                )
-                                                            })}
-                                                            <p className="text-center">
-                                                                <button type="button" className="add-details-btn btn p-0 pt-1"
-                                                                    onClick={() => this.setState({ keyModal: key, addModalShow: true })}>
-                                                                    <span className="far fa-plus-square fa-lg">
-                                                                    </span>
-                                                                </button>
-                                                                <CreateTripModal
-                                                                    show={this.state.addModalShow}
-                                                                    onConfirm={() => this.addModalConfirm(this.state.keyModal)}
-                                                                    onHide={() => this.addModalClose(this.state.keyModal)} //use for closeButton
-                                                                    EventForm={this.state.Event}
-                                                                    handleEventForm={this.onhandleEventForm}
-                                                                    onSelectTypeEat={this.onSelectTypeEat}
-                                                                    onSelectTypeTravel={this.onSelectTypeTravel}
-                                                                    onSelectTypeSleep={this.onSelectTypeSleep}
-                                                                ></CreateTripModal>
-                                                            </p>
-
-
-                                                        </div>
-                                                    }
-
-                                                </div>
-                                            )
-                                        })}
-
-
-                                        <div className="buttom-page py-3">
-                                            <div className="container py-3">
-                                                <div className="col-2 float-left ml-4">
-                                                    <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                        onClick={this.props.handlePreviousStep}>ย้อนกลับ</button>
-                                                </div>
-                                                <div className=" col-2 float-right mr-4">
-                                                    <button type="button" class="btn btn-warning btn-lg btn-block text-white"
-                                                        onClick={this.props.handleStep}>เสร็จสิ้น</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-2"></div>
+            <WrapperLoading>
+                <RowLoading justify="center">
+                    <LoadingGif src="/gif/loading-v2.gif" alt="loading..." />
+                </RowLoading>
+            </WrapperLoading>
+        )
+    } else {
+        return (
+            <Wrapper>
+                <div className="top-page mb-4 pb-4">
+                    <Stepper typeStep="trip" step={2} />
+                    <Row justify="center ">
+                        <div className="container">
+                            <Col span={24} className="pb-3">
+                                <div className="pt-4 pb-2" >
+                                    <ShowStartToEnd />
                                 </div>
-                            </div>
+                                {Trip.totalDate.map((PerDay, key) => {
+                                    return (
+                                        <>
+                                            {Trip.activeEvent !== key ?
+                                                <DateCardNotActive onClick={() => setActiveEvent(key)}>
+                                                    <Row justify="center">
+                                                        {momentjs(PerDay.eventDate).format('ll')}
+                                                        <CaretDownOutlined />
+                                                    </Row>
+                                                </DateCardNotActive>
+                                                :
+                                                <div>
+                                                    <DateCardNotActive onClick={() => setNotActiveEvent(key)}>
+                                                        <Row justify="center">
+                                                            {momentjs(PerDay.eventDate).format('ll')}
+                                                            <CaretUpOutlined />
+                                                        </Row>
+                                                    </DateCardNotActive>
+                                                    {PerDay.event.map((eventDetail, keyE) => {
+                                                        return (
+                                                            <Row className="my-1">
+                                                                <Col span={19}>
+                                                                    <div className="container">
+                                                                        <EventCard>
+                                                                            <ShowEventBox eventDetail={eventDetail} />
+                                                                        </EventCard>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col span={5} >
+                                                                    <DeleteEventCard onClick={() => deleteEvent(key, keyE)}>
+                                                                        <DeleteButton />
+                                                                    </DeleteEventCard>
+                                                                </Col>
+                                                            </Row>
+                                                        )
+                                                    })}
+                                                    <AddEventButton type="primary"
+                                                        shape="circle"
+                                                        size="middle"
+                                                        onClick={() => eventModalShow(key)}
+                                                        icon={<PlusOutlined />}
+                                                    />
+                                                    <CreateTripModal
+                                                        centered
+                                                        show={addModalShow}
+                                                        onConfirm={() => setEvent(keyModal)}
+                                                        onHide={() => eventModalClose(keyModal)}
+                                                    ></CreateTripModal>
+                                                </div>
+                                            }
+                                        </>
+                                    )
+                                })}
+
+                            </Col>
                         </div>
-                    </div>
+                    </Row>
                 </div>
-            </div>
+                <Row justify="center" className="bg-white fixed-bottom">
+                    <AntForm className="container">
+                        <AntFormItem>
+                            <Row>
+                                <Col span={8}>
+                                    <PrevButton
+                                        type="link"
+                                        size={"large"}
+                                        block htmlType="button"
+                                        onClick={() => prevTripStep(1)}
+                                    >ย้อนกลับ</PrevButton>
+                                </Col>
+                                <Col span={16}>
+                                    <PrimaryButton
+                                        type="primary"
+                                        size={"large"}
+                                        block htmlType="submit"
+                                        onClick={handleSubmit}
+                                    >ยืนยัน</PrimaryButton>
+                                </Col>
+                            </Row>
+                        </AntFormItem>
+                    </AntForm>
+                </Row>
+            </Wrapper>
         )
     }
 }

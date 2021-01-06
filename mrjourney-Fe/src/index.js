@@ -1,70 +1,75 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 
-{ BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from 'react-router-dom';
 import App from './App';
-import CreateTrip from './linepage/CreateTrip';
-import Home from './webpage/Home';
-import CreateJoinRoom from './webpage/CreateJoinRoom';
-import JoinedRoom from './webpage/JoinedRoom';
-import MyOwnerRoom from './webpage/MyOwnerRoom';
-import CurrentJoinRoom from './webpage/CurrentJoinRoom';
-import Profile from './webpage/Profile';
-import CheckTrip from './linepage/CheckTrip';
-import LoginPage from './webpage/LoginPage';
-import FirstTimeLogin from './webpage/FirstTimeLogin';
+import { HookProvider } from './store/HookProvider'
+import momentjs from 'moment'
+import { createGlobalStyle } from "styled-components";
+import 'moment/locale/en-gb';
+import { Theme } from "./static/Theme";
+momentjs.locale('en-gb')
 
-// ReactDOM.render
-// (<App />, 
-// document.getElementById('root')
-// );
+const GlobalStyle = createGlobalStyle`
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Kanit', sans-serif;
+  }
+  .modal-content {
+    box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+    border: none;
+    border-radius: 13px;
+  }
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+        border-radius: 4px;
+        height: 40px;
+        font-size: 16px;
+        align-items: center;
+        &:hover , &:active, &:focus {
+            border-color: rgb(230, 111, 15);
+        }
+    }
+.edit-profile {
+    .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+        border-radius: 4px;
+        font-size: 14px;
+        align-items: center;
+        &:hover , &:active, &:focus {
+            border-color: rgb(230, 111, 15);
+        }
+    }
+}
+    textarea.ant-input {
+        font-size: 16px;
+        border-radius: 4px;
+        &:hover , &:active, &:focus {
+            border-color: rgb(230, 111, 15);
+        }
+    }
+    .ant-steps-item-custom .ant-steps-item-icon > .ant-steps-icon {
+        line-height: 0px;
+        top: -2px;
+    }
+    .ant-progress-success-bg, .ant-progress-bg {
+        background-color: rgb(230, 111, 15);
+    }
+    div.ant-typography, .ant-typography p {
+        margin: 0px;
+    }
+    .ant-btn-icon-only {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+`
 
 ReactDOM.render(
-    <Router>
-        <Switch>
-            <Route path="/CheckTrip" >
-                <CheckTrip />
-            </Route>
-            <Route path="/CreateTrip">
-                <CreateTrip />
-            </Route>
-            <Route path="/CreateJoinRoom" >
-                <CreateJoinRoom />
-            </Route>
-            <Route path="/JoinedRoom">
-                <JoinedRoom />
-            </Route>
-            <Route path="/Home">
-                <Home />
-            </Route>
-            <Route path="/Profile">
-                <Profile />
-            </Route>
-            <Route path="/MyOwnerRoom">
-                <MyOwnerRoom/>
-            </Route>
-            <Route path="/CurrentJoinRoom">
-                <CurrentJoinRoom/>
-            </Route>
-            <Route path="/LoginPage">
-                <LoginPage/>
-            </Route>
-            <Route path="/FirstTimeLogin">
-                <FirstTimeLogin/>
-            </Route>
-            <Route path="/">
-                <App />
-            </Route>
-        </Switch>
-    </Router>
-    ,document.getElementById('root')
+    <HookProvider>
+        <GlobalStyle />
+        <Theme>
+            <App />
+        </Theme>
+    </HookProvider>
+    , document.getElementById('root')
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 

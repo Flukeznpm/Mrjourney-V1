@@ -1,297 +1,163 @@
-import React from 'react';
-import "../../static/css/Show-Room.css";
-import "../../static/css/Nav.css";
-import "../../static/css/App.css";
-import BgSlide1 from '../../static/img/pr-01.png';
-import Logo from '../../static/img/logojourney.png';
-import Swal from 'sweetalert2';
+import React, { useContext, useEffect, useState } from 'react';
+import styled from "styled-components";
 import axios from 'axios';
-import momentjs from 'moment'
+import { HookContext } from '../../store/HookProvider'
 import MoreRoomDetailModal from '../Modal/MoreRoomDetailModal';
-class ShowRoomBox extends React.Component {
+import {
+    Button as AntButton,
+    Card, Col, Row,
+    Tooltip,
+    Input as AntInput,
+    Select as AntSelect
+} from 'antd';
+import RoomBox from './RoomBox';
 
-    constructor() {
-        super()
-        this.state = {
-            addModalShow: false,
-            room: [
-                {
-                    // roomID: '',
-                    // roomName: '',
-                    // // picRoom: datas.picRoom,
-                    // province: '',
-                    // startDate: '',
-                    // endDate: '',
-                    // tripDetails: '',
-                    // // QRcode: datas.QRcode,
-                    // maxMember: '',
-                    // genderCondition: '',
-                    // ageCondition: '',
-                    // status: ''
-                }
-            ],
-
-        }
+const { Search } = AntInput;
+const SearchComponent = styled(Search)`
+    height: 40px;
+    border-radius: 4px;
+    &:hover , &:active, &:focus {
+            border-color: rgb(230, 111, 15);
     }
+    .ant-input {
+        font-size: 16px;
+    }
+`;
 
-    componentDidMount = async () => {
-        await axios.get('http://localhost:5000/room')
+const ImgCover = styled.img`
+    height: 155px;
+    width: 100%;
+    object-fit: cover;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+`;
+
+function ShowRoomBox(props) {
+    const { addModalShow, showRoomModalClose, showRoomModalShow, thaiprovince } = useContext(HookContext)
+    const [data, setData] = useState([]);
+    const [room, setShowRoom] = useState([{}])
+    const [sortType, setSortType] = useState('recent');
+    const [roomModal, setRoomModal] = useState({})
+    const [accountJoinRoom, setAccountJoinRoom] = useState({})
+    const [filterRoomID, setFilterRoomID] = useState(null)
+    const [filterRoomProvince, setFilterRoomProvince] = useState(null)
+    const { Option } = AntSelect;
+    const [loading, isLoading] = useState(true)
+
+    useEffect(() => {
+        axios.get('https://mrjourney-senior.herokuapp.com/room')
             .then(async res => {
-                // console.log('Data from /api/room : ' + res.data)
-                this.setState({
-                    room: res.data
-                });
+                const sortArray = type => {
+                    const types = {
+                        recent: 'recent',
+                        maxMembers: 'maxMembers',
+                        province: 'province',
+                    };
+                    const sortProperty = types[type];
+                    const sorted = [...res.data].sort((a, b) => {
+                        if (sortProperty === 'recent') {
+                            return a - b;
+                        } else if (sortProperty === 'province') {
+                            return a.province.localeCompare(b.province);
+                        } else if (sortProperty === 'maxMembers') {
+                            return b.maxMember - a.maxMember;
+                        }
+                    });
+                    setShowRoom(sorted);
+                };
+                sortArray(sortType);
+                isLoading(false)
             });
-        // console.log('Data from state.room : ' + this.state.room);
-    }
+    }, [sortType])
 
-    AlertJoinWrongCondition = () => {
-
-        Swal.fire({
-            icon: 'error',
-            title: 'ขออภัย!',
-            text: 'เงื่อนไขไม่ตรงกับทางทริปที่กำหนด',
-            showCancelButton: false,
-            confirmButtonColor: '#D33',
-            confirmButtonText: 'กลับสู่หน้าหลัก'
-        })
+    const onFilterRoomID = (roomID) => {
+        if (!filterRoomID) {
+            return roomID
+        } else {
+            return filterRoomID
+        }
 
     }
 
-    AlertJoinRoom = () => {
-        if (this.state.myacc === 'guest') {
-            Swal.fire({
-                icon: 'success',
-                title: 'เข้าร่วมสำเร็จ!',
-                text: 'ขณะนี้คุณสามารถเข้าสู่ห้องเพื่อตรวจสอบรายละเอียดได้แล้ว',
-                showCancelButton: true,
-                confirmButtonText: 'เข้าสู่ห้อง',
-                confirmButtonColor: '#31CC71',
-                cancelButtonText: 'กลับสู่หน้าหลัก',
-            })
+    const onFilterRoomProvince = (roomProvince) => {
+        if (!filterRoomProvince) {
+            return roomProvince
+        } else {
+            return filterRoomProvince
         }
     }
 
-    AlertJoinRoomDontAcc = () => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'คุณยังไม่ได้ Login!',
-            text: 'กรุณาทำการ Login ก่อนทำรายการ',
-            showCancelButton: true,
-            confirmButtonText: 'Login',
-            confirmButtonColor: '#F37945',
-            cancelButtonText: 'กลับสู่หน้าหลัก',
-        })
-    }
-
-    AlertRoomDetails = () => {
-        Swal.fire({
-            imageUrl: "//static/img/logojourney.png",
-            position: 'center',
-            type: 'info',
-            title: `Class Information`,
-            input: 'date',
-            html: `<div>
-            <h1> HelloWorld </h1>
-            <p> TestAlert </p>
-            <p className="float-right">hahaha</p>
-            <img src=${Logo} height="45" alt="MrJourney" />ผู้สร้าง 
-            </div>`,
-        })
-    }
-
-    addModalClose = () => {
-        this.setState({
-            addModalShow: false,
-        })
-    }
-
-    render() {
-        return (
-            <section className="py-5">
-                <div className="Show-Join-Room">
-                    <div className="container">
-                        <div className="row">
-
-                            {this.state.room.map((room, key) => {
+    return (
+        <div className="container py-3">
+            <Row justify="center" gutter={18}>
+                <Col lg={6} md={8} sm={18} xs={18} className="py-2">
+                    <Row justify="center">
+                        <SearchComponent
+                            placeholder="ใส่รหัสประจำห้องเพื่อค้นหา"
+                            onSearch={value => setFilterRoomID(value)}
+                        />
+                    </Row>
+                </Col>
+                <Col lg={6} md={8} sm={18} xs={18} className="py-2">
+                    <Row justify="center">
+                        <AntSelect
+                            placeholder="เลือกจังหวัดที่ต้องการ"
+                            style={{ width: "100%" }}
+                            onChange={e => setFilterRoomProvince(e)}
+                        >
+                            <Option value="">แสดงทุกจังหวัด</Option>
+                            {thaiprovince.map((ThaiProvinceShow) => {
                                 return (
-                                    // <span id={key}>
-                                    <div className="col-lg-4 col-md-6 col-sm-12">
-                                        <div className="">
-
-                                            <div class="alert box-room show-box">
-                                                <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                                                <div class="box-room-details show-box mt-2">
-                                                    <div className="mt-3 mr-3 ml-3 mb-0">
-                                                        <h3 className="py-1">
-                                                            {room.roomName} &nbsp;
-                                                             <button
-                                                                type="button" class="maxMember-btn btn p-0 ml-1 "
-                                                                style={{ fontSize: "12px" }} >
-                                                                0/
-                                                                {room.maxMember}
-                                                            </button>
-                                                        </h3>
-                                                        <span className="py-1" style={{ fontSize: "14px" }}>
-                                                            Room ID : {room.roomID}
-                                                        </span>
-                                                        <br />
-                                                        <span className="py-1" style={{ fontSize: "14px" }}>
-                                                            จังหวัด : {room.province}
-                                                        </span>
-                                                        <br />
-                                                        <span className="py-1" style={{ fontSize: "14px" }}>
-                                                            วันที่ : &nbsp;
-                                                            <button
-                                                                type="button" class="show-details-btn btn p-1 " style={{ fontSize: "10px" }}>
-                                                                {momentjs(room.startDate).format('DD/MM/YYYY')}
-                                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                                            </button>
-                                                            &nbsp; - &nbsp;
-                                                            <button
-                                                                type="button" class="show-details-btn btn p-1" style={{ fontSize: "10px" }}>
-                                                                {momentjs(room.endDate).format('DD/MM/YYYY')}
-                                                                <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                                            </button>
-                                                        </span>
-                                                        <p />
-                                                        <div className="text-right">
-                                                            {room.genderCondition == 'ชาย' ?
-                                                                <span className="Show-genderCondition pl-2 pr-2">
-                                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                                </span>
-                                                                :
-                                                                ""}
-                                                            {room.genderCondition == 'หญิง' ?
-                                                                <span className="Show-genderCondition pl-2 pr-2">
-                                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                                </span>
-                                                                :
-                                                                ""}
-                                                            {room.genderCondition == 'ไม่จำกัดเพศ' ?
-                                                                <span className="Show-genderCondition pl-2 pr-2">
-                                                                    <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                                    <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                                </span>
-                                                                :
-                                                                ""}
-                                                            <br /><span className="mt-0 ml-2" style={{ fontSize: "10px" }}>
-                                                                อายุ
-                                                                &nbsp;
-                                                            <button
-                                                                    type="button" class="show-details-btn btn p-1 " style={{ fontSize: "8px" }}>
-                                                                    {room.ageCondition}
-                                                                </button>
-                                                            </span>
-                                                        </div>
-                                                        <span className="pl-1 pr-1"><img src={room.ownerPicRoom} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
-                                                        <span style={{ fontSize: "13px" }}>ผู้สร้าง : {room.ownerRoom}</span>
-                                                    </div>
-                                                    <div className="navbar pt-2">
-                                                        <div>
-                                                            <button type="button" class="btn btn-join-color round text-white" onClick={this.AlertJoinWrongCondition}>เข้าร่วม</button>
-                                                        </div>
-                                                        <div className="button-search">
-                                                            <button type="button" className="btn"
-                                                                onClick={() => this.setState({ addModalShow: true })}>
-                                                                <i class="fas fa-search fa-2x" style={{ color: "#F37945" }}></i>
-                                                            </button>
-                                                            <MoreRoomDetailModal
-                                                                show={this.state.addModalShow}
-                                                                onHide={this.addModalClose} //use for closeButton
-                                                            ></MoreRoomDetailModal>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    // </span>
+                                    <Option value={ThaiProvinceShow}>{ThaiProvinceShow}</Option>
                                 )
                             })}
+                        </AntSelect>
+                    </Row>
+                </Col>
+                <Col lg={6} md={8} sm={18} xs={18} className="py-2" >
+                    <Row justify="center">
+                        <AntSelect
+                            defaultValue="recent"
+                            onChange={e => setSortType(e)}
+                            style={{ width: "100%" }}
+                        >
+                            <Option value="recent">ล่าสุด</Option>
+                            <Option value="maxMembers">จำนวนที่เปิดรับ</Option>
+                            <Option value="province">ชือจังหวัด</Option>
+                        </AntSelect>
+                    </Row>
+                </Col>
+            </Row>
 
+            <div className="row">
+                {room
+                    .filter(room => room.roomID === onFilterRoomID(room.roomID))
+                    .filter(room => room.province === onFilterRoomProvince(room.province))
+                    .map((room, key) => {
+                        return (
+                            <>
+                                {room.roomID !== undefined ?
+                                    <RoomBox room={room}
+                                        setRoomModal={setRoomModal}
+                                        showRoomModalShow={showRoomModalShow}
+                                        setAccountJoinRoom={setAccountJoinRoom}
+                                        acc={props.acc}
+                                        loading={loading}
+                                    />
+                                    :
+                                    null}
+                            </>
+                        )
+                    })}
+                <MoreRoomDetailModal
+                    show={addModalShow}
+                    onHide={() => showRoomModalClose()} //use for closeButton
+                    room={roomModal}
+                    acc={accountJoinRoom}
+                ></MoreRoomDetailModal>
+            </div>
+        </div>
 
-                            {/* Mockup 01 */}
-                            <div className="col-lg-4 col-md-6 col-sm-12">
-                                <div className="">
-
-                                    <div class="alert box-room show-box">
-                                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
-                                        <div class="box-room-details show-box mt-2">
-                                            <div className="mt-3 mr-3 ml-3 mb-0">
-                                                <h3 className="py-1">
-                                                    Mockup 01 &nbsp;
-                                                             <button
-                                                        type="button" class="maxMember-btn btn p-0 ml-1 "
-                                                        style={{ fontSize: "12px" }} >
-                                                        0/5
-                                                    </button>
-                                                </h3>
-                                                <span className="py-1" style={{ fontSize: "14px" }}>
-                                                    Room ID : R_000002
-                                                </span>
-                                                <br />
-                                                <span className="py-1" style={{ fontSize: "14px" }}>
-                                                    จังหวัด : กรุงเทพมหานคร
-                                                </span>
-                                                <br />
-                                                <span className="py-1" style={{ fontSize: "14px" }}>
-                                                    วันที่ : &nbsp;
-                                                            <button
-                                                        type="button" class="show-details-btn btn p-1 " style={{ fontSize: "10px" }}>
-                                                        {momentjs('2020-05-04').format('DD/MM/YYYY')}
-                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                                    </button>
-                                                            &nbsp; - &nbsp;
-                                                            <button
-                                                        type="button" class="show-details-btn btn p-1" style={{ fontSize: "10px" }}>
-                                                        {momentjs('2020-05-05').format('DD/MM/YYYY')}
-                                                        <i class="far fa-calendar-alt ml-2 mr-1"></i>
-                                                    </button>
-                                                </span>
-                                                <p />
-                                                <div className="text-right">
-                                                    <span className="Show-genderCondition pl-2 pr-2">
-                                                        <i class="fas fa-user fa-lg ml-2 mb-0" style={{ color: "hotpink" }}></i>
-                                                        <i class="fas fa-user fa-lg ml-2" style={{ color: "dodgerblue" }}></i>
-                                                    </span>
-                                                    <br /><span className="mt-0 ml-2" style={{ fontSize: "10px" }}>
-                                                        อายุ
-                                                        &nbsp;
-                                                            <button
-                                                            type="button" class="show-details-btn btn p-1 " style={{ fontSize: "8px" }}>
-                                                            20 ปีขึ้นไป
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                                <span className="pl-1 pr-1"><img src={Logo} class="image_outer_container" height="30px" width="30px" alt="owner-img" /></span>
-                                                <span style={{ fontSize: "13px" }}>ผู้สร้าง : mrjourney</span>
-                                            </div>
-                                            <div className="navbar pt-2">
-                                                <div>
-                                                    <button type="button" class="btn nav-color round text-white" onClick={this.AlertJoinRoomSuc}>เข้าร่วม</button>
-                                                </div>
-                                                <div className="button-search">
-                                                    <button type="button" className="btn"
-                                                        onClick={() => this.setState({ addModalShow: true })}>
-                                                        <i class="fas fa-search fa-2x" style={{ color: "#F37945" }}></i>
-                                                    </button>
-                                                    <MoreRoomDetailModal
-                                                        show={this.state.addModalShow}
-                                                        onHide={this.addModalClose} //use for closeButton
-                                                    ></MoreRoomDetailModal>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        )
-    }
+    )
 }
 export default ShowRoomBox;

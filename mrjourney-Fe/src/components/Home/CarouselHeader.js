@@ -1,6 +1,12 @@
 import React from 'react';
-import BgSlide1 from '../../static/img/pr-01.png';
+import BgSlide1 from '../../static/img/pr-02.png';
+import styled from "styled-components";
 
+const ImgCover = styled.img`
+    height: 100%;
+    width: 100%;
+    /* object-fit: cover; */
+`;
 
 const CarouselHeader = () => {
     return (
@@ -13,13 +19,13 @@ const CarouselHeader = () => {
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="d-block w-100" src={BgSlide1} alt="First slide" />
+                        <ImgCover class="d-block" src="/img/Carousel-1.png" alt="First slide" />
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src={BgSlide1} alt="Second slide" />
+                        <ImgCover class="d-block" src="/img/Carousel-2.png" alt="Second slide" />
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100" src={BgSlide1} alt="Third slide" />
+                        <ImgCover class="d-block" src="/img/Carousel-3.png" alt="Third slide" />
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

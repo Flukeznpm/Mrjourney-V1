@@ -1,0 +1,28 @@
+.personal-details {
+    padding: 30px 15px 30px 15px;
+}
+
+.show-profile {
+    text-align: center;
+}
+
+.edit-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 20px 0px 20px;
+}
+
+.detail-text {
+    padding: 10px 0px 10px 0px;
+}
+
+.detail-label {
+    text-align: right;
+}
+
+@media (max-width: 767px) {
+    .detail-label {
+        text-align: center;
+    }
+}

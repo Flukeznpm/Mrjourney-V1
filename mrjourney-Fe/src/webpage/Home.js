@@ -1,51 +1,75 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavWebPage from '../components/Nav/NavWebPage';
 import CarouselHeader from '../components/Home/CarouselHeader';
 import ShowRoomBox from '../components/Home/ShowRoomBox';
 import '../static/css/Show-Room.css';
+import '../static/css/SearchButton.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+import Swal from 'sweetalert2';
+import momentjs from 'moment'
 
-class Home extends React.Component {
+function Home(props) {
+    const [lineID, setLineID] = useState("")
+    const [displayName, setDisplayName] = useState("")
+    const [pictureURL, setPictureURL] = useState("")
+    const [acc, setShowAcc] = useState([{}])
 
-    componentDidMount() {
-        let search = window.location.search;
-        let params = new URLSearchParams(search);
-        let code = params.get('code');
-        let data = {
-            code: code
+    useEffect(() => {
+        let loadJWT = cookie.load('jwt');
+        if (loadJWT === undefined) {
+            props.history.push('/Home');
+        } else {
+            var user = jwt.verify(loadJWT, 'secreatKey');
+            setDisplayName(user.displayName)
+            setPictureURL(user.pictureURL)
+            setLineID(user.lineID)
         }
-        if (code != null) {
-            axios.post('http://localhost:5000/getToken', data).then((res) => {
-                console.log(res);
-                cookie.save('jwt', res.data);
-                var decoded = jwt.verify(res.data, 'secreatKey');
-                console.log(decoded);
-            })
-        }
-    }
 
-    render() {
-        return (
-            <div className="flex-wrapper">
-                <div className="top-page">
-                    <NavWebPage />
-                    <div className="content-page">
-                        <div className="Carousel-Header">
-                            <CarouselHeader></CarouselHeader>
-                        </div>
-                        <ShowRoomBox></ShowRoomBox>
+        if (!user) {
+            setShowAcc([{}])
+        } else {
+            axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile?userID=${user.lineID}`)
+                .then(res => {
+                    setShowAcc(res.data)
+                });
+
+            let dataSyncLine = {
+                lineID: user.lineID,
+                displayName: user.displayName,
+                pictureURL: user.pictureURL
+            }
+            console.log('dataSyncLine: ', dataSyncLine);
+            axios.post('https://mrjourney-senior.herokuapp.com/update/syncLine', dataSyncLine)
+                .then((res) => {
+                    // console.log(res)
+                });
+        }
+    }, [])
+
+    return (
+        <div className="flex-wrapper">
+            <div className="top-page">
+                <NavWebPage />
+                <div className="content-page">
+                    <div className="Carousel-Header">
+                        <CarouselHeader></CarouselHeader>
                     </div>
-                </div>
-                <div className="footer-page">
-                    <FooterWebPage></FooterWebPage>
+                    {acc.map((acc) => {
+                        return (
+                            <ShowRoomBox acc={acc}></ShowRoomBox>
+                        )
+                    })}
                 </div>
             </div>
-
-        )
-    }
+            <div className="footer-page">
+                <FooterWebPage></FooterWebPage>
+            </div>
+        </div>
+    )
 }
 
-export default Home;
+export default withRouter(Home);

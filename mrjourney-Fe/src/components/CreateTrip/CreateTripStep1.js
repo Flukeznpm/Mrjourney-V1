@@ -1,181 +1,233 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import styled from "styled-components";
 import '../../static/css/App.css';
-import '../../static/css/Stepper.css';
-import LogoStep1 from '../../static/img/LogoStep1.png'
-import LogoStep2 from '../../static/img/LogoStep2.png'
-import LogoStep3 from '../../static/img/LogoStep3.png'
-import jwt from 'jsonwebtoken';
-import cookie from 'react-cookies';
 import { withRouter } from 'react-router-dom';
+import { HookContext } from '../../store/HookProvider'
+import Stepper from '../components/Stepper';
+import { Link } from 'react-router-dom';
+import liff from '@line/liff';
+import axios from 'axios';
+import {
+    Form as AntForm,
+    Input as AntInput,
+    Button as AntButton,
+    Select as AntSelect,
+    DatePicker,
+    Col, Row,
+    InputNumber
+} from 'antd';
+import momentjs from 'moment';
 
+const WrapperLoading = styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+`;
 
-class CreateTripStep1 extends React.Component {
+const RowLoading = styled(Row)`
+    display: flex;
+    align-items: center;
+    height: 100%;
+`
 
-    constructor() {
-        super()
-        this.state = {
-            thaiprovince: [
-                'กรุงเทพมหานคร', 'กระบี่', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร',
-                'ขอบแก่น',
-                'จันทบุรี', 'ฉะเชิงเทรา', 'ชลบุรี', 'ชัยนาท', 'ชัยภูมิ', 'ชุมพร', 'เชียงราย', 'เชียงใหม่',
-                'ตรัง', 'ตราด', 'ตาก',
-                'นครนายก', 'นครปฐม', 'นครพนม', 'นครราชสีมา', 'นครศรีธรรมราข', 'นครสวรรค์', 'นนทบุรี', 'นราธิวาส', 'น่าน',
-                'บึงกาฬ', 'บุรีรัมย์',
-                'ปทุมธานี', 'ประจวบคีรีขันธ์', 'ปราจีนบุรี', 'ปัตตานี',
-                'พระนครศรีอยุธยา', 'พังงา', 'พัทลุง', 'พิจิตร', 'พิษณุโลก', 'เพชรบุรี', 'เพชรบูรณ์', 'แพร่', 'พะเยา',
-                'ภูเก็ต',
-                'มหาสารคาม', 'มุกดาหาร', 'แม่ฮ่องสอน',
-                'ยะลา', 'ยโสธร',
-                'ร้อยเอ็ด', 'ระนอง', 'ระยอง', 'ราชบุรี',
-                'ลพบุรี', 'ลำปาง', 'ลำพูน', 'เลย',
-                'ศรีสะเกษ',
-                'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรปราการ', 'สมุทรสงคราม', 'สมุทรสาคร', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์',
-                'หนองคาย', 'หนองบัวลำภู', 'อ่างทอง', 'อุดรธานี', 'อุทัยธานี', 'อุตรดิตถ์', 'อุบลราชธานี', 'อำนาจเจริญ']
-        }
+const LoadingGif = styled.img`
+    height: 250px;
+    width: 250px;
+   
+`;
+
+const PrimaryButton = styled(AntButton)`
+    border-radius: 4px;
+    font-size: 16px;
+    height: 50px;
+    background: ${props => (props.theme.color.primary)};
+    border: ${props => (props.theme.color.primary)};
+    &:hover , &:active, &:focus {
+        background: ${props => (props.theme.color.primaryPress)};
+        border: ${props => (props.theme.color.primaryPress)};
+    }
+`;
+
+const DatePickerComponent = styled(DatePicker)`
+    height: 40px;
+    border-radius: 4px;
+    &:hover , &:active, &:focus {
+        border-color: rgb(230, 111, 15);
+    }
+`
+
+const InputComponent = styled(AntInput)`
+    border-radius: 4px;
+    height: 40px;
+    font-size: 16px;
+    align-items: center;
+    &:hover , &:active, &:focus {
+        border-color: ${props => (props.theme.color.primary)};
+    }
+`;
+
+const InputNumberComponent = styled(InputNumber)`
+    border-radius: 4px;
+    height: 40px;
+    font-size: 16px;
+    align-content: center;
+    &:hover , &:active, &:focus {
+        border-color: ${props => (props.theme.color.primary)};
+    }
+`;
+
+const AntFormItem = styled(AntForm.Item)`
+    margin-bottom: 0px;
+    padding: 10px;
+`
+
+function CreateTripStep1(props) {
+    const { thaiprovince, handleTripForm, Trip, confirmTripStep, toDate } = useContext(HookContext)
+
+    const [LineID, setLineID] = useState('')
+    const [LineName, setLineName] = useState('')
+    const [LinePicture, setLinePicture] = useState('')
+    const [LineGroup, setLineGroup] = useState('')
+    const [loading, isLoading] = useState(true)
+    const [tripList, setTripList] = useState([{}])
+
+    const { Option } = AntSelect;
+    const dateFormat = 'DD/MM/YYYY';
+    const [form] = AntForm.useForm();
+
+    useEffect(() => {
+        liff.init({ liffId: '1653975470-jV83lv9w' }).then(async () => {
+            if (liff.isLoggedIn()) {
+                if (!LineGroup || LineGroup === '') {
+                    let profile = await liff.getProfile();
+                    setLineID(profile.userId);
+                    setLineName(profile.displayName);
+                    setLinePicture(profile.pictureUrl);
+                    const context = await liff.getContext();
+                    setLineGroup(context.groupId)
+                } else {
+                    await axios.get(`https://mrjourney-senior.herokuapp.com/trip?lineGroupID=${LineGroup}`)
+                        .then(res => {
+                            if (res.status === 202) {
+                                isLoading(false)
+                            } else {
+                                setTripList(res.data)
+                                isLoading(false)
+                            }
+                        });
+                }
+
+            } else {
+                props.history.push('/Home');
+            }
+        });
+        form.setFieldsValue({
+            numberAddDate: Trip.numberAddDate
+        })
+    }, [LineGroup])
+
+    const onFinish = values => {
+        handleTripForm(values.tripName, 'tripName')
+        handleTripForm(values.province, 'province')
+        handleTripForm(values.date, 'date')
+        handleTripForm(values.numberAddDate, 'numberAddDate')
+        confirmTripStep(1)
+    };
+
+    const closedLiff = () => {
+        liff.closeWindow()
     }
 
-    componentDidMount() {
-        let loadJWT = cookie.load('jwt');
-        console.log(loadJWT)
-        if (loadJWT == undefined) {
-            this.props.history.push('/Home');
-        } else {
-            var user = jwt.verify(loadJWT, 'secreatKey');
-            this.setState({
-                Linename: user.displayName,
-                Linepicture: user.pictureURL
-            })
-        }
-    }
-
-    render() {
+    if (loading) {
         return (
-            <div >
-                <div className="top-page">
-                    {/* <NavTripPage firsttitle={"ยินดีต้อนรับ"} secondtitle={"เริ่มสร้างแผนการท่องเที่ยว"} ></NavTripPage> */}
-
-                    <div className="step-progress step-1 mt-3 pt-2" >
-                        <ul>
-                            <li>
-                                <img src={LogoStep1} style={{ opacity: "80%" }} /><br />
-                                <i class="fas fa-sync-alt"></i>
-                                <p>สร้างแผน</p>
-                            </li>
-                            <li>
-                                <img src={LogoStep2} style={{ opacity: '20%' }} /><br />
-                                {/* <i class="fas fa-sync-alt"></i> */}
-                                <i class="fas fa-times"></i>
-                                <p>ระบุรายละเอียด</p>
-                            </li>
-                            <li>
-                                <img src={LogoStep3} style={{ opacity: '20%' }} /><br />
-                                <i class="fas fa-times"></i>
-                                <p>เสร็จสิ้น</p>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="content-page py-2">
-                        <div className="col-12">
-                            <div className="row">
-                                <div className="col-2"></div>
-                                <div className="col-8">
-                                    <div className="py-3">
-            
-                                        <form>
-                                            <div className="form-group">
-                                                <div className="InputFrom">
-                                                    <div className="">
-                                                        <label htmlFor="exampleInputEmail1">ชื่อทริป<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                        <input type='text' className="form-control"
-                                                            name="tripName"
-                                                            value={this.props.TripForm.tripName}
-                                                            onChange={(e) => this.props.handleForm(e)}
-                                                            placeholder="ใส่ชื่อทริปท่องเที่ยว" />
-                                                    </div>
-                                                </div>
-                                                <div className="InputFrom">
-                                                    <div className="pt-4">
-                                                        <label htmlFor="exampleInputEmail1" >จังหวัด<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                        <div className="btn-group pl-5">
-                                                            <select className=" btn province-btn dropdown-toggle"
-                                                                name="province"
-                                                                value={this.props.TripForm.province}
-                                                                onChange={(e) => this.props.handleForm(e)}
-                                                                id="dropdownMenuButton"
+            <WrapperLoading>
+                <RowLoading justify="center">
+                    <LoadingGif src="/gif/loading-v2.gif" alt="loading..." />
+                </RowLoading>
+            </WrapperLoading>
+        )
+    } else {
+        return (
+            <div>
+                {tripList.map((trip) => {
+                    return (
+                        <>
+                            {trip.tripName ?
+                                <WrapperLoading>
+                                    <RowLoading justify="center">
+                                        <h2 className="col-12 font-weight-bold text-center color-default py-4">
+                                            ขณะนี้ยังมีทริปเก่าที่ยังถูกสร้างอยู่
+                                          </h2>
+                                        <AntForm className="container">
+                                            <AntFormItem>
+                                                <Col span={24}>
+                                                    <PrimaryButton type="primary" size={"large"}
+                                                        block htmlType="button"
+                                                        onClick={() => closedLiff()}
+                                                    >กลับสู่ห้องแชท</PrimaryButton>
+                                                </Col>
+                                            </AntFormItem>
+                                        </AntForm>
+                                    </RowLoading>
+                                </WrapperLoading>
+                                :
+                                <>
+                                    <div className="pb-2">
+                                        <Stepper typeStep="trip" step={1} />
+                                    </div>
+                                    <div className="content-page py-2">
+                                        <div className="col-12">
+                                            <div className="row">
+                                                <div className="col-md-3"></div>
+                                                <div className="col-md-6">
+                                                    <AntForm form={form} onFinish={onFinish}>
+                                                        <AntForm.Item name="tripName" label="ชื่อทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                                            <InputComponent placeholder="ใส่ชื่อทริปของคุณ" />
+                                                        </AntForm.Item>
+                                                        <AntForm.Item name="province" labelCol={{ span: 24 }} label="จังหวัด" rules={[{ required: true }]}>
+                                                            <AntSelect
+                                                                placeholder="กรุณาเลือกจังหวัด"
                                                             >
-                                                                {this.state.thaiprovince.map((ThaiProvinceShow) => {
+                                                                {thaiprovince.map((ThaiProvinceShow) => {
                                                                     return (
-                                                                        <option value={ThaiProvinceShow}>{ThaiProvinceShow}</option>
+                                                                        <Option value={ThaiProvinceShow}>{ThaiProvinceShow}</Option>
                                                                     )
                                                                 })}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="InputFrom">
-                                                    <div className="pt-4">
-                                                        <label htmlFor="exampleInputEmail1">เลือกวันเริ่มเดินทาง<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                        <input type='date' className="form-control"
-                                                            name="date"
-                                                            value={this.props.TripForm.date}
-                                                            onChange={(e) => this.props.handleForm(e)} />
-                                                            
-                                                    </div>
-                                                </div>
-                                                {/* <InputAddDate></InputAddDate> */}
-
-
-                                                <div className="col pt-4">
-                                                    <label htmlFor="example-date-input">จำนวนวัน<span className="p-1" style={{ color: "red" }}>*</span></label>
-                                                    <div className="input-group">
-
-                                                        <span className="input-group-btn">
-                                                            <button type="button" className="btn btn-default btn-number"
-                                                                onClick={this.props.handleFormRemoveDate}>
-                                                                <span className="fas fa-minus"></span>
-                                                            </button>
-                                                        </span>
-
-                                                        <input type="text" name="numberAddDate" className="form-control input-number" value={this.props.TripForm.numberAddDate} min="1" max="10" />
-
-                                                        <span className="input-group-btn">
-                                                            <button type="button" className="btn btn-default btn-number"
-                                                                onClick={this.props.handleFormAddDate}>
-                                                                <span className="fas fa-plus" aria-hidden="true"></span>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                            <div className="col-12">
-                                                <div className="row">
-                                                    <div className="col-2"></div>
-                                                    <div className="col-8">
-                                                        <div className="buttom-page py-3">
-                                                            <div className="py-3" style={{ marginBottom: "25px", marginTop: "20px" }}>
-                                                                {/* <div className=" col-2 float-right "> */}
-                                                                <div className="next-btn">
-                                                                    <button type="button" className="btn btn-warning btn-lg btn-block text-white"
-                                                                        onClick={this.props.handleStep}>{this.props.nextButton}</button>
+                                                            </AntSelect>
+                                                        </AntForm.Item>
+                                                        <div className="col-12 p-0">
+                                                            <div className="row">
+                                                                <div className="col-6">
+                                                                    <AntForm.Item name="date" label="วันเริ่มทริป" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                                                        <DatePickerComponent style={{ width: "100%" }}
+                                                                            disabledDate={d => !d || d.isSameOrBefore(momentjs(new Date()).add(-1, 'day'))}
+                                                                            format={dateFormat} placeholder="เลือกวันที่เริ่มเดินทาง"
+                                                                        />
+                                                                    </AntForm.Item>
+                                                                </div>
+                                                                <div className="col-6">
+                                                                    <AntForm.Item name="numberAddDate" label="จำนวนวันเดินทาง" labelCol={{ span: 24 }} rules={[{ required: true }]}>
+                                                                        <InputNumberComponent min={1} style={{ width: "100%" }} placeholder="จำนวนวันเดินทาง" />
+                                                                    </AntForm.Item>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="col-2"></div>
+                                                        <div className="container col-md-6 fixed-bottom">
+                                                            <AntFormItem>
+                                                                <PrimaryButton type="primary" size={"large"} block htmlType="ถัดไป">ถัดไป</PrimaryButton>
+                                                            </AntFormItem>
+                                                        </div>
+                                                    </AntForm>
                                                 </div>
+                                                <div className="col-md-3"></div>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
-
-                                </div>
-                                <div className="col-2"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                                </>
+                            }
+                        </>
+                    )
+                })}
             </div>
         )
     }

@@ -1,122 +1,114 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import styled from "styled-components";
 import NavWebPage from '../components/Nav/NavWebPage';
-import ProfileImg from '../static/img/bg-slide-test-1.jpg';
-import '../static/css/App.css';
 import FooterWebPage from '../components/Footer/FooterWebPage';
-import { Button, ButtonToolbar, Tabs, Tab } from 'react-bootstrap'
-import { Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import cookie from 'react-cookies'
+import {
+    Card,
+    Row,
+    Col,
+    Tooltip,
+    Button as AntButton,
+} from 'antd';
+import ProfileDetails from '../components/Profile/ProfileDetails';
+import HistoryCreateRoom from '../components/Profile/HistoryCreateRoom/View';
+import HistoryCreateTrip from '../components/Profile/HistoryCreateTrip/View';
+import Rating from '../components/Profile/Rating/View';
 
-const ProfileMoreDetail = () => {
-    const [key, setKey] = useState('home');
-    return (
-        <div>
-            <Tabs
-                id="controlled-tab-example"
-                activeKey={key}
-                onSelect={(k) => setKey(k)}>
-                <Tab eventKey="home" title="Home"> sadass</Tab>
-                <Tab eventKey="profile" title="Profile">sfsafs</Tab>
-                <Tab eventKey="contact" title="Contact" disabled>sfsaf</Tab>
-            </Tabs>
-        </div>
-    )
-}
+const AntCard = styled(Card)`
+  border-radius: 8px;
+  box-shadow: 2px 8px 10px rgba(0, 0, 0, 0.06), 0px 3px 4px rgba(0, 0, 0, 0.07);
+  margin: 10px 0px 10px 0px;
+  padding: 15px 0px 15px 0px;
+`;
 
-class Profile extends React.Component {
+function Profile(props) {
+    const [lineID, setLineID] = useState("")
+    const [displayName, setDisplayName] = useState("")
+    const [pictureURL, setPictureURL] = useState("")
+    const [acc, setShowAcc] = useState([{}])
+    const [isEditProfile, setEditProfile] = useState(false)
+    const [isEditBio, setEditBio] = useState(true);
+    const [loading, isLoading] = useState(true)
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            displayName: '',
-            pictureURL: '',
-            email: ''
-        }
-    }
 
-    componentDidMount() {
+    useEffect(() => {
         let loadJWT = cookie.load('jwt');
-        console.log(loadJWT)
-        if (loadJWT == undefined) {
-            this.props.history.push('/Home');
+        if (loadJWT === undefined) {
+            props.history.push('/Home');
         } else {
             var user = jwt.verify(loadJWT, 'secreatKey');
-            this.setState({
-                displayName: user.displayName,
-                pictureURL: user.pictureURL,
-                email: user.email,
-            })
+            setDisplayName(user.displayName)
+            setPictureURL(user.pictureURL)
+            setLineID(user.lineID)
         }
-    }
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        let getUserID = params.get('userID');
 
-    render() {
-        return (
-            <div className="flex-wrapper">
-                <div className="top-page">
-                    <NavWebPage />
+        axios.get(`https://mrjourney-senior.herokuapp.com/accountProfile?userID=${getUserID}`)
+            .then(res => {
+                setShowAcc(res.data)
+                isLoading(false)
+            })
+    }, [isEditProfile, isEditBio])
 
-                    <div className="content-page">
-                        <div className="pt-5">
-                            <div className="Profile-Details text-center">
-                                <img src={this.state.pictureURL} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
-                                <div className="line-name pt-2" style={{ fontSize: "28px" }}>คุณ : {this.state.displayName}</div>
-                                <div className="line-name pt-2" style={{ fontSize: "20px" }}>เมล : {this.state.email}</div>
-                                <div className="detail-web pt-2">
-                                    <span>ชื่อจริง : </span>
-                                    <p /><span>เพศ : </span>
-                                </div>
+    return (
+        <div className="flex-wrapper">
+            <div className="top-page">
+                <NavWebPage />
+                {acc.map((acc) => {
+                    return (
+                        <>
+                            <div className="Profile-page py-4">
+                                <Row justify="center">
+                                    <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                        <ProfileDetails acc={acc} lineID={lineID}
+                                            isEditProfile={isEditProfile} setEditProfile={setEditProfile}
+                                            isEditBio={isEditBio} setEditBio={setEditBio}
+                                            loading={loading}
+                                        ></ProfileDetails>
+                                    </Col>
+                                </Row>
+                                <Row justify="center">
+                                    <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                        <HistoryCreateRoom loading={loading} />
+                                    </Col>
+                                </Row>
+
+                                {lineID === acc.lineID ?
+                                    <Row justify="center">
+                                        <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                            <HistoryCreateTrip acc={acc} loading={loading} />
+                                        </Col>
+                                    </Row>
+                                    :
+                                    null
+                                }
+
+                                <Row justify="center">
+                                    <Col lg={{ span: 10 }} md={{ span: 18 }} sm={{ span: 24 }} style={{ width: 400 }}>
+                                        <AntCard>
+                                            <Row>
+                                                <h4 style={{ fontWeight: "bold" }}>คะแนน</h4>
+                                            </Row>
+                                                <Rating />
+                                                {/* <h5 style={{ color: "#e66f0f", padding: "20px", fontWeight: "bold" }}>อยู่ในช่วงการพัฒนา...</h5> */}
+                                        </AntCard>
+                                    </Col>
+                                </Row>
                             </div>
-                            <div className="container">
-                                <div className="Profile-show-box mt-2" >
-                                    <ProfileMoreDetail></ProfileMoreDetail>
-                                    {/* <div className="bg-warning" style={{ width: "100%", height: "200px" }}> */}
-                                    {/* <div className="navbar">
-                                        <div className="Bio-box">
-                                            Bio
-                                        </div>
-                                        <div className="Bio-box">
-                                            History Join Room
-                                        </div>
-                                        <div className="Bio-box">
-                                            History Trip
-                                        </div>
-                                    </div>
-                                    <div className="display-show-box">
-
-                                    </div> */}
-
-                                    {/* </div> */}
-
-                                </div>
-                                <div className="Profile-score py-2 mt-5">
-                                    <div className="container">
-                                        <div className="text-left pl-3">คะแนน</div><p />
-                                        <div className="row text-center">
-                                            <div className="col-4">
-                                                <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
-                                                <div className="pt-2">ความสนุก</div>
-                                            </div>
-                                            <div className="col-4">
-                                                <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
-                                                <div className="pt-2">ความคุ้มค่า</div>
-                                            </div>
-                                            <div className="col-4">
-                                                <img src={ProfileImg} class="image_outer_container" height="200px" width="200px" alt="mrjourney-img" />
-                                                <div className="pt-2">การจัดการแผน</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="footer-page">
-                    <FooterWebPage></FooterWebPage>
-                </div>
+                        </>
+                    )
+                })}
             </div>
-        )
-    }
+            <div className="footer-page">
+                <FooterWebPage></FooterWebPage>
+            </div>
+        </div >
+    )
 }
 export default withRouter(Profile);

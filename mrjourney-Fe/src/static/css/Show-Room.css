@@ -17,16 +17,17 @@
   cursor: pointer;
 }
 
-.show-details-btn {
-  color: honeydew;
-  background-color: rgb(230, 111, 15);
-  text-align: center;
-  border-radius: 5px;
+.button-search:hover {
+  background-color: rgb(243, 243, 243);
+  border-radius: 10px;
 }
 
-.show-details-btn:hover {
-  color: honeydew;
-  background-color: rgb(230, 111, 15);
+.date-room-btn {
+  font-weight: 500;
+  color: hsl(345, 6%, 13%);
+  background-color: rgb(0, 0, 0, 0.03);
+  text-align: center;
+  border-radius: 5px;
 }
 
 .maxMember-btn {
@@ -48,9 +49,38 @@
 }
 
 .btn-join-color:hover {
-  background-color: rgb(218, 78, 18);
+  background-color: #C25738
 }
 
 .round {
-  border-radius: 18px;
+  border-radius: 12px;
+}
+
+.card {
+  border-radius: 20px;
+  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+}
+
+.card-title {
+  margin-bottom: 0 !important;
+}
+
+.text-block {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: black;
+  color: white;
+  padding-left: 20px;
+  padding-right: 20px;
 }
